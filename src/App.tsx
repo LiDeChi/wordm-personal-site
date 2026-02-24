@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { DebugPanel } from './components/DebugPanel'
 import { MarginNotes } from './components/MarginNotes'
 import { ProjectEntry } from './components/ProjectEntry'
+import { ResumeSection } from './components/ResumeSection'
 import { Sidebar } from './components/Sidebar'
 import { SubdomainProjectView } from './components/SubdomainProjectView'
 import projectsSnapshotRaw from './data/projects.snapshot.json'
@@ -15,7 +16,7 @@ import {
 import type { PortfolioProject, ProjectsSnapshot } from './types'
 
 const snapshot = projectsSnapshotRaw as ProjectsSnapshot
-const sectionIds = ['home', 'about', 'projects', 'visual', 'contact']
+const sectionIds = ['home', 'about', 'resume', 'projects', 'visual', 'contact']
 
 function defaultSelection(projects: PortfolioProject[], preferred: string[]): string[] {
   const preferredExisting = preferred.filter((slug) => projects.some((project) => project.slug === slug))
@@ -173,6 +174,8 @@ function App() {
             <span className="mono">Current Focus:</span> Multi-Agent Workflow, Automation Platform, Human-AI Collaboration.
           </p>
         </section>
+
+        <ResumeSection />
 
         <section id="projects">
           <h2>最新动态 / News</h2>

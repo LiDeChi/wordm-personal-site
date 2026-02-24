@@ -3,6 +3,7 @@
 基于你提供的学术极简版式实现的个人网站，包含：
 
 - 个人介绍（首页/研究叙事风格）
+- 简历模块（由 `游戏策划_简永杰.pdf` 转写并提供 PDF 下载）
 - `center-control` 项目展示（来源：`/Users/lidechi/Documents/Github/center-control/data/exports/projects.json`）
 - `debug` 模式控制展示项目
 - 项目子域名展示（`p-*.wordm.us`）
