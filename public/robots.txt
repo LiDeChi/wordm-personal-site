@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://wordm.us/sitemap.xml
+Host: wordm.us
