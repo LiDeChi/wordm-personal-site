@@ -1,6 +1,8 @@
 const ROOT_ORIGIN = 'https://wordm.us'
 
 const ALLOWED_SUBDOMAINS = new Set([
+  'resume',
+  'cv',
   'p-page-glance-extension',
   'p-apple-notes-webclipper',
   'p-personalinflationbasket',
@@ -38,9 +40,12 @@ export default {
     }
 
     const targetUrl = new URL(`${incomingUrl.pathname}${incomingUrl.search}`, ROOT_ORIGIN)
-    const accept = request.headers.get('accept') || ''
-    if (incomingUrl.pathname === '/' && accept.includes('text/html')) {
-      targetUrl.searchParams.set('subdomain', subdomain)
+    if (incomingUrl.pathname === '/') {
+      if (subdomain === 'resume' || subdomain === 'cv') {
+        targetUrl.searchParams.set('page', 'resume')
+      } else {
+        targetUrl.searchParams.set('subdomain', subdomain)
+      }
     }
 
     const proxiedRequest = new Request(targetUrl.toString(), request)

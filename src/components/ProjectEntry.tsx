@@ -18,7 +18,7 @@ export function ProjectEntry({ project }: ProjectEntryProps) {
         {project.name}
       </a>
 
-      <div className="paper-authors">Source: center-control · Scope: tracked · Relations: {project.relationCount}</div>
+      <div className="paper-authors">Portfolio Item · Scope: tracked · Relations: {project.relationCount}</div>
 
       <p className="paper-summary">{project.summary}</p>
 

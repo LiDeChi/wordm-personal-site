@@ -3,15 +3,15 @@ export function MarginNotes() {
     <aside className="margin-notes">
       <div className="note">
         <span className="note-ref">1</span>
-        center-control 会每日更新项目活动指标，展示页默认使用最新导出快照。
+        博客与作品集共享同一视觉语言，内容按“文章叙事 + 项目证据”组织。
       </div>
       <div className="note">
         <span className="note-ref">2</span>
-        `debug=1` 模式下可手动选择项目，URL `show=slug1,slug2` 可直接分享。
+        简历已独立到子域名 resume.wordm.us，根域保持为个人博客主站。
       </div>
       <div className="note">
         <span className="note-ref">3</span>
-        每个展示项目对应一个固定子域名，便于独立传播与追踪。
+        每个展示项目对应固定子域名，便于单独传播与追踪。
       </div>
     </aside>
   )

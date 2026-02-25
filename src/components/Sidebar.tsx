@@ -7,7 +7,7 @@ type SidebarProps = {
 const navItems = [
   { id: 'home', label: 'Home [首页]' },
   { id: 'about', label: 'About [介绍]' },
-  { id: 'resume', label: 'Resume [简历]' },
+  { id: 'blog', label: 'Blog [文章]' },
   { id: 'projects', label: 'Projects [项目]' },
   { id: 'visual', label: 'Visual [图示]' },
   { id: 'contact', label: 'Contact [联系]' },

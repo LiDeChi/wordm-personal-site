@@ -273,6 +273,24 @@ p {
   color: var(--c-paper);
 }
 
+.blog-entry {
+  margin-bottom: 2rem;
+  border-left: 1px dashed var(--c-ink-faint);
+  padding-left: 16px;
+}
+
+.blog-entry h3 {
+  font-size: 1.08rem;
+  margin-bottom: 0.45rem;
+  letter-spacing: 0;
+}
+
+.blog-entry p {
+  font-size: 0.95rem;
+  color: #444;
+  margin-bottom: 0.2rem;
+}
+
 .resume-section .abstract-block {
   margin-bottom: 2rem;
 }

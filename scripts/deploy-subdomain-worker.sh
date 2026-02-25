@@ -4,6 +4,7 @@ set -euo pipefail
 npx wrangler deploy workers/subdomain-proxy.ts \
   --name wordm-project-subdomains \
   --compatibility-date 2026-02-24 \
+  --domains resume.wordm.us \
   --domains p-page-glance-extension.wordm.us \
   --domains p-apple-notes-webclipper.wordm.us \
   --domains p-personalinflationbasket.wordm.us \

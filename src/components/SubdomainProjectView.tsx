@@ -39,7 +39,7 @@ export function SubdomainProjectView({ project, lastUpdated }: SubdomainProjectV
         </div>
 
         <footer className="subdomain-footer">
-          <div>Generated from center-control snapshot</div>
+          <div>Project showcase subdomain</div>
           <div>Updated: {lastUpdated}</div>
         </footer>
       </main>

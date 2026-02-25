@@ -2,8 +2,8 @@
 
 基于你提供的学术极简版式实现的个人网站，包含：
 
-- 个人介绍（首页/研究叙事风格）
-- 简历模块（由 `游戏策划_简永杰.pdf` 转写并提供 PDF 下载）
+- 根域 `wordm.us`：个人博客 + 作品集
+- 子域 `resume.wordm.us`：独立简历页（含 PDF 下载）
 - `center-control` 项目展示（来源：`/Users/lidechi/Documents/Github/center-control/data/exports/projects.json`）
 - `debug` 模式控制展示项目
 - 项目子域名展示（`p-*.wordm.us`）
@@ -32,6 +32,7 @@ http://localhost:5173/?debug=1
 - `show=slug1,slug2`：指定展示项目
 - `centerApi=https://.../api/portfolio/projects.json`：切换为 center-control 实时 API 数据
 - `subdomain=p-xxx`：本地模拟子域名视图
+- `page=resume`：本地模拟简历子域名视图
 
 ## 数据同步
 
@@ -59,7 +60,7 @@ npx wrangler whoami
 npm run deploy:pages
 ```
 
-3. 部署项目子域名 Worker（自动绑定 8 个展示项目子域名）：
+3. 部署子域名 Worker（自动绑定简历子域名 + 项目子域名）：
 
 ```bash
 npm run deploy:subdomains
@@ -69,6 +70,7 @@ npm run deploy:subdomains
 
 - Worker 名称：`wordm-project-subdomains`
 - 已绑定子域名：
+  - `resume.wordm.us`
   - `p-page-glance-extension.wordm.us`
   - `p-apple-notes-webclipper.wordm.us`
   - `p-personalinflationbasket.wordm.us`

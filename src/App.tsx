@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
+import { BlogSection } from './components/BlogSection'
 import { DebugPanel } from './components/DebugPanel'
 import { MarginNotes } from './components/MarginNotes'
 import { ProjectEntry } from './components/ProjectEntry'
-import { ResumeSection } from './components/ResumeSection'
+import { ResumePage } from './components/ResumePage'
 import { Sidebar } from './components/Sidebar'
 import { SubdomainProjectView } from './components/SubdomainProjectView'
 import projectsSnapshotRaw from './data/projects.snapshot.json'
@@ -16,7 +17,7 @@ import {
 import type { PortfolioProject, ProjectsSnapshot } from './types'
 
 const snapshot = projectsSnapshotRaw as ProjectsSnapshot
-const sectionIds = ['home', 'about', 'resume', 'projects', 'visual', 'contact']
+const sectionIds = ['home', 'about', 'blog', 'projects', 'visual', 'contact']
 
 function defaultSelection(projects: PortfolioProject[], preferred: string[]): string[] {
   const preferredExisting = preferred.filter((slug) => projects.some((project) => project.slug === slug))
@@ -29,15 +30,17 @@ function defaultSelection(projects: PortfolioProject[], preferred: string[]): st
 
 function App() {
   const params = new URLSearchParams(window.location.search)
+  const hostname = window.location.hostname.toLowerCase()
   const debugMode = params.get('debug') === '1' || import.meta.env.DEV
   const forcedSubdomain = params.get('subdomain')
+  const forcedPage = params.get('page')
   const initialApi = params.get('centerApi') || import.meta.env.VITE_CENTER_CONTROL_API || ''
   const initialShowSlugs = parseShowSlugs(params.get('show'))
 
   const [projects, setProjects] = useState<PortfolioProject[]>(snapshot.projects)
   const [activeSection, setActiveSection] = useState('home')
   const [centerApi, setCenterApi] = useState(initialApi)
-  const [sourceLabel, setSourceLabel] = useState('center-control snapshot')
+  const [sourceLabel, setSourceLabel] = useState('project snapshot')
   const [loadState, setLoadState] = useState<'idle' | 'loading' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState('')
   const [selectedSlugs, setSelectedSlugs] = useState<string[]>(() => {
@@ -104,7 +107,7 @@ function App() {
   async function loadLiveProjects() {
     if (!centerApi) {
       setLoadState('error')
-      setErrorMessage('请先填写 center-control API 地址。')
+      setErrorMessage('请先填写项目 API 地址。')
       return
     }
 
@@ -147,9 +150,13 @@ function App() {
     () => resolveSubdomainView(projects, window.location.hostname, forcedSubdomain),
     [projects, forcedSubdomain],
   )
+  const isResumeView = forcedPage === 'resume' || hostname === 'resume.wordm.us' || hostname === 'cv.wordm.us'
 
   if (subdomainProject) {
     return <SubdomainProjectView project={subdomainProject} lastUpdated={lastUpdated} />
+  }
+  if (isResumeView) {
+    return <ResumePage lastUpdated={lastUpdated} />
   }
 
   return (
@@ -159,23 +166,25 @@ function App() {
       <main className="main-content">
         <section id="home">
           <h1>
-            Personal Systems &amp;
+            Personal Blog &amp;
             <br />
-            Product Experiments
+            Project Portfolio
           </h1>
         </section>
 
         <section id="about" className="abstract-block">
           <span className="abstract-label">Statement / 个人介绍</span>
           <p>
-            我专注于 AI 产品策略、工程落地与跨项目协同系统。当前主线是把多个工具链统一为可复用的工作流，从需求、实现到部署形成稳定闭环。
+            这里是我的个人博客与作品集主站，持续记录产品策略、AI 实践与游戏系统设计中的方法、复盘和实验结果。
           </p>
           <p style={{ marginBottom: 0 }}>
-            <span className="mono">Current Focus:</span> Multi-Agent Workflow, Automation Platform, Human-AI Collaboration.
+            <span className="mono">Current Focus:</span> Game Design, Data-Driven Product, Human-AI Collaboration.
+            <br />
+            <span className="mono">Resume:</span> <a href="https://resume.wordm.us">resume.wordm.us</a>
           </p>
         </section>
 
-        <ResumeSection />
+        <BlogSection />
 
         <section id="projects">
           <h2>最新动态 / News</h2>
@@ -218,7 +227,7 @@ function App() {
             />
           ) : null}
 
-          <h2>项目展示 / Selected Projects</h2>
+          <h2>作品集 / Portfolio</h2>
           {featuredProjects.map((project) => (
             <ProjectEntry key={project.id} project={project} />
           ))}
@@ -226,7 +235,7 @@ function App() {
 
         <section id="visual">
           <h2>可视化 / Visualizations</h2>
-          <p className="visual-intro">From center-control metrics to curated project surfaces under dedicated subdomains.</p>
+          <p className="visual-intro">From article insights to portfolio evidence, with each project accessible via its own subdomain.</p>
 
           <div className="visual-grid">
             {highlightedProjects.map((project, index) => (
@@ -248,11 +257,13 @@ function App() {
 
         <section id="contact">
           <h2>联系 / Contact</h2>
-          <div className="formula">deploy(host) = wordm.us + {'{'}p-*.wordm.us{'}'}</div>
+          <div className="formula">deploy(host) = wordm.us + {'{'}resume.wordm.us + p-*.wordm.us{'}'}</div>
           <p>
             站点主域名：<a href="https://wordm.us">wordm.us</a>
             <br />
-            项目子域名：由 center-control 数据自动分配，并可在 debug 模式手动控制展示。
+            简历子域名：<a href="https://resume.wordm.us">resume.wordm.us</a>
+            <br />
+            项目子域名：按作品独立分配，可在 debug 模式手动控制展示。
           </p>
         </section>
 
