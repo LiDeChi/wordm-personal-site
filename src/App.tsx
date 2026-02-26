@@ -378,10 +378,13 @@ function App() {
             />
           ) : null}
 
-          <h2>作品集 / Portfolio</h2>
-          {featuredProjects.map((project) => (
-            <ProjectEntry key={project.id} project={project} />
-          ))}
+          <h2>作品集 / Portfolio Gallery</h2>
+          <p className="visual-intro">以 gallery 形式展示项目卡片，点击任一卡片可进入对应子域名详情页。</p>
+          <div className="portfolio-gallery">
+            {featuredProjects.map((project) => (
+              <ProjectEntry key={project.id} project={project} />
+            ))}
+          </div>
         </section>
 
         <section id="visual">
