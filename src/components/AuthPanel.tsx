@@ -1,10 +1,12 @@
 import { type FormEvent, useState } from 'react'
+import type { AuthRole } from '../lib/auth'
 
 export type AuthPanelProps = {
   enabled: boolean
   loading: boolean
   busy: boolean
   userEmail: string | null
+  userRole: AuthRole
   statusMessage: string
   className?: string
   onLogin: (email: string, password: string) => Promise<void> | void
@@ -12,11 +14,25 @@ export type AuthPanelProps = {
   onLogout: () => Promise<void> | void
 }
 
+function roleLabel(role: AuthRole) {
+  if (role === 'admin') {
+    return '管理员'
+  }
+  if (role === 'tester') {
+    return '测试账号'
+  }
+  if (role === 'user') {
+    return '普通账号'
+  }
+  return '游客'
+}
+
 export function AuthPanel({
   enabled,
   loading,
   busy,
   userEmail,
+  userRole,
   statusMessage,
   className,
   onLogin,
@@ -63,6 +79,7 @@ export function AuthPanel({
       {enabled && !loading && userEmail ? (
         <div className="auth-user-card">
           <p className="auth-user-email">{userEmail}</p>
+          <p className="auth-role">当前身份：{roleLabel(userRole)}</p>
           <button type="button" className="auth-primary-btn" disabled={busy} onClick={() => void onLogout()}>
             {busy ? '处理中...' : '退出登录'}
           </button>
@@ -113,6 +130,7 @@ export function AuthPanel({
         </>
       ) : null}
 
+      {!userEmail ? <p className="auth-role auth-role-guest">当前身份：{roleLabel(userRole)}</p> : null}
       {statusMessage ? <p className="auth-status">{statusMessage}</p> : null}
     </section>
   )

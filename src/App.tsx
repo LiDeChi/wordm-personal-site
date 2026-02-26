@@ -1,19 +1,22 @@
 import { useEffect, useMemo, useState } from 'react'
-import { BlogNotesPanel } from './components/BlogNotesPanel'
 import { DebugPanel } from './components/DebugPanel'
 import { ProjectEntry } from './components/ProjectEntry'
+import { ResumeAccessDenied } from './components/ResumeAccessDenied'
 import { ResumePage } from './components/ResumePage'
 import { Sidebar } from './components/Sidebar'
 import { SubdomainProjectView } from './components/SubdomainProjectView'
 import { BLOG_ARTICLES } from './data/blogArticles'
 import projectsSnapshotRaw from './data/projects.snapshot.json'
 import {
+  type AuthRole,
+  type AuthRoleRules,
   type AuthUserSummary,
   fetchSessionUser,
   isAuthConfigured,
   loginWithPassword,
   logout,
   normalizeAuthError,
+  parseRoleEmailSet,
   signupWithPassword,
   subscribeAuthState,
   toAuthUserSummary,
@@ -58,6 +61,13 @@ function App() {
     () => ({
       supabaseUrl: import.meta.env.VITE_SUPABASE_URL || '',
       supabaseAnonKey: import.meta.env.VITE_SUPABASE_ANON_KEY || '',
+    }),
+    [],
+  )
+  const authRoleRules = useMemo<AuthRoleRules>(
+    () => ({
+      adminEmails: parseRoleEmailSet(import.meta.env.VITE_AUTH_ADMIN_EMAILS || import.meta.env.VITE_ADMIN_EMAILS || ''),
+      testerEmails: parseRoleEmailSet(import.meta.env.VITE_AUTH_TEST_EMAILS || import.meta.env.VITE_TEST_EMAILS || ''),
     }),
     [],
   )
@@ -198,7 +208,7 @@ function App() {
           return
         }
 
-        setAuthUser(toAuthUserSummary(user))
+        setAuthUser(toAuthUserSummary(user, authRoleRules))
       })
       .catch((error) => {
         if (!active) {
@@ -218,14 +228,14 @@ function App() {
         return
       }
 
-      setAuthUser(toAuthUserSummary(user))
+      setAuthUser(toAuthUserSummary(user, authRoleRules))
     })
 
     return () => {
       active = false
       unsubscribe()
     }
-  }, [authConfig, authEnabled])
+  }, [authConfig, authEnabled, authRoleRules])
 
   async function loadLiveProjects() {
     if (!centerApi) {
@@ -273,7 +283,7 @@ function App() {
 
     try {
       const user = await loginWithPassword(authConfig, email, password)
-      const normalizedUser = toAuthUserSummary(user)
+      const normalizedUser = toAuthUserSummary(user, authRoleRules)
       setAuthUser(normalizedUser)
       setAuthStatusMessage(normalizedUser?.email ? `登录成功：${normalizedUser.email}` : '登录成功。')
     } catch (error) {
@@ -310,7 +320,7 @@ function App() {
         return
       }
 
-      const normalizedUser = toAuthUserSummary(result.user)
+      const normalizedUser = toAuthUserSummary(result.user, authRoleRules)
       setAuthUser(normalizedUser)
       setAuthStatusMessage(normalizedUser?.email ? `注册并登录成功：${normalizedUser.email}` : '注册成功。')
     } catch (error) {
@@ -362,13 +372,16 @@ function App() {
     0,
     BLOG_ARTICLES.findIndex((article) => article.id === activeArticleId),
   )
-  const normalizedActiveArticle = BLOG_ARTICLES[activeArticleIndex] || BLOG_ARTICLES[0]
+  const activeArticle = BLOG_ARTICLES[activeArticleIndex] || BLOG_ARTICLES[0]
   const nextArticle = BLOG_ARTICLES[activeArticleIndex + 1] || null
+  const authRole: AuthRole = authUser?.role ?? 'guest'
+  const canAccessResume = authRole === 'admin' || authRole === 'tester'
   const authPanelProps = {
     enabled: authEnabled,
     loading: authLoading,
     busy: authBusy,
     userEmail: authUser?.email ?? null,
+    userRole: authRole,
     statusMessage: authStatusMessage,
     onLogin: handleLogin,
     onSignup: handleSignup,
@@ -387,15 +400,18 @@ function App() {
     return <SubdomainProjectView project={subdomainProject} lastUpdated={lastUpdated} authPanel={authPanelProps} />
   }
   if (isResumeView) {
+    if (!canAccessResume) {
+      return <ResumeAccessDenied role={authRole} authPanel={authPanelProps} />
+    }
     return <ResumePage lastUpdated={lastUpdated} authPanel={authPanelProps} />
   }
 
   if (rootView === 'blog') {
     return (
-      <div className="page-container">
+      <div className="page-container blog-page">
         <Sidebar
           mode="blog"
-          activeKey={normalizedActiveArticle.id}
+          activeKey={activeArticle.id}
           lastUpdated={lastUpdated}
           onModeChange={setRootView}
           onNavigate={jumpToArticle}
@@ -414,15 +430,6 @@ function App() {
               <br />
               Field Notes
             </h1>
-            <div className="abstract-block">
-              <span className="abstract-label">Reading Mode</span>
-              <p>
-                左栏是文章目录，中栏按时间连续阅读，右栏显示当前注释。页面底部提供固定“跳到下一篇”按钮，滑动阅读时可随时切换。若要看作品集，请切到 Portfolio。
-              </p>
-              <p style={{ marginBottom: 0 }}>
-                <span className="mono">Resume:</span> <a href="https://resume.wordm.us">resume.wordm.us</a>
-              </p>
-            </div>
           </section>
 
           {BLOG_ARTICLES.map((article) => (
@@ -444,17 +451,6 @@ function App() {
             <div>Blog mode on wordm.us</div>
           </footer>
         </main>
-
-        <BlogNotesPanel
-          activeArticle={normalizedActiveArticle}
-          nextArticle={nextArticle}
-          onJumpNext={() => {
-            if (!nextArticle) {
-              return
-            }
-            jumpToArticle(nextArticle.id)
-          }}
-        />
         <div className="blog-next-fixed-wrap" aria-live="polite">
           <button
             type="button"

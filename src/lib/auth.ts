@@ -5,9 +5,17 @@ export type AuthConfig = {
   supabaseAnonKey: string
 }
 
+export type AuthRole = 'admin' | 'tester' | 'user' | 'guest'
+
+export type AuthRoleRules = {
+  adminEmails: Set<string>
+  testerEmails: Set<string>
+}
+
 export type AuthUserSummary = {
   id: string
   email: string
+  role: AuthRole
 }
 
 export type SignupOutcome = 'session' | 'confirm' | 'exists'
@@ -31,6 +39,18 @@ let cachedClient:
     }
   | null = null
 
+const ROLE_ALIAS_MAP: Record<string, AuthRole> = {
+  admin: 'admin',
+  administrator: 'admin',
+  root: 'admin',
+  owner: 'admin',
+  test: 'tester',
+  tester: 'tester',
+  qa: 'tester',
+  user: 'user',
+  member: 'user',
+}
+
 function hasWindow() {
   return typeof window !== 'undefined'
 }
@@ -42,6 +62,20 @@ function hasDocument() {
 function isWordmHost(hostname: string) {
   const host = hostname.toLowerCase()
   return host === 'wordm.us' || host.endsWith('.wordm.us')
+}
+
+function parseRoleFromMetadata(user: User): AuthRole | null {
+  const rawRole = user.app_metadata?.role ?? user.user_metadata?.role
+  if (typeof rawRole !== 'string') {
+    return null
+  }
+
+  const normalized = rawRole.trim().toLowerCase()
+  return ROLE_ALIAS_MAP[normalized] ?? null
+}
+
+function normalizeEmail(email: string | null | undefined) {
+  return (email ?? '').trim().toLowerCase()
 }
 
 function resolveCookieDomain() {
@@ -181,6 +215,36 @@ export function isAuthConfigured(config: AuthConfig) {
   return Boolean(config.supabaseUrl && config.supabaseAnonKey)
 }
 
+export function parseRoleEmailSet(raw: string) {
+  return new Set(
+    raw
+      .split(',')
+      .map((value) => value.trim().replace(/^['"]|['"]$/g, '').toLowerCase())
+      .filter(Boolean),
+  )
+}
+
+export function resolveAuthRole(user: User | null, rules: AuthRoleRules): AuthRole {
+  if (!user) {
+    return 'guest'
+  }
+
+  const metadataRole = parseRoleFromMetadata(user)
+  if (metadataRole) {
+    return metadataRole
+  }
+
+  const email = normalizeEmail(user.email)
+  if (email && rules.adminEmails.has(email)) {
+    return 'admin'
+  }
+  if (email && rules.testerEmails.has(email)) {
+    return 'tester'
+  }
+
+  return 'user'
+}
+
 export function getSupabaseClient(config: AuthConfig) {
   if (!isAuthConfigured(config)) {
     throw new Error('Supabase is not configured.')
@@ -237,14 +301,15 @@ export function normalizeAuthError(error: unknown, fallback = '认证失败，�
   return fallback
 }
 
-export function toAuthUserSummary(user: User | null): AuthUserSummary | null {
+export function toAuthUserSummary(user: User | null, rules: AuthRoleRules): AuthUserSummary | null {
   if (!user) {
     return null
   }
 
   return {
     id: user.id,
-    email: user.email ?? '',
+    email: normalizeEmail(user.email),
+    role: resolveAuthRole(user, rules),
   }
 }
 

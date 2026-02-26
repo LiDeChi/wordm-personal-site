@@ -3,7 +3,7 @@
 基于你提供的学术极简版式实现的个人网站，包含：
 
 - 根域 `wordm.us`：个人博客 + 作品集
-- 子域 `resume.wordm.us`：独立简历页（含 PDF 下载）
+- 子域 `resume.wordm.us`：独立简历页（含 PDF 下载，仅管理员/测试账号可访问）
 - 账号系统：Supabase 邮箱登录/注册/退出（`wordm.us` 与全部子域共用一套会话）
 - `center-control` 项目展示（来源：`/Users/lidechi/Documents/Github/center-control/data/exports/projects.json`）
 - `debug` 模式控制展示项目
@@ -27,10 +27,15 @@ npm run dev
 ```bash
 VITE_SUPABASE_URL=...
 VITE_SUPABASE_ANON_KEY=...
+VITE_AUTH_ADMIN_EMAILS=admin1@example.com,admin2@example.com
+VITE_AUTH_TEST_EMAILS=test1@example.com,test2@example.com
 ```
 
 - 推荐使用你提到的同一套 Supabase 项目（`latti-wordm`）来保证账号一致。
 - 站点会将 Supabase 会话同步到 `.wordm.us` 域级 cookie，因此 `wordm.us`、`resume.wordm.us`、`p-*.wordm.us` 会共享登录态。
+- 账号角色共四类：`admin`（管理员）、`tester`（测试账号）、`user`（普通账号）、`guest`（游客）。
+- 角色判定顺序：Supabase 用户 metadata 的 `role` 字段 > `VITE_AUTH_ADMIN_EMAILS`/`VITE_AUTH_TEST_EMAILS` 邮箱白名单 > 默认 `user`。
+- 简历页权限：仅 `admin` / `tester` 可访问，`user` / `guest` 会显示受限提示页。
 
 ### Debug 模式
 
