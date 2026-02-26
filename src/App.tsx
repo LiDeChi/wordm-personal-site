@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { BlogNotesPanel } from './components/BlogNotesPanel'
 import { DebugPanel } from './components/DebugPanel'
-import { MarginNotes } from './components/MarginNotes'
 import { ProjectEntry } from './components/ProjectEntry'
 import { ResumePage } from './components/ResumePage'
 import { Sidebar } from './components/Sidebar'
@@ -318,7 +317,7 @@ function App() {
         ]}
       />
 
-      <main className="main-content">
+      <main className="main-content portfolio-main-content">
         <section id="home">
           <h1>
             Personal Blog &amp;
@@ -427,7 +426,6 @@ function App() {
         </footer>
       </main>
 
-      <MarginNotes />
     </div>
   )
 }

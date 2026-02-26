@@ -217,6 +217,10 @@ p {
   padding-top: 0;
 }
 
+.portfolio-main-content {
+  grid-column: 2 / -1;
+}
+
 .abstract-block {
   background: #fafafa;
   padding: 2rem;
@@ -764,6 +768,10 @@ footer {
   .page-container {
     grid-template-columns: 1fr;
     padding: 28px;
+  }
+
+  .portfolio-main-content {
+    grid-column: auto;
   }
 
   .portfolio-gallery {
