@@ -475,8 +475,6 @@ p {
   margin-bottom: 2.6rem;
   border-left: 1px dashed var(--c-ink-faint);
   padding-left: 16px;
-  position: relative;
-  overflow: visible;
 }
 
 .blog-article-title {
@@ -510,30 +508,65 @@ p {
   color: #fff;
 }
 
-.blog-next-boundary-anchor {
-  position: relative;
-  height: 0;
-  margin: 0.4rem 0 1rem;
+.blog-main {
+  padding-bottom: 120px;
 }
 
-.blog-next-boundary-btn {
-  position: absolute;
-  left: calc(100% + 10px);
-  top: 0;
-  transform: translateY(-50%);
-  border: 1px solid var(--c-ink);
-  background: #fff;
-  color: var(--c-ink);
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.03em;
-  white-space: nowrap;
-  padding: 4px 7px;
+.blog-next-fixed-wrap {
+  position: fixed;
+  left: calc(50% + 120px);
+  transform: translateX(-50%);
+  bottom: 18px;
+  width: min(860px, 58vw);
+  z-index: 25;
+}
+
+.blog-next-fixed-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid #111;
+  background: #111;
+  color: #fff;
+  padding: 12px 16px;
+  box-shadow: 0 10px 26px rgb(0 0 0 / 20%);
   cursor: pointer;
-  z-index: 3;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
 }
 
-.blog-next-boundary-btn:hover {
+.blog-next-fixed-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 30px rgb(0 0 0 / 25%);
+}
+
+.blog-next-fixed-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.blog-next-fixed-btn:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: -4px;
+}
+
+.blog-next-fixed-label {
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  border: 1px solid rgb(255 255 255 / 40%);
+  padding: 3px 6px;
+}
+
+.blog-next-fixed-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.92rem;
+  line-height: 1.2;
+}
+
+.blog-next-fixed-btn:hover .blog-next-fixed-label {
   background: #111;
   color: #fff;
 }
@@ -786,10 +819,6 @@ footer {
   .margin-notes {
     display: none;
   }
-
-  .blog-next-boundary-anchor {
-    display: none;
-  }
 }
 
 @media (max-width: 900px) {
@@ -810,6 +839,27 @@ footer {
 
   .portfolio-gallery {
     grid-template-columns: 1fr;
+  }
+
+  .blog-main {
+    padding-bottom: 100px;
+  }
+
+  .blog-next-fixed-wrap {
+    left: 14px;
+    right: 14px;
+    width: auto;
+    transform: none;
+    bottom: 12px;
+  }
+
+  .blog-next-fixed-btn {
+    padding: 10px 12px;
+    gap: 9px;
+  }
+
+  .blog-next-fixed-text {
+    font-size: 0.84rem;
   }
 
   .sidebar {
