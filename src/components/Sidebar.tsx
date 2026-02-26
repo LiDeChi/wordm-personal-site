@@ -21,17 +21,7 @@ type SidebarProps = {
 export function Sidebar({ mode, activeKey, lastUpdated, onNavigate, onModeChange, tocItems, authPanel }: SidebarProps) {
   return (
     <aside className={`sidebar ${mode === 'blog' ? 'blog-sidebar' : ''}`}>
-      <div className="profile-block">
-        <div className="profile-title">简永杰</div>
-        <div className="profile-title profile-title-en">Jian Yongjie</div>
-        <div className="profile-affil">
-          Product Strategist &amp; Builder
-          <br />
-          AI + Design + Engineering
-          <br />
-          Base: New York / Beijing
-        </div>
-      </div>
+      <AuthPanel {...authPanel} className="sidebar-auth" />
 
       <div className="view-switch" role="tablist" aria-label="view switch">
         <button
@@ -70,8 +60,6 @@ export function Sidebar({ mode, activeKey, lastUpdated, onNavigate, onModeChange
           })}
         </ul>
       </nav>
-
-      <AuthPanel {...authPanel} className="sidebar-auth" />
 
       <div className="sidebar-meta">Last updated: {lastUpdated}</div>
     </aside>

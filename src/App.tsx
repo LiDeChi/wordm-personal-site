@@ -465,12 +465,23 @@ function App() {
         />
 
         <main className="main-content blog-main">
-          <section id="home">
+          <section id="home" className="blog-home-head">
             <h1>
               Blog Essays &amp;
               <br />
               Field Notes
             </h1>
+            <div className="blog-home-profile">
+              <div className="profile-title">简永杰</div>
+              <div className="profile-title profile-title-en">Jian Yongjie</div>
+              <div className="profile-affil">
+                Product Strategist &amp; Builder
+                <br />
+                AI + Design + Engineering
+                <br />
+                Base: New York / Beijing
+              </div>
+            </div>
           </section>
 
           {BLOG_ARTICLES.map((article) => (
