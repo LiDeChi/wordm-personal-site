@@ -36,7 +36,7 @@ import type { PortfolioProject, ProjectsSnapshot } from './types'
 type RootView = 'blog' | 'portfolio'
 
 const snapshot = projectsSnapshotRaw as ProjectsSnapshot
-const portfolioSectionIds = ['home', 'about', 'projects', 'visual', 'contact']
+const portfolioSectionIds = ['home', 'projects', 'visual', 'contact']
 
 function defaultSelection(projects: PortfolioProject[], preferred: string[]): string[] {
   const preferredExisting = preferred.filter((slug) => projects.some((project) => project.slug === slug))
@@ -526,7 +526,6 @@ function App() {
         onNavigate={(id) => setActiveSection(id)}
         tocItems={[
           { id: 'home', label: 'Home [首页]' },
-          { id: 'about', label: 'About [介绍]' },
           { id: 'projects', label: 'Projects [项目]' },
           { id: 'visual', label: 'Visual [图示]' },
           { id: 'contact', label: 'Contact [联系]' },
@@ -541,16 +540,6 @@ function App() {
             <br />
             Project Portfolio
           </h1>
-        </section>
-
-        <section id="about" className="abstract-block">
-          <span className="abstract-label">Statement / 个人介绍</span>
-          <p>
-            这里是我的作品集视图，聚焦项目方法、实现结果与可复用资产。博客文章请切换到 Blog 视图；简历在独立子域名。
-          </p>
-          <p style={{ marginBottom: 0 }}>
-            <span className="mono">Resume:</span> <a href="https://resume.wordm.us">resume.wordm.us</a>
-          </p>
         </section>
 
         <section id="projects">
