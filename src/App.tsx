@@ -8,17 +8,20 @@ import { SubdomainProjectView } from './components/SubdomainProjectView'
 import { BLOG_ARTICLES } from './data/blogArticles'
 import projectsSnapshotRaw from './data/projects.snapshot.json'
 import {
+  type AuthRoleRulesJson,
   type AuthRole,
   type AuthRoleRules,
   type AuthUserSummary,
   fetchSessionUser,
   isAuthConfigured,
+  mergeRoleRules,
   loginWithPassword,
   logout,
   normalizeAuthError,
   parseRoleEmailSet,
   signupWithPassword,
   subscribeAuthState,
+  toRoleRulesFromJson,
   toAuthUserSummary,
 } from './lib/auth'
 import {
@@ -64,13 +67,14 @@ function App() {
     }),
     [],
   )
-  const authRoleRules = useMemo<AuthRoleRules>(
+  const envRoleRules = useMemo<AuthRoleRules>(
     () => ({
       adminEmails: parseRoleEmailSet(import.meta.env.VITE_AUTH_ADMIN_EMAILS || import.meta.env.VITE_ADMIN_EMAILS || ''),
       testerEmails: parseRoleEmailSet(import.meta.env.VITE_AUTH_TEST_EMAILS || import.meta.env.VITE_TEST_EMAILS || ''),
     }),
     [],
   )
+  const [authRoleRules, setAuthRoleRules] = useState<AuthRoleRules>(envRoleRules)
   const authEnabled = isAuthConfigured(authConfig)
 
   const [rootView, setRootView] = useState<RootView>(initialRootView)
@@ -191,6 +195,43 @@ function App() {
     next.searchParams.set('debug', '1')
     window.history.replaceState({}, '', next)
   }, [debugMode, rootView, selectedSlugs, centerApi])
+
+  useEffect(() => {
+    let active = true
+
+    async function loadRoleRulesFromPublicFile() {
+      try {
+        const response = await fetch('/auth-role-rules.json', {
+          cache: 'no-store',
+        })
+
+        if (!response.ok) {
+          throw new Error(`role rules file not found (${response.status})`)
+        }
+
+        const payload = (await response.json()) as AuthRoleRulesJson
+        const fileRules = toRoleRulesFromJson(payload)
+
+        if (!active) {
+          return
+        }
+
+        setAuthRoleRules(mergeRoleRules(envRoleRules, fileRules))
+      } catch {
+        if (!active) {
+          return
+        }
+
+        setAuthRoleRules(envRoleRules)
+      }
+    }
+
+    void loadRoleRulesFromPublicFile()
+
+    return () => {
+      active = false
+    }
+  }, [envRoleRules])
 
   useEffect(() => {
     if (!authEnabled) {

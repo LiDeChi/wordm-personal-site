@@ -12,6 +12,11 @@ export type AuthRoleRules = {
   testerEmails: Set<string>
 }
 
+export type AuthRoleRulesJson = {
+  adminEmails?: string[]
+  testerEmails?: string[]
+}
+
 export type AuthUserSummary = {
   id: string
   email: string
@@ -222,6 +227,39 @@ export function parseRoleEmailSet(raw: string) {
       .map((value) => value.trim().replace(/^['"]|['"]$/g, '').toLowerCase())
       .filter(Boolean),
   )
+}
+
+export function parseRoleEmailList(input: unknown) {
+  if (!Array.isArray(input)) {
+    return new Set<string>()
+  }
+
+  return new Set(
+    input
+      .map((value) => (typeof value === 'string' ? normalizeEmail(value) : ''))
+      .filter(Boolean),
+  )
+}
+
+export function toRoleRulesFromJson(input: AuthRoleRulesJson | null | undefined): AuthRoleRules {
+  return {
+    adminEmails: parseRoleEmailList(input?.adminEmails),
+    testerEmails: parseRoleEmailList(input?.testerEmails),
+  }
+}
+
+export function mergeRoleRules(primary: AuthRoleRules, secondary: AuthRoleRules): AuthRoleRules {
+  return {
+    adminEmails: new Set([...primary.adminEmails, ...secondary.adminEmails]),
+    testerEmails: new Set([...primary.testerEmails, ...secondary.testerEmails]),
+  }
+}
+
+export function toRoleRulesJson(rules: AuthRoleRules): AuthRoleRulesJson {
+  return {
+    adminEmails: [...rules.adminEmails].sort(),
+    testerEmails: [...rules.testerEmails].sort(),
+  }
 }
 
 export function resolveAuthRole(user: User | null, rules: AuthRoleRules): AuthRole {

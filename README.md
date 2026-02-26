@@ -34,8 +34,36 @@ VITE_AUTH_TEST_EMAILS=test1@example.com,test2@example.com
 - 推荐使用你提到的同一套 Supabase 项目（`latti-wordm`）来保证账号一致。
 - 站点会将 Supabase 会话同步到 `.wordm.us` 域级 cookie，因此 `wordm.us`、`resume.wordm.us`、`p-*.wordm.us` 会共享登录态。
 - 账号角色共四类：`admin`（管理员）、`tester`（测试账号）、`user`（普通账号）、`guest`（游客）。
-- 角色判定顺序：Supabase 用户 metadata 的 `role` 字段 > `VITE_AUTH_ADMIN_EMAILS`/`VITE_AUTH_TEST_EMAILS` 邮箱白名单 > 默认 `user`。
+- 角色判定顺序：Supabase 用户 metadata 的 `role` 字段 > `public/auth-role-rules.json` 邮箱名单（与环境变量合并）> 默认 `user`。
 - 简历页权限：仅 `admin` / `tester` 可访问，`user` / `guest` 会显示受限提示页。
+
+### 快速管理管理员/测试邮箱
+
+优先推荐直接维护文件：`public/auth-role-rules.json`
+
+```json
+{
+  "adminEmails": ["admin@example.com"],
+  "testerEmails": ["qa@example.com"]
+}
+```
+
+也可以用命令行快速增删改（会自动去重并排序）：
+
+```bash
+npm run roles -- list
+npm run roles -- add admin admin1@example.com admin2@example.com
+npm run roles -- add tester qa1@example.com
+npm run roles -- remove tester qa1@example.com
+npm run roles -- set admin admin@example.com,owner@example.com
+npm run roles -- clear tester
+```
+
+修改后重新部署：
+
+```bash
+npm run deploy:pages
+```
 
 ### Debug 模式
 
