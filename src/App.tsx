@@ -1,11 +1,11 @@
-import { useEffect, useMemo, useState } from 'react'
+import { Fragment, useEffect, useMemo, useState } from 'react'
 import { BlogNotesPanel } from './components/BlogNotesPanel'
 import { DebugPanel } from './components/DebugPanel'
 import { ProjectEntry } from './components/ProjectEntry'
 import { ResumePage } from './components/ResumePage'
 import { Sidebar } from './components/Sidebar'
 import { SubdomainProjectView } from './components/SubdomainProjectView'
-import { BLOG_ARTICLES } from './data/blogArticles'
+import { BLOG_ARTICLES, type BlogArticle } from './data/blogArticles'
 import projectsSnapshotRaw from './data/projects.snapshot.json'
 import {
   chooseProjects,
@@ -20,6 +20,7 @@ type RootView = 'blog' | 'portfolio'
 
 const snapshot = projectsSnapshotRaw as ProjectsSnapshot
 const portfolioSectionIds = ['home', 'about', 'projects', 'visual', 'contact']
+const BLOG_SKIP_THRESHOLD = 160
 
 function defaultSelection(projects: PortfolioProject[], preferred: string[]): string[] {
   const preferredExisting = preferred.filter((slug) => projects.some((project) => project.slug === slug))
@@ -32,6 +33,23 @@ function defaultSelection(projects: PortfolioProject[], preferred: string[]): st
 
 function toRootView(raw: string | null): RootView {
   return raw === 'portfolio' ? 'portfolio' : 'blog'
+}
+
+function textLength(raw: string): number {
+  return raw.replace(/\s+/g, '').length
+}
+
+function findBoundaryParagraphIndex(article: BlogArticle, threshold: number): number | null {
+  let total = textLength(article.summary)
+
+  for (let index = 0; index < article.paragraphs.length; index += 1) {
+    total += textLength(article.paragraphs[index])
+    if (total >= threshold) {
+      return index
+    }
+  }
+
+  return null
 }
 
 function App() {
@@ -214,6 +232,14 @@ function App() {
   const normalizedActiveArticle = BLOG_ARTICLES[activeArticleIndex] || BLOG_ARTICLES[0]
   const nextArticle = BLOG_ARTICLES[activeArticleIndex + 1] || null
 
+  function jumpToArticle(id: string) {
+    setActiveArticleId(id)
+    const target = document.getElementById(id)
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }
+
   if (subdomainProject) {
     return <SubdomainProjectView project={subdomainProject} lastUpdated={lastUpdated} />
   }
@@ -229,13 +255,7 @@ function App() {
           activeKey={normalizedActiveArticle.id}
           lastUpdated={lastUpdated}
           onModeChange={setRootView}
-          onNavigate={(id) => {
-            setActiveArticleId(id)
-            const target = document.getElementById(id)
-            if (target) {
-              target.scrollIntoView({ behavior: 'smooth', block: 'start' })
-            }
-          }}
+          onNavigate={jumpToArticle}
           tocItems={BLOG_ARTICLES.map((article) => ({
             id: article.id,
             label: article.title,
@@ -253,7 +273,7 @@ function App() {
             <div className="abstract-block">
               <span className="abstract-label">Reading Mode</span>
               <p>
-                左栏是文章目录，中栏按时间连续阅读，右栏显示当前注释并提供“下一篇”快速跳转。若要看作品集，请切到 Portfolio。
+                左栏是文章目录，中栏按时间连续阅读，右栏显示当前注释。若单篇超过阅读界限，会在正文与注释列之间出现“跳到下一篇”按钮。若要看作品集，请切到 Portfolio。
               </p>
               <p style={{ marginBottom: 0 }}>
                 <span className="mono">Resume:</span> <a href="https://resume.wordm.us">resume.wordm.us</a>
@@ -261,19 +281,39 @@ function App() {
             </div>
           </section>
 
-          {BLOG_ARTICLES.map((article) => (
-            <article key={article.id} id={article.id} className="blog-article">
-              <div className="paper-meta">
-                <span>{article.date}</span>
-                <span>{article.category}</span>
-              </div>
-              <h2 className="blog-article-title">{article.title}</h2>
-              <p className="meta">{article.summary}</p>
-              {article.paragraphs.map((paragraph) => (
-                <p key={`${article.id}-${paragraph.slice(0, 12)}`}>{paragraph}</p>
-              ))}
-            </article>
-          ))}
+          {BLOG_ARTICLES.map((article, index) => {
+            const boundaryParagraphIndex = findBoundaryParagraphIndex(article, BLOG_SKIP_THRESHOLD)
+            const nextByOrder = BLOG_ARTICLES[index + 1] ?? null
+
+            return (
+              <article key={article.id} id={article.id} className="blog-article">
+                <div className="paper-meta">
+                  <span>{article.date}</span>
+                  <span>{article.category}</span>
+                </div>
+                <h2 className="blog-article-title">{article.title}</h2>
+                <p className="meta">{article.summary}</p>
+                {article.paragraphs.map((paragraph, paragraphIndex) => (
+                  <Fragment key={`${article.id}-${paragraph.slice(0, 12)}`}>
+                    <p>{paragraph}</p>
+                    {nextByOrder && boundaryParagraphIndex === paragraphIndex ? (
+                      <div className="blog-next-boundary-anchor">
+                        <button
+                          type="button"
+                          className="blog-next-boundary-btn"
+                          onClick={() => jumpToArticle(nextByOrder.id)}
+                          title={`下一篇：${nextByOrder.title}`}
+                          aria-label={`跳转到下一篇：${nextByOrder.title}`}
+                        >
+                          跳到下一篇
+                        </button>
+                      </div>
+                    ) : null}
+                  </Fragment>
+                ))}
+              </article>
+            )
+          })}
 
           <footer>
             <div>© 2026 Jian Yongjie. All rights reserved.</div>
@@ -288,12 +328,7 @@ function App() {
             if (!nextArticle) {
               return
             }
-
-            setActiveArticleId(nextArticle.id)
-            const target = document.getElementById(nextArticle.id)
-            if (target) {
-              target.scrollIntoView({ behavior: 'smooth', block: 'start' })
-            }
+            jumpToArticle(nextArticle.id)
           }}
         />
       </div>
