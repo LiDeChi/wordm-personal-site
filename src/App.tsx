@@ -4,6 +4,7 @@ import { ProjectEntry } from './components/ProjectEntry'
 import { ResumeAccessDenied } from './components/ResumeAccessDenied'
 import { ResumePage } from './components/ResumePage'
 import { Sidebar } from './components/Sidebar'
+import { SiteHeroBanner } from './components/SiteHeroBanner'
 import { SubdomainProjectView } from './components/SubdomainProjectView'
 import { BLOG_ARTICLES } from './data/blogArticles'
 import projectsSnapshotRaw from './data/projects.snapshot.json'
@@ -466,11 +467,7 @@ function App() {
 
         <main className="main-content blog-main">
           <section id="home" className="blog-home-head">
-            <h1>
-              Blog Essays &amp;
-              <br />
-              Field Notes
-            </h1>
+            <SiteHeroBanner className="blog-hero-banner" />
             <div className="blog-home-profile">
               <div className="profile-title">简永杰</div>
               <div className="profile-title profile-title-en">Jian Yongjie</div>
@@ -546,11 +543,7 @@ function App() {
 
       <main className="main-content portfolio-main-content">
         <section id="home">
-          <h1>
-            Personal Blog &amp;
-            <br />
-            Project Portfolio
-          </h1>
+          <SiteHeroBanner className="portfolio-hero-banner" />
         </section>
 
         <section id="projects">

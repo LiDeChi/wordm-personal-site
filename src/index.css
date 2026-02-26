@@ -345,6 +345,14 @@ p {
   grid-template-columns: 240px minmax(0, 1fr);
 }
 
+.site-hero-banner {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+  border: 1px solid var(--c-ink-faint);
+  background: #f3f3f3;
+}
+
 .blog-home-head {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 300px;
@@ -353,8 +361,8 @@ p {
   margin-bottom: 0.5rem;
 }
 
-.blog-home-head h1 {
-  margin-bottom: 0;
+.blog-hero-banner {
+  height: clamp(200px, 24vw, 320px);
 }
 
 .blog-home-profile {
@@ -370,6 +378,11 @@ p {
 .blog-home-profile .profile-affil {
   font-size: 0.72rem;
   line-height: 1.5;
+}
+
+.portfolio-hero-banner {
+  height: clamp(220px, 26vw, 340px);
+  margin-bottom: 0.6rem;
 }
 
 .portfolio-main-content {
@@ -1019,6 +1032,11 @@ footer {
   .page-container {
     grid-template-columns: 1fr;
     padding: 28px;
+  }
+
+  .blog-hero-banner,
+  .portfolio-hero-banner {
+    height: 180px;
   }
 
   .portfolio-main-content {

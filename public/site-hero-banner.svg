@@ -1,0 +1,39 @@
+<svg width="1800" height="560" viewBox="0 0 1800 560" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Monochrome landscape banner">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FAFAFA"/>
+      <stop offset="1" stop-color="#E9E9E9"/>
+    </linearGradient>
+    <pattern id="grid" width="22" height="22" patternUnits="userSpaceOnUse">
+      <path d="M 22 0 L 0 0 0 22" stroke="#D4D4D4" stroke-width="0.8" fill="none"/>
+    </pattern>
+    <linearGradient id="wave" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#1E1E1E" stop-opacity="0.04"/>
+      <stop offset="0.5" stop-color="#1E1E1E" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#1E1E1E" stop-opacity="0.04"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1800" height="560" fill="url(#bg)"/>
+  <rect width="1800" height="560" fill="url(#grid)" opacity="0.55"/>
+
+  <path d="M-20 360 C 180 300, 380 450, 590 370 C 780 300, 980 440, 1170 360 C 1370 280, 1560 430, 1820 340" stroke="url(#wave)" stroke-width="36" fill="none"/>
+  <path d="M-20 430 C 220 360, 430 520, 660 440 C 880 370, 1080 540, 1320 450 C 1520 380, 1660 470, 1820 420" stroke="#111" stroke-opacity="0.12" stroke-width="18" fill="none"/>
+
+  <rect x="74" y="94" width="300" height="220" rx="8" fill="#FFF" fill-opacity="0.55" stroke="#BEBEBE"/>
+  <rect x="388" y="160" width="260" height="140" rx="8" fill="#FFF" fill-opacity="0.32" stroke="#C9C9C9"/>
+  <rect x="1210" y="108" width="220" height="120" rx="8" fill="#FFF" fill-opacity="0.34" stroke="#C9C9C9"/>
+
+  <line x1="110" y1="130" x2="328" y2="290" stroke="#191919" stroke-opacity="0.24" stroke-width="2"/>
+  <line x1="328" y1="130" x2="110" y2="290" stroke="#191919" stroke-opacity="0.2" stroke-width="2"/>
+  <circle cx="219" cy="210" r="26" fill="#FFF" stroke="#222" stroke-opacity="0.35"/>
+
+  <circle cx="995" cy="155" r="34" fill="#FFF" fill-opacity="0.3" stroke="#666" stroke-opacity="0.45"/>
+  <circle cx="1045" cy="197" r="15" fill="#FFF" fill-opacity="0.35" stroke="#666" stroke-opacity="0.45"/>
+  <circle cx="949" cy="224" r="20" fill="#FFF" fill-opacity="0.35" stroke="#666" stroke-opacity="0.45"/>
+
+  <path d="M1515 430 Q 1610 300 1710 430" stroke="#222" stroke-opacity="0.26" stroke-width="2.6" fill="none"/>
+  <path d="M1450 430 Q 1582 238 1726 430" stroke="#222" stroke-opacity="0.14" stroke-width="1.6" fill="none"/>
+
+  <rect x="0.5" y="0.5" width="1799" height="559" stroke="#BDBDBD" stroke-opacity="0.7"/>
+</svg>
