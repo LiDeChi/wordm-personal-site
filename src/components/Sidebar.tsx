@@ -1,21 +1,23 @@
-type SidebarProps = {
-  activeSection: string
-  lastUpdated: string
-  onNavigate: (sectionId: string) => void
+type SidebarMode = 'blog' | 'portfolio'
+
+type TocItem = {
+  id: string
+  label: string
+  meta?: string
 }
 
-const navItems = [
-  { id: 'home', label: 'Home [首页]' },
-  { id: 'about', label: 'About [介绍]' },
-  { id: 'blog', label: 'Blog [文章]' },
-  { id: 'projects', label: 'Projects [项目]' },
-  { id: 'visual', label: 'Visual [图示]' },
-  { id: 'contact', label: 'Contact [联系]' },
-]
+type SidebarProps = {
+  mode: SidebarMode
+  activeKey: string
+  lastUpdated: string
+  onNavigate: (key: string) => void
+  onModeChange: (mode: SidebarMode) => void
+  tocItems: TocItem[]
+}
 
-export function Sidebar({ activeSection, lastUpdated, onNavigate }: SidebarProps) {
+export function Sidebar({ mode, activeKey, lastUpdated, onNavigate, onModeChange, tocItems }: SidebarProps) {
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar ${mode === 'blog' ? 'blog-sidebar' : ''}`}>
       <div className="profile-block">
         <div className="profile-title">简永杰</div>
         <div className="profile-title profile-title-en">Jian Yongjie</div>
@@ -28,10 +30,27 @@ export function Sidebar({ activeSection, lastUpdated, onNavigate }: SidebarProps
         </div>
       </div>
 
+      <div className="view-switch" role="tablist" aria-label="view switch">
+        <button
+          type="button"
+          className={`view-btn ${mode === 'blog' ? 'active' : ''}`}
+          onClick={() => onModeChange('blog')}
+        >
+          Blog
+        </button>
+        <button
+          type="button"
+          className={`view-btn ${mode === 'portfolio' ? 'active' : ''}`}
+          onClick={() => onModeChange('portfolio')}
+        >
+          Portfolio
+        </button>
+      </div>
+
       <nav>
         <ul className="nav-list">
-          {navItems.map((item) => {
-            const isActive = activeSection === item.id
+          {tocItems.map((item) => {
+            const isActive = activeKey === item.id
 
             return (
               <li className="nav-item" key={item.id}>
@@ -42,6 +61,7 @@ export function Sidebar({ activeSection, lastUpdated, onNavigate }: SidebarProps
                 >
                   {item.label}
                 </a>
+                {item.meta ? <div className="toc-meta">{item.meta}</div> : null}
               </li>
             )
           })}

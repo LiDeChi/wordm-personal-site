@@ -7,6 +7,7 @@
 - `center-control` 项目展示（来源：`/Users/lidechi/Documents/Github/center-control/data/exports/projects.json`）
 - `debug` 模式控制展示项目
 - 项目子域名展示（`p-*.wordm.us`）
+- 根域支持 `Blog / Portfolio` 一键切换：博客为三栏阅读模式（左目录、中间连续文章、右注释 + 下一篇按钮）
 
 ## 本地开发
 
@@ -33,6 +34,7 @@ http://localhost:5173/?debug=1
 - `centerApi=https://.../api/portfolio/projects.json`：切换为 center-control 实时 API 数据
 - `subdomain=p-xxx`：本地模拟子域名视图
 - `page=resume`：本地模拟简历子域名视图
+- `view=portfolio`：切到作品集视图（默认是 blog）
 
 ## 数据同步
 

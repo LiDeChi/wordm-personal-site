@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from 'react'
-import { BlogSection } from './components/BlogSection'
+import { BlogNotesPanel } from './components/BlogNotesPanel'
 import { DebugPanel } from './components/DebugPanel'
 import { MarginNotes } from './components/MarginNotes'
 import { ProjectEntry } from './components/ProjectEntry'
 import { ResumePage } from './components/ResumePage'
 import { Sidebar } from './components/Sidebar'
 import { SubdomainProjectView } from './components/SubdomainProjectView'
+import { BLOG_ARTICLES } from './data/blogArticles'
 import projectsSnapshotRaw from './data/projects.snapshot.json'
 import {
   chooseProjects,
@@ -16,8 +17,10 @@ import {
 } from './lib/projects'
 import type { PortfolioProject, ProjectsSnapshot } from './types'
 
+type RootView = 'blog' | 'portfolio'
+
 const snapshot = projectsSnapshotRaw as ProjectsSnapshot
-const sectionIds = ['home', 'about', 'blog', 'projects', 'visual', 'contact']
+const portfolioSectionIds = ['home', 'about', 'projects', 'visual', 'contact']
 
 function defaultSelection(projects: PortfolioProject[], preferred: string[]): string[] {
   const preferredExisting = preferred.filter((slug) => projects.some((project) => project.slug === slug))
@@ -28,6 +31,10 @@ function defaultSelection(projects: PortfolioProject[], preferred: string[]): st
   return projects.slice(0, 8).map((project) => project.slug)
 }
 
+function toRootView(raw: string | null): RootView {
+  return raw === 'portfolio' ? 'portfolio' : 'blog'
+}
+
 function App() {
   const params = new URLSearchParams(window.location.search)
   const hostname = window.location.hostname.toLowerCase()
@@ -36,9 +43,12 @@ function App() {
   const forcedPage = params.get('page')
   const initialApi = params.get('centerApi') || import.meta.env.VITE_CENTER_CONTROL_API || ''
   const initialShowSlugs = parseShowSlugs(params.get('show'))
+  const initialRootView = toRootView(params.get('view'))
 
+  const [rootView, setRootView] = useState<RootView>(initialRootView)
   const [projects, setProjects] = useState<PortfolioProject[]>(snapshot.projects)
   const [activeSection, setActiveSection] = useState('home')
+  const [activeArticleId, setActiveArticleId] = useState(BLOG_ARTICLES[0]?.id || '')
   const [centerApi, setCenterApi] = useState(initialApi)
   const [sourceLabel, setSourceLabel] = useState('project snapshot')
   const [loadState, setLoadState] = useState<'idle' | 'loading' | 'error'>('idle')
@@ -55,6 +65,21 @@ function App() {
   const lastUpdated = formatDate(primaryUpdatedAt)
 
   useEffect(() => {
+    const next = new URL(window.location.href)
+    if (rootView === 'portfolio') {
+      next.searchParams.set('view', 'portfolio')
+    } else {
+      next.searchParams.delete('view')
+    }
+
+    window.history.replaceState({}, '', next)
+  }, [rootView])
+
+  useEffect(() => {
+    if (rootView !== 'portfolio') {
+      return
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         const visible = entries
@@ -71,7 +96,7 @@ function App() {
       },
     )
 
-    sectionIds.forEach((id) => {
+    portfolioSectionIds.forEach((id) => {
       const node = document.getElementById(id)
       if (node) {
         observer.observe(node)
@@ -79,10 +104,41 @@ function App() {
     })
 
     return () => observer.disconnect()
-  }, [])
+  }, [rootView])
 
   useEffect(() => {
-    if (!debugMode) {
+    if (rootView !== 'blog') {
+      return
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)
+
+        if (visible[0]) {
+          setActiveArticleId(visible[0].target.id)
+        }
+      },
+      {
+        rootMargin: '-30% 0px -55% 0px',
+        threshold: [0.2, 0.45, 0.7],
+      },
+    )
+
+    BLOG_ARTICLES.forEach((article) => {
+      const node = document.getElementById(article.id)
+      if (node) {
+        observer.observe(node)
+      }
+    })
+
+    return () => observer.disconnect()
+  }, [rootView])
+
+  useEffect(() => {
+    if (!debugMode || rootView !== 'portfolio') {
       return
     }
 
@@ -102,7 +158,7 @@ function App() {
 
     next.searchParams.set('debug', '1')
     window.history.replaceState({}, '', next)
-  }, [debugMode, selectedSlugs, centerApi])
+  }, [debugMode, rootView, selectedSlugs, centerApi])
 
   async function loadLiveProjects() {
     if (!centerApi) {
@@ -152,6 +208,13 @@ function App() {
   )
   const isResumeView = forcedPage === 'resume' || hostname === 'resume.wordm.us' || hostname === 'cv.wordm.us'
 
+  const activeArticleIndex = Math.max(
+    0,
+    BLOG_ARTICLES.findIndex((article) => article.id === activeArticleId),
+  )
+  const normalizedActiveArticle = BLOG_ARTICLES[activeArticleIndex] || BLOG_ARTICLES[0]
+  const nextArticle = BLOG_ARTICLES[activeArticleIndex + 1] || null
+
   if (subdomainProject) {
     return <SubdomainProjectView project={subdomainProject} lastUpdated={lastUpdated} />
   }
@@ -159,9 +222,101 @@ function App() {
     return <ResumePage lastUpdated={lastUpdated} />
   }
 
+  if (rootView === 'blog') {
+    return (
+      <div className="page-container">
+        <Sidebar
+          mode="blog"
+          activeKey={normalizedActiveArticle.id}
+          lastUpdated={lastUpdated}
+          onModeChange={setRootView}
+          onNavigate={(id) => {
+            setActiveArticleId(id)
+            const target = document.getElementById(id)
+            if (target) {
+              target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+            }
+          }}
+          tocItems={BLOG_ARTICLES.map((article) => ({
+            id: article.id,
+            label: article.title,
+            meta: article.date,
+          }))}
+        />
+
+        <main className="main-content blog-main">
+          <section id="home">
+            <h1>
+              Blog Essays &amp;
+              <br />
+              Field Notes
+            </h1>
+            <div className="abstract-block">
+              <span className="abstract-label">Reading Mode</span>
+              <p>
+                左栏是文章目录，中栏按时间连续阅读，右栏显示当前注释并提供“下一篇”快速跳转。若要看作品集，请切到 Portfolio。
+              </p>
+              <p style={{ marginBottom: 0 }}>
+                <span className="mono">Resume:</span> <a href="https://resume.wordm.us">resume.wordm.us</a>
+              </p>
+            </div>
+          </section>
+
+          {BLOG_ARTICLES.map((article) => (
+            <article key={article.id} id={article.id} className="blog-article">
+              <div className="paper-meta">
+                <span>{article.date}</span>
+                <span>{article.category}</span>
+              </div>
+              <h2 className="blog-article-title">{article.title}</h2>
+              <p className="meta">{article.summary}</p>
+              {article.paragraphs.map((paragraph) => (
+                <p key={`${article.id}-${paragraph.slice(0, 12)}`}>{paragraph}</p>
+              ))}
+            </article>
+          ))}
+
+          <footer>
+            <div>© 2026 Jian Yongjie. All rights reserved.</div>
+            <div>Blog mode on wordm.us</div>
+          </footer>
+        </main>
+
+        <BlogNotesPanel
+          activeArticle={normalizedActiveArticle}
+          nextArticle={nextArticle}
+          onJumpNext={() => {
+            if (!nextArticle) {
+              return
+            }
+
+            setActiveArticleId(nextArticle.id)
+            const target = document.getElementById(nextArticle.id)
+            if (target) {
+              target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+            }
+          }}
+        />
+      </div>
+    )
+  }
+
   return (
     <div className="page-container">
-      <Sidebar activeSection={activeSection} lastUpdated={lastUpdated} onNavigate={setActiveSection} />
+      <Sidebar
+        mode="portfolio"
+        activeKey={activeSection}
+        lastUpdated={lastUpdated}
+        onModeChange={setRootView}
+        onNavigate={(id) => setActiveSection(id)}
+        tocItems={[
+          { id: 'home', label: 'Home [首页]' },
+          { id: 'about', label: 'About [介绍]' },
+          { id: 'projects', label: 'Projects [项目]' },
+          { id: 'visual', label: 'Visual [图示]' },
+          { id: 'contact', label: 'Contact [联系]' },
+        ]}
+      />
 
       <main className="main-content">
         <section id="home">
@@ -175,16 +330,12 @@ function App() {
         <section id="about" className="abstract-block">
           <span className="abstract-label">Statement / 个人介绍</span>
           <p>
-            这里是我的个人博客与作品集主站，持续记录产品策略、AI 实践与游戏系统设计中的方法、复盘和实验结果。
+            这里是我的作品集视图，聚焦项目方法、实现结果与可复用资产。博客文章请切换到 Blog 视图；简历在独立子域名。
           </p>
           <p style={{ marginBottom: 0 }}>
-            <span className="mono">Current Focus:</span> Game Design, Data-Driven Product, Human-AI Collaboration.
-            <br />
             <span className="mono">Resume:</span> <a href="https://resume.wordm.us">resume.wordm.us</a>
           </p>
         </section>
-
-        <BlogSection />
 
         <section id="projects">
           <h2>最新动态 / News</h2>
@@ -269,7 +420,7 @@ function App() {
 
         <footer>
           <div>© 2026 Jian Yongjie. All rights reserved.</div>
-          <div>Typeset in Noto Serif SC &amp; JetBrains Mono</div>
+          <div>Portfolio mode on wordm.us</div>
         </footer>
       </main>
 
