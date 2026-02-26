@@ -8,7 +8,7 @@
 - `center-control` 项目展示（来源：`/Users/lidechi/Documents/Github/center-control/data/exports/projects.json`）
 - `debug` 模式控制展示项目
 - 项目子域名展示（`p-*.wordm.us`）
-- 根域支持 `Blog / Portfolio` 一键切换：博客为三栏阅读模式（左目录、中间连续文章、右注释 + 下一篇按钮）
+- 根域支持 `Blog / Portfolio` 一键切换：博客为双栏阅读模式（左目录、中间连续文章 + 底部下一篇按钮，注释列暂时隐藏）
 
 ## 本地开发
 
