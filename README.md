@@ -4,6 +4,7 @@
 
 - 根域 `wordm.us`：个人博客 + 作品集
 - 子域 `resume.wordm.us`：独立简历页（含 PDF 下载）
+- 账号系统：Supabase 邮箱登录/注册/退出（`wordm.us` 与全部子域共用一套会话）
 - `center-control` 项目展示（来源：`/Users/lidechi/Documents/Github/center-control/data/exports/projects.json`）
 - `debug` 模式控制展示项目
 - 项目子域名展示（`p-*.wordm.us`）
@@ -18,6 +19,18 @@ npm run dev
 ```
 
 默认地址：`http://localhost:5173`
+
+### Supabase 账号系统配置
+
+在 `.env` 中配置（可直接复制 `.env.example`）：
+
+```bash
+VITE_SUPABASE_URL=...
+VITE_SUPABASE_ANON_KEY=...
+```
+
+- 推荐使用你提到的同一套 Supabase 项目（`latti-wordm`）来保证账号一致。
+- 站点会将 Supabase 会话同步到 `.wordm.us` 域级 cookie，因此 `wordm.us`、`resume.wordm.us`、`p-*.wordm.us` 会共享登录态。
 
 ### Debug 模式
 
@@ -61,6 +74,8 @@ npx wrangler whoami
 ```bash
 npm run deploy:pages
 ```
+
+如需让线上构建启用登录，请确保执行部署时本地环境包含 `VITE_SUPABASE_URL` 和 `VITE_SUPABASE_ANON_KEY`。
 
 3. 部署子域名 Worker（自动绑定简历子域名 + 项目子域名）：
 

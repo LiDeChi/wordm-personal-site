@@ -1,3 +1,5 @@
+import { AuthPanel, type AuthPanelProps } from './AuthPanel'
+
 type SidebarMode = 'blog' | 'portfolio'
 
 type TocItem = {
@@ -13,9 +15,10 @@ type SidebarProps = {
   onNavigate: (key: string) => void
   onModeChange: (mode: SidebarMode) => void
   tocItems: TocItem[]
+  authPanel: Omit<AuthPanelProps, 'className'>
 }
 
-export function Sidebar({ mode, activeKey, lastUpdated, onNavigate, onModeChange, tocItems }: SidebarProps) {
+export function Sidebar({ mode, activeKey, lastUpdated, onNavigate, onModeChange, tocItems, authPanel }: SidebarProps) {
   return (
     <aside className={`sidebar ${mode === 'blog' ? 'blog-sidebar' : ''}`}>
       <div className="profile-block">
@@ -67,6 +70,8 @@ export function Sidebar({ mode, activeKey, lastUpdated, onNavigate, onModeChange
           })}
         </ul>
       </nav>
+
+      <AuthPanel {...authPanel} className="sidebar-auth" />
 
       <div className="sidebar-meta">Last updated: {lastUpdated}</div>
     </aside>

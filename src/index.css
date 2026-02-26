@@ -179,6 +179,119 @@ p {
   color: #999;
 }
 
+.sidebar-auth {
+  width: 100%;
+  margin-top: 18px;
+  margin-bottom: 14px;
+}
+
+.auth-panel {
+  border: 1px solid var(--c-ink-faint);
+  background: #fafafa;
+  padding: 10px;
+}
+
+.auth-panel-head {
+  margin-bottom: 8px;
+  color: #444;
+  font-size: 0.72rem;
+}
+
+.auth-muted {
+  margin-bottom: 0;
+  color: #666;
+  font-size: 0.74rem;
+  text-align: left;
+}
+
+.auth-user-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.auth-user-email {
+  margin-bottom: 0;
+  color: #222;
+  font-size: 0.8rem;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.auth-mode-switch {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid var(--c-ink-faint);
+  margin-bottom: 8px;
+}
+
+.auth-mode-btn {
+  appearance: none;
+  border: 0;
+  border-right: 1px solid var(--c-ink-faint);
+  background: #fff;
+  color: #666;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  padding: 6px 8px;
+  cursor: pointer;
+}
+
+.auth-mode-btn:last-child {
+  border-right: 0;
+}
+
+.auth-mode-btn.active {
+  background: #111;
+  color: #fff;
+}
+
+.auth-form {
+  display: grid;
+  gap: 6px;
+}
+
+.auth-form input {
+  border: 1px solid var(--c-ink-faint);
+  padding: 6px 8px;
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  background: #fff;
+}
+
+.auth-primary-btn {
+  border: 1px solid var(--c-ink-faint);
+  background: transparent;
+  color: #111;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  padding: 7px 9px;
+  cursor: pointer;
+}
+
+.auth-primary-btn:hover {
+  border-color: var(--c-ink);
+  background: #111;
+  color: #fff;
+}
+
+.auth-primary-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.auth-status {
+  margin-top: 8px;
+  margin-bottom: 0;
+  text-align: left;
+  color: #444;
+  font-size: 0.72rem;
+}
+
+.subdomain-auth {
+  margin-bottom: 1rem;
+}
+
 .view-switch {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -890,6 +1003,11 @@ footer {
     flex-direction: row;
     flex-wrap: wrap;
     gap: 20px;
+  }
+
+  .sidebar-auth {
+    flex: 1 1 280px;
+    margin: 0;
   }
 
   .nav-list {

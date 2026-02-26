@@ -8,6 +8,17 @@ import { SubdomainProjectView } from './components/SubdomainProjectView'
 import { BLOG_ARTICLES } from './data/blogArticles'
 import projectsSnapshotRaw from './data/projects.snapshot.json'
 import {
+  type AuthUserSummary,
+  fetchSessionUser,
+  isAuthConfigured,
+  loginWithPassword,
+  logout,
+  normalizeAuthError,
+  signupWithPassword,
+  subscribeAuthState,
+  toAuthUserSummary,
+} from './lib/auth'
+import {
   chooseProjects,
   fetchProjectsFromApi,
   formatDate,
@@ -43,6 +54,14 @@ function App() {
   const initialApi = params.get('centerApi') || import.meta.env.VITE_CENTER_CONTROL_API || ''
   const initialShowSlugs = parseShowSlugs(params.get('show'))
   const initialRootView = toRootView(params.get('view'))
+  const authConfig = useMemo(
+    () => ({
+      supabaseUrl: import.meta.env.VITE_SUPABASE_URL || '',
+      supabaseAnonKey: import.meta.env.VITE_SUPABASE_ANON_KEY || '',
+    }),
+    [],
+  )
+  const authEnabled = isAuthConfigured(authConfig)
 
   const [rootView, setRootView] = useState<RootView>(initialRootView)
   const [projects, setProjects] = useState<PortfolioProject[]>(snapshot.projects)
@@ -52,6 +71,10 @@ function App() {
   const [sourceLabel, setSourceLabel] = useState('project snapshot')
   const [loadState, setLoadState] = useState<'idle' | 'loading' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState('')
+  const [authUser, setAuthUser] = useState<AuthUserSummary | null>(null)
+  const [authLoading, setAuthLoading] = useState(authEnabled)
+  const [authBusy, setAuthBusy] = useState(false)
+  const [authStatusMessage, setAuthStatusMessage] = useState('')
   const [selectedSlugs, setSelectedSlugs] = useState<string[]>(() => {
     if (initialShowSlugs.length) {
       return initialShowSlugs
@@ -159,6 +182,51 @@ function App() {
     window.history.replaceState({}, '', next)
   }, [debugMode, rootView, selectedSlugs, centerApi])
 
+  useEffect(() => {
+    if (!authEnabled) {
+      setAuthLoading(false)
+      setAuthUser(null)
+      return
+    }
+
+    let active = true
+    setAuthLoading(true)
+
+    void fetchSessionUser(authConfig)
+      .then((user) => {
+        if (!active) {
+          return
+        }
+
+        setAuthUser(toAuthUserSummary(user))
+      })
+      .catch((error) => {
+        if (!active) {
+          return
+        }
+
+        setAuthStatusMessage(`会话恢复失败：${normalizeAuthError(error, '请重新登录。')}`)
+      })
+      .finally(() => {
+        if (active) {
+          setAuthLoading(false)
+        }
+      })
+
+    const unsubscribe = subscribeAuthState(authConfig, (user) => {
+      if (!active) {
+        return
+      }
+
+      setAuthUser(toAuthUserSummary(user))
+    })
+
+    return () => {
+      active = false
+      unsubscribe()
+    }
+  }, [authConfig, authEnabled])
+
   async function loadLiveProjects() {
     if (!centerApi) {
       setLoadState('error')
@@ -189,6 +257,89 @@ function App() {
     }
   }
 
+  async function handleLogin(email: string, password: string) {
+    if (!authEnabled) {
+      setAuthStatusMessage('未配置 Supabase，无法登录。')
+      return
+    }
+
+    if (!email || !password) {
+      setAuthStatusMessage('请输入邮箱和密码。')
+      return
+    }
+
+    setAuthBusy(true)
+    setAuthStatusMessage('登录中...')
+
+    try {
+      const user = await loginWithPassword(authConfig, email, password)
+      const normalizedUser = toAuthUserSummary(user)
+      setAuthUser(normalizedUser)
+      setAuthStatusMessage(normalizedUser?.email ? `登录成功：${normalizedUser.email}` : '登录成功。')
+    } catch (error) {
+      setAuthStatusMessage(`登录失败：${normalizeAuthError(error, '请检查邮箱或密码。')}`)
+    } finally {
+      setAuthBusy(false)
+    }
+  }
+
+  async function handleSignup(email: string, password: string) {
+    if (!authEnabled) {
+      setAuthStatusMessage('未配置 Supabase，无法注册。')
+      return
+    }
+
+    if (!email || !password) {
+      setAuthStatusMessage('请输入邮箱和密码。')
+      return
+    }
+
+    setAuthBusy(true)
+    setAuthStatusMessage('注册中...')
+
+    try {
+      const result = await signupWithPassword(authConfig, email, password)
+
+      if (result.outcome === 'exists') {
+        setAuthStatusMessage('该邮箱已注册，请直接登录。')
+        return
+      }
+
+      if (result.outcome === 'confirm') {
+        setAuthStatusMessage('注册成功，请先到邮箱点击确认链接，再回来登录。')
+        return
+      }
+
+      const normalizedUser = toAuthUserSummary(result.user)
+      setAuthUser(normalizedUser)
+      setAuthStatusMessage(normalizedUser?.email ? `注册并登录成功：${normalizedUser.email}` : '注册成功。')
+    } catch (error) {
+      setAuthStatusMessage(`注册失败：${normalizeAuthError(error, '请稍后重试。')}`)
+    } finally {
+      setAuthBusy(false)
+    }
+  }
+
+  async function handleLogout() {
+    if (!authEnabled) {
+      setAuthStatusMessage('未配置 Supabase。')
+      return
+    }
+
+    setAuthBusy(true)
+    setAuthStatusMessage('退出中...')
+
+    try {
+      await logout(authConfig)
+      setAuthUser(null)
+      setAuthStatusMessage('已退出登录。')
+    } catch (error) {
+      setAuthStatusMessage(`退出失败：${normalizeAuthError(error, '请稍后重试。')}`)
+    } finally {
+      setAuthBusy(false)
+    }
+  }
+
   const featuredProjects = useMemo(() => {
     const chosen = chooseProjects(projects, selectedSlugs)
     if (chosen.length) {
@@ -213,6 +364,16 @@ function App() {
   )
   const normalizedActiveArticle = BLOG_ARTICLES[activeArticleIndex] || BLOG_ARTICLES[0]
   const nextArticle = BLOG_ARTICLES[activeArticleIndex + 1] || null
+  const authPanelProps = {
+    enabled: authEnabled,
+    loading: authLoading,
+    busy: authBusy,
+    userEmail: authUser?.email ?? null,
+    statusMessage: authStatusMessage,
+    onLogin: handleLogin,
+    onSignup: handleSignup,
+    onLogout: handleLogout,
+  }
 
   function jumpToArticle(id: string) {
     setActiveArticleId(id)
@@ -223,10 +384,10 @@ function App() {
   }
 
   if (subdomainProject) {
-    return <SubdomainProjectView project={subdomainProject} lastUpdated={lastUpdated} />
+    return <SubdomainProjectView project={subdomainProject} lastUpdated={lastUpdated} authPanel={authPanelProps} />
   }
   if (isResumeView) {
-    return <ResumePage lastUpdated={lastUpdated} />
+    return <ResumePage lastUpdated={lastUpdated} authPanel={authPanelProps} />
   }
 
   if (rootView === 'blog') {
@@ -243,6 +404,7 @@ function App() {
             label: article.title,
             meta: article.date,
           }))}
+          authPanel={authPanelProps}
         />
 
         <main className="main-content blog-main">
@@ -332,6 +494,7 @@ function App() {
           { id: 'visual', label: 'Visual [图示]' },
           { id: 'contact', label: 'Contact [联系]' },
         ]}
+        authPanel={authPanelProps}
       />
 
       <main className="main-content portfolio-main-content">
