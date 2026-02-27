@@ -1,3 +1,3 @@
-/zh https://gridnote.wordm.us/?lang=zh 301
-/en https://gridnote.wordm.us/?lang=en 301
+/zh /?lang=zh 301
+/en /?lang=en 301
 /api/* https://gridnote.wordm.us/api/:splat 308

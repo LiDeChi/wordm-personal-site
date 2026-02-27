@@ -310,6 +310,33 @@ p {
   margin-bottom: 20px;
 }
 
+.lang-switch {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid var(--c-ink-faint);
+  margin-bottom: 8px;
+}
+
+.lang-btn {
+  appearance: none;
+  border: 0;
+  border-right: 1px solid var(--c-ink-faint);
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  padding: 6px 8px;
+  cursor: pointer;
+}
+
+.lang-btn:last-child {
+  border-right: 0;
+}
+
+.lang-btn.active {
+  background: #111;
+  color: #fff;
+}
+
 .view-btn {
   appearance: none;
   border: 0;

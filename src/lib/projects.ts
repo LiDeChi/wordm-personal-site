@@ -82,19 +82,19 @@ export function resolveSubdomainView(
 export async function fetchProjectsFromApi(apiUrl: string): Promise<PortfolioProject[]> {
   const response = await fetch(apiUrl)
   if (!response.ok) {
-    throw new Error(`请求失败：${response.status}`)
+    throw new Error(`Request failed: ${response.status}`)
   }
 
   const payload = (await response.json()) as { projects?: PortfolioProject[]; count?: number }
   if (!Array.isArray(payload.projects)) {
-    throw new Error('接口返回缺少 projects 数组')
+    throw new Error('API response missing projects array')
   }
 
   return payload.projects.map((project, index) => ({
     id: project.id || `live_${index}`,
     name: project.name,
     slug: project.slug,
-    summary: project.summary || `${project.name} 项目`,
+    summary: project.summary || `${project.name} project`,
     techStack: Array.isArray(project.techStack) ? project.techStack : [],
     tags: Array.isArray(project.tags) ? project.tags : [],
     activityScore: Number(project.activityScore || 0),

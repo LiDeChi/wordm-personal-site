@@ -327,7 +327,7 @@ export function resolveSignupOutcome(input: { user: User | null; session: Sessio
   return 'confirm'
 }
 
-export function normalizeAuthError(error: unknown, fallback = '认证失败，请稍后重试。') {
+export function normalizeAuthError(error: unknown, fallback = 'Authentication failed. Please try again.') {
   if (!error || typeof error !== 'object') {
     return fallback
   }
@@ -371,7 +371,7 @@ export async function loginWithPassword(config: AuthConfig, email: string, passw
   }
 
   if (!data.user) {
-    throw new Error('登录失败，请检查邮箱与密码。')
+    throw new Error('Login failed. Please check email and password.')
   }
 
   return data.user

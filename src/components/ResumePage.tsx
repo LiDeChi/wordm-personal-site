@@ -1,31 +1,52 @@
 import { AuthPanel, type AuthPanelProps } from './AuthPanel'
 import { ResumeSection } from './ResumeSection'
+import type { Lang } from '../i18n/lang'
 
 type ResumePageProps = {
+  lang: Lang
   lastUpdated: string
   authPanel: Omit<AuthPanelProps, 'className'>
 }
 
-export function ResumePage({ lastUpdated, authPanel }: ResumePageProps) {
+const PAGE_COPY = {
+  zh: {
+    title: '简永杰简历',
+    updated: '最近更新',
+    backHome: '返回 wordm.us',
+    downloadPdf: '下载 PDF',
+  },
+  en: {
+    title: 'Jian Yongjie Resume',
+    updated: 'Updated',
+    backHome: 'Back to wordm.us',
+    downloadPdf: 'Download PDF',
+  },
+} as const
+
+export function ResumePage({ lang, lastUpdated, authPanel }: ResumePageProps) {
+  const copy = PAGE_COPY[lang]
+
   return (
     <div className="subdomain-page">
       <main className="subdomain-main">
         <p className="mono subdomain-tag">resume.wordm.us</p>
-        <h1>Jian Yongjie Resume</h1>
-        <p className="meta">Updated: {lastUpdated}</p>
+        <h1>{copy.title}</h1>
+        <p className="meta">
+          {copy.updated}: {lastUpdated}
+        </p>
         <AuthPanel {...authPanel} className="subdomain-auth" />
 
-        <ResumeSection />
+        <ResumeSection lang={lang} />
 
         <footer className="subdomain-footer">
           <div>
             <a href="https://wordm.us" target="_blank" rel="noreferrer">
-              Back to wordm.us
+              {copy.backHome}
             </a>
           </div>
           <div>
             <a href="/jian-yongjie-resume.pdf" target="_blank" rel="noreferrer">
-              Download PDF
+              {copy.downloadPdf}
             </a>
           </div>
         </footer>

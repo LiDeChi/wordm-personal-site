@@ -7,6 +7,7 @@ import { Sidebar } from './components/Sidebar'
 import { SiteHeroBanner } from './components/SiteHeroBanner'
 import { SubdomainProjectView } from './components/SubdomainProjectView'
 import { BLOG_ARTICLES } from './data/blogArticles'
+import { type Lang, resolveInitialLang } from './i18n/lang'
 import projectsSnapshotRaw from './data/projects.snapshot.json'
 import {
   type AuthRoleRulesJson,
@@ -15,15 +16,15 @@ import {
   type AuthUserSummary,
   fetchSessionUser,
   isAuthConfigured,
-  mergeRoleRules,
   loginWithPassword,
   logout,
+  mergeRoleRules,
   normalizeAuthError,
   parseRoleEmailSet,
   signupWithPassword,
   subscribeAuthState,
-  toRoleRulesFromJson,
   toAuthUserSummary,
+  toRoleRulesFromJson,
 } from './lib/auth'
 import {
   chooseProjects,
@@ -39,6 +40,111 @@ type RootView = 'blog' | 'portfolio'
 const snapshot = projectsSnapshotRaw as ProjectsSnapshot
 const portfolioSectionIds = ['home', 'projects', 'visual', 'contact']
 
+const APP_COPY = {
+  zh: {
+    sourceSnapshot: '项目快照',
+    sourceLivePrefix: '实时 API',
+    sourceLoadFailed: '加载失败，请稍后重试。',
+    apiRequired: '请先填写项目 API 地址。',
+    profileLine1: '产品策略与构建者',
+    profileLine2: 'AI + Design + Engineering',
+    profileLine3: 'Base: New York / Beijing',
+    tocHome: '首页',
+    tocProjects: '项目',
+    tocVisual: '图示',
+    tocContact: '联系',
+    portfolioTitle: '作品集',
+    portfolioIntro: '以 gallery 形式展示项目卡片，点击任一卡片可进入对应子域名详情页。',
+    visualTitle: '可视化',
+    visualIntro: '从博客洞察到作品证据，每个项目都能通过独立子域名访问。',
+    contactTitle: '联系',
+    rootDomain: '站点主域名',
+    resumeDomain: '简历子域名',
+    projectDomain: '项目子域名',
+    projectDomainDesc: '按作品独立分配，可在 debug 模式手动控制展示。',
+    copyright: '© 2026 Jian Yongjie. All rights reserved.',
+    blogMode: 'wordm.us 博客模式',
+    portfolioMode: 'wordm.us 作品集模式',
+    nextLabel: 'NEXT',
+    nextPrefix: '跳到下一篇',
+    nextTitlePrefix: '下一篇',
+    nextAriaPrefix: '跳转到下一篇',
+    noNext: '已经是最后一篇',
+    sessionRestoreFailed: '会话恢复失败',
+    pleaseRelogin: '请重新登录。',
+    loginUnavailable: '未配置 Supabase，无法登录。',
+    signupUnavailable: '未配置 Supabase，无法注册。',
+    authUnavailable: '未配置 Supabase。',
+    emailPasswordRequired: '请输入邮箱和密码。',
+    loggingIn: '登录中...',
+    loginSuccess: '登录成功',
+    loginFailed: '登录失败',
+    loginFallback: '请检查邮箱或密码。',
+    signingUp: '注册中...',
+    emailExists: '该邮箱已注册，请直接登录。',
+    confirmEmail: '注册成功，请先到邮箱点击确认链接，再回来登录。',
+    signupSuccess: '注册成功',
+    signupAndLoginSuccess: '注册并登录成功',
+    signupFailed: '注册失败',
+    signupFallback: '请稍后重试。',
+    loggingOut: '退出中...',
+    logoutSuccess: '已退出登录。',
+    logoutFailed: '退出失败',
+    logoutFallback: '请稍后重试。',
+  },
+  en: {
+    sourceSnapshot: 'Project snapshot',
+    sourceLivePrefix: 'Live API',
+    sourceLoadFailed: 'Load failed. Please try again.',
+    apiRequired: 'Please provide the project API URL first.',
+    profileLine1: 'Product Strategist & Builder',
+    profileLine2: 'AI + Design + Engineering',
+    profileLine3: 'Base: New York / Beijing',
+    tocHome: 'Home',
+    tocProjects: 'Projects',
+    tocVisual: 'Visual',
+    tocContact: 'Contact',
+    portfolioTitle: 'Portfolio Gallery',
+    portfolioIntro: 'Project cards in a gallery layout. Click any card to open its dedicated subdomain page.',
+    visualTitle: 'Visualizations',
+    visualIntro: 'From blog insights to portfolio evidence, each project is accessible via its own subdomain.',
+    contactTitle: 'Contact',
+    rootDomain: 'Primary domain',
+    resumeDomain: 'Resume subdomain',
+    projectDomain: 'Project subdomains',
+    projectDomainDesc: 'Each showcased project has an independent subdomain and can be controlled in debug mode.',
+    copyright: '© 2026 Jian Yongjie. All rights reserved.',
+    blogMode: 'Blog mode on wordm.us',
+    portfolioMode: 'Portfolio mode on wordm.us',
+    nextLabel: 'NEXT',
+    nextPrefix: 'Jump to next',
+    nextTitlePrefix: 'Next',
+    nextAriaPrefix: 'Jump to next article',
+    noNext: 'This is the last article',
+    sessionRestoreFailed: 'Session restore failed',
+    pleaseRelogin: 'Please log in again.',
+    loginUnavailable: 'Supabase is not configured. Login is unavailable.',
+    signupUnavailable: 'Supabase is not configured. Sign-up is unavailable.',
+    authUnavailable: 'Supabase is not configured.',
+    emailPasswordRequired: 'Please enter email and password.',
+    loggingIn: 'Signing in...',
+    loginSuccess: 'Login successful',
+    loginFailed: 'Login failed',
+    loginFallback: 'Please check your email and password.',
+    signingUp: 'Creating account...',
+    emailExists: 'This email already exists. Please log in directly.',
+    confirmEmail: 'Sign-up successful. Confirm your email first, then log in.',
+    signupSuccess: 'Sign-up successful',
+    signupAndLoginSuccess: 'Sign-up and login successful',
+    signupFailed: 'Sign-up failed',
+    signupFallback: 'Please try again later.',
+    loggingOut: 'Signing out...',
+    logoutSuccess: 'Logged out.',
+    logoutFailed: 'Logout failed',
+    logoutFallback: 'Please try again later.',
+  },
+} as const
+
 function defaultSelection(projects: PortfolioProject[], preferred: string[]): string[] {
   const preferredExisting = preferred.filter((slug) => projects.some((project) => project.slug === slug))
   if (preferredExisting.length) {
@@ -52,6 +158,18 @@ function toRootView(raw: string | null): RootView {
   return raw === 'blog' ? 'blog' : 'portfolio'
 }
 
+function withDetail(prefix: string, detail: string) {
+  return `${prefix}: ${detail}`
+}
+
+function withEmail(prefix: string, email: string) {
+  return `${prefix}: ${email}`
+}
+
+function withDone(text: string, lang: Lang) {
+  return lang === 'zh' ? `${text}。` : `${text}.`
+}
+
 function App() {
   const params = new URLSearchParams(window.location.search)
   const hostname = window.location.hostname.toLowerCase()
@@ -61,6 +179,11 @@ function App() {
   const initialApi = params.get('centerApi') || import.meta.env.VITE_CENTER_CONTROL_API || ''
   const initialShowSlugs = parseShowSlugs(params.get('show'))
   const initialRootView = toRootView(params.get('view'))
+  const initialLang = resolveInitialLang(window.location)
+
+  const [lang, setLang] = useState<Lang>(initialLang)
+  const copy = APP_COPY[lang]
+
   const authConfig = useMemo(
     () => ({
       supabaseUrl: import.meta.env.VITE_SUPABASE_URL || '',
@@ -68,6 +191,7 @@ function App() {
     }),
     [],
   )
+
   const envRoleRules = useMemo<AuthRoleRules>(
     () => ({
       adminEmails: parseRoleEmailSet(import.meta.env.VITE_AUTH_ADMIN_EMAILS || import.meta.env.VITE_ADMIN_EMAILS || ''),
@@ -75,6 +199,7 @@ function App() {
     }),
     [],
   )
+
   const [authRoleRules, setAuthRoleRules] = useState<AuthRoleRules>(envRoleRules)
   const authEnabled = isAuthConfigured(authConfig)
 
@@ -83,7 +208,7 @@ function App() {
   const [activeSection, setActiveSection] = useState('home')
   const [activeArticleId, setActiveArticleId] = useState(BLOG_ARTICLES[0]?.id || '')
   const [centerApi, setCenterApi] = useState(initialApi)
-  const [sourceLabel, setSourceLabel] = useState('project snapshot')
+  const [sourceType, setSourceType] = useState<'snapshot' | 'live'>('snapshot')
   const [loadState, setLoadState] = useState<'idle' | 'loading' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState('')
   const [authUser, setAuthUser] = useState<AuthUserSummary | null>(null)
@@ -98,6 +223,8 @@ function App() {
     return defaultSelection(snapshot.projects, snapshot.featured)
   })
 
+  const sourceLabel = sourceType === 'live' && centerApi ? `${copy.sourceLivePrefix}: ${centerApi}` : copy.sourceSnapshot
+
   const primaryUpdatedAt = snapshot.centerControlGeneratedAt || snapshot.generatedAt
   const lastUpdated = formatDate(primaryUpdatedAt)
 
@@ -109,8 +236,14 @@ function App() {
       next.searchParams.delete('view')
     }
 
+    if (lang === 'en') {
+      next.searchParams.set('lang', 'en')
+    } else {
+      next.searchParams.delete('lang')
+    }
+
     window.history.replaceState({}, '', next)
-  }, [rootView])
+  }, [rootView, lang])
 
   useEffect(() => {
     if (rootView !== 'portfolio') {
@@ -257,7 +390,8 @@ function App() {
           return
         }
 
-        setAuthStatusMessage(`会话恢复失败：${normalizeAuthError(error, '请重新登录。')}`)
+        const detail = normalizeAuthError(error, copy.pleaseRelogin)
+        setAuthStatusMessage(withDetail(copy.sessionRestoreFailed, detail))
       })
       .finally(() => {
         if (active) {
@@ -277,12 +411,12 @@ function App() {
       active = false
       unsubscribe()
     }
-  }, [authConfig, authEnabled, authRoleRules])
+  }, [authConfig, authEnabled, authRoleRules, copy.pleaseRelogin, copy.sessionRestoreFailed])
 
   async function loadLiveProjects() {
     if (!centerApi) {
       setLoadState('error')
-      setErrorMessage('请先填写项目 API 地址。')
+      setErrorMessage(copy.apiRequired)
       return
     }
 
@@ -301,35 +435,40 @@ function App() {
 
         return defaultSelection(liveProjects, snapshot.featured)
       })
-      setSourceLabel(`live api: ${centerApi}`)
+      setSourceType('live')
       setLoadState('idle')
     } catch (error) {
       setLoadState('error')
-      setErrorMessage(error instanceof Error ? error.message : '加载失败')
+      setErrorMessage(error instanceof Error && error.message ? error.message : copy.sourceLoadFailed)
     }
   }
 
   async function handleLogin(email: string, password: string) {
     if (!authEnabled) {
-      setAuthStatusMessage('未配置 Supabase，无法登录。')
+      setAuthStatusMessage(copy.loginUnavailable)
       return
     }
 
     if (!email || !password) {
-      setAuthStatusMessage('请输入邮箱和密码。')
+      setAuthStatusMessage(copy.emailPasswordRequired)
       return
     }
 
     setAuthBusy(true)
-    setAuthStatusMessage('登录中...')
+    setAuthStatusMessage(copy.loggingIn)
 
     try {
       const user = await loginWithPassword(authConfig, email, password)
       const normalizedUser = toAuthUserSummary(user, authRoleRules)
       setAuthUser(normalizedUser)
-      setAuthStatusMessage(normalizedUser?.email ? `登录成功：${normalizedUser.email}` : '登录成功。')
+      setAuthStatusMessage(
+        normalizedUser?.email
+          ? withEmail(copy.loginSuccess, normalizedUser.email)
+          : withDone(copy.loginSuccess, lang),
+      )
     } catch (error) {
-      setAuthStatusMessage(`登录失败：${normalizeAuthError(error, '请检查邮箱或密码。')}`)
+      const detail = normalizeAuthError(error, copy.loginFallback)
+      setAuthStatusMessage(withDetail(copy.loginFailed, detail))
     } finally {
       setAuthBusy(false)
     }
@@ -337,36 +476,41 @@ function App() {
 
   async function handleSignup(email: string, password: string) {
     if (!authEnabled) {
-      setAuthStatusMessage('未配置 Supabase，无法注册。')
+      setAuthStatusMessage(copy.signupUnavailable)
       return
     }
 
     if (!email || !password) {
-      setAuthStatusMessage('请输入邮箱和密码。')
+      setAuthStatusMessage(copy.emailPasswordRequired)
       return
     }
 
     setAuthBusy(true)
-    setAuthStatusMessage('注册中...')
+    setAuthStatusMessage(copy.signingUp)
 
     try {
       const result = await signupWithPassword(authConfig, email, password)
 
       if (result.outcome === 'exists') {
-        setAuthStatusMessage('该邮箱已注册，请直接登录。')
+        setAuthStatusMessage(copy.emailExists)
         return
       }
 
       if (result.outcome === 'confirm') {
-        setAuthStatusMessage('注册成功，请先到邮箱点击确认链接，再回来登录。')
+        setAuthStatusMessage(copy.confirmEmail)
         return
       }
 
       const normalizedUser = toAuthUserSummary(result.user, authRoleRules)
       setAuthUser(normalizedUser)
-      setAuthStatusMessage(normalizedUser?.email ? `注册并登录成功：${normalizedUser.email}` : '注册成功。')
+      setAuthStatusMessage(
+        normalizedUser?.email
+          ? withEmail(copy.signupAndLoginSuccess, normalizedUser.email)
+          : withDone(copy.signupSuccess, lang),
+      )
     } catch (error) {
-      setAuthStatusMessage(`注册失败：${normalizeAuthError(error, '请稍后重试。')}`)
+      const detail = normalizeAuthError(error, copy.signupFallback)
+      setAuthStatusMessage(withDetail(copy.signupFailed, detail))
     } finally {
       setAuthBusy(false)
     }
@@ -374,19 +518,20 @@ function App() {
 
   async function handleLogout() {
     if (!authEnabled) {
-      setAuthStatusMessage('未配置 Supabase。')
+      setAuthStatusMessage(copy.authUnavailable)
       return
     }
 
     setAuthBusy(true)
-    setAuthStatusMessage('退出中...')
+    setAuthStatusMessage(copy.loggingOut)
 
     try {
       await logout(authConfig)
       setAuthUser(null)
-      setAuthStatusMessage('已退出登录。')
+      setAuthStatusMessage(copy.logoutSuccess)
     } catch (error) {
-      setAuthStatusMessage(`退出失败：${normalizeAuthError(error, '请稍后重试。')}`)
+      const detail = normalizeAuthError(error, copy.logoutFallback)
+      setAuthStatusMessage(withDetail(copy.logoutFailed, detail))
     } finally {
       setAuthBusy(false)
     }
@@ -419,6 +564,7 @@ function App() {
   const authRole: AuthRole = authUser?.role ?? 'guest'
   const canAccessResume = authRole === 'admin' || authRole === 'tester'
   const authPanelProps = {
+    lang,
     enabled: authEnabled,
     loading: authLoading,
     busy: authBusy,
@@ -439,27 +585,30 @@ function App() {
   }
 
   if (subdomainProject) {
-    return <SubdomainProjectView project={subdomainProject} lastUpdated={lastUpdated} authPanel={authPanelProps} />
+    return <SubdomainProjectView lang={lang} project={subdomainProject} lastUpdated={lastUpdated} authPanel={authPanelProps} />
   }
+
   if (isResumeView) {
     if (!canAccessResume) {
-      return <ResumeAccessDenied role={authRole} authPanel={authPanelProps} />
+      return <ResumeAccessDenied lang={lang} role={authRole} authPanel={authPanelProps} />
     }
-    return <ResumePage lastUpdated={lastUpdated} authPanel={authPanelProps} />
+    return <ResumePage lang={lang} lastUpdated={lastUpdated} authPanel={authPanelProps} />
   }
 
   if (rootView === 'blog') {
     return (
       <div className="page-container blog-page">
         <Sidebar
+          lang={lang}
           mode="blog"
           activeKey={activeArticle.id}
           lastUpdated={lastUpdated}
+          onLangChange={setLang}
           onModeChange={setRootView}
           onNavigate={jumpToArticle}
           tocItems={BLOG_ARTICLES.map((article) => ({
             id: article.id,
-            label: article.title,
+            label: article.title[lang],
             meta: article.date,
           }))}
           authPanel={authPanelProps}
@@ -467,16 +616,16 @@ function App() {
 
         <main className="main-content blog-main">
           <section id="home" className="site-home-head">
-            <SiteHeroBanner className="blog-hero-banner" />
+            <SiteHeroBanner lang={lang} className="blog-hero-banner" />
             <div className="site-home-profile">
               <div className="profile-title">简永杰</div>
               <div className="profile-title profile-title-en">Jian Yongjie</div>
               <div className="profile-affil">
-                Product Strategist &amp; Builder
+                {copy.profileLine1}
                 <br />
-                AI + Design + Engineering
+                {copy.profileLine2}
                 <br />
-                Base: New York / Beijing
+                {copy.profileLine3}
               </div>
             </div>
           </section>
@@ -485,19 +634,19 @@ function App() {
             <article key={article.id} id={article.id} className="blog-article">
               <div className="paper-meta">
                 <span>{article.date}</span>
-                <span>{article.category}</span>
+                <span>{article.category[lang]}</span>
               </div>
-              <h2 className="blog-article-title">{article.title}</h2>
-              <p className="meta">{article.summary}</p>
-              {article.paragraphs.map((paragraph) => (
-                <p key={`${article.id}-${paragraph.slice(0, 12)}`}>{paragraph}</p>
+              <h2 className="blog-article-title">{article.title[lang]}</h2>
+              <p className="meta">{article.summary[lang]}</p>
+              {article.paragraphs.map((paragraph, index) => (
+                <p key={`${article.id}-${index}`}>{paragraph[lang]}</p>
               ))}
             </article>
           ))}
 
           <footer>
-            <div>© 2026 Jian Yongjie. All rights reserved.</div>
-            <div>Blog mode on wordm.us</div>
+            <div>{copy.copyright}</div>
+            <div>{copy.blogMode}</div>
           </footer>
         </main>
         <div className="blog-next-fixed-wrap" aria-live="polite">
@@ -511,12 +660,12 @@ function App() {
               jumpToArticle(nextArticle.id)
             }}
             disabled={!nextArticle}
-            title={nextArticle ? `下一篇：${nextArticle.title}` : '已经是最后一篇'}
-            aria-label={nextArticle ? `跳转到下一篇：${nextArticle.title}` : '已经是最后一篇'}
+            title={nextArticle ? `${copy.nextTitlePrefix}: ${nextArticle.title[lang]}` : copy.noNext}
+            aria-label={nextArticle ? `${copy.nextAriaPrefix}: ${nextArticle.title[lang]}` : copy.noNext}
           >
-            <span className="mono blog-next-fixed-label">NEXT</span>
+            <span className="mono blog-next-fixed-label">{copy.nextLabel}</span>
             <span className="blog-next-fixed-text">
-              {nextArticle ? `跳到下一篇：${nextArticle.title}` : '已经是最后一篇'}
+              {nextArticle ? `${copy.nextPrefix}: ${nextArticle.title[lang]}` : copy.noNext}
             </span>
           </button>
         </div>
@@ -527,16 +676,18 @@ function App() {
   return (
     <div className="page-container">
       <Sidebar
+        lang={lang}
         mode="portfolio"
         activeKey={activeSection}
         lastUpdated={lastUpdated}
+        onLangChange={setLang}
         onModeChange={setRootView}
         onNavigate={(id) => setActiveSection(id)}
         tocItems={[
-          { id: 'home', label: 'Home [首页]' },
-          { id: 'projects', label: 'Projects [项目]' },
-          { id: 'visual', label: 'Visual [图示]' },
-          { id: 'contact', label: 'Contact [联系]' },
+          { id: 'home', label: copy.tocHome },
+          { id: 'projects', label: copy.tocProjects },
+          { id: 'visual', label: copy.tocVisual },
+          { id: 'contact', label: copy.tocContact },
         ]}
         authPanel={authPanelProps}
       />
@@ -544,16 +695,16 @@ function App() {
       <main className="main-content portfolio-main-content">
         <section id="home">
           <div className="site-home-head">
-            <SiteHeroBanner className="blog-hero-banner" />
+            <SiteHeroBanner lang={lang} className="blog-hero-banner" />
             <div className="site-home-profile">
               <div className="profile-title">简永杰</div>
               <div className="profile-title profile-title-en">Jian Yongjie</div>
               <div className="profile-affil">
-                Product Strategist &amp; Builder
+                {copy.profileLine1}
                 <br />
-                AI + Design + Engineering
+                {copy.profileLine2}
                 <br />
-                Base: New York / Beijing
+                {copy.profileLine3}
               </div>
             </div>
           </div>
@@ -562,6 +713,7 @@ function App() {
         <section id="projects">
           {debugMode ? (
             <DebugPanel
+              lang={lang}
               allProjects={projects}
               selectedSlugs={selectedSlugs}
               centerApi={centerApi}
@@ -584,18 +736,18 @@ function App() {
             />
           ) : null}
 
-          <h2>作品集 / Portfolio Gallery</h2>
-          <p className="visual-intro">以 gallery 形式展示项目卡片，点击任一卡片可进入对应子域名详情页。</p>
+          <h2>{copy.portfolioTitle}</h2>
+          <p className="visual-intro">{copy.portfolioIntro}</p>
           <div className="portfolio-gallery">
             {featuredProjects.map((project) => (
-              <ProjectEntry key={project.id} project={project} />
+              <ProjectEntry lang={lang} key={project.id} project={project} />
             ))}
           </div>
         </section>
 
         <section id="visual">
-          <h2>可视化 / Visualizations</h2>
-          <p className="visual-intro">From article insights to portfolio evidence, with each project accessible via its own subdomain.</p>
+          <h2>{copy.visualTitle}</h2>
+          <p className="visual-intro">{copy.visualIntro}</p>
 
           <div className="visual-grid">
             {highlightedProjects.map((project, index) => (
@@ -616,23 +768,22 @@ function App() {
         </section>
 
         <section id="contact">
-          <h2>联系 / Contact</h2>
+          <h2>{copy.contactTitle}</h2>
           <div className="formula">deploy(host) = wordm.us + {'{'}resume.wordm.us + p-*.wordm.us{'}'}</div>
           <p>
-            站点主域名：<a href="https://wordm.us">wordm.us</a>
+            {copy.rootDomain}: <a href="https://wordm.us">wordm.us</a>
             <br />
-            简历子域名：<a href="https://resume.wordm.us">resume.wordm.us</a>
+            {copy.resumeDomain}: <a href="https://resume.wordm.us">resume.wordm.us</a>
             <br />
-            项目子域名：按作品独立分配，可在 debug 模式手动控制展示。
+            {copy.projectDomain}: {copy.projectDomainDesc}
           </p>
         </section>
 
         <footer>
-          <div>© 2026 Jian Yongjie. All rights reserved.</div>
-          <div>Portfolio mode on wordm.us</div>
+          <div>{copy.copyright}</div>
+          <div>{copy.portfolioMode}</div>
         </footer>
       </main>
-
     </div>
   )
 }

@@ -1,7 +1,10 @@
 import { type FormEvent, useState } from 'react'
 import type { AuthRole } from '../lib/auth'
+import type { Lang } from '../i18n/lang'
+import { roleLabel } from '../i18n/roles'
 
 export type AuthPanelProps = {
+  lang: Lang
   enabled: boolean
   loading: boolean
   busy: boolean
@@ -14,20 +17,55 @@ export type AuthPanelProps = {
   onLogout: () => Promise<void> | void
 }
 
-function roleLabel(role: AuthRole) {
-  if (role === 'admin') {
-    return '管理员'
+const PANEL_COPY: Record<
+  Lang,
+  {
+    title: string
+    disabled: string
+    restoring: string
+    currentRole: string
+    processing: string
+    logout: string
+    authModeAria: string
+    loginTab: string
+    signupTab: string
+    passwordPlaceholder: string
+    loginAction: string
+    signupAction: string
   }
-  if (role === 'tester') {
-    return '测试账号'
-  }
-  if (role === 'user') {
-    return '普通账号'
-  }
-  return '游客'
+> = {
+  zh: {
+    title: '账号',
+    disabled: '未配置 Supabase，账号系统暂不可用。',
+    restoring: '正在恢复登录态...',
+    currentRole: '当前身份',
+    processing: '处理中...',
+    logout: '退出登录',
+    authModeAria: '账号模式',
+    loginTab: '登录',
+    signupTab: '注册',
+    passwordPlaceholder: '至少 6 位密码',
+    loginAction: '登录账号',
+    signupAction: '创建账号',
+  },
+  en: {
+    title: 'Account',
+    disabled: 'Supabase is not configured. Authentication is unavailable.',
+    restoring: 'Restoring session...',
+    currentRole: 'Current role',
+    processing: 'Processing...',
+    logout: 'Log out',
+    authModeAria: 'Authentication mode',
+    loginTab: 'Log in',
+    signupTab: 'Sign up',
+    passwordPlaceholder: 'At least 6 characters',
+    loginAction: 'Log in',
+    signupAction: 'Create account',
+  },
 }
 
 export function AuthPanel({
+  lang,
   enabled,
   loading,
   busy,
@@ -39,6 +77,7 @@ export function AuthPanel({
   onSignup,
   onLogout,
 }: AuthPanelProps) {
+  const copy = PANEL_COPY[lang]
   const [mode, setMode] = useState<'login' | 'signup'>('login')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -67,41 +106,41 @@ export function AuthPanel({
   return (
     <section className={panelClassName}>
       <div className="auth-panel-head">
-        <span className="mono">Account</span>
+        <span className="mono">{copy.title}</span>
       </div>
 
-      {!enabled ? (
-        <p className="auth-muted">未配置 Supabase，账号系统暂不可用。</p>
-      ) : null}
+      {!enabled ? <p className="auth-muted">{copy.disabled}</p> : null}
 
-      {enabled && loading ? <p className="auth-muted">正在恢复登录态...</p> : null}
+      {enabled && loading ? <p className="auth-muted">{copy.restoring}</p> : null}
 
       {enabled && !loading && userEmail ? (
         <div className="auth-user-card">
           <p className="auth-user-email">{userEmail}</p>
-          <p className="auth-role">当前身份：{roleLabel(userRole)}</p>
+          <p className="auth-role">
+            {copy.currentRole}: {roleLabel(userRole, lang)}
+          </p>
           <button type="button" className="auth-primary-btn" disabled={busy} onClick={() => void onLogout()}>
-            {busy ? '处理中...' : '退出登录'}
+            {busy ? copy.processing : copy.logout}
           </button>
         </div>
       ) : null}
 
       {enabled && !loading && !userEmail ? (
         <>
-          <div className="auth-mode-switch" role="tablist" aria-label="auth mode">
+          <div className="auth-mode-switch" role="tablist" aria-label={copy.authModeAria}>
             <button
               type="button"
               className={`auth-mode-btn ${mode === 'login' ? 'active' : ''}`}
               onClick={() => setMode('login')}
             >
-              登录
+              {copy.loginTab}
             </button>
             <button
               type="button"
               className={`auth-mode-btn ${mode === 'signup' ? 'active' : ''}`}
               onClick={() => setMode('signup')}
             >
-              注册
+              {copy.signupTab}
             </button>
           </div>
 
@@ -118,19 +157,23 @@ export function AuthPanel({
               type="password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
-              placeholder="至少 6 位密码"
+              placeholder={copy.passwordPlaceholder}
               autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
               minLength={6}
               required
             />
             <button type="submit" className="auth-primary-btn" disabled={busy}>
-              {busy ? '处理中...' : mode === 'login' ? '登录账号' : '创建账号'}
+              {busy ? copy.processing : mode === 'login' ? copy.loginAction : copy.signupAction}
             </button>
           </form>
         </>
       ) : null}
 
-      {!userEmail ? <p className="auth-role auth-role-guest">当前身份：{roleLabel(userRole)}</p> : null}
+      {!userEmail ? (
+        <p className="auth-role auth-role-guest">
+          {copy.currentRole}: {roleLabel(userRole, lang)}
+        </p>
+      ) : null}
       {statusMessage ? <p className="auth-status">{statusMessage}</p> : null}
     </section>
   )

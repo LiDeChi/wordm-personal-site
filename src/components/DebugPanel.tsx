@@ -1,6 +1,8 @@
 import type { PortfolioProject } from '../types'
+import type { Lang } from '../i18n/lang'
 
 type DebugPanelProps = {
+  lang: Lang
   allProjects: PortfolioProject[]
   selectedSlugs: string[]
   centerApi: string
@@ -14,7 +16,29 @@ type DebugPanelProps = {
   onSelectAll: () => void
 }
 
+const DEBUG_COPY = {
+  zh: {
+    title: 'Debug 模式 / 展示控制',
+    source: '当前数据源',
+    resetDefault: '还原默认展示',
+    selectAll: '展示全部项目',
+    liveApi: '实时 API',
+    loading: '加载中...',
+    loadLive: '拉取实时项目',
+  },
+  en: {
+    title: 'Debug Mode / Showcase Control',
+    source: 'Current source',
+    resetDefault: 'Restore default selection',
+    selectAll: 'Select all projects',
+    liveApi: 'Live API',
+    loading: 'Loading...',
+    loadLive: 'Load live projects',
+  },
+} as const
+
 export function DebugPanel({
+  lang,
   allProjects,
   selectedSlugs,
   centerApi,
@@ -27,25 +51,27 @@ export function DebugPanel({
   onSelectFeatured,
   onSelectAll,
 }: DebugPanelProps) {
+  const copy = DEBUG_COPY[lang]
+
   return (
     <section className="debug-panel" id="debug">
-      <h3>Debug Mode / 展示控制</h3>
+      <h3>{copy.title}</h3>
       <p>
-        当前数据源：<span className="mono">{sourceLabel}</span>
+        {copy.source}: <span className="mono">{sourceLabel}</span>
       </p>
 
       <div className="debug-actions">
         <button type="button" onClick={onSelectFeatured}>
-          还原默认展示
+          {copy.resetDefault}
         </button>
         <button type="button" onClick={onSelectAll}>
-          展示全部项目
+          {copy.selectAll}
         </button>
       </div>
 
       <div className="debug-api">
         <label htmlFor="center-api" className="mono">
-          Live API
+          {copy.liveApi}
         </label>
         <input
           id="center-api"
@@ -54,7 +80,7 @@ export function DebugPanel({
           placeholder="https://center-control.example.com/api/portfolio/projects.json"
         />
         <button type="button" onClick={onLoadLive} disabled={loadState === 'loading'}>
-          {loadState === 'loading' ? 'Loading...' : '拉取实时项目'}
+          {loadState === 'loading' ? copy.loading : copy.loadLive}
         </button>
       </div>
 
