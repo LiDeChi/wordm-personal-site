@@ -49,7 +49,7 @@ function defaultSelection(projects: PortfolioProject[], preferred: string[]): st
 }
 
 function toRootView(raw: string | null): RootView {
-  return raw === 'portfolio' ? 'portfolio' : 'blog'
+  return raw === 'blog' ? 'blog' : 'portfolio'
 }
 
 function App() {
@@ -103,8 +103,8 @@ function App() {
 
   useEffect(() => {
     const next = new URL(window.location.href)
-    if (rootView === 'portfolio') {
-      next.searchParams.set('view', 'portfolio')
+    if (rootView === 'blog') {
+      next.searchParams.set('view', 'blog')
     } else {
       next.searchParams.delete('view')
     }

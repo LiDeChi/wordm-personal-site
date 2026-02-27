@@ -80,7 +80,7 @@ http://localhost:5173/?debug=1
 - `centerApi=https://.../api/portfolio/projects.json`：切换为 center-control 实时 API 数据
 - `subdomain=p-xxx`：本地模拟子域名视图
 - `page=resume`：本地模拟简历子域名视图
-- `view=portfolio`：切到作品集视图（默认是 blog）
+- `view=blog`：切到博客视图（默认是 portfolio）
 
 ## 数据同步
 
