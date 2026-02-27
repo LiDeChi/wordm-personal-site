@@ -466,9 +466,9 @@ function App() {
         />
 
         <main className="main-content blog-main">
-          <section id="home" className="blog-home-head">
+          <section id="home" className="site-home-head">
             <SiteHeroBanner className="blog-hero-banner" />
-            <div className="blog-home-profile">
+            <div className="site-home-profile">
               <div className="profile-title">简永杰</div>
               <div className="profile-title profile-title-en">Jian Yongjie</div>
               <div className="profile-affil">
@@ -543,26 +543,23 @@ function App() {
 
       <main className="main-content portfolio-main-content">
         <section id="home">
-          <SiteHeroBanner className="portfolio-hero-banner" />
+          <div className="site-home-head">
+            <SiteHeroBanner className="blog-hero-banner" />
+            <div className="site-home-profile">
+              <div className="profile-title">简永杰</div>
+              <div className="profile-title profile-title-en">Jian Yongjie</div>
+              <div className="profile-affil">
+                Product Strategist &amp; Builder
+                <br />
+                AI + Design + Engineering
+                <br />
+                Base: New York / Beijing
+              </div>
+            </div>
+          </div>
         </section>
 
         <section id="projects">
-          <h2>最新动态 / News</h2>
-          <ul className="news-list">
-            {featuredProjects.slice(0, 3).map((project) => (
-              <li key={`news-${project.id}`} className="news-item">
-                <span className="mono news-date">{formatDate(project.lastCommitAt)}</span>
-                <span>
-                  {project.name} 活跃度 <strong>{project.activityScore}</strong>，子域名已分配为{' '}
-                  <a href={project.subdomainUrl} target="_blank" rel="noreferrer">
-                    {project.subdomain}.wordm.us
-                  </a>
-                  。
-                </span>
-              </li>
-            ))}
-          </ul>
-
           {debugMode ? (
             <DebugPanel
               allProjects={projects}

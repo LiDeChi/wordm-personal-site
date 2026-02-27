@@ -353,7 +353,7 @@ p {
   background: #f3f3f3;
 }
 
-.blog-home-head {
+.site-home-head {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 300px;
   gap: 28px;
@@ -365,24 +365,19 @@ p {
   height: clamp(200px, 24vw, 320px);
 }
 
-.blog-home-profile {
+.site-home-profile {
   border-left: 1px solid var(--c-ink-faint);
   padding-left: 16px;
   padding-bottom: 14px;
 }
 
-.blog-home-profile .profile-title {
+.site-home-profile .profile-title {
   font-size: 1rem;
 }
 
-.blog-home-profile .profile-affil {
+.site-home-profile .profile-affil {
   font-size: 0.72rem;
   line-height: 1.5;
-}
-
-.portfolio-hero-banner {
-  height: clamp(220px, 26vw, 340px);
-  margin-bottom: 0.6rem;
 }
 
 .portfolio-main-content {
@@ -998,13 +993,13 @@ footer {
     padding: 40px;
   }
 
-  .blog-home-head {
+  .site-home-head {
     grid-template-columns: 1fr;
     gap: 14px;
     align-items: start;
   }
 
-  .blog-home-profile {
+  .site-home-profile {
     border-left: none;
     border-top: 1px solid var(--c-ink-faint);
     padding-left: 0;
@@ -1034,8 +1029,7 @@ footer {
     padding: 28px;
   }
 
-  .blog-hero-banner,
-  .portfolio-hero-banner {
+  .blog-hero-banner {
     height: 180px;
   }
 
