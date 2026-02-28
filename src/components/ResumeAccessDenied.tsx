@@ -2,6 +2,7 @@ import { AuthPanel, type AuthPanelProps } from './AuthPanel'
 import type { AuthRole } from '../lib/auth'
 import type { Lang } from '../i18n/lang'
 import { roleLabel } from '../i18n/roles'
+import { withLangParam } from '../lib/lang-url'
 
 type ResumeAccessDeniedProps = {
   lang: Lang
@@ -26,6 +27,7 @@ const DENIED_COPY = {
 
 export function ResumeAccessDenied({ lang, authPanel, role }: ResumeAccessDeniedProps) {
   const copy = DENIED_COPY[lang]
+  const homeUrl = withLangParam('https://wordm.us', lang)
 
   return (
     <div className="subdomain-page">
@@ -40,7 +42,7 @@ export function ResumeAccessDenied({ lang, authPanel, role }: ResumeAccessDenied
 
         <footer className="subdomain-footer">
           <div>
-            <a href="https://wordm.us" target="_blank" rel="noreferrer">
+            <a href={homeUrl} target="_blank" rel="noreferrer">
               {copy.backHome}
             </a>
           </div>

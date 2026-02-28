@@ -1,6 +1,7 @@
 import type { PortfolioProject } from '../types'
 import { formatMonth } from '../lib/projects'
 import type { Lang } from '../i18n/lang'
+import { withLangParam } from '../lib/lang-url'
 
 type ProjectEntryProps = {
   lang: Lang
@@ -54,10 +55,11 @@ export function ProjectEntry({ lang, project }: ProjectEntryProps) {
   const copy = PROJECT_COPY[lang]
   const coverInitials = initials(project.name)
   const accent = slugAccent(project.slug)
+  const localizedSubdomainUrl = withLangParam(project.subdomainUrl, lang)
 
   return (
     <article className="gallery-card" id={`project-${project.slug}`}>
-      <a className="gallery-cover" href={project.subdomainUrl} target="_blank" rel="noreferrer">
+      <a className="gallery-cover" href={localizedSubdomainUrl} target="_blank" rel="noreferrer">
         <div className="gallery-cover-grid" aria-hidden="true" />
         <div className="gallery-cover-initials" style={{ color: accent }}>
           {coverInitials || 'PJ'}
@@ -76,7 +78,7 @@ export function ProjectEntry({ lang, project }: ProjectEntryProps) {
           </span>
         </div>
 
-        <a className="paper-title gallery-title" href={project.subdomainUrl} target="_blank" rel="noreferrer">
+        <a className="paper-title gallery-title" href={localizedSubdomainUrl} target="_blank" rel="noreferrer">
           {project.name}
         </a>
 
@@ -103,7 +105,7 @@ export function ProjectEntry({ lang, project }: ProjectEntryProps) {
         ) : null}
 
         <div className="paper-links">
-          <a href={project.subdomainUrl} target="_blank" rel="noreferrer">
+          <a href={localizedSubdomainUrl} target="_blank" rel="noreferrer">
             {copy.subdomain}
           </a>
           {project.productionUrl ? (

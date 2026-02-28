@@ -1,6 +1,7 @@
 import { AuthPanel, type AuthPanelProps } from './AuthPanel'
 import { ResumeSection } from './ResumeSection'
 import type { Lang } from '../i18n/lang'
+import { withLangParam } from '../lib/lang-url'
 
 type ResumePageProps = {
   lang: Lang
@@ -25,6 +26,7 @@ const PAGE_COPY = {
 
 export function ResumePage({ lang, lastUpdated, authPanel }: ResumePageProps) {
   const copy = PAGE_COPY[lang]
+  const homeUrl = withLangParam('https://wordm.us', lang)
 
   return (
     <div className="subdomain-page">
@@ -40,7 +42,7 @@ export function ResumePage({ lang, lastUpdated, authPanel }: ResumePageProps) {
 
         <footer className="subdomain-footer">
           <div>
-            <a href="https://wordm.us" target="_blank" rel="noreferrer">
+            <a href={homeUrl} target="_blank" rel="noreferrer">
               {copy.backHome}
             </a>
           </div>

@@ -9,6 +9,7 @@ import { SubdomainProjectView } from './components/SubdomainProjectView'
 import { BLOG_ARTICLES } from './data/blogArticles'
 import { type Lang, resolveInitialLang } from './i18n/lang'
 import projectsSnapshotRaw from './data/projects.snapshot.json'
+import { withLangParam } from './lib/lang-url'
 import {
   type AuthRoleRulesJson,
   type AuthRole,
@@ -183,6 +184,8 @@ function App() {
 
   const [lang, setLang] = useState<Lang>(initialLang)
   const copy = APP_COPY[lang]
+  const rootHomeUrl = withLangParam('https://wordm.us', lang)
+  const resumeHomeUrl = withLangParam('https://resume.wordm.us', lang)
 
   const authConfig = useMemo(
     () => ({
@@ -771,9 +774,9 @@ function App() {
           <h2>{copy.contactTitle}</h2>
           <div className="formula">deploy(host) = wordm.us + {'{'}resume.wordm.us + p-*.wordm.us{'}'}</div>
           <p>
-            {copy.rootDomain}: <a href="https://wordm.us">wordm.us</a>
+            {copy.rootDomain}: <a href={rootHomeUrl}>wordm.us</a>
             <br />
-            {copy.resumeDomain}: <a href="https://resume.wordm.us">resume.wordm.us</a>
+            {copy.resumeDomain}: <a href={resumeHomeUrl}>resume.wordm.us</a>
             <br />
             {copy.projectDomain}: {copy.projectDomainDesc}
           </p>

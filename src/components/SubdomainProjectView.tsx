@@ -2,6 +2,7 @@ import { AuthPanel, type AuthPanelProps } from './AuthPanel'
 import type { PortfolioProject } from '../types'
 import { formatDate } from '../lib/projects'
 import type { Lang } from '../i18n/lang'
+import { withLangParam } from '../lib/lang-url'
 
 type SubdomainProjectViewProps = {
   lang: Lang
@@ -35,6 +36,7 @@ const SUBDOMAIN_COPY = {
 
 export function SubdomainProjectView({ lang, project, lastUpdated, authPanel }: SubdomainProjectViewProps) {
   const copy = SUBDOMAIN_COPY[lang]
+  const homeUrl = withLangParam('https://wordm.us', lang)
 
   return (
     <div className="subdomain-page">
@@ -65,7 +67,7 @@ export function SubdomainProjectView({ lang, project, lastUpdated, authPanel }: 
               {copy.source}
             </a>
           ) : null}
-          <a href="https://wordm.us" target="_blank" rel="noreferrer">
+          <a href={homeUrl} target="_blank" rel="noreferrer">
             {copy.backHome}
           </a>
         </div>
