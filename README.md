@@ -43,14 +43,18 @@ VITE_AUTH_TEST_EMAILS=test1@example.com,test2@example.com
 - 单作品解锁：仅解锁一个指定项目。
 - 当前全部作品解锁：按购买时的作品清单解锁当下所有项目。
 - 当前作品 + 一年内新作品：购买时清单全部可访问，且购买后一年内新增项目也可访问。
+- 付费权限校验与 `latti-wordm` 保持一致：读取 `public.entitlements`（`plan/plan_id/expires_at`）。
+  - `single` / `all_current` 需要有效订阅或终身权益（`SUBSCRIPTION/basic/pro/lifetime`）。
+  - `all_current_plus_year` 需要终身权益（`LIFETIME/lifetime`）。
 - 免费解锁额度（一次性总池）：
   - 注册 7 天内：总额度 `N=2`
   - 注册 7~30 天：总额度 `N=1`
   - 注册超过 30 天：总额度 `N=0`
 - 免费额度在首次使用时固化，后续按已用/剩余额度扣减。
 - 当前实现为 `Supabase 优先 + 本地回退`：
-  - 优先通过 Supabase RPC 读写解锁状态（服务端约束）
-  - 当 RPC 不可用时自动回退到本地账本（`localStorage`，按用户 ID 分桶）
+  - 优先通过 Supabase RPC 读写解锁状态（服务端约束）。
+  - 当 RPC 不可用时，仅 `free_pick` 回退到本地账本（`localStorage`，按用户 ID 分桶）。
+  - 付费解锁（`single/all_current/all_current_plus_year`）必须走 Supabase 校验，不会本地降级绕过。
 
 ### 初始化 Supabase 解锁表与函数
 
@@ -64,10 +68,9 @@ VITE_AUTH_TEST_EMAILS=test1@example.com,test2@example.com
 
 - `public.project_unlock_profiles`
 - `public.project_unlock_grants`
+- `public.wordm_unlock_plan_tier(uuid)` RPC
 - `public.wordm_get_unlock_state()` RPC
 - `public.wordm_apply_unlock_grant(...)` RPC
-
-注意：当前 paid plan 按产品流程先打通权限逻辑，尚未接第三方支付校验表；后续可在 `wordm_apply_unlock_grant` 中接入 payment receipt 验证。
 
 ### 快速管理管理员/测试邮箱
 

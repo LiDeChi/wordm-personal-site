@@ -15,10 +15,7 @@ import { applyUnlockGrantFromSupabase, fetchUnlockStateFromSupabase } from './li
 import {
   canAccessProject,
   getFreeOfferStatus,
-  grantAllCurrentPlusYearUnlock,
-  grantAllCurrentUnlock,
   grantFreeProjectUnlock,
-  grantSingleProjectUnlock,
   loadUnlockStateForUser,
   saveUnlockStateForUser,
   type UserUnlockState,
@@ -133,6 +130,11 @@ const APP_COPY = {
     unlockStorageLoading: '权限存储: 同步中...',
     unlockStorageIdle: '权限存储: 登录后可用',
     unlockRemoteFallback: 'Supabase 解锁服务不可用，已切换到本地模式。',
+    unlockPaidRequired: '该解锁需要付费权益，请先在 latti.wordm.us 完成订阅或购买。',
+    unlockLifetimeRequired: '该解锁仅对终身权益用户开放。',
+    unlockPaidServerRequired: '付费校验服务暂不可用，当前仅支持免费名额解锁。',
+    unlockBillingHintPrefix: '付费解锁权益与 latti 账号体系打通：',
+    unlockBillingHintLink: '前往 latti.wordm.us',
   },
   en: {
     sourceSnapshot: 'Project snapshot',
@@ -206,6 +208,11 @@ const APP_COPY = {
     unlockStorageLoading: 'Storage: syncing...',
     unlockStorageIdle: 'Storage: available after login',
     unlockRemoteFallback: 'Supabase unlock service unavailable. Switched to local fallback mode.',
+    unlockPaidRequired: 'This unlock requires paid entitlement. Complete purchase on latti.wordm.us first.',
+    unlockLifetimeRequired: 'This unlock is available for lifetime entitlement only.',
+    unlockPaidServerRequired: 'Paid verification service is unavailable. Only free-pick unlock is available now.',
+    unlockBillingHintPrefix: 'Paid entitlements are shared with latti account system:',
+    unlockBillingHintLink: 'Go to latti.wordm.us',
   },
 } as const
 
@@ -259,6 +266,7 @@ function App() {
   const copy = APP_COPY[lang]
   const rootHomeUrl = withLangParam('https://wordm.us', lang)
   const resumeHomeUrl = withLangParam('https://resume.wordm.us', lang)
+  const billingHomeUrl = withLangParam('https://latti.wordm.us', lang)
 
   const authConfig = useMemo(
     () => ({
@@ -603,6 +611,27 @@ function App() {
     return unlockErrorCode(error).includes('FREE_OFFER_EXHAUSTED')
   }
 
+  function isPaymentRequiredError(error: unknown): boolean {
+    return unlockErrorCode(error).includes('PAYMENT_REQUIRED')
+  }
+
+  function isLifetimeRequiredError(error: unknown): boolean {
+    return unlockErrorCode(error).includes('LIFETIME_REQUIRED')
+  }
+
+  function isBusinessUnlockError(error: unknown): boolean {
+    const code = unlockErrorCode(error)
+    return (
+      code.includes('FREE_OFFER_EXHAUSTED') ||
+      code.includes('PROJECT_SLUG_REQUIRED') ||
+      code.includes('CATALOG_SLUGS_REQUIRED') ||
+      code.includes('INVALID_UNLOCK_KIND') ||
+      code.includes('PAYMENT_REQUIRED') ||
+      code.includes('LIFETIME_REQUIRED') ||
+      code.includes('UNAUTHENTICATED')
+    )
+  }
+
   async function handleLogin(email: string, password: string) {
     if (!authEnabled) {
       setAuthStatusMessage(copy.loginUnavailable)
@@ -790,8 +819,6 @@ function App() {
     kind: 'single' | 'all_current' | 'all_current_plus_year' | 'free_pick',
     projectSlug?: string,
   ): Promise<UserUnlockState> {
-    const currentState = unlockState ?? EMPTY_UNLOCK_STATE
-
     if (unlockStorageMode === 'remote') {
       try {
         return await applyUnlockGrantFromSupabase(authConfig, {
@@ -802,31 +829,29 @@ function App() {
               ? projectCatalogSlugs
               : null,
         })
-      } catch {
+      } catch (error) {
+        if (isBusinessUnlockError(error)) {
+          throw error
+        }
+
+        if (kind !== 'free_pick') {
+          throw new Error('PAYMENT_BACKEND_REQUIRED')
+        }
+
         setUnlockStorageMode('local')
         setUnlockStatusMessage(copy.unlockRemoteFallback)
       }
     }
 
-    if (kind === 'single') {
-      if (!projectSlug) {
-        throw new Error('PROJECT_SLUG_REQUIRED')
-      }
-      return grantSingleProjectUnlock(currentState, projectSlug, new Date())
-    }
-
-    if (kind === 'all_current') {
-      return grantAllCurrentUnlock(currentState, projectCatalogSlugs, new Date())
-    }
-
-    if (kind === 'all_current_plus_year') {
-      return grantAllCurrentPlusYearUnlock(currentState, projectCatalogSlugs, new Date())
+    if (kind !== 'free_pick') {
+      throw new Error('PAYMENT_BACKEND_REQUIRED')
     }
 
     if (!projectSlug) {
       throw new Error('PROJECT_SLUG_REQUIRED')
     }
 
+    const currentState = unlockState ?? EMPTY_UNLOCK_STATE
     return grantFreeProjectUnlock(currentState, projectSlug, authUser?.createdAt ?? null, new Date())
   }
 
@@ -846,7 +871,22 @@ function App() {
       const nextState = await applyUnlockGrant('single', normalizedSlug)
       setUnlockState(nextState)
       setUnlockStatusMessage(`${copy.unlockSingleSuccessPrefix}: ${getProjectNameBySlug(normalizedSlug)}`)
-    } catch {
+    } catch (error) {
+      if (isPaymentRequiredError(error)) {
+        setUnlockStatusMessage(copy.unlockPaidRequired)
+        return
+      }
+
+      if (isLifetimeRequiredError(error)) {
+        setUnlockStatusMessage(copy.unlockLifetimeRequired)
+        return
+      }
+
+      if (unlockErrorCode(error).includes('PAYMENT_BACKEND_REQUIRED')) {
+        setUnlockStatusMessage(copy.unlockPaidServerRequired)
+        return
+      }
+
       setUnlockStatusMessage(copy.unlockActionFailed)
     } finally {
       setUnlockBusy(false)
@@ -863,7 +903,17 @@ function App() {
       const nextState = await applyUnlockGrant('all_current')
       setUnlockState(nextState)
       setUnlockStatusMessage(copy.unlockAllCurrentSuccess)
-    } catch {
+    } catch (error) {
+      if (isPaymentRequiredError(error)) {
+        setUnlockStatusMessage(copy.unlockPaidRequired)
+        return
+      }
+
+      if (unlockErrorCode(error).includes('PAYMENT_BACKEND_REQUIRED')) {
+        setUnlockStatusMessage(copy.unlockPaidServerRequired)
+        return
+      }
+
       setUnlockStatusMessage(copy.unlockActionFailed)
     } finally {
       setUnlockBusy(false)
@@ -880,7 +930,22 @@ function App() {
       const nextState = await applyUnlockGrant('all_current_plus_year')
       setUnlockState(nextState)
       setUnlockStatusMessage(copy.unlockAllCurrentPlusYearSuccess)
-    } catch {
+    } catch (error) {
+      if (isLifetimeRequiredError(error)) {
+        setUnlockStatusMessage(copy.unlockLifetimeRequired)
+        return
+      }
+
+      if (isPaymentRequiredError(error)) {
+        setUnlockStatusMessage(copy.unlockPaidRequired)
+        return
+      }
+
+      if (unlockErrorCode(error).includes('PAYMENT_BACKEND_REQUIRED')) {
+        setUnlockStatusMessage(copy.unlockPaidServerRequired)
+        return
+      }
+
       setUnlockStatusMessage(copy.unlockActionFailed)
     } finally {
       setUnlockBusy(false)
@@ -1118,6 +1183,12 @@ function App() {
             <p className="unlock-control-intro">{copy.unlockPanelIntro}</p>
             <p className="unlock-plan-summary">
               {copy.unlockPlanSingleLabel} (card) · {copy.unlockPlanAllCurrent} · {copy.unlockPlanAllCurrentPlusYear}
+            </p>
+            <p className="unlock-control-intro">
+              {copy.unlockBillingHintPrefix}{' '}
+              <a href={billingHomeUrl} target="_blank" rel="noreferrer">
+                {copy.unlockBillingHintLink}
+              </a>
             </p>
 
             {authRole === 'admin' || authRole === 'tester' ? (
