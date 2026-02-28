@@ -48,7 +48,26 @@ VITE_AUTH_TEST_EMAILS=test1@example.com,test2@example.com
   - 注册 7~30 天：总额度 `N=1`
   - 注册超过 30 天：总额度 `N=0`
 - 免费额度在首次使用时固化，后续按已用/剩余额度扣减。
-- 当前实现为前端本地账本（`localStorage`，按用户 ID 分桶），便于后续对接真实支付回调。
+- 当前实现为 `Supabase 优先 + 本地回退`：
+  - 优先通过 Supabase RPC 读写解锁状态（服务端约束）
+  - 当 RPC 不可用时自动回退到本地账本（`localStorage`，按用户 ID 分桶）
+
+### 初始化 Supabase 解锁表与函数
+
+在 Supabase SQL Editor 执行：
+
+```sql
+-- file: scripts/supabase-unlock-schema.sql
+```
+
+该脚本会创建：
+
+- `public.project_unlock_profiles`
+- `public.project_unlock_grants`
+- `public.wordm_get_unlock_state()` RPC
+- `public.wordm_apply_unlock_grant(...)` RPC
+
+注意：当前 paid plan 按产品流程先打通权限逻辑，尚未接第三方支付校验表；后续可在 `wordm_apply_unlock_grant` 中接入 payment receipt 验证。
 
 ### 快速管理管理员/测试邮箱
 

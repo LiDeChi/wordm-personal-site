@@ -11,6 +11,7 @@ import { BLOG_ARTICLES } from './data/blogArticles'
 import { type Lang, resolveInitialLang } from './i18n/lang'
 import projectsSnapshotRaw from './data/projects.snapshot.json'
 import { withLangParam } from './lib/lang-url'
+import { applyUnlockGrantFromSupabase, fetchUnlockStateFromSupabase } from './lib/unlock-remote'
 import {
   canAccessProject,
   getFreeOfferStatus,
@@ -49,6 +50,7 @@ import {
 import type { PortfolioProject, ProjectsSnapshot } from './types'
 
 type RootView = 'blog' | 'portfolio'
+type UnlockStorageMode = 'remote' | 'local' | 'loading' | 'idle'
 
 const snapshot = projectsSnapshotRaw as ProjectsSnapshot
 const portfolioSectionIds = ['home', 'projects', 'visual', 'contact']
@@ -126,6 +128,11 @@ const APP_COPY = {
     unlockQuotaUsed: '已用',
     unlockQuotaRemaining: '剩余',
     unlockBypassNotice: '当前身份可直接访问全部作品，无需解锁。',
+    unlockStorageRemote: '权限存储: Supabase',
+    unlockStorageLocal: '权限存储: 本地回退',
+    unlockStorageLoading: '权限存储: 同步中...',
+    unlockStorageIdle: '权限存储: 登录后可用',
+    unlockRemoteFallback: 'Supabase 解锁服务不可用，已切换到本地模式。',
   },
   en: {
     sourceSnapshot: 'Project snapshot',
@@ -194,6 +201,11 @@ const APP_COPY = {
     unlockQuotaUsed: 'used',
     unlockQuotaRemaining: 'remaining',
     unlockBypassNotice: 'Your role can access all projects without unlock limits.',
+    unlockStorageRemote: 'Storage: Supabase',
+    unlockStorageLocal: 'Storage: Local fallback',
+    unlockStorageLoading: 'Storage: syncing...',
+    unlockStorageIdle: 'Storage: available after login',
+    unlockRemoteFallback: 'Supabase unlock service unavailable. Switched to local fallback mode.',
   },
 } as const
 
@@ -280,6 +292,8 @@ function App() {
   const [authBusy, setAuthBusy] = useState(false)
   const [authStatusMessage, setAuthStatusMessage] = useState('')
   const [unlockState, setUnlockState] = useState<UserUnlockState | null>(null)
+  const [unlockStorageMode, setUnlockStorageMode] = useState<UnlockStorageMode>('idle')
+  const [unlockBusy, setUnlockBusy] = useState(false)
   const [unlockStatusMessage, setUnlockStatusMessage] = useState('')
   const [unlockTargetSlug, setUnlockTargetSlug] = useState<string | null>(initialUnlockSlug)
   const [selectedSlugs, setSelectedSlugs] = useState<string[]>(() => {
@@ -489,12 +503,41 @@ function App() {
   useEffect(() => {
     if (!authUser) {
       setUnlockState(null)
+      setUnlockStorageMode('idle')
       setUnlockStatusMessage('')
       return
     }
 
-    setUnlockState(loadUnlockStateForUser(authUser.id))
-  }, [authUser])
+    const authUserId = authUser.id
+    let active = true
+    setUnlockStorageMode('loading')
+
+    async function loadUnlockState() {
+      try {
+        const remoteState = await fetchUnlockStateFromSupabase(authConfig)
+        if (!active) {
+          return
+        }
+
+        setUnlockState(remoteState)
+        setUnlockStorageMode('remote')
+      } catch {
+        if (!active) {
+          return
+        }
+
+        setUnlockState(loadUnlockStateForUser(authUserId))
+        setUnlockStorageMode('local')
+        setUnlockStatusMessage(copy.unlockRemoteFallback)
+      }
+    }
+
+    void loadUnlockState()
+
+    return () => {
+      active = false
+    }
+  }, [authConfig, authUser, copy.unlockRemoteFallback])
 
   useEffect(() => {
     if (!authUser || !unlockState) {
@@ -549,6 +592,15 @@ function App() {
       setLoadState('error')
       setErrorMessage(error instanceof Error && error.message ? error.message : copy.sourceLoadFailed)
     }
+  }
+
+  function unlockErrorCode(error: unknown): string {
+    const detail = normalizeAuthError(error, '')
+    return detail.toUpperCase()
+  }
+
+  function isFreeOfferExhaustedError(error: unknown): boolean {
+    return unlockErrorCode(error).includes('FREE_OFFER_EXHAUSTED')
   }
 
   async function handleLogin(email: string, password: string) {
@@ -676,8 +728,17 @@ function App() {
     () => getFreeOfferStatus(unlockState ?? EMPTY_UNLOCK_STATE, authUser?.createdAt ?? null),
     [authUser?.createdAt, unlockState],
   )
-  const canUseFreeUnlock = authRole !== 'guest' && freeOfferStatus.remaining > 0
+  const unlockActionDisabled = unlockBusy || unlockStorageMode === 'loading'
+  const canUseFreeUnlock = authRole !== 'guest' && freeOfferStatus.remaining > 0 && !unlockActionDisabled
   const unlockQuotaText = `${copy.unlockQuotaFormatPrefix} ${freeOfferStatus.total} · ${copy.unlockQuotaUsed} ${freeOfferStatus.used} · ${copy.unlockQuotaRemaining} ${freeOfferStatus.remaining}`
+  const unlockStorageLabel =
+    unlockStorageMode === 'remote'
+      ? copy.unlockStorageRemote
+      : unlockStorageMode === 'local'
+        ? copy.unlockStorageLocal
+        : unlockStorageMode === 'loading'
+          ? copy.unlockStorageLoading
+          : copy.unlockStorageIdle
   const subdomainProjectUnlocked = subdomainProject
     ? canAccessProject(subdomainProject.slug, authRole, unlockState)
     : false
@@ -703,6 +764,15 @@ function App() {
   }
 
   function ensureCanUnlock() {
+    if (unlockStorageMode === 'loading') {
+      setUnlockStatusMessage(copy.unlockStorageLoading)
+      return false
+    }
+
+    if (unlockBusy) {
+      return false
+    }
+
     if (authRole === 'admin' || authRole === 'tester') {
       setUnlockStatusMessage(copy.unlockBypassNotice)
       return false
@@ -716,7 +786,51 @@ function App() {
     return true
   }
 
-  function handleUnlockSingle(projectSlug: string) {
+  async function applyUnlockGrant(
+    kind: 'single' | 'all_current' | 'all_current_plus_year' | 'free_pick',
+    projectSlug?: string,
+  ): Promise<UserUnlockState> {
+    const currentState = unlockState ?? EMPTY_UNLOCK_STATE
+
+    if (unlockStorageMode === 'remote') {
+      try {
+        return await applyUnlockGrantFromSupabase(authConfig, {
+          kind,
+          projectSlug: projectSlug ?? null,
+          catalogSlugs:
+            kind === 'all_current' || kind === 'all_current_plus_year'
+              ? projectCatalogSlugs
+              : null,
+        })
+      } catch {
+        setUnlockStorageMode('local')
+        setUnlockStatusMessage(copy.unlockRemoteFallback)
+      }
+    }
+
+    if (kind === 'single') {
+      if (!projectSlug) {
+        throw new Error('PROJECT_SLUG_REQUIRED')
+      }
+      return grantSingleProjectUnlock(currentState, projectSlug, new Date())
+    }
+
+    if (kind === 'all_current') {
+      return grantAllCurrentUnlock(currentState, projectCatalogSlugs, new Date())
+    }
+
+    if (kind === 'all_current_plus_year') {
+      return grantAllCurrentPlusYearUnlock(currentState, projectCatalogSlugs, new Date())
+    }
+
+    if (!projectSlug) {
+      throw new Error('PROJECT_SLUG_REQUIRED')
+    }
+
+    return grantFreeProjectUnlock(currentState, projectSlug, authUser?.createdAt ?? null, new Date())
+  }
+
+  async function handleUnlockSingle(projectSlug: string) {
     const normalizedSlug = normalizeSlug(projectSlug)
     if (!normalizedSlug) {
       return
@@ -727,48 +841,53 @@ function App() {
       return
     }
 
+    setUnlockBusy(true)
     try {
-      const nextState = grantSingleProjectUnlock(unlockState ?? EMPTY_UNLOCK_STATE, normalizedSlug, new Date())
+      const nextState = await applyUnlockGrant('single', normalizedSlug)
       setUnlockState(nextState)
       setUnlockStatusMessage(`${copy.unlockSingleSuccessPrefix}: ${getProjectNameBySlug(normalizedSlug)}`)
     } catch {
       setUnlockStatusMessage(copy.unlockActionFailed)
+    } finally {
+      setUnlockBusy(false)
     }
   }
 
-  function handleUnlockAllCurrent() {
+  async function handleUnlockAllCurrent() {
     if (!ensureCanUnlock()) {
       return
     }
 
+    setUnlockBusy(true)
     try {
-      const nextState = grantAllCurrentUnlock(unlockState ?? EMPTY_UNLOCK_STATE, projectCatalogSlugs, new Date())
+      const nextState = await applyUnlockGrant('all_current')
       setUnlockState(nextState)
       setUnlockStatusMessage(copy.unlockAllCurrentSuccess)
     } catch {
       setUnlockStatusMessage(copy.unlockActionFailed)
+    } finally {
+      setUnlockBusy(false)
     }
   }
 
-  function handleUnlockAllCurrentPlusYear() {
+  async function handleUnlockAllCurrentPlusYear() {
     if (!ensureCanUnlock()) {
       return
     }
 
+    setUnlockBusy(true)
     try {
-      const nextState = grantAllCurrentPlusYearUnlock(
-        unlockState ?? EMPTY_UNLOCK_STATE,
-        projectCatalogSlugs,
-        new Date(),
-      )
+      const nextState = await applyUnlockGrant('all_current_plus_year')
       setUnlockState(nextState)
       setUnlockStatusMessage(copy.unlockAllCurrentPlusYearSuccess)
     } catch {
       setUnlockStatusMessage(copy.unlockActionFailed)
+    } finally {
+      setUnlockBusy(false)
     }
   }
 
-  function handleUnlockFree(projectSlug: string) {
+  async function handleUnlockFree(projectSlug: string) {
     const normalizedSlug = normalizeSlug(projectSlug)
     if (!normalizedSlug) {
       return
@@ -779,22 +898,20 @@ function App() {
       return
     }
 
+    setUnlockBusy(true)
     try {
-      const nextState = grantFreeProjectUnlock(
-        unlockState ?? EMPTY_UNLOCK_STATE,
-        normalizedSlug,
-        authUser?.createdAt ?? null,
-        new Date(),
-      )
+      const nextState = await applyUnlockGrant('free_pick', normalizedSlug)
       setUnlockState(nextState)
       setUnlockStatusMessage(`${copy.unlockFreeSuccessPrefix}: ${getProjectNameBySlug(normalizedSlug)}`)
     } catch (error) {
-      if (error instanceof Error && error.message === 'FREE_OFFER_EXHAUSTED') {
+      if (isFreeOfferExhaustedError(error)) {
         setUnlockStatusMessage(copy.unlockFreeEmpty)
         return
       }
 
       setUnlockStatusMessage(copy.unlockActionFailed)
+    } finally {
+      setUnlockBusy(false)
     }
   }
 
@@ -828,10 +945,11 @@ function App() {
           project={subdomainProject}
           statusMessage={unlockStatusMessage}
           canUseFreeUnlock={canUseFreeUnlock}
+          unlockBusy={unlockActionDisabled}
           freeRemaining={freeOfferStatus.remaining}
           authPanel={authPanelProps}
-          onUnlockSingle={handleUnlockSingle}
-          onUnlockFree={handleUnlockFree}
+          onUnlockSingle={(slug) => void handleUnlockSingle(slug)}
+          onUnlockFree={(slug) => void handleUnlockFree(slug)}
         />
       )
     }
@@ -995,6 +1113,7 @@ function App() {
               <span>
                 {copy.unlockFreeQuotaPrefix}: {unlockQuotaText}
               </span>
+              <span>{unlockStorageLabel}</span>
             </div>
             <p className="unlock-control-intro">{copy.unlockPanelIntro}</p>
             <p className="unlock-plan-summary">
@@ -1005,10 +1124,20 @@ function App() {
               <p className="unlock-status-message">{copy.unlockBypassNotice}</p>
             ) : (
               <div className="unlock-plan-actions">
-                <button type="button" className="unlock-plan-btn" onClick={handleUnlockAllCurrent}>
+                <button
+                  type="button"
+                  className="unlock-plan-btn"
+                  disabled={unlockActionDisabled}
+                  onClick={() => void handleUnlockAllCurrent()}
+                >
                   {copy.unlockPlanAllCurrent}
                 </button>
-                <button type="button" className="unlock-plan-btn" onClick={handleUnlockAllCurrentPlusYear}>
+                <button
+                  type="button"
+                  className="unlock-plan-btn"
+                  disabled={unlockActionDisabled}
+                  onClick={() => void handleUnlockAllCurrentPlusYear()}
+                >
                   {copy.unlockPlanAllCurrentPlusYear}
                 </button>
               </div>
@@ -1026,8 +1155,9 @@ function App() {
                 unlocked={isProjectUnlocked(project.slug)}
                 focused={unlockTargetSlug === project.slug}
                 canUseFreeUnlock={canUseFreeUnlock}
-                onUnlockSingle={handleUnlockSingle}
-                onUnlockFree={handleUnlockFree}
+                unlockBusy={unlockActionDisabled}
+                onUnlockSingle={(slug) => void handleUnlockSingle(slug)}
+                onUnlockFree={(slug) => void handleUnlockFree(slug)}
               />
             ))}
           </div>

@@ -11,6 +11,7 @@ type SubdomainProjectLockedProps = {
   project: PortfolioProject
   statusMessage: string
   canUseFreeUnlock: boolean
+  unlockBusy: boolean
   freeRemaining: number
   authPanel: Omit<AuthPanelProps, 'className'>
   onUnlockSingle: (projectSlug: string) => void
@@ -48,6 +49,7 @@ export function SubdomainProjectLocked({
   project,
   statusMessage,
   canUseFreeUnlock,
+  unlockBusy,
   freeRemaining,
   authPanel,
   onUnlockSingle,
@@ -68,13 +70,18 @@ export function SubdomainProjectLocked({
         <p className="meta">{copy.plansHint}</p>
 
         <div className="subdomain-unlock-panel">
-          <button type="button" className="auth-primary-btn" onClick={() => onUnlockSingle(project.slug)}>
+          <button
+            type="button"
+            className="auth-primary-btn"
+            disabled={unlockBusy}
+            onClick={() => onUnlockSingle(project.slug)}
+          >
             {copy.unlockSingle}
           </button>
           <button
             type="button"
             className="auth-primary-btn subdomain-unlock-free"
-            disabled={!canUseFreeUnlock}
+            disabled={!canUseFreeUnlock || unlockBusy}
             onClick={() => onUnlockFree(project.slug)}
           >
             {canUseFreeUnlock ? copy.freeUnlock : copy.freeEmpty}

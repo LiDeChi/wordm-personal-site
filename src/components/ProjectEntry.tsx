@@ -9,6 +9,7 @@ type ProjectEntryProps = {
   unlocked: boolean
   focused?: boolean
   canUseFreeUnlock: boolean
+  unlockBusy: boolean
   onUnlockSingle: (projectSlug: string) => void
   onUnlockFree: (projectSlug: string) => void
 }
@@ -76,6 +77,7 @@ export function ProjectEntry({
   unlocked,
   focused = false,
   canUseFreeUnlock,
+  unlockBusy,
   onUnlockSingle,
   onUnlockFree,
 }: ProjectEntryProps) {
@@ -179,13 +181,18 @@ export function ProjectEntry({
           <div className="gallery-lock-actions">
             <p className="gallery-lock-hint">{copy.lockHint}</p>
             <div className="gallery-lock-buttons">
-              <button type="button" className="gallery-unlock-btn" onClick={() => onUnlockSingle(project.slug)}>
+              <button
+                type="button"
+                className="gallery-unlock-btn"
+                disabled={unlockBusy}
+                onClick={() => onUnlockSingle(project.slug)}
+              >
                 {copy.unlockSingle}
               </button>
               <button
                 type="button"
                 className="gallery-unlock-btn ghost"
-                disabled={!canUseFreeUnlock}
+                disabled={!canUseFreeUnlock || unlockBusy}
                 onClick={() => onUnlockFree(project.slug)}
               >
                 {canUseFreeUnlock ? copy.freeUnlock : copy.freeUnlockUnavailable}

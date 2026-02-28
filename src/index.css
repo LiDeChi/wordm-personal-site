@@ -783,6 +783,11 @@ p {
   color: #fff;
 }
 
+.unlock-plan-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
 .unlock-status-message {
   margin-top: 8px;
   margin-bottom: 0;
