@@ -11,6 +11,7 @@ import { BLOG_ARTICLES } from './data/blogArticles'
 import { type Lang, resolveInitialLang } from './i18n/lang'
 import projectsSnapshotRaw from './data/projects.snapshot.json'
 import { withLangParam } from './lib/lang-url'
+import { createUnlockCheckoutUrl, type UnlockCheckoutKind } from './lib/unlock-billing'
 import { applyUnlockGrantFromSupabase, fetchUnlockStateFromSupabase } from './lib/unlock-remote'
 import {
   canAccessProject,
@@ -135,6 +136,11 @@ const APP_COPY = {
     unlockPaidServerRequired: '付费校验服务暂不可用，当前仅支持免费名额解锁。',
     unlockBillingHintPrefix: '付费解锁权益与 latti 账号体系打通：',
     unlockBillingHintLink: '前往 latti.wordm.us',
+    unlockCheckoutStarting: '正在跳转支付...',
+    unlockCheckoutProductMissing: '未配置该解锁方案的商品，请先在 latti.wordm.us 完成升级。',
+    unlockCheckoutFailed: '拉起支付失败，请稍后重试。',
+    unlockCheckoutSuccess: '支付回调已返回。请再次点击解锁按钮完成授权同步。',
+    unlockCheckoutCanceled: '已取消支付。',
   },
   en: {
     sourceSnapshot: 'Project snapshot',
@@ -213,6 +219,11 @@ const APP_COPY = {
     unlockPaidServerRequired: 'Paid verification service is unavailable. Only free-pick unlock is available now.',
     unlockBillingHintPrefix: 'Paid entitlements are shared with latti account system:',
     unlockBillingHintLink: 'Go to latti.wordm.us',
+    unlockCheckoutStarting: 'Redirecting to checkout...',
+    unlockCheckoutProductMissing: 'No product is configured for this unlock mode. Upgrade on latti.wordm.us first.',
+    unlockCheckoutFailed: 'Failed to start checkout. Please try again later.',
+    unlockCheckoutSuccess: 'Payment callback received. Click unlock again to sync entitlement.',
+    unlockCheckoutCanceled: 'Checkout canceled.',
   },
 } as const
 
@@ -260,6 +271,9 @@ function App() {
   const initialShowSlugs = parseShowSlugs(params.get('show'))
   const initialRootView = toRootView(params.get('view'))
   const initialUnlockSlug = normalizeSlug(params.get('unlock'))
+  const initialCheckoutSlug = normalizeSlug(params.get('checkout_slug'))
+  const initialPurchaseSuccess = params.get('purchase_success') === '1'
+  const initialPurchaseCanceled = params.get('purchase_cancel') === '1'
   const initialLang = resolveInitialLang(window.location)
 
   const [lang, setLang] = useState<Lang>(initialLang)
@@ -267,6 +281,14 @@ function App() {
   const rootHomeUrl = withLangParam('https://wordm.us', lang)
   const resumeHomeUrl = withLangParam('https://resume.wordm.us', lang)
   const billingHomeUrl = withLangParam('https://latti.wordm.us', lang)
+  const unlockCheckoutProducts = useMemo(
+    () => ({
+      single: import.meta.env.VITE_UNLOCK_PRODUCT_SINGLE || '',
+      allCurrent: import.meta.env.VITE_UNLOCK_PRODUCT_ALL_CURRENT || '',
+      allCurrentPlusYear: import.meta.env.VITE_UNLOCK_PRODUCT_ALL_CURRENT_PLUS_YEAR || '',
+    }),
+    [],
+  )
 
   const authConfig = useMemo(
     () => ({
@@ -302,6 +324,7 @@ function App() {
   const [unlockState, setUnlockState] = useState<UserUnlockState | null>(null)
   const [unlockStorageMode, setUnlockStorageMode] = useState<UnlockStorageMode>('idle')
   const [unlockBusy, setUnlockBusy] = useState(false)
+  const [checkoutBusyKind, setCheckoutBusyKind] = useState<UnlockCheckoutKind | null>(null)
   const [unlockStatusMessage, setUnlockStatusMessage] = useState('')
   const [unlockTargetSlug, setUnlockTargetSlug] = useState<string | null>(initialUnlockSlug)
   const [selectedSlugs, setSelectedSlugs] = useState<string[]>(() => {
@@ -339,6 +362,36 @@ function App() {
 
     window.history.replaceState({}, '', next)
   }, [rootView, lang, unlockTargetSlug])
+
+  useEffect(() => {
+    if (!initialPurchaseSuccess && !initialPurchaseCanceled) {
+      return
+    }
+
+    if (initialCheckoutSlug) {
+      setUnlockTargetSlug(initialCheckoutSlug)
+    }
+
+    if (initialPurchaseSuccess) {
+      setRootView('portfolio')
+      setUnlockStatusMessage(copy.unlockCheckoutSuccess)
+    } else {
+      setUnlockStatusMessage(copy.unlockCheckoutCanceled)
+    }
+
+    const next = new URL(window.location.href)
+    next.searchParams.delete('purchase_success')
+    next.searchParams.delete('purchase_cancel')
+    next.searchParams.delete('checkout_kind')
+    next.searchParams.delete('checkout_slug')
+    window.history.replaceState({}, '', next)
+  }, [
+    copy.unlockCheckoutCanceled,
+    copy.unlockCheckoutSuccess,
+    initialCheckoutSlug,
+    initialPurchaseCanceled,
+    initialPurchaseSuccess,
+  ])
 
   useEffect(() => {
     if (rootView !== 'portfolio') {
@@ -632,6 +685,87 @@ function App() {
     )
   }
 
+  function buildCheckoutReturnUrl(kind: UnlockCheckoutKind, projectSlug: string | null = null) {
+    const next = new URL(window.location.href)
+    next.searchParams.set('purchase_success', '1')
+    next.searchParams.set('checkout_kind', kind)
+
+    const normalizedSlug = normalizeSlug(projectSlug)
+    if (normalizedSlug) {
+      next.searchParams.set('checkout_slug', normalizedSlug)
+      next.searchParams.set('unlock', normalizedSlug)
+    } else {
+      next.searchParams.delete('checkout_slug')
+    }
+
+    next.searchParams.set('view', 'portfolio')
+    if (lang === 'en') {
+      next.searchParams.set('lang', 'en')
+    } else {
+      next.searchParams.delete('lang')
+    }
+    return next.toString()
+  }
+
+  function buildCheckoutCancelUrl(projectSlug: string | null = null) {
+    const next = new URL(window.location.href)
+    next.searchParams.set('purchase_cancel', '1')
+
+    const normalizedSlug = normalizeSlug(projectSlug)
+    if (normalizedSlug) {
+      next.searchParams.set('checkout_slug', normalizedSlug)
+      next.searchParams.set('unlock', normalizedSlug)
+    } else {
+      next.searchParams.delete('checkout_slug')
+    }
+
+    next.searchParams.set('view', 'portfolio')
+    if (lang === 'en') {
+      next.searchParams.set('lang', 'en')
+    } else {
+      next.searchParams.delete('lang')
+    }
+    return next.toString()
+  }
+
+  async function startUnlockCheckout(kind: UnlockCheckoutKind, projectSlug: string | null = null) {
+    if (!authEnabled || !authUser) {
+      setUnlockStatusMessage(copy.unlockNeedLogin)
+      return false
+    }
+
+    setCheckoutBusyKind(kind)
+    setUnlockStatusMessage(copy.unlockCheckoutStarting)
+
+    try {
+      const checkoutUrl = await createUnlockCheckoutUrl(authConfig, {
+        kind,
+        products: unlockCheckoutProducts,
+        successUrl: buildCheckoutReturnUrl(kind, projectSlug),
+        cancelUrl: buildCheckoutCancelUrl(projectSlug),
+      })
+
+      window.location.assign(checkoutUrl)
+      return true
+    } catch (error) {
+      const code = unlockErrorCode(error)
+      if (code.includes('CHECKOUT_PRODUCT_MISSING')) {
+        setUnlockStatusMessage(copy.unlockCheckoutProductMissing)
+        return false
+      }
+
+      if (code.includes('UNAUTHENTICATED')) {
+        setUnlockStatusMessage(copy.unlockNeedLogin)
+        return false
+      }
+
+      setUnlockStatusMessage(copy.unlockCheckoutFailed)
+      return false
+    } finally {
+      setCheckoutBusyKind(null)
+    }
+  }
+
   async function handleLogin(email: string, password: string) {
     if (!authEnabled) {
       setAuthStatusMessage(copy.loginUnavailable)
@@ -757,7 +891,7 @@ function App() {
     () => getFreeOfferStatus(unlockState ?? EMPTY_UNLOCK_STATE, authUser?.createdAt ?? null),
     [authUser?.createdAt, unlockState],
   )
-  const unlockActionDisabled = unlockBusy || unlockStorageMode === 'loading'
+  const unlockActionDisabled = unlockBusy || checkoutBusyKind !== null || unlockStorageMode === 'loading'
   const canUseFreeUnlock = authRole !== 'guest' && freeOfferStatus.remaining > 0 && !unlockActionDisabled
   const unlockQuotaText = `${copy.unlockQuotaFormatPrefix} ${freeOfferStatus.total} · ${copy.unlockQuotaUsed} ${freeOfferStatus.used} · ${copy.unlockQuotaRemaining} ${freeOfferStatus.remaining}`
   const unlockStorageLabel =
@@ -873,12 +1007,12 @@ function App() {
       setUnlockStatusMessage(`${copy.unlockSingleSuccessPrefix}: ${getProjectNameBySlug(normalizedSlug)}`)
     } catch (error) {
       if (isPaymentRequiredError(error)) {
-        setUnlockStatusMessage(copy.unlockPaidRequired)
+        await startUnlockCheckout('single', normalizedSlug)
         return
       }
 
       if (isLifetimeRequiredError(error)) {
-        setUnlockStatusMessage(copy.unlockLifetimeRequired)
+        await startUnlockCheckout('all_current_plus_year', normalizedSlug)
         return
       }
 
@@ -905,7 +1039,7 @@ function App() {
       setUnlockStatusMessage(copy.unlockAllCurrentSuccess)
     } catch (error) {
       if (isPaymentRequiredError(error)) {
-        setUnlockStatusMessage(copy.unlockPaidRequired)
+        await startUnlockCheckout('all_current')
         return
       }
 
@@ -932,12 +1066,12 @@ function App() {
       setUnlockStatusMessage(copy.unlockAllCurrentPlusYearSuccess)
     } catch (error) {
       if (isLifetimeRequiredError(error)) {
-        setUnlockStatusMessage(copy.unlockLifetimeRequired)
+        await startUnlockCheckout('all_current_plus_year')
         return
       }
 
       if (isPaymentRequiredError(error)) {
-        setUnlockStatusMessage(copy.unlockPaidRequired)
+        await startUnlockCheckout('all_current_plus_year')
         return
       }
 

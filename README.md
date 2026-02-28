@@ -29,9 +29,13 @@ VITE_SUPABASE_URL=...
 VITE_SUPABASE_ANON_KEY=...
 VITE_AUTH_ADMIN_EMAILS=admin1@example.com,admin2@example.com
 VITE_AUTH_TEST_EMAILS=test1@example.com,test2@example.com
+VITE_UNLOCK_PRODUCT_SINGLE=prod_xxx
+VITE_UNLOCK_PRODUCT_ALL_CURRENT=prod_yyy
+VITE_UNLOCK_PRODUCT_ALL_CURRENT_PLUS_YEAR=prod_zzz
 ```
 
 - 推荐使用你提到的同一套 Supabase 项目（`latti-wordm`）来保证账号一致。
+- 三个 `VITE_UNLOCK_PRODUCT_*` 对应作品集三种付费解锁模式，前端会调用 Supabase Edge Function `creem-checkout` 拉起支付。
 - 站点会将 Supabase 会话同步到 `.wordm.us` 域级 cookie，因此 `wordm.us`、`resume.wordm.us`、`p-*.wordm.us` 会共享登录态。
 - 账号角色共四类：`admin`（管理员）、`tester`（测试账号）、`user`（普通账号）、`guest`（游客）。
 - 角色判定顺序：Supabase 用户 metadata 的 `role` 字段 > `public/auth-role-rules.json` 邮箱名单（与环境变量合并）> 默认 `user`。
@@ -55,6 +59,9 @@ VITE_AUTH_TEST_EMAILS=test1@example.com,test2@example.com
   - 优先通过 Supabase RPC 读写解锁状态（服务端约束）。
   - 当 RPC 不可用时，仅 `free_pick` 回退到本地账本（`localStorage`，按用户 ID 分桶）。
   - 付费解锁（`single/all_current/all_current_plus_year`）必须走 Supabase 校验，不会本地降级绕过。
+- 付费交互：
+  - 若点击解锁触发 `PAYMENT_REQUIRED` / `LIFETIME_REQUIRED`，前端会自动拉起 `creem-checkout`。
+  - 支付成功后回到当前页面并显示回调提示；再次点击解锁即可完成授权同步。
 
 ### 初始化 Supabase 解锁表与函数
 
