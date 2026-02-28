@@ -783,6 +783,12 @@ p {
   color: #fff;
 }
 
+.unlock-plan-btn.active {
+  border-color: #111;
+  background: #111;
+  color: #fff;
+}
+
 .unlock-plan-btn:disabled {
   opacity: 0.55;
   cursor: not-allowed;
@@ -794,6 +800,59 @@ p {
   font-size: 0.74rem;
   color: #3f3f3f;
   text-align: left;
+}
+
+.deploy-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 8px;
+  margin: 8px 0;
+}
+
+.deploy-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+}
+
+.deploy-field span {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: #666;
+}
+
+.deploy-input {
+  border: 1px solid var(--c-ink-faint);
+  background: #fff;
+  color: #111;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  padding: 7px 8px;
+}
+
+.deploy-command-block {
+  margin-top: 8px;
+  margin-bottom: 8px;
+  border: 1px solid var(--c-ink-faint);
+  background: #f6f6f6;
+  padding: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.deploy-link-btn {
+  display: inline-flex;
+  align-items: center;
+  border-bottom: 1px solid var(--c-ink-faint);
+  text-decoration: none;
+}
+
+.deploy-link-btn:hover {
+  border-bottom: 1px solid var(--c-ink);
 }
 
 .blog-entry {

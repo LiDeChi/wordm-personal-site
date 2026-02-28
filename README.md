@@ -33,11 +33,13 @@ VITE_UNLOCK_PRODUCT_SINGLE=prod_xxx
 VITE_UNLOCK_PRODUCT_ALL_CURRENT=prod_yyy
 VITE_UNLOCK_PRODUCT_ALL_CURRENT_PLUS_YEAR=prod_zzz
 VITE_SELFHOST_INSTALL_URL=https://github.com/LiDeChi/latti/blob/main/docs/selfhost-one-click.md
+VITE_SELFHOST_INSTALL_SCRIPT_URL=https://raw.githubusercontent.com/LiDeChi/latti/main/scripts/selfhost-install.sh
 ```
 
 - 推荐使用你提到的同一套 Supabase 项目（`latti-wordm`）来保证账号一致。
 - 三个 `VITE_UNLOCK_PRODUCT_*` 对应作品集三种付费解锁模式，前端会调用 Supabase Edge Function `creem-checkout` 拉起支付。
 - `VITE_SELFHOST_INSTALL_URL` 用于支付成功后的“自部署安装”入口，默认指向 `latti` 的 one-click self-host 文档。
+- `VITE_SELFHOST_INSTALL_SCRIPT_URL` 用于部署页生成一键部署命令，默认指向 `latti` 官方安装脚本。
 - 若不配置，会使用 `latti` 当前公开计划商品作为默认值（Basic 月付 / Pro 月付 / Pro 年付）。
 - 站点会将 Supabase 会话同步到 `.wordm.us` 域级 cookie，因此 `wordm.us`、`resume.wordm.us`、`p-*.wordm.us` 会共享登录态。
 - 账号角色共四类：`admin`（管理员）、`tester`（测试账号）、`user`（普通账号）、`guest`（游客）。
@@ -63,7 +65,9 @@ VITE_SELFHOST_INSTALL_URL=https://github.com/LiDeChi/latti/blob/main/docs/selfho
   - 付费解锁（`single/all_current/all_current_plus_year`）必须走 Supabase 校验，不会本地降级绕过。
 - 付费交互：
   - 若点击解锁触发 `PAYMENT_REQUIRED`，前端会自动拉起 `creem-checkout`。
-  - 支付成功后回到当前页面并显示回调提示；解锁面板会提供“自部署安装”入口，同时也可再次点击解锁完成授权同步。
+  - 支付成功后自动跳转到 `?view=deploy` 部署页（默认“当前机器”）。
+  - 部署页支持“当前机器 / 远程服务器”两种目标，自动生成部署命令并支持一键复制。
+  - 部署页仍保留安装指南入口；你也可返回作品集再次点击解锁完成授权同步。
 
 ### 初始化 Supabase 解锁表与函数
 

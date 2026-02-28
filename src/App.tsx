@@ -47,8 +47,9 @@ import {
 } from './lib/projects'
 import type { PortfolioProject, ProjectsSnapshot } from './types'
 
-type RootView = 'blog' | 'portfolio'
+type RootView = 'blog' | 'portfolio' | 'deploy'
 type UnlockStorageMode = 'remote' | 'local' | 'loading' | 'idle'
+type DeployTarget = 'local' | 'remote'
 
 const snapshot = projectsSnapshotRaw as ProjectsSnapshot
 const portfolioSectionIds = ['home', 'projects', 'visual', 'contact']
@@ -69,6 +70,7 @@ const APP_COPY = {
     profileLine3: 'Base: New York / Beijing',
     tocHome: '首页',
     tocProjects: '项目',
+    tocDeploy: '部署',
     tocVisual: '图示',
     tocContact: '联系',
     portfolioTitle: '作品集',
@@ -143,6 +145,26 @@ const APP_COPY = {
     unlockCheckoutFailed: '拉起支付失败，请稍后重试。',
     unlockCheckoutSuccess: '支付回调已返回。你可以直接使用下方自部署入口，或再次点击解锁按钮完成授权同步。',
     unlockCheckoutCanceled: '已取消支付。',
+    deployTitle: '一键自部署',
+    deployIntro: '付费后可将 Latti 一键部署到你的机器或你自己的服务器。',
+    deployAutoReady: '已完成支付，正在引导你部署。',
+    deployMachineLocal: '当前机器（默认）',
+    deployMachineRemote: '远程服务器',
+    deployMachineLocalDesc: '在当前机器终端执行下面命令，约 1~3 分钟可用。',
+    deployMachineRemoteDesc: '填写目标服务器 SSH 地址后，在当前机器执行命令触发远程部署。',
+    deployPortLabel: '服务端口',
+    deployRemoteHostLabel: '服务器地址（user@host）',
+    deployRemoteHostPlaceholder: '例如 root@1.2.3.4',
+    deployRemoteHostRequired: '请先填写服务器地址（user@host）。',
+    deployCopyCommand: '复制部署命令',
+    deployCopySuccess: '部署命令已复制，请到终端粘贴执行。',
+    deployCopyFailed: '复制失败，请手动复制命令。',
+    deployOpenGuide: '查看安装说明',
+    deployOpenScript: '打开安装脚本',
+    deployAfterDone: '部署完成后，访问 http://localhost:端口（或你的服务器地址）即可使用。',
+    deployBackPortfolio: '返回作品集',
+    deployOpenUnlockedProject: '打开已解锁项目',
+    deployWindowsHint: 'Windows 建议在 WSL / Git Bash 中执行命令。',
   },
   en: {
     sourceSnapshot: 'Project snapshot',
@@ -154,6 +176,7 @@ const APP_COPY = {
     profileLine3: 'Base: New York / Beijing',
     tocHome: 'Home',
     tocProjects: 'Projects',
+    tocDeploy: 'Deploy',
     tocVisual: 'Visual',
     tocContact: 'Contact',
     portfolioTitle: 'Portfolio Gallery',
@@ -228,6 +251,26 @@ const APP_COPY = {
     unlockCheckoutFailed: 'Failed to start checkout. Please try again later.',
     unlockCheckoutSuccess: 'Payment callback received. Use the self-host entry below, or click unlock again to sync entitlement.',
     unlockCheckoutCanceled: 'Checkout canceled.',
+    deployTitle: 'One-Click Self-Host',
+    deployIntro: 'After payment, deploy Latti to your current machine or your own server.',
+    deployAutoReady: 'Payment confirmed. Redirecting you to deployment.',
+    deployMachineLocal: 'Current machine (default)',
+    deployMachineRemote: 'Remote server',
+    deployMachineLocalDesc: 'Run the command below in your current machine terminal. Usually ready in 1-3 minutes.',
+    deployMachineRemoteDesc: 'Fill in your target SSH host, then run the command locally to trigger remote deployment.',
+    deployPortLabel: 'Service port',
+    deployRemoteHostLabel: 'Server address (user@host)',
+    deployRemoteHostPlaceholder: 'Example: root@1.2.3.4',
+    deployRemoteHostRequired: 'Please provide the server address (user@host) first.',
+    deployCopyCommand: 'Copy deploy command',
+    deployCopySuccess: 'Deploy command copied. Paste it in your terminal.',
+    deployCopyFailed: 'Copy failed. Please copy the command manually.',
+    deployOpenGuide: 'Open install guide',
+    deployOpenScript: 'Open install script',
+    deployAfterDone: 'After deployment, open http://localhost:port (or your server host:port) to start using it.',
+    deployBackPortfolio: 'Back to portfolio',
+    deployOpenUnlockedProject: 'Open unlocked project',
+    deployWindowsHint: 'On Windows, use WSL or Git Bash to run the command.',
   },
 } as const
 
@@ -241,7 +284,15 @@ function defaultSelection(projects: PortfolioProject[], preferred: string[]): st
 }
 
 function toRootView(raw: string | null): RootView {
-  return raw === 'blog' ? 'blog' : 'portfolio'
+  if (raw === 'blog') {
+    return 'blog'
+  }
+
+  if (raw === 'deploy') {
+    return 'deploy'
+  }
+
+  return 'portfolio'
 }
 
 function normalizeSlug(raw: string | null): string | null {
@@ -265,6 +316,59 @@ function withDone(text: string, lang: Lang) {
   return lang === 'zh' ? `${text}。` : `${text}.`
 }
 
+function detectLikelyOs(): 'windows' | 'mac' | 'linux' | 'other' {
+  if (typeof navigator === 'undefined') {
+    return 'other'
+  }
+
+  const value = `${navigator.platform} ${navigator.userAgent}`.toLowerCase()
+  if (value.includes('win')) {
+    return 'windows'
+  }
+  if (value.includes('mac')) {
+    return 'mac'
+  }
+  if (value.includes('linux')) {
+    return 'linux'
+  }
+  return 'other'
+}
+
+async function copyTextToClipboard(text: string): Promise<boolean> {
+  if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
+    try {
+      await navigator.clipboard.writeText(text)
+      return true
+    } catch {
+      // Continue to fallback below.
+    }
+  }
+
+  if (typeof document === 'undefined') {
+    return false
+  }
+
+  const textarea = document.createElement('textarea')
+  textarea.value = text
+  textarea.setAttribute('readonly', 'true')
+  textarea.style.position = 'fixed'
+  textarea.style.opacity = '0'
+  textarea.style.left = '-9999px'
+  document.body.appendChild(textarea)
+  textarea.select()
+
+  let copied = false
+  try {
+    copied = document.execCommand('copy')
+  } catch {
+    copied = false
+  } finally {
+    document.body.removeChild(textarea)
+  }
+
+  return copied
+}
+
 function App() {
   const params = new URLSearchParams(window.location.search)
   const hostname = window.location.hostname.toLowerCase()
@@ -285,8 +389,12 @@ function App() {
   const rootHomeUrl = withLangParam('https://wordm.us', lang)
   const resumeHomeUrl = withLangParam('https://resume.wordm.us', lang)
   const billingHomeUrl = withLangParam('https://latti.wordm.us', lang)
-  const selfHostInstallUrl =
+  const selfHostInstallGuideUrl =
     import.meta.env.VITE_SELFHOST_INSTALL_URL || 'https://github.com/LiDeChi/latti/blob/main/docs/selfhost-one-click.md'
+  const selfHostInstallScriptUrl =
+    import.meta.env.VITE_SELFHOST_INSTALL_SCRIPT_URL ||
+    'https://raw.githubusercontent.com/LiDeChi/latti/main/scripts/selfhost-install.sh'
+  const clientOs = useMemo(() => detectLikelyOs(), [])
   const unlockCheckoutProducts = useMemo(
     () => ({
       single: import.meta.env.VITE_UNLOCK_PRODUCT_SINGLE || 'prod_4eDxmaC52vCKWPjGqfqIqy',
@@ -333,6 +441,10 @@ function App() {
   const [checkoutBusyKind, setCheckoutBusyKind] = useState<UnlockCheckoutKind | null>(null)
   const [unlockStatusMessage, setUnlockStatusMessage] = useState('')
   const [unlockTargetSlug, setUnlockTargetSlug] = useState<string | null>(initialUnlockSlug)
+  const [deployTarget, setDeployTarget] = useState<DeployTarget>('local')
+  const [deployPort, setDeployPort] = useState('8080')
+  const [deployRemoteHost, setDeployRemoteHost] = useState('')
+  const [deployStatusMessage, setDeployStatusMessage] = useState('')
   const [selectedSlugs, setSelectedSlugs] = useState<string[]>(() => {
     if (initialShowSlugs.length) {
       return initialShowSlugs
@@ -350,6 +462,8 @@ function App() {
     const next = new URL(window.location.href)
     if (rootView === 'blog') {
       next.searchParams.set('view', 'blog')
+    } else if (rootView === 'deploy') {
+      next.searchParams.set('view', 'deploy')
     } else {
       next.searchParams.delete('view')
     }
@@ -379,7 +493,9 @@ function App() {
     }
 
     if (initialPurchaseSuccess) {
-      setRootView('portfolio')
+      setRootView('deploy')
+      setDeployTarget('local')
+      setDeployStatusMessage(copy.deployAutoReady)
       setUnlockStatusMessage(copy.unlockCheckoutSuccess)
     } else {
       setUnlockStatusMessage(copy.unlockCheckoutCanceled)
@@ -392,12 +508,24 @@ function App() {
     next.searchParams.delete('checkout_slug')
     window.history.replaceState({}, '', next)
   }, [
+    copy.deployAutoReady,
     copy.unlockCheckoutCanceled,
     copy.unlockCheckoutSuccess,
     initialCheckoutSlug,
     initialPurchaseCanceled,
     initialPurchaseSuccess,
   ])
+
+  useEffect(() => {
+    if (rootView === 'deploy') {
+      setActiveSection('deploy')
+      return
+    }
+
+    if (rootView === 'portfolio') {
+      setActiveSection('home')
+    }
+  }, [rootView])
 
   useEffect(() => {
     if (rootView !== 'portfolio') {
@@ -704,7 +832,7 @@ function App() {
       next.searchParams.delete('checkout_slug')
     }
 
-    next.searchParams.set('view', 'portfolio')
+    next.searchParams.set('view', 'deploy')
     if (lang === 'en') {
       next.searchParams.set('lang', 'en')
     } else {
@@ -770,6 +898,21 @@ function App() {
     } finally {
       setCheckoutBusyKind(null)
     }
+  }
+
+  async function handleCopyDeployCommand() {
+    if (deployTarget === 'remote' && !deployRemoteHost.trim()) {
+      setDeployStatusMessage(copy.deployRemoteHostRequired)
+      return
+    }
+
+    if (!activeDeployCommand) {
+      setDeployStatusMessage(copy.deployCopyFailed)
+      return
+    }
+
+    const copied = await copyTextToClipboard(activeDeployCommand)
+    setDeployStatusMessage(copied ? copy.deployCopySuccess : copy.deployCopyFailed)
   }
 
   async function handleLogin(email: string, password: string) {
@@ -908,6 +1051,23 @@ function App() {
         : unlockStorageMode === 'loading'
           ? copy.unlockStorageLoading
           : copy.unlockStorageIdle
+  const normalizedDeployPort = useMemo(() => {
+    const value = deployPort.trim()
+    return value || '8080'
+  }, [deployPort])
+  const localDeployCommand = useMemo(
+    () => `curl -fsSL ${selfHostInstallScriptUrl} | bash -s -- --port ${normalizedDeployPort}`,
+    [normalizedDeployPort, selfHostInstallScriptUrl],
+  )
+  const remoteDeployCommand = useMemo(() => {
+    const host = deployRemoteHost.trim()
+    if (!host) {
+      return ''
+    }
+
+    return `ssh ${host} 'curl -fsSL ${selfHostInstallScriptUrl} | bash -s -- --port ${normalizedDeployPort}'`
+  }, [deployRemoteHost, normalizedDeployPort, selfHostInstallScriptUrl])
+  const activeDeployCommand = deployTarget === 'local' ? localDeployCommand : remoteDeployCommand
   const subdomainProjectUnlocked = subdomainProject
     ? canAccessProject(subdomainProject.slug, authRole, unlockState)
     : false
@@ -1247,6 +1407,157 @@ function App() {
     )
   }
 
+  if (rootView === 'deploy') {
+    return (
+      <div className="page-container">
+        <Sidebar
+          lang={lang}
+          mode="portfolio"
+          activeKey={activeSection}
+          lastUpdated={lastUpdated}
+          onLangChange={setLang}
+          onModeChange={setRootView}
+          onNavigate={(id) => {
+            setActiveSection(id)
+            const target = document.getElementById(id)
+            if (target) {
+              target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+            }
+          }}
+          tocItems={[
+            { id: 'home', label: copy.tocHome },
+            { id: 'deploy', label: copy.tocDeploy },
+            { id: 'contact', label: copy.tocContact },
+          ]}
+          authPanel={authPanelProps}
+        />
+
+        <main className="main-content portfolio-main-content">
+          <section id="home">
+            <div className="site-home-head">
+              <SiteHeroBanner lang={lang} className="blog-hero-banner" />
+              <div className="site-home-profile">
+                <div className="profile-title">简永杰</div>
+                <div className="profile-title profile-title-en">Jian Yongjie</div>
+                <div className="profile-affil">
+                  {copy.profileLine1}
+                  <br />
+                  {copy.profileLine2}
+                  <br />
+                  {copy.profileLine3}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="deploy">
+            <h2>{copy.deployTitle}</h2>
+            <p className="visual-intro">{copy.deployIntro}</p>
+            <section className="unlock-control-panel" aria-live="polite">
+              <div className="unlock-plan-actions">
+                <button
+                  type="button"
+                  className={`unlock-plan-btn ${deployTarget === 'local' ? 'active' : ''}`}
+                  onClick={() => setDeployTarget('local')}
+                >
+                  {copy.deployMachineLocal}
+                </button>
+                <button
+                  type="button"
+                  className={`unlock-plan-btn ${deployTarget === 'remote' ? 'active' : ''}`}
+                  onClick={() => setDeployTarget('remote')}
+                >
+                  {copy.deployMachineRemote}
+                </button>
+              </div>
+
+              <p className="unlock-control-intro">
+                {deployTarget === 'local' ? copy.deployMachineLocalDesc : copy.deployMachineRemoteDesc}
+              </p>
+              {clientOs === 'windows' ? <p className="unlock-status-message">{copy.deployWindowsHint}</p> : null}
+
+              <div className="deploy-form-grid">
+                <label className="deploy-field">
+                  <span>{copy.deployPortLabel}</span>
+                  <input
+                    className="deploy-input"
+                    value={deployPort}
+                    onChange={(event) => setDeployPort(event.target.value)}
+                    inputMode="numeric"
+                    placeholder="8080"
+                  />
+                </label>
+                {deployTarget === 'remote' ? (
+                  <label className="deploy-field">
+                    <span>{copy.deployRemoteHostLabel}</span>
+                    <input
+                      className="deploy-input"
+                      value={deployRemoteHost}
+                      onChange={(event) => setDeployRemoteHost(event.target.value)}
+                      placeholder={copy.deployRemoteHostPlaceholder}
+                    />
+                  </label>
+                ) : null}
+              </div>
+
+              <pre className="deploy-command-block">
+                <code>{activeDeployCommand || copy.deployRemoteHostRequired}</code>
+              </pre>
+
+              <div className="unlock-plan-actions">
+                <button type="button" className="unlock-plan-btn" onClick={() => void handleCopyDeployCommand()}>
+                  {copy.deployCopyCommand}
+                </button>
+                <a className="unlock-plan-btn deploy-link-btn" href={selfHostInstallGuideUrl} target="_blank" rel="noreferrer">
+                  {copy.deployOpenGuide}
+                </a>
+                <a className="unlock-plan-btn deploy-link-btn" href={selfHostInstallScriptUrl} target="_blank" rel="noreferrer">
+                  {copy.deployOpenScript}
+                </a>
+              </div>
+
+              {deployStatusMessage ? <p className="unlock-status-message">{deployStatusMessage}</p> : null}
+              <p className="unlock-control-intro">{copy.deployAfterDone}</p>
+
+              <div className="unlock-plan-actions">
+                <button type="button" className="unlock-plan-btn" onClick={() => setRootView('portfolio')}>
+                  {copy.deployBackPortfolio}
+                </button>
+                {unlockTargetSlug ? (
+                  <a
+                    className="unlock-plan-btn deploy-link-btn"
+                    href={withLangParam(`https://${unlockTargetSlug}.wordm.us`, lang)}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {copy.deployOpenUnlockedProject}
+                  </a>
+                ) : null}
+              </div>
+            </section>
+          </section>
+
+          <section id="contact">
+            <h2>{copy.contactTitle}</h2>
+            <div className="formula">deploy(host) = wordm.us + {'{'}resume.wordm.us + p-*.wordm.us{'}'}</div>
+            <p>
+              {copy.rootDomain}: <a href={rootHomeUrl}>wordm.us</a>
+              <br />
+              {copy.resumeDomain}: <a href={resumeHomeUrl}>resume.wordm.us</a>
+              <br />
+              {copy.projectDomain}: {copy.projectDomainDesc}
+            </p>
+          </section>
+
+          <footer>
+            <div>{copy.copyright}</div>
+            <div>{copy.portfolioMode}</div>
+          </footer>
+        </main>
+      </div>
+    )
+  }
+
   return (
     <div className="page-container">
       <Sidebar
@@ -1332,7 +1643,7 @@ function App() {
             </p>
             <p className="unlock-control-intro">
               {copy.unlockInstallHintPrefix}{' '}
-              <a href={selfHostInstallUrl} target="_blank" rel="noreferrer">
+              <a href={selfHostInstallGuideUrl} target="_blank" rel="noreferrer">
                 {copy.unlockInstallHintLink}
               </a>
             </p>
