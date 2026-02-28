@@ -1,17 +1,10 @@
 const ROOT_ORIGIN = 'https://wordm.us'
 
-const ALLOWED_SUBDOMAINS = new Set([
-  'resume',
-  'cv',
-  'p-page-glance-extension',
-  'p-apple-notes-webclipper',
-  'p-personalinflationbasket',
-  'p-llm-layer',
-  'p-focusor',
-  'p-code-agent-demo',
-  'p-open-deep-research',
-  'p-dynamic-delegate-2',
-])
+const STATIC_SUBDOMAINS = new Set(['resume', 'cv'])
+
+function isAllowedSubdomain(subdomain: string): boolean {
+  return STATIC_SUBDOMAINS.has(subdomain) || subdomain.startsWith('p-')
+}
 
 function extractSubdomain(hostname: string): string | null {
   const normalized = hostname.toLowerCase()
@@ -32,7 +25,7 @@ export default {
     const incomingUrl = new URL(request.url)
     const subdomain = extractSubdomain(incomingUrl.hostname)
 
-    if (!subdomain || !ALLOWED_SUBDOMAINS.has(subdomain)) {
+    if (!subdomain || !isAllowedSubdomain(subdomain)) {
       return new Response('Subdomain is not configured.', {
         status: 404,
         headers: { 'content-type': 'text/plain; charset=utf-8' },

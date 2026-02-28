@@ -151,16 +151,12 @@ npm run deploy:subdomains
 脚本：`scripts/deploy-subdomain-worker.sh` + `workers/subdomain-proxy.ts`
 
 - Worker 名称：`wordm-project-subdomains`
-- 已绑定子域名：
+- 自动从 `src/data/projects.snapshot.json` 读取全部 `p-*` 子域并绑定，同时包含：
   - `resume.wordm.us`
-  - `p-page-glance-extension.wordm.us`
-  - `p-apple-notes-webclipper.wordm.us`
-  - `p-personalinflationbasket.wordm.us`
-  - `p-llm-layer.wordm.us`
-  - `p-focusor.wordm.us`
-  - `p-code-agent-demo.wordm.us`
-  - `p-open-deep-research.wordm.us`
-  - `p-dynamic-delegate-2.wordm.us`
+  - `cv.wordm.us`
+- Worker 访问规则：
+  - 固定允许 `resume` / `cv`
+  - 所有 `p-` 前缀子域按统一代理规则转发到根域并保留语言参数
 
 ## SEO 与兼容跳转
 
