@@ -5,11 +5,23 @@ import { ResumeAccessDenied } from './components/ResumeAccessDenied'
 import { ResumePage } from './components/ResumePage'
 import { Sidebar } from './components/Sidebar'
 import { SiteHeroBanner } from './components/SiteHeroBanner'
+import { SubdomainProjectLocked } from './components/SubdomainProjectLocked'
 import { SubdomainProjectView } from './components/SubdomainProjectView'
 import { BLOG_ARTICLES } from './data/blogArticles'
 import { type Lang, resolveInitialLang } from './i18n/lang'
 import projectsSnapshotRaw from './data/projects.snapshot.json'
 import { withLangParam } from './lib/lang-url'
+import {
+  canAccessProject,
+  getFreeOfferStatus,
+  grantAllCurrentPlusYearUnlock,
+  grantAllCurrentUnlock,
+  grantFreeProjectUnlock,
+  grantSingleProjectUnlock,
+  loadUnlockStateForUser,
+  saveUnlockStateForUser,
+  type UserUnlockState,
+} from './lib/unlock'
 import {
   type AuthRoleRulesJson,
   type AuthRole,
@@ -40,6 +52,11 @@ type RootView = 'blog' | 'portfolio'
 
 const snapshot = projectsSnapshotRaw as ProjectsSnapshot
 const portfolioSectionIds = ['home', 'projects', 'visual', 'contact']
+const EMPTY_UNLOCK_STATE: UserUnlockState = {
+  grants: [],
+  freeOfferTotal: null,
+  freePickedSlugs: [],
+}
 
 const APP_COPY = {
   zh: {
@@ -92,6 +109,23 @@ const APP_COPY = {
     logoutSuccess: '已退出登录。',
     logoutFailed: '退出失败',
     logoutFallback: '请稍后重试。',
+    unlockPanelTitle: '作品解锁与安装',
+    unlockPanelIntro: '解锁后可进入项目子域名并一键安装到本地设备。',
+    unlockPlanSingleLabel: '单作品解锁',
+    unlockPlanAllCurrent: '解锁当前全部作品',
+    unlockPlanAllCurrentPlusYear: '解锁当前作品 + 一年内新作品',
+    unlockNeedLogin: '请先登录后再解锁作品。',
+    unlockActionFailed: '解锁失败，请稍后重试。',
+    unlockAllCurrentSuccess: '已解锁当前全部作品。',
+    unlockAllCurrentPlusYearSuccess: '已解锁当前作品，并开启一年新作品解锁。',
+    unlockSingleSuccessPrefix: '已解锁作品',
+    unlockFreeSuccessPrefix: '已使用免费名额解锁',
+    unlockFreeEmpty: '免费解锁名额已用完。',
+    unlockFreeQuotaPrefix: '免费解锁额度',
+    unlockQuotaFormatPrefix: '总额度',
+    unlockQuotaUsed: '已用',
+    unlockQuotaRemaining: '剩余',
+    unlockBypassNotice: '当前身份可直接访问全部作品，无需解锁。',
   },
   en: {
     sourceSnapshot: 'Project snapshot',
@@ -143,6 +177,23 @@ const APP_COPY = {
     logoutSuccess: 'Logged out.',
     logoutFailed: 'Logout failed',
     logoutFallback: 'Please try again later.',
+    unlockPanelTitle: 'Unlock & Install',
+    unlockPanelIntro: 'Unlock to access project subdomains and one-click install to your device.',
+    unlockPlanSingleLabel: 'Single project unlock',
+    unlockPlanAllCurrent: 'Unlock all current projects',
+    unlockPlanAllCurrentPlusYear: 'Unlock current + 1-year new projects',
+    unlockNeedLogin: 'Please log in before unlocking projects.',
+    unlockActionFailed: 'Unlock failed. Please try again later.',
+    unlockAllCurrentSuccess: 'All current projects are now unlocked.',
+    unlockAllCurrentPlusYearSuccess: 'Current projects unlocked, plus one-year new project access enabled.',
+    unlockSingleSuccessPrefix: 'Unlocked project',
+    unlockFreeSuccessPrefix: 'Free unlock used for',
+    unlockFreeEmpty: 'No free unlock quota left.',
+    unlockFreeQuotaPrefix: 'Free unlock quota',
+    unlockQuotaFormatPrefix: 'total',
+    unlockQuotaUsed: 'used',
+    unlockQuotaRemaining: 'remaining',
+    unlockBypassNotice: 'Your role can access all projects without unlock limits.',
   },
 } as const
 
@@ -157,6 +208,15 @@ function defaultSelection(projects: PortfolioProject[], preferred: string[]): st
 
 function toRootView(raw: string | null): RootView {
   return raw === 'blog' ? 'blog' : 'portfolio'
+}
+
+function normalizeSlug(raw: string | null): string | null {
+  if (!raw) {
+    return null
+  }
+
+  const slug = raw.trim().toLowerCase()
+  return slug || null
 }
 
 function withDetail(prefix: string, detail: string) {
@@ -180,6 +240,7 @@ function App() {
   const initialApi = params.get('centerApi') || import.meta.env.VITE_CENTER_CONTROL_API || ''
   const initialShowSlugs = parseShowSlugs(params.get('show'))
   const initialRootView = toRootView(params.get('view'))
+  const initialUnlockSlug = normalizeSlug(params.get('unlock'))
   const initialLang = resolveInitialLang(window.location)
 
   const [lang, setLang] = useState<Lang>(initialLang)
@@ -218,6 +279,9 @@ function App() {
   const [authLoading, setAuthLoading] = useState(authEnabled)
   const [authBusy, setAuthBusy] = useState(false)
   const [authStatusMessage, setAuthStatusMessage] = useState('')
+  const [unlockState, setUnlockState] = useState<UserUnlockState | null>(null)
+  const [unlockStatusMessage, setUnlockStatusMessage] = useState('')
+  const [unlockTargetSlug, setUnlockTargetSlug] = useState<string | null>(initialUnlockSlug)
   const [selectedSlugs, setSelectedSlugs] = useState<string[]>(() => {
     if (initialShowSlugs.length) {
       return initialShowSlugs
@@ -245,8 +309,14 @@ function App() {
       next.searchParams.delete('lang')
     }
 
+    if (unlockTargetSlug) {
+      next.searchParams.set('unlock', unlockTargetSlug)
+    } else {
+      next.searchParams.delete('unlock')
+    }
+
     window.history.replaceState({}, '', next)
-  }, [rootView, lang])
+  }, [rootView, lang, unlockTargetSlug])
 
   useEffect(() => {
     if (rootView !== 'portfolio') {
@@ -416,6 +486,41 @@ function App() {
     }
   }, [authConfig, authEnabled, authRoleRules, copy.pleaseRelogin, copy.sessionRestoreFailed])
 
+  useEffect(() => {
+    if (!authUser) {
+      setUnlockState(null)
+      setUnlockStatusMessage('')
+      return
+    }
+
+    setUnlockState(loadUnlockStateForUser(authUser.id))
+  }, [authUser])
+
+  useEffect(() => {
+    if (!authUser || !unlockState) {
+      return
+    }
+
+    saveUnlockStateForUser(authUser.id, unlockState)
+  }, [authUser, unlockState])
+
+  useEffect(() => {
+    if (!unlockTargetSlug) {
+      return
+    }
+
+    setSelectedSlugs((prev) => {
+      if (prev.includes(unlockTargetSlug)) {
+        return prev
+      }
+      if (!projects.some((project) => project.slug === unlockTargetSlug)) {
+        return prev
+      }
+
+      return [...prev, unlockTargetSlug]
+    })
+  }, [projects, unlockTargetSlug])
+
   async function loadLiveProjects() {
     if (!centerApi) {
       setLoadState('error')
@@ -566,6 +671,16 @@ function App() {
   const nextArticle = BLOG_ARTICLES[activeArticleIndex + 1] || null
   const authRole: AuthRole = authUser?.role ?? 'guest'
   const canAccessResume = authRole === 'admin' || authRole === 'tester'
+  const projectCatalogSlugs = useMemo(() => projects.map((project) => project.slug), [projects])
+  const freeOfferStatus = useMemo(
+    () => getFreeOfferStatus(unlockState ?? EMPTY_UNLOCK_STATE, authUser?.createdAt ?? null),
+    [authUser?.createdAt, unlockState],
+  )
+  const canUseFreeUnlock = authRole !== 'guest' && freeOfferStatus.remaining > 0
+  const unlockQuotaText = `${copy.unlockQuotaFormatPrefix} ${freeOfferStatus.total} · ${copy.unlockQuotaUsed} ${freeOfferStatus.used} · ${copy.unlockQuotaRemaining} ${freeOfferStatus.remaining}`
+  const subdomainProjectUnlocked = subdomainProject
+    ? canAccessProject(subdomainProject.slug, authRole, unlockState)
+    : false
   const authPanelProps = {
     lang,
     enabled: authEnabled,
@@ -579,6 +694,123 @@ function App() {
     onLogout: handleLogout,
   }
 
+  function getProjectNameBySlug(slug: string) {
+    return projects.find((project) => project.slug === slug)?.name || slug
+  }
+
+  function isProjectUnlocked(slug: string) {
+    return canAccessProject(slug, authRole, unlockState)
+  }
+
+  function ensureCanUnlock() {
+    if (authRole === 'admin' || authRole === 'tester') {
+      setUnlockStatusMessage(copy.unlockBypassNotice)
+      return false
+    }
+
+    if (authRole === 'guest' || !authUser) {
+      setUnlockStatusMessage(copy.unlockNeedLogin)
+      return false
+    }
+
+    return true
+  }
+
+  function handleUnlockSingle(projectSlug: string) {
+    const normalizedSlug = normalizeSlug(projectSlug)
+    if (!normalizedSlug) {
+      return
+    }
+
+    setUnlockTargetSlug(normalizedSlug)
+    if (!ensureCanUnlock()) {
+      return
+    }
+
+    try {
+      const nextState = grantSingleProjectUnlock(unlockState ?? EMPTY_UNLOCK_STATE, normalizedSlug, new Date())
+      setUnlockState(nextState)
+      setUnlockStatusMessage(`${copy.unlockSingleSuccessPrefix}: ${getProjectNameBySlug(normalizedSlug)}`)
+    } catch {
+      setUnlockStatusMessage(copy.unlockActionFailed)
+    }
+  }
+
+  function handleUnlockAllCurrent() {
+    if (!ensureCanUnlock()) {
+      return
+    }
+
+    try {
+      const nextState = grantAllCurrentUnlock(unlockState ?? EMPTY_UNLOCK_STATE, projectCatalogSlugs, new Date())
+      setUnlockState(nextState)
+      setUnlockStatusMessage(copy.unlockAllCurrentSuccess)
+    } catch {
+      setUnlockStatusMessage(copy.unlockActionFailed)
+    }
+  }
+
+  function handleUnlockAllCurrentPlusYear() {
+    if (!ensureCanUnlock()) {
+      return
+    }
+
+    try {
+      const nextState = grantAllCurrentPlusYearUnlock(
+        unlockState ?? EMPTY_UNLOCK_STATE,
+        projectCatalogSlugs,
+        new Date(),
+      )
+      setUnlockState(nextState)
+      setUnlockStatusMessage(copy.unlockAllCurrentPlusYearSuccess)
+    } catch {
+      setUnlockStatusMessage(copy.unlockActionFailed)
+    }
+  }
+
+  function handleUnlockFree(projectSlug: string) {
+    const normalizedSlug = normalizeSlug(projectSlug)
+    if (!normalizedSlug) {
+      return
+    }
+
+    setUnlockTargetSlug(normalizedSlug)
+    if (!ensureCanUnlock()) {
+      return
+    }
+
+    try {
+      const nextState = grantFreeProjectUnlock(
+        unlockState ?? EMPTY_UNLOCK_STATE,
+        normalizedSlug,
+        authUser?.createdAt ?? null,
+        new Date(),
+      )
+      setUnlockState(nextState)
+      setUnlockStatusMessage(`${copy.unlockFreeSuccessPrefix}: ${getProjectNameBySlug(normalizedSlug)}`)
+    } catch (error) {
+      if (error instanceof Error && error.message === 'FREE_OFFER_EXHAUSTED') {
+        setUnlockStatusMessage(copy.unlockFreeEmpty)
+        return
+      }
+
+      setUnlockStatusMessage(copy.unlockActionFailed)
+    }
+  }
+
+  useEffect(() => {
+    if (rootView !== 'portfolio' || !unlockTargetSlug) {
+      return
+    }
+
+    const target = document.getElementById(`project-${unlockTargetSlug}`)
+    if (!target) {
+      return
+    }
+
+    target.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  }, [rootView, unlockTargetSlug])
+
   function jumpToArticle(id: string) {
     setActiveArticleId(id)
     const target = document.getElementById(id)
@@ -588,6 +820,22 @@ function App() {
   }
 
   if (subdomainProject) {
+    if (!subdomainProjectUnlocked) {
+      return (
+        <SubdomainProjectLocked
+          lang={lang}
+          role={authRole}
+          project={subdomainProject}
+          statusMessage={unlockStatusMessage}
+          canUseFreeUnlock={canUseFreeUnlock}
+          freeRemaining={freeOfferStatus.remaining}
+          authPanel={authPanelProps}
+          onUnlockSingle={handleUnlockSingle}
+          onUnlockFree={handleUnlockFree}
+        />
+      )
+    }
+
     return <SubdomainProjectView lang={lang} project={subdomainProject} lastUpdated={lastUpdated} authPanel={authPanelProps} />
   }
 
@@ -741,9 +989,46 @@ function App() {
 
           <h2>{copy.portfolioTitle}</h2>
           <p className="visual-intro">{copy.portfolioIntro}</p>
+          <section className="unlock-control-panel" aria-live="polite">
+            <div className="paper-meta unlock-control-meta">
+              <span>{copy.unlockPanelTitle}</span>
+              <span>
+                {copy.unlockFreeQuotaPrefix}: {unlockQuotaText}
+              </span>
+            </div>
+            <p className="unlock-control-intro">{copy.unlockPanelIntro}</p>
+            <p className="unlock-plan-summary">
+              {copy.unlockPlanSingleLabel} (card) · {copy.unlockPlanAllCurrent} · {copy.unlockPlanAllCurrentPlusYear}
+            </p>
+
+            {authRole === 'admin' || authRole === 'tester' ? (
+              <p className="unlock-status-message">{copy.unlockBypassNotice}</p>
+            ) : (
+              <div className="unlock-plan-actions">
+                <button type="button" className="unlock-plan-btn" onClick={handleUnlockAllCurrent}>
+                  {copy.unlockPlanAllCurrent}
+                </button>
+                <button type="button" className="unlock-plan-btn" onClick={handleUnlockAllCurrentPlusYear}>
+                  {copy.unlockPlanAllCurrentPlusYear}
+                </button>
+              </div>
+            )}
+
+            {unlockStatusMessage ? <p className="unlock-status-message">{unlockStatusMessage}</p> : null}
+          </section>
+
           <div className="portfolio-gallery">
             {featuredProjects.map((project) => (
-              <ProjectEntry lang={lang} key={project.id} project={project} />
+              <ProjectEntry
+                lang={lang}
+                key={project.id}
+                project={project}
+                unlocked={isProjectUnlocked(project.slug)}
+                focused={unlockTargetSlug === project.slug}
+                canUseFreeUnlock={canUseFreeUnlock}
+                onUnlockSingle={handleUnlockSingle}
+                onUnlockFree={handleUnlockFree}
+              />
             ))}
           </div>
         </section>

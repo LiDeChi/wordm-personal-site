@@ -21,6 +21,7 @@ export type AuthUserSummary = {
   id: string
   email: string
   role: AuthRole
+  createdAt: string | null
 }
 
 export type SignupOutcome = 'session' | 'confirm' | 'exists'
@@ -348,6 +349,7 @@ export function toAuthUserSummary(user: User | null, rules: AuthRoleRules): Auth
     id: user.id,
     email: normalizeEmail(user.email),
     role: resolveAuthRole(user, rules),
+    createdAt: typeof user.created_at === 'string' ? user.created_at : null,
   }
 }
 

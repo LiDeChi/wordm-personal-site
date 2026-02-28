@@ -36,6 +36,19 @@ VITE_AUTH_TEST_EMAILS=test1@example.com,test2@example.com
 - 账号角色共四类：`admin`（管理员）、`tester`（测试账号）、`user`（普通账号）、`guest`（游客）。
 - 角色判定顺序：Supabase 用户 metadata 的 `role` 字段 > `public/auth-role-rules.json` 邮箱名单（与环境变量合并）> 默认 `user`。
 - 简历页权限：仅 `admin` / `tester` 可访问，`user` / `guest` 会显示受限提示页。
+- 项目解锁权限：`admin` / `tester` 自动拥有全部作品访问权限；`user` 需按解锁规则获取访问；`guest` 需先登录。
+
+### 作品解锁规则（Portfolio Monetization MVP）
+
+- 单作品解锁：仅解锁一个指定项目。
+- 当前全部作品解锁：按购买时的作品清单解锁当下所有项目。
+- 当前作品 + 一年内新作品：购买时清单全部可访问，且购买后一年内新增项目也可访问。
+- 免费解锁额度（一次性总池）：
+  - 注册 7 天内：总额度 `N=2`
+  - 注册 7~30 天：总额度 `N=1`
+  - 注册超过 30 天：总额度 `N=0`
+- 免费额度在首次使用时固化，后续按已用/剩余额度扣减。
+- 当前实现为前端本地账本（`localStorage`，按用户 ID 分桶），便于后续对接真实支付回调。
 
 ### 快速管理管理员/测试邮箱
 

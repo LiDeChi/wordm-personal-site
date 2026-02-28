@@ -543,6 +543,22 @@ p {
   transform: translateY(-2px);
 }
 
+.gallery-card-focused {
+  border-color: #222;
+  box-shadow: 0 0 0 1px rgb(34 34 34 / 35%);
+}
+
+.gallery-card-locked {
+  border-color: #dbdbdb;
+  background: #fcfcfc;
+}
+
+.gallery-card-locked:hover {
+  border-color: #cfcfcf;
+  box-shadow: 0 8px 18px rgb(0 0 0 / 5%);
+  transform: translateY(-1px);
+}
+
 .gallery-cover {
   position: relative;
   display: block;
@@ -583,6 +599,21 @@ p {
   font-size: 0.62rem;
 }
 
+.gallery-lock-badge {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  border: 1px solid rgb(0 0 0 / 15%);
+  background: rgb(255 255 255 / 78%);
+  color: rgb(17 17 17 / 72%);
+  font-size: 0.61rem;
+  padding: 2px 6px;
+}
+
+.gallery-card-locked .gallery-cover-initials {
+  opacity: 0.65;
+}
+
 .gallery-card-body {
   display: flex;
   flex: 1;
@@ -606,6 +637,12 @@ p {
 
 .gallery-title:hover {
   background: transparent;
+}
+
+.gallery-title-locked {
+  border-bottom: 0;
+  color: #252525;
+  cursor: default;
 }
 
 .gallery-scope {
@@ -653,6 +690,105 @@ p {
   margin-right: 8px;
   margin-bottom: 6px;
   display: inline-block;
+}
+
+.gallery-lock-actions {
+  margin-top: auto;
+  padding-top: 6px;
+}
+
+.gallery-lock-hint {
+  margin-bottom: 8px;
+  color: #666;
+  font-size: 0.72rem;
+  text-align: left;
+}
+
+.gallery-lock-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.gallery-unlock-btn {
+  border: 1px solid var(--c-ink-faint);
+  background: #fff;
+  color: #222;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  padding: 6px 8px;
+  cursor: pointer;
+}
+
+.gallery-unlock-btn:hover {
+  border-color: var(--c-ink);
+}
+
+.gallery-unlock-btn.ghost {
+  background: #fafafa;
+  color: #555;
+}
+
+.gallery-unlock-btn:disabled,
+.gallery-unlock-btn.ghost:disabled {
+  opacity: 0.52;
+  cursor: not-allowed;
+}
+
+.unlock-control-panel {
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  border: 1px dashed var(--c-ink-faint);
+  background: #fcfcfc;
+  padding: 12px;
+}
+
+.unlock-control-meta {
+  margin-bottom: 4px;
+}
+
+.unlock-control-intro {
+  margin-bottom: 6px;
+  font-size: 0.84rem;
+  color: #444;
+  text-align: left;
+}
+
+.unlock-plan-summary {
+  margin-bottom: 8px;
+  font-size: 0.75rem;
+  color: #666;
+  text-align: left;
+}
+
+.unlock-plan-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.unlock-plan-btn {
+  border: 1px solid var(--c-ink-faint);
+  background: #fff;
+  color: #111;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  padding: 7px 9px;
+  cursor: pointer;
+}
+
+.unlock-plan-btn:hover {
+  border-color: var(--c-ink);
+  background: #111;
+  color: #fff;
+}
+
+.unlock-status-message {
+  margin-top: 8px;
+  margin-bottom: 0;
+  font-size: 0.74rem;
+  color: #3f3f3f;
+  text-align: left;
 }
 
 .blog-entry {
@@ -1024,6 +1160,27 @@ footer {
   justify-content: space-between;
   gap: 10px;
   flex-wrap: wrap;
+}
+
+.subdomain-unlock-panel {
+  border: 1px dashed var(--c-ink-faint);
+  background: #fcfcfc;
+  padding: 10px;
+  margin-bottom: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.subdomain-unlock-free {
+  background: #fafafa;
+}
+
+.subdomain-inline-status {
+  margin-bottom: 0;
+  font-size: 0.74rem;
+  text-align: left;
 }
 
 @media (max-width: 1100px) {
