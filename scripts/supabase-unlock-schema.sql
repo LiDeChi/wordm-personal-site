@@ -281,8 +281,8 @@ begin
 
   elsif v_kind = 'all_current_plus_year' then
     v_plan_tier := public.wordm_unlock_plan_tier(v_uid);
-    if v_plan_tier < 2 then
-      raise exception 'LIFETIME_REQUIRED';
+    if v_plan_tier < 1 then
+      raise exception 'PAYMENT_REQUIRED';
     end if;
 
     insert into public.project_unlock_grants (user_id, kind, catalog_slugs, granted_at, new_unlock_until)

@@ -36,6 +36,7 @@ VITE_UNLOCK_PRODUCT_ALL_CURRENT_PLUS_YEAR=prod_zzz
 
 - 推荐使用你提到的同一套 Supabase 项目（`latti-wordm`）来保证账号一致。
 - 三个 `VITE_UNLOCK_PRODUCT_*` 对应作品集三种付费解锁模式，前端会调用 Supabase Edge Function `creem-checkout` 拉起支付。
+- 若不配置，会使用 `latti` 当前公开计划商品作为默认值（Basic 月付 / Pro 月付 / Pro 年付）。
 - 站点会将 Supabase 会话同步到 `.wordm.us` 域级 cookie，因此 `wordm.us`、`resume.wordm.us`、`p-*.wordm.us` 会共享登录态。
 - 账号角色共四类：`admin`（管理员）、`tester`（测试账号）、`user`（普通账号）、`guest`（游客）。
 - 角色判定顺序：Supabase 用户 metadata 的 `role` 字段 > `public/auth-role-rules.json` 邮箱名单（与环境变量合并）> 默认 `user`。
@@ -48,8 +49,7 @@ VITE_UNLOCK_PRODUCT_ALL_CURRENT_PLUS_YEAR=prod_zzz
 - 当前全部作品解锁：按购买时的作品清单解锁当下所有项目。
 - 当前作品 + 一年内新作品：购买时清单全部可访问，且购买后一年内新增项目也可访问。
 - 付费权限校验与 `latti-wordm` 保持一致：读取 `public.entitlements`（`plan/plan_id/expires_at`）。
-  - `single` / `all_current` 需要有效订阅或终身权益（`SUBSCRIPTION/basic/pro/lifetime`）。
-  - `all_current_plus_year` 需要终身权益（`LIFETIME/lifetime`）。
+  - `single` / `all_current` / `all_current_plus_year` 均需要有效付费权益（`SUBSCRIPTION/basic/pro/lifetime`）。
 - 免费解锁额度（一次性总池）：
   - 注册 7 天内：总额度 `N=2`
   - 注册 7~30 天：总额度 `N=1`
@@ -60,7 +60,7 @@ VITE_UNLOCK_PRODUCT_ALL_CURRENT_PLUS_YEAR=prod_zzz
   - 当 RPC 不可用时，仅 `free_pick` 回退到本地账本（`localStorage`，按用户 ID 分桶）。
   - 付费解锁（`single/all_current/all_current_plus_year`）必须走 Supabase 校验，不会本地降级绕过。
 - 付费交互：
-  - 若点击解锁触发 `PAYMENT_REQUIRED` / `LIFETIME_REQUIRED`，前端会自动拉起 `creem-checkout`。
+  - 若点击解锁触发 `PAYMENT_REQUIRED`，前端会自动拉起 `creem-checkout`。
   - 支付成功后回到当前页面并显示回调提示；再次点击解锁即可完成授权同步。
 
 ### 初始化 Supabase 解锁表与函数

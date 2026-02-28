@@ -283,9 +283,9 @@ function App() {
   const billingHomeUrl = withLangParam('https://latti.wordm.us', lang)
   const unlockCheckoutProducts = useMemo(
     () => ({
-      single: import.meta.env.VITE_UNLOCK_PRODUCT_SINGLE || '',
-      allCurrent: import.meta.env.VITE_UNLOCK_PRODUCT_ALL_CURRENT || '',
-      allCurrentPlusYear: import.meta.env.VITE_UNLOCK_PRODUCT_ALL_CURRENT_PLUS_YEAR || '',
+      single: import.meta.env.VITE_UNLOCK_PRODUCT_SINGLE || 'prod_4eDxmaC52vCKWPjGqfqIqy',
+      allCurrent: import.meta.env.VITE_UNLOCK_PRODUCT_ALL_CURRENT || 'prod_omAVm07vFxto9HGfmfJ9q',
+      allCurrentPlusYear: import.meta.env.VITE_UNLOCK_PRODUCT_ALL_CURRENT_PLUS_YEAR || 'prod_3WVufccMdH37WNdEVvSL6',
     }),
     [],
   )
