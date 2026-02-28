@@ -136,10 +136,12 @@ const APP_COPY = {
     unlockPaidServerRequired: '付费校验服务暂不可用，当前仅支持免费名额解锁。',
     unlockBillingHintPrefix: '付费解锁权益与 latti 账号体系打通：',
     unlockBillingHintLink: '前往 latti.wordm.us',
+    unlockInstallHintPrefix: '付费后可一键自部署：',
+    unlockInstallHintLink: '打开安装指南',
     unlockCheckoutStarting: '正在跳转支付...',
     unlockCheckoutProductMissing: '未配置该解锁方案的商品，请先在 latti.wordm.us 完成升级。',
     unlockCheckoutFailed: '拉起支付失败，请稍后重试。',
-    unlockCheckoutSuccess: '支付回调已返回。请再次点击解锁按钮完成授权同步。',
+    unlockCheckoutSuccess: '支付回调已返回。你可以直接使用下方自部署入口，或再次点击解锁按钮完成授权同步。',
     unlockCheckoutCanceled: '已取消支付。',
   },
   en: {
@@ -219,10 +221,12 @@ const APP_COPY = {
     unlockPaidServerRequired: 'Paid verification service is unavailable. Only free-pick unlock is available now.',
     unlockBillingHintPrefix: 'Paid entitlements are shared with latti account system:',
     unlockBillingHintLink: 'Go to latti.wordm.us',
+    unlockInstallHintPrefix: 'After payment, one-click self-host is available here:',
+    unlockInstallHintLink: 'Open install guide',
     unlockCheckoutStarting: 'Redirecting to checkout...',
     unlockCheckoutProductMissing: 'No product is configured for this unlock mode. Upgrade on latti.wordm.us first.',
     unlockCheckoutFailed: 'Failed to start checkout. Please try again later.',
-    unlockCheckoutSuccess: 'Payment callback received. Click unlock again to sync entitlement.',
+    unlockCheckoutSuccess: 'Payment callback received. Use the self-host entry below, or click unlock again to sync entitlement.',
     unlockCheckoutCanceled: 'Checkout canceled.',
   },
 } as const
@@ -281,6 +285,8 @@ function App() {
   const rootHomeUrl = withLangParam('https://wordm.us', lang)
   const resumeHomeUrl = withLangParam('https://resume.wordm.us', lang)
   const billingHomeUrl = withLangParam('https://latti.wordm.us', lang)
+  const selfHostInstallUrl =
+    import.meta.env.VITE_SELFHOST_INSTALL_URL || 'https://github.com/LiDeChi/latti/blob/main/docs/selfhost-one-click.md'
   const unlockCheckoutProducts = useMemo(
     () => ({
       single: import.meta.env.VITE_UNLOCK_PRODUCT_SINGLE || 'prod_4eDxmaC52vCKWPjGqfqIqy',
@@ -1322,6 +1328,12 @@ function App() {
               {copy.unlockBillingHintPrefix}{' '}
               <a href={billingHomeUrl} target="_blank" rel="noreferrer">
                 {copy.unlockBillingHintLink}
+              </a>
+            </p>
+            <p className="unlock-control-intro">
+              {copy.unlockInstallHintPrefix}{' '}
+              <a href={selfHostInstallUrl} target="_blank" rel="noreferrer">
+                {copy.unlockInstallHintLink}
               </a>
             </p>
 
