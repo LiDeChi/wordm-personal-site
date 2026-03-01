@@ -4,7 +4,6 @@ import { ProjectEntry } from './components/ProjectEntry'
 import { ResumeAccessDenied } from './components/ResumeAccessDenied'
 import { ResumePage } from './components/ResumePage'
 import { Sidebar } from './components/Sidebar'
-import { SiteHeroBanner } from './components/SiteHeroBanner'
 import { SubdomainProjectLocked } from './components/SubdomainProjectLocked'
 import { SubdomainProjectView } from './components/SubdomainProjectView'
 import { BLOG_ARTICLES } from './data/blogArticles'
@@ -53,7 +52,7 @@ type UnlockStorageMode = 'remote' | 'local' | 'loading' | 'idle'
 type DeployTarget = 'local' | 'remote'
 
 const snapshot = projectsSnapshotRaw as ProjectsSnapshot
-const portfolioSectionIds = ['home', 'projects', 'visual', 'contact']
+const portfolioSectionIds = ['projects', 'contact']
 const EMPTY_UNLOCK_STATE: UserUnlockState = {
   grants: [],
   freeOfferTotal: null,
@@ -69,20 +68,14 @@ const APP_COPY = {
     profileLine1: '产品策略与构建者',
     profileLine2: 'AI + Design + Engineering',
     profileLine3: 'Base: New York / Beijing',
-    tocHome: '首页',
     tocProjects: '项目',
     tocDeploy: '部署',
-    tocVisual: '图示',
     tocContact: '联系',
     portfolioTitle: '作品集',
     portfolioIntro: '以 gallery 形式展示项目卡片，点击任一卡片可进入对应子域名详情页。',
-    visualTitle: '可视化',
-    visualIntro: '从博客洞察到作品证据，每个项目都能通过独立子域名访问。',
     contactTitle: '联系',
-    rootDomain: '站点主域名',
-    resumeDomain: '简历子域名',
-    projectDomain: '项目子域名',
-    projectDomainDesc: '按作品独立分配，可在 debug 模式手动控制展示。',
+    contactProfileTitle: '个人简介',
+    contactEmailLabel: '邮箱',
     copyright: '© 2026 Jian Yongjie. All rights reserved.',
     blogMode: 'wordm.us 博客模式',
     portfolioMode: 'wordm.us 作品集模式',
@@ -178,20 +171,14 @@ const APP_COPY = {
     profileLine1: 'Product Strategist & Builder',
     profileLine2: 'AI + Design + Engineering',
     profileLine3: 'Base: New York / Beijing',
-    tocHome: 'Home',
     tocProjects: 'Projects',
     tocDeploy: 'Deploy',
-    tocVisual: 'Visual',
     tocContact: 'Contact',
     portfolioTitle: 'Portfolio Gallery',
     portfolioIntro: 'Project cards in a gallery layout. Click any card to open its dedicated subdomain page.',
-    visualTitle: 'Visualizations',
-    visualIntro: 'From blog insights to portfolio evidence, each project is accessible via its own subdomain.',
     contactTitle: 'Contact',
-    rootDomain: 'Primary domain',
-    resumeDomain: 'Resume subdomain',
-    projectDomain: 'Project subdomains',
-    projectDomainDesc: 'Each showcased project has an independent subdomain and can be controlled in debug mode.',
+    contactProfileTitle: 'Profile',
+    contactEmailLabel: 'Email',
     copyright: '© 2026 Jian Yongjie. All rights reserved.',
     blogMode: 'Blog mode on wordm.us',
     portfolioMode: 'Portfolio mode on wordm.us',
@@ -397,8 +384,6 @@ function App() {
 
   const [lang, setLang] = useState<Lang>(initialLang)
   const copy = APP_COPY[lang]
-  const rootHomeUrl = withLangParam('https://wordm.us', lang)
-  const resumeHomeUrl = withLangParam('https://resume.wordm.us', lang)
   const billingHomeUrl = withLangParam('https://latti.wordm.us', lang)
   const selfHostInstallGuideUrl =
     import.meta.env.VITE_SELFHOST_INSTALL_URL || 'https://github.com/LiDeChi/center-control#付费用户一键安装deploy-ticket'
@@ -436,7 +421,7 @@ function App() {
 
   const [rootView, setRootView] = useState<RootView>(initialRootView)
   const [projects, setProjects] = useState<PortfolioProject[]>(snapshot.projects)
-  const [activeSection, setActiveSection] = useState('home')
+  const [activeSection, setActiveSection] = useState('projects')
   const [activeArticleId, setActiveArticleId] = useState(BLOG_ARTICLES[0]?.id || '')
   const [centerApi, setCenterApi] = useState(initialApi)
   const [sourceType, setSourceType] = useState<'snapshot' | 'live'>('snapshot')
@@ -534,7 +519,7 @@ function App() {
     }
 
     if (rootView === 'portfolio') {
-      setActiveSection('home')
+      setActiveSection('projects')
     }
   }, [rootView])
 
@@ -1047,8 +1032,6 @@ function App() {
     return chooseProjects(projects, fallbackSlugs)
   }, [projects, selectedSlugs])
 
-  const highlightedProjects = featuredProjects.slice(0, 3)
-
   const subdomainProject = useMemo(
     () => resolveSubdomainView(projects, window.location.hostname, forcedSubdomain),
     [projects, forcedSubdomain],
@@ -1382,7 +1365,6 @@ function App() {
 
         <main className="main-content blog-main">
           <section id="home" className="site-home-head">
-            <SiteHeroBanner lang={lang} className="blog-hero-banner" />
             <div className="site-home-profile">
               <div className="profile-title">简永杰</div>
               <div className="profile-title profile-title-en">Jian Yongjie</div>
@@ -1457,7 +1439,6 @@ function App() {
             }
           }}
           tocItems={[
-            { id: 'home', label: copy.tocHome },
             { id: 'deploy', label: copy.tocDeploy },
             { id: 'contact', label: copy.tocContact },
           ]}
@@ -1465,23 +1446,6 @@ function App() {
         />
 
         <main className="main-content portfolio-main-content">
-          <section id="home">
-            <div className="site-home-head">
-              <SiteHeroBanner lang={lang} className="blog-hero-banner" />
-              <div className="site-home-profile">
-                <div className="profile-title">简永杰</div>
-                <div className="profile-title profile-title-en">Jian Yongjie</div>
-                <div className="profile-affil">
-                  {copy.profileLine1}
-                  <br />
-                  {copy.profileLine2}
-                  <br />
-                  {copy.profileLine3}
-                </div>
-              </div>
-            </div>
-          </section>
-
           <section id="deploy">
             <h2>{copy.deployTitle}</h2>
             <p className="visual-intro">{copy.deployIntro}</p>
@@ -1571,13 +1535,18 @@ function App() {
 
           <section id="contact">
             <h2>{copy.contactTitle}</h2>
-            <div className="formula">deploy(host) = wordm.us + {'{'}resume.wordm.us + p-*.wordm.us{'}'}</div>
             <p>
-              {copy.rootDomain}: <a href={rootHomeUrl}>wordm.us</a>
+              <strong>{copy.contactProfileTitle}</strong>
               <br />
-              {copy.resumeDomain}: <a href={resumeHomeUrl}>resume.wordm.us</a>
+              简永杰 / Jian Yongjie
               <br />
-              {copy.projectDomain}: {copy.projectDomainDesc}
+              {copy.profileLine1}
+              <br />
+              {copy.profileLine2}
+              <br />
+              {copy.profileLine3}
+              <br />
+              {copy.contactEmailLabel}: <a href="mailto:parsonjian@gmail.com">parsonjian@gmail.com</a>
             </p>
           </section>
 
@@ -1601,32 +1570,13 @@ function App() {
         onModeChange={setRootView}
         onNavigate={(id) => setActiveSection(id)}
         tocItems={[
-          { id: 'home', label: copy.tocHome },
           { id: 'projects', label: copy.tocProjects },
-          { id: 'visual', label: copy.tocVisual },
           { id: 'contact', label: copy.tocContact },
         ]}
         authPanel={authPanelProps}
       />
 
       <main className="main-content portfolio-main-content">
-        <section id="home">
-          <div className="site-home-head">
-            <SiteHeroBanner lang={lang} className="blog-hero-banner" />
-            <div className="site-home-profile">
-              <div className="profile-title">简永杰</div>
-              <div className="profile-title profile-title-en">Jian Yongjie</div>
-              <div className="profile-affil">
-                {copy.profileLine1}
-                <br />
-                {copy.profileLine2}
-                <br />
-                {copy.profileLine3}
-              </div>
-            </div>
-          </div>
-        </section>
-
         <section id="projects">
           {debugMode ? (
             <DebugPanel
@@ -1723,37 +1673,20 @@ function App() {
           </div>
         </section>
 
-        <section id="visual">
-          <h2>{copy.visualTitle}</h2>
-          <p className="visual-intro">{copy.visualIntro}</p>
-
-          <div className="visual-grid">
-            {highlightedProjects.map((project, index) => (
-              <div key={`visual-${project.id}`}>
-                <div className="grid-item">
-                  <svg width="100%" height="100%" viewBox="0 0 100 100" aria-hidden="true">
-                    <rect x="8" y="8" width="84" height="84" fill="none" stroke="#cdcdcd" strokeWidth="1" />
-                    <line x1="16" y1="84" x2="84" y2="16" stroke="#222" strokeWidth="1.2" />
-                    <line x1="16" y1="16" x2="84" y2="84" stroke="#555" strokeWidth="0.8" strokeDasharray="3 2" />
-                    <circle cx={30 + index * 20} cy={40 + index * 8} r="5" fill="#111" />
-                    <path d="M 18 70 Q 50 20 82 70" stroke="#111" fill="none" strokeWidth="1" />
-                  </svg>
-                </div>
-                <div className="grid-caption">{project.name}</div>
-              </div>
-            ))}
-          </div>
-        </section>
-
         <section id="contact">
           <h2>{copy.contactTitle}</h2>
-          <div className="formula">deploy(host) = wordm.us + {'{'}resume.wordm.us + p-*.wordm.us{'}'}</div>
           <p>
-            {copy.rootDomain}: <a href={rootHomeUrl}>wordm.us</a>
+            <strong>{copy.contactProfileTitle}</strong>
             <br />
-            {copy.resumeDomain}: <a href={resumeHomeUrl}>resume.wordm.us</a>
+            简永杰 / Jian Yongjie
             <br />
-            {copy.projectDomain}: {copy.projectDomainDesc}
+            {copy.profileLine1}
+            <br />
+            {copy.profileLine2}
+            <br />
+            {copy.profileLine3}
+            <br />
+            {copy.contactEmailLabel}: <a href="mailto:parsonjian@gmail.com">parsonjian@gmail.com</a>
           </p>
         </section>
 
