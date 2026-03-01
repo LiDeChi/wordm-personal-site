@@ -32,14 +32,14 @@ VITE_AUTH_TEST_EMAILS=test1@example.com,test2@example.com
 VITE_UNLOCK_PRODUCT_SINGLE=prod_xxx
 VITE_UNLOCK_PRODUCT_ALL_CURRENT=prod_yyy
 VITE_UNLOCK_PRODUCT_ALL_CURRENT_PLUS_YEAR=prod_zzz
-VITE_SELFHOST_INSTALL_URL=https://github.com/LiDeChi/latti/blob/main/docs/selfhost-one-click.md
-VITE_SELFHOST_INSTALL_SCRIPT_URL=https://raw.githubusercontent.com/LiDeChi/latti/main/scripts/selfhost-install.sh
+VITE_SELFHOST_INSTALL_URL=https://github.com/LiDeChi/center-control#付费用户一键安装deploy-ticket
+VITE_SELFHOST_INSTALL_SCRIPT_URL=https://raw.githubusercontent.com/LiDeChi/center-control/main/scripts/install-center-control.sh
 ```
 
 - 推荐使用你提到的同一套 Supabase 项目（`latti-wordm`）来保证账号一致。
 - 三个 `VITE_UNLOCK_PRODUCT_*` 对应作品集三种付费解锁模式，前端会调用 Supabase Edge Function `creem-checkout` 拉起支付。
-- `VITE_SELFHOST_INSTALL_URL` 用于支付成功后的“自部署安装”入口，默认指向 `latti` 的 one-click self-host 文档。
-- `VITE_SELFHOST_INSTALL_SCRIPT_URL` 用于部署页生成一键部署命令，默认指向 `latti` 官方安装脚本。
+- `VITE_SELFHOST_INSTALL_URL` 用于支付成功后的“自部署安装”入口，默认指向 `center-control` 安装说明。
+- `VITE_SELFHOST_INSTALL_SCRIPT_URL` 用于部署页生成一键部署命令，默认指向 `center-control` 官方安装脚本。
 - 若不配置，会使用 `latti` 当前公开计划商品作为默认值（Basic 月付 / Pro 月付 / Pro 年付）。
 - 站点会将 Supabase 会话同步到 `.wordm.us` 域级 cookie，因此 `wordm.us`、`resume.wordm.us`、`p-*.wordm.us` 会共享登录态。
 - 账号角色共四类：`admin`（管理员）、`tester`（测试账号）、`user`（普通账号）、`guest`（游客）。
@@ -66,7 +66,7 @@ VITE_SELFHOST_INSTALL_SCRIPT_URL=https://raw.githubusercontent.com/LiDeChi/latti
 - 付费交互：
   - 若点击解锁触发 `PAYMENT_REQUIRED`，前端会自动拉起 `creem-checkout`。
   - 支付成功后自动跳转到 `?view=deploy` 部署页（默认“当前机器”）。
-  - 部署页支持“当前机器 / 远程服务器”两种目标，自动生成部署命令并支持一键复制。
+  - 部署页支持“当前机器 / 远程服务器”两种目标，复制命令前会向 Supabase 申请一次性 deploy ticket。
   - 部署页仍保留安装指南入口；你也可返回作品集再次点击解锁完成授权同步。
 
 ### 初始化 Supabase 解锁表与函数
@@ -84,6 +84,31 @@ VITE_SELFHOST_INSTALL_SCRIPT_URL=https://raw.githubusercontent.com/LiDeChi/latti
 - `public.wordm_unlock_plan_tier(uuid)` RPC
 - `public.wordm_get_unlock_state()` RPC
 - `public.wordm_apply_unlock_grant(...)` RPC
+
+### 部署票据（Deploy Ticket）配置
+
+为“支付后安装 center-control”链路，还需要在 Supabase 部署两个函数：
+
+- `create-deploy-ticket`
+- `resolve-deploy-ticket`
+
+并确保已应用 migration：
+
+- `supabase/migrations/20260301110000_wordm_deploy_tickets.sql`
+
+建议的函数 secrets（按你的项目实际值替换）：
+
+```bash
+npx supabase secrets set \
+  CENTER_CONTROL_INSTALL_SCRIPT_URL=https://raw.githubusercontent.com/LiDeChi/center-control/main/scripts/install-center-control.sh \
+  CENTER_CONTROL_REPO_URL=https://github.com/LiDeChi/center-control.git \
+  CENTER_CONTROL_GIT_REF=main \
+  CENTER_CONTROL_DEFAULT_GITHUB_ROOT=~/Documents/Github \
+  CENTER_CONTROL_DEFAULT_OWNER_LOGIN=LiDeChi \
+  CENTER_CONTROL_DEFAULT_REPORT_TIME=09:00 \
+  CENTER_CONTROL_DEFAULT_TIMEZONE=America/New_York \
+  CENTER_CONTROL_DEFAULT_WEB_PORT=3000
+```
 
 ### 快速管理管理员/测试邮箱
 

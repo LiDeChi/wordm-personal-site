@@ -12,6 +12,7 @@ import { type Lang, resolveInitialLang } from './i18n/lang'
 import projectsSnapshotRaw from './data/projects.snapshot.json'
 import { withLangParam } from './lib/lang-url'
 import { createUnlockCheckoutUrl, type UnlockCheckoutKind } from './lib/unlock-billing'
+import { createDeployTicket } from './lib/deploy-ticket'
 import { applyUnlockGrantFromSupabase, fetchUnlockStateFromSupabase } from './lib/unlock-remote'
 import {
   canAccessProject,
@@ -145,8 +146,8 @@ const APP_COPY = {
     unlockCheckoutFailed: '拉起支付失败，请稍后重试。',
     unlockCheckoutSuccess: '支付回调已返回。你可以直接使用下方自部署入口，或再次点击解锁按钮完成授权同步。',
     unlockCheckoutCanceled: '已取消支付。',
-    deployTitle: '一键自部署',
-    deployIntro: '付费后可将 Latti 一键部署到你的机器或你自己的服务器。',
+    deployTitle: 'Center Control 一键部署',
+    deployIntro: '付费后可将 Center Control 一键部署到你的机器或你自己的服务器。',
     deployAutoReady: '已完成支付，正在引导你部署。',
     deployMachineLocal: '当前机器（默认）',
     deployMachineRemote: '远程服务器',
@@ -157,6 +158,9 @@ const APP_COPY = {
     deployRemoteHostPlaceholder: '例如 root@1.2.3.4',
     deployRemoteHostRequired: '请先填写服务器地址（user@host）。',
     deployCopyCommand: '复制部署命令',
+    deployGeneratingTicket: '正在生成一次性部署凭证...',
+    deployNeedLogin: '请先登录并确保账号具备付费权益。',
+    deployTicketFailed: '生成部署凭证失败，请稍后重试。',
     deployCopySuccess: '部署命令已复制，请到终端粘贴执行。',
     deployCopyFailed: '复制失败，请手动复制命令。',
     deployOpenGuide: '查看安装说明',
@@ -251,8 +255,8 @@ const APP_COPY = {
     unlockCheckoutFailed: 'Failed to start checkout. Please try again later.',
     unlockCheckoutSuccess: 'Payment callback received. Use the self-host entry below, or click unlock again to sync entitlement.',
     unlockCheckoutCanceled: 'Checkout canceled.',
-    deployTitle: 'One-Click Self-Host',
-    deployIntro: 'After payment, deploy Latti to your current machine or your own server.',
+    deployTitle: 'One-Click Center Control Deploy',
+    deployIntro: 'After payment, deploy Center Control to your current machine or your own server.',
     deployAutoReady: 'Payment confirmed. Redirecting you to deployment.',
     deployMachineLocal: 'Current machine (default)',
     deployMachineRemote: 'Remote server',
@@ -263,6 +267,9 @@ const APP_COPY = {
     deployRemoteHostPlaceholder: 'Example: root@1.2.3.4',
     deployRemoteHostRequired: 'Please provide the server address (user@host) first.',
     deployCopyCommand: 'Copy deploy command',
+    deployGeneratingTicket: 'Generating one-time deploy ticket...',
+    deployNeedLogin: 'Please log in and make sure your account has paid entitlement.',
+    deployTicketFailed: 'Failed to generate deploy ticket. Please try again later.',
     deployCopySuccess: 'Deploy command copied. Paste it in your terminal.',
     deployCopyFailed: 'Copy failed. Please copy the command manually.',
     deployOpenGuide: 'Open install guide',
@@ -369,6 +376,10 @@ async function copyTextToClipboard(text: string): Promise<boolean> {
   return copied
 }
 
+function shellQuote(raw: string): string {
+  return `'${raw.replace(/'/g, `'"'"'`)}'`
+}
+
 function App() {
   const params = new URLSearchParams(window.location.search)
   const hostname = window.location.hostname.toLowerCase()
@@ -390,10 +401,10 @@ function App() {
   const resumeHomeUrl = withLangParam('https://resume.wordm.us', lang)
   const billingHomeUrl = withLangParam('https://latti.wordm.us', lang)
   const selfHostInstallGuideUrl =
-    import.meta.env.VITE_SELFHOST_INSTALL_URL || 'https://github.com/LiDeChi/latti/blob/main/docs/selfhost-one-click.md'
+    import.meta.env.VITE_SELFHOST_INSTALL_URL || 'https://github.com/LiDeChi/center-control#付费用户一键安装deploy-ticket'
   const selfHostInstallScriptUrl =
     import.meta.env.VITE_SELFHOST_INSTALL_SCRIPT_URL ||
-    'https://raw.githubusercontent.com/LiDeChi/latti/main/scripts/selfhost-install.sh'
+    'https://raw.githubusercontent.com/LiDeChi/center-control/main/scripts/install-center-control.sh'
   const clientOs = useMemo(() => detectLikelyOs(), [])
   const unlockCheckoutProducts = useMemo(
     () => ({
@@ -901,18 +912,35 @@ function App() {
   }
 
   async function handleCopyDeployCommand() {
-    if (deployTarget === 'remote' && !deployRemoteHost.trim()) {
+    const remoteHost = deployRemoteHost.trim()
+    if (deployTarget === 'remote' && !remoteHost) {
       setDeployStatusMessage(copy.deployRemoteHostRequired)
       return
     }
 
-    if (!activeDeployCommand) {
-      setDeployStatusMessage(copy.deployCopyFailed)
+    if (!authEnabled || !authUser) {
+      setDeployStatusMessage(copy.deployNeedLogin)
       return
     }
 
-    const copied = await copyTextToClipboard(activeDeployCommand)
-    setDeployStatusMessage(copied ? copy.deployCopySuccess : copy.deployCopyFailed)
+    setDeployStatusMessage(copy.deployGeneratingTicket)
+
+    try {
+      const deployTicket = await createDeployTicket(authConfig, {
+        scope: 'center_control_personal',
+        target: deployTarget,
+        expiresInSec: 600,
+      })
+
+      const installScriptUrl = deployTicket.installScriptUrl || selfHostInstallScriptUrl
+      const localCommand = `curl -fsSL ${installScriptUrl} | bash -s -- --ticket ${shellQuote(deployTicket.ticket)} --resolve-endpoint ${shellQuote(deployTicket.resolveEndpoint)} --port ${normalizedDeployPort}`
+      const command = deployTarget === 'remote' ? `ssh ${remoteHost} ${shellQuote(localCommand)}` : localCommand
+
+      const copied = await copyTextToClipboard(command)
+      setDeployStatusMessage(copied ? copy.deployCopySuccess : copy.deployCopyFailed)
+    } catch {
+      setDeployStatusMessage(copy.deployTicketFailed)
+    }
   }
 
   async function handleLogin(email: string, password: string) {
@@ -1055,19 +1083,23 @@ function App() {
     const value = deployPort.trim()
     return value || '8080'
   }, [deployPort])
-  const localDeployCommand = useMemo(
-    () => `curl -fsSL ${selfHostInstallScriptUrl} | bash -s -- --port ${normalizedDeployPort}`,
-    [normalizedDeployPort, selfHostInstallScriptUrl],
-  )
-  const remoteDeployCommand = useMemo(() => {
-    const host = deployRemoteHost.trim()
-    if (!host) {
-      return ''
+  const deployCommandPreview = useMemo(() => {
+    if (deployTarget === 'remote' && !deployRemoteHost.trim()) {
+      return copy.deployRemoteHostRequired
     }
 
-    return `ssh ${host} 'curl -fsSL ${selfHostInstallScriptUrl} | bash -s -- --port ${normalizedDeployPort}'`
-  }, [deployRemoteHost, normalizedDeployPort, selfHostInstallScriptUrl])
-  const activeDeployCommand = deployTarget === 'local' ? localDeployCommand : remoteDeployCommand
+    if (deployTarget === 'remote') {
+      return `ssh ${deployRemoteHost.trim()} 'curl -fsSL ${selfHostInstallScriptUrl} | bash -s -- --ticket <generated-on-copy> --resolve-endpoint <resolve-endpoint> --port ${normalizedDeployPort}'`
+    }
+
+    return `curl -fsSL ${selfHostInstallScriptUrl} | bash -s -- --ticket <generated-on-copy> --resolve-endpoint <resolve-endpoint> --port ${normalizedDeployPort}`
+  }, [
+    copy.deployRemoteHostRequired,
+    deployRemoteHost,
+    deployTarget,
+    normalizedDeployPort,
+    selfHostInstallScriptUrl,
+  ])
   const subdomainProjectUnlocked = subdomainProject
     ? canAccessProject(subdomainProject.slug, authRole, unlockState)
     : false
@@ -1501,7 +1533,7 @@ function App() {
               </div>
 
               <pre className="deploy-command-block">
-                <code>{activeDeployCommand || copy.deployRemoteHostRequired}</code>
+                <code>{deployCommandPreview}</code>
               </pre>
 
               <div className="unlock-plan-actions">
