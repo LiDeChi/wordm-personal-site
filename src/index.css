@@ -1186,9 +1186,23 @@ p {
 }
 
 footer {
-  margin-top: 80px;
-  padding-top: 40px;
+  margin-top: 64px;
+  padding-top: 20px;
   border-top: 1px solid var(--c-ink);
+}
+
+.footer-contact-inline {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.5;
+}
+
+.footer-contact-inline a {
+  border-bottom: 1px solid var(--c-ink-faint);
+}
+
+.footer-meta-row {
+  margin-top: 12px;
   font-family: var(--font-mono);
   font-size: 0.8rem;
   display: flex;

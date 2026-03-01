@@ -74,8 +74,6 @@ const APP_COPY = {
     portfolioTitle: '作品集',
     portfolioIntro: '以 gallery 形式展示项目卡片，点击任一卡片可进入对应子域名详情页。',
     contactTitle: '联系',
-    contactProfileTitle: '个人简介',
-    contactEmailLabel: '邮箱',
     copyright: '© 2026 Jian Yongjie. All rights reserved.',
     blogMode: 'wordm.us 博客模式',
     portfolioMode: 'wordm.us 作品集模式',
@@ -177,8 +175,6 @@ const APP_COPY = {
     portfolioTitle: 'Portfolio Gallery',
     portfolioIntro: 'Project cards in a gallery layout. Click any card to open its dedicated subdomain page.',
     contactTitle: 'Contact',
-    contactProfileTitle: 'Profile',
-    contactEmailLabel: 'Email',
     copyright: '© 2026 Jian Yongjie. All rights reserved.',
     blogMode: 'Blog mode on wordm.us',
     portfolioMode: 'Portfolio mode on wordm.us',
@@ -450,6 +446,7 @@ function App() {
   })
 
   const sourceLabel = sourceType === 'live' && centerApi ? `${copy.sourceLivePrefix}: ${centerApi}` : copy.sourceSnapshot
+  const contactEmail = 'parsonjian@gmail.com'
 
   const primaryUpdatedAt = snapshot.centerControlGeneratedAt || snapshot.generatedAt
   const lastUpdated = formatDate(primaryUpdatedAt)
@@ -1378,9 +1375,15 @@ function App() {
             </article>
           ))}
 
-          <footer>
-            <div>{copy.copyright}</div>
-            <div>{copy.blogMode}</div>
+          <footer id="contact">
+            <div className="footer-contact-inline">
+              {copy.contactTitle}: 简永杰 / Jian Yongjie · {copy.profileLine1} ·{' '}
+              <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
+            </div>
+            <div className="footer-meta-row">
+              <div>{copy.copyright}</div>
+              <div>{copy.blogMode}</div>
+            </div>
           </footer>
         </main>
         <div className="blog-next-fixed-wrap" aria-live="polite">
@@ -1519,26 +1522,15 @@ function App() {
             </section>
           </section>
 
-          <section id="contact">
-            <h2>{copy.contactTitle}</h2>
-            <p>
-              <strong>{copy.contactProfileTitle}</strong>
-              <br />
-              简永杰 / Jian Yongjie
-              <br />
-              {copy.profileLine1}
-              <br />
-              {copy.profileLine2}
-              <br />
-              {copy.profileLine3}
-              <br />
-              {copy.contactEmailLabel}: <a href="mailto:parsonjian@gmail.com">parsonjian@gmail.com</a>
-            </p>
-          </section>
-
-          <footer>
-            <div>{copy.copyright}</div>
-            <div>{copy.portfolioMode}</div>
+          <footer id="contact">
+            <div className="footer-contact-inline">
+              {copy.contactTitle}: 简永杰 / Jian Yongjie · {copy.profileLine1} ·{' '}
+              <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
+            </div>
+            <div className="footer-meta-row">
+              <div>{copy.copyright}</div>
+              <div>{copy.portfolioMode}</div>
+            </div>
           </footer>
         </main>
       </div>
@@ -1659,26 +1651,15 @@ function App() {
           </div>
         </section>
 
-        <section id="contact">
-          <h2>{copy.contactTitle}</h2>
-          <p>
-            <strong>{copy.contactProfileTitle}</strong>
-            <br />
-            简永杰 / Jian Yongjie
-            <br />
-            {copy.profileLine1}
-            <br />
-            {copy.profileLine2}
-            <br />
-            {copy.profileLine3}
-            <br />
-            {copy.contactEmailLabel}: <a href="mailto:parsonjian@gmail.com">parsonjian@gmail.com</a>
-          </p>
-        </section>
-
-        <footer>
-          <div>{copy.copyright}</div>
-          <div>{copy.portfolioMode}</div>
+        <footer id="contact">
+          <div className="footer-contact-inline">
+            {copy.contactTitle}: 简永杰 / Jian Yongjie · {copy.profileLine1} ·{' '}
+            <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
+          </div>
+          <div className="footer-meta-row">
+            <div>{copy.copyright}</div>
+            <div>{copy.portfolioMode}</div>
+          </div>
         </footer>
       </main>
     </div>
