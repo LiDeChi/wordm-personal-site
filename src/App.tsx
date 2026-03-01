@@ -1364,20 +1364,6 @@ function App() {
         />
 
         <main className="main-content blog-main">
-          <section id="home" className="site-home-head">
-            <div className="site-home-profile">
-              <div className="profile-title">简永杰</div>
-              <div className="profile-title profile-title-en">Jian Yongjie</div>
-              <div className="profile-affil">
-                {copy.profileLine1}
-                <br />
-                {copy.profileLine2}
-                <br />
-                {copy.profileLine3}
-              </div>
-            </div>
-          </section>
-
           {BLOG_ARTICLES.map((article) => (
             <article key={article.id} id={article.id} className="blog-article">
               <div className="paper-meta">
