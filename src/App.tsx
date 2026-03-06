@@ -128,8 +128,6 @@ const APP_COPY = {
     unlockPaidRequired: '该解锁需要付费权益，请先在 latti.wordm.us 完成订阅或购买。',
     unlockLifetimeRequired: '该解锁仅对终身权益用户开放。',
     unlockPaidServerRequired: '付费校验服务暂不可用，当前仅支持免费名额解锁。',
-    unlockBillingHintPrefix: '付费解锁权益与 latti 账号体系打通：',
-    unlockBillingHintLink: '前往 latti.wordm.us',
     unlockInstallHintPrefix: '付费后可一键自部署：',
     unlockInstallHintLink: '打开安装指南',
     unlockCheckoutStarting: '正在跳转支付...',
@@ -229,8 +227,6 @@ const APP_COPY = {
     unlockPaidRequired: 'This unlock requires paid entitlement. Complete purchase on latti.wordm.us first.',
     unlockLifetimeRequired: 'This unlock is available for lifetime entitlement only.',
     unlockPaidServerRequired: 'Paid verification service is unavailable. Only free-pick unlock is available now.',
-    unlockBillingHintPrefix: 'Paid entitlements are shared with latti account system:',
-    unlockBillingHintLink: 'Go to latti.wordm.us',
     unlockInstallHintPrefix: 'After payment, one-click self-host is available here:',
     unlockInstallHintLink: 'Open install guide',
     unlockCheckoutStarting: 'Redirecting to checkout...',
@@ -380,7 +376,6 @@ function App() {
 
   const [lang, setLang] = useState<Lang>(initialLang)
   const copy = APP_COPY[lang]
-  const billingHomeUrl = withLangParam('https://latti.wordm.us', lang)
   const selfHostInstallGuideUrl =
     import.meta.env.VITE_SELFHOST_INSTALL_URL || 'https://github.com/LiDeChi/center-control#付费用户一键安装deploy-ticket'
   const selfHostInstallScriptUrl =
@@ -915,12 +910,18 @@ function App() {
       })
 
       const installScriptUrl = deployTicket.installScriptUrl || selfHostInstallScriptUrl
-      const localCommand = `curl -fsSL ${installScriptUrl} | bash -s -- --ticket ${shellQuote(deployTicket.ticket)} --resolve-endpoint ${shellQuote(deployTicket.resolveEndpoint)} --port ${normalizedDeployPort}`
+      const localCommand = `curl -fsSL ${shellQuote(installScriptUrl)} | bash -s -- --ticket ${shellQuote(deployTicket.ticket)} --resolve-endpoint ${shellQuote(deployTicket.resolveEndpoint)} --port ${normalizedDeployPort}`
       const command = deployTarget === 'remote' ? `ssh ${remoteHost} ${shellQuote(localCommand)}` : localCommand
 
       const copied = await copyTextToClipboard(command)
       setDeployStatusMessage(copied ? copy.deployCopySuccess : copy.deployCopyFailed)
-    } catch {
+    } catch (error) {
+      const code = unlockErrorCode(error)
+      if (code.includes('UNAUTHENTICATED') || code.includes('DEPLOY_ENTITLEMENT_REQUIRED')) {
+        setDeployStatusMessage(copy.deployNeedLogin)
+        return
+      }
+
       setDeployStatusMessage(copy.deployTicketFailed)
     }
   }
@@ -1044,6 +1045,10 @@ function App() {
   const authRole: AuthRole = authUser?.role ?? 'guest'
   const canAccessResume = authRole === 'admin' || authRole === 'tester'
   const projectCatalogSlugs = useMemo(() => projects.map((project) => project.slug), [projects])
+  const deployTargetProject = useMemo(
+    () => (unlockTargetSlug ? projects.find((project) => project.slug === unlockTargetSlug) ?? null : null),
+    [projects, unlockTargetSlug],
+  )
   const freeOfferStatus = useMemo(
     () => getFreeOfferStatus(unlockState ?? EMPTY_UNLOCK_STATE, authUser?.createdAt ?? null),
     [authUser?.createdAt, unlockState],
@@ -1068,11 +1073,13 @@ function App() {
       return copy.deployRemoteHostRequired
     }
 
+    const quotedScriptUrl = shellQuote(selfHostInstallScriptUrl)
+
     if (deployTarget === 'remote') {
-      return `ssh ${deployRemoteHost.trim()} 'curl -fsSL ${selfHostInstallScriptUrl} | bash -s -- --ticket <generated-on-copy> --resolve-endpoint <resolve-endpoint> --port ${normalizedDeployPort}'`
+      return `ssh ${deployRemoteHost.trim()} 'curl -fsSL ${quotedScriptUrl} | bash -s -- --ticket <generated-on-copy> --resolve-endpoint <resolve-endpoint> --port ${normalizedDeployPort}'`
     }
 
-    return `curl -fsSL ${selfHostInstallScriptUrl} | bash -s -- --ticket <generated-on-copy> --resolve-endpoint <resolve-endpoint> --port ${normalizedDeployPort}`
+    return `curl -fsSL ${quotedScriptUrl} | bash -s -- --ticket <generated-on-copy> --resolve-endpoint <resolve-endpoint> --port ${normalizedDeployPort}`
   }, [
     copy.deployRemoteHostRequired,
     deployRemoteHost,
@@ -1080,6 +1087,7 @@ function App() {
     normalizedDeployPort,
     selfHostInstallScriptUrl,
   ])
+  const deployProjectUrl = deployTargetProject ? withLangParam(deployTargetProject.subdomainUrl, lang) : null
   const subdomainProjectUnlocked = subdomainProject
     ? canAccessProject(subdomainProject.slug, authRole, unlockState)
     : false
@@ -1508,13 +1516,8 @@ function App() {
                 <button type="button" className="unlock-plan-btn" onClick={() => setRootView('portfolio')}>
                   {copy.deployBackPortfolio}
                 </button>
-                {unlockTargetSlug ? (
-                  <a
-                    className="unlock-plan-btn deploy-link-btn"
-                    href={withLangParam(`https://${unlockTargetSlug}.wordm.us`, lang)}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
+                {deployTargetProject && deployProjectUrl && isProjectUnlocked(deployTargetProject.slug) ? (
+                  <a className="unlock-plan-btn deploy-link-btn" href={deployProjectUrl} target="_blank" rel="noreferrer">
                     {copy.deployOpenUnlockedProject}
                   </a>
                 ) : null}
@@ -1594,12 +1597,6 @@ function App() {
             <p className="unlock-control-intro">{copy.unlockPanelIntro}</p>
             <p className="unlock-plan-summary">
               {copy.unlockPlanSingleLabel} (card) · {copy.unlockPlanAllCurrent} · {copy.unlockPlanAllCurrentPlusYear}
-            </p>
-            <p className="unlock-control-intro">
-              {copy.unlockBillingHintPrefix}{' '}
-              <a href={billingHomeUrl} target="_blank" rel="noreferrer">
-                {copy.unlockBillingHintLink}
-              </a>
             </p>
             <p className="unlock-control-intro">
               {copy.unlockInstallHintPrefix}{' '}
