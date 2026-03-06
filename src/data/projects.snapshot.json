@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-02-24T14:37:17.478Z",
+  "generatedAt": "2026-03-06T13:24:57.803Z",
   "sourcePath": "/Users/lidechi/Documents/Github/center-control/data/exports/projects.json",
-  "centerControlGeneratedAt": "2026-02-24T14:00:36.429Z",
+  "centerControlGeneratedAt": "2026-03-01T02:39:24.439Z",
   "domain": "wordm.us",
   "featured": [
     "page-glance-extension",
@@ -15,44 +15,227 @@
   ],
   "projects": [
     {
-      "id": "proj_g0r9osczmm0hb65p",
-      "name": "ai-progress-compare",
-      "slug": "ai-progress-compare",
-      "summary": "ai-progress-compare 项目详情可查看项目页与源码。",
+      "id": "proj_yb5qxhk3mm3k2uvu",
+      "name": "ai-stroke-writer",
+      "slug": "ai-stroke-writer",
+      "summary": "AI Stroke Writer",
       "techStack": [
         "nodejs",
-        "@capacitor/android",
-        "@capacitor/cli",
-        "@capacitor/core",
-        "@capacitor/ios",
-        "@hookform/resolvers",
-        "@radix-ui/react-accordion",
-        "@radix-ui/react-alert-dialog"
+        "katex",
+        "docker"
       ],
       "tags": [
         "ai",
-        "progress",
-        "compare",
-        "welcome",
-        "your",
-        "lovable",
-        "project",
-        "info"
+        "stroke",
+        "writer",
+        "converts",
+        "plain",
+        "text",
+        "latex",
+        "into"
       ],
       "activityScore": 100,
-      "commitCount30d": 64,
+      "commitCount30d": 19,
+      "relationCount": 1,
+      "lastCommitAt": "2026-03-01T02:37:22.000Z",
+      "productionUrl": "http://host.docker.internal:41400/",
+      "sourceUrl": "https://github.com/LiDeChi/ai-stroke-writer",
+      "subdomain": "p-ai-stroke-writer",
+      "subdomainUrl": "https://p-ai-stroke-writer.wordm.us",
+      "detail": {
+        "source": "orchestration-manifest",
+        "slug": "ai-stroke-writer",
+        "projectPath": "ai-stroke-writer",
+        "status": "partial",
+        "type": "app",
+        "language": "js",
+        "entry": "ai-stroke-writer/README.md",
+        "apiOrPackage": "ai-stroke-writer",
+        "publisherId": "openclaw-official",
+        "trustMode": "publisher_signature_once",
+        "commands": {
+          "run": "N/A",
+          "test": "N/A",
+          "lint": "N/A",
+          "build": "N/A",
+          "docs": "N/A"
+        },
+        "distributionMode": "single",
+        "verifyBeforeDeploy": true,
+        "defaultActions": [
+          "verify",
+          "bundle"
+        ],
+        "artifactName": "ai-stroke-writer.tar.gz",
+        "artifactPath": "../../releases/ai-stroke-writer.tar.gz",
+        "artifactSha256Snapshot": "2082165a016d313301935ad2c93b6bdc3d950e5e4a5a0e7eb08ad6f4b74564ed",
+        "executionEntrypoint": "deploy.sh",
+        "clickInstallers": [
+          {
+            "label": "mac",
+            "command": "install.command"
+          },
+          {
+            "label": "linux",
+            "command": "install.sh"
+          },
+          {
+            "label": "windows_powershell",
+            "command": "install.ps1"
+          },
+          {
+            "label": "windows_cmd",
+            "command": "install.bat"
+          },
+          {
+            "label": "cross_platform",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.command"
+          }
+        ],
+        "recommendedActions": [
+          {
+            "label": "default",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.py"
+          },
+          {
+            "label": "verify",
+            "command": "deploy.sh verify"
+          },
+          {
+            "label": "bundle",
+            "command": "deploy.sh bundle"
+          },
+          {
+            "label": "run",
+            "command": "deploy.sh run"
+          }
+        ]
+      }
+    },
+    {
+      "id": "proj_2ajrtoo6mm3hmvw5",
+      "name": "my-blog",
+      "slug": "my-blog",
+      "summary": "wordm.us Personal Site (Vite + React)",
+      "techStack": [
+        "nodejs",
+        "@supabase/supabase-js",
+        "react",
+        "react-dom",
+        "@eslint/js",
+        "@types/node",
+        "@types/react",
+        "@types/react-dom"
+      ],
+      "tags": [
+        "my",
+        "blog",
+        "wordm.us",
+        "personal",
+        "site",
+        "vite",
+        "react",
+        "resume.wordm.us"
+      ],
+      "activityScore": 100,
+      "commitCount30d": 33,
       "relationCount": 2,
-      "lastCommitAt": "2026-01-28T04:20:14.000Z",
-      "productionUrl": null,
-      "sourceUrl": "https://github.com/LiDeChi/ai-progress-compare",
-      "subdomain": "p-ai-progress-compare",
-      "subdomainUrl": "https://p-ai-progress-compare.wordm.us"
+      "lastCommitAt": "2026-02-28T10:21:57.000Z",
+      "productionUrl": "https://gridnote.wordm.us/?lang=zh",
+      "sourceUrl": "https://github.com/LiDeChi/wordm-personal-site",
+      "subdomain": "p-my-blog",
+      "subdomainUrl": "https://p-my-blog.wordm.us",
+      "detail": {
+        "source": "orchestration-manifest",
+        "slug": "my-blog",
+        "projectPath": "my-blog",
+        "status": "ready",
+        "type": "app",
+        "language": "js",
+        "entry": "my-blog/README.md",
+        "apiOrPackage": "my-blog",
+        "publisherId": "openclaw-official",
+        "trustMode": "publisher_signature_once",
+        "commands": {
+          "run": "npm run dev",
+          "test": "N/A",
+          "lint": "npm run lint",
+          "build": "npm run build",
+          "docs": "N/A"
+        },
+        "distributionMode": "single",
+        "verifyBeforeDeploy": true,
+        "defaultActions": [
+          "verify",
+          "bundle"
+        ],
+        "artifactName": "my-blog.tar.gz",
+        "artifactPath": "../../releases/my-blog.tar.gz",
+        "artifactSha256Snapshot": "fff8b8e5538e7750ba460faa448dfb39408c4caa45316ec5b376d376147cc007",
+        "executionEntrypoint": "deploy.sh",
+        "clickInstallers": [
+          {
+            "label": "mac",
+            "command": "install.command"
+          },
+          {
+            "label": "linux",
+            "command": "install.sh"
+          },
+          {
+            "label": "windows_powershell",
+            "command": "install.ps1"
+          },
+          {
+            "label": "windows_cmd",
+            "command": "install.bat"
+          },
+          {
+            "label": "cross_platform",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.command"
+          }
+        ],
+        "recommendedActions": [
+          {
+            "label": "default",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.py"
+          },
+          {
+            "label": "verify",
+            "command": "deploy.sh verify"
+          },
+          {
+            "label": "bundle",
+            "command": "deploy.sh bundle"
+          },
+          {
+            "label": "run",
+            "command": "deploy.sh run"
+          }
+        ]
+      }
     },
     {
       "id": "proj_91f91wsbmm0hb65w",
       "name": "page-glance-extension",
       "slug": "page-glance-extension",
-      "summary": "一个面向小白用户的 Chrome/Edge (Manifest V3) 扩展：在任意网页右键弹出浮层，给出页面概览、下一步建议和快捷跳转。",
+      "summary": "Page Glance",
       "techStack": [],
       "tags": [
         "page",
@@ -66,18 +249,199 @@
       ],
       "activityScore": 60,
       "commitCount30d": 21,
-      "relationCount": 3,
+      "relationCount": 0,
       "lastCommitAt": "2026-02-06T04:27:49.000Z",
       "productionUrl": null,
       "sourceUrl": "https://github.com/LiDeChi/page-glance-extension",
       "subdomain": "p-page-glance-extension",
-      "subdomainUrl": "https://p-page-glance-extension.wordm.us"
+      "subdomainUrl": "https://p-page-glance-extension.wordm.us",
+      "detail": {
+        "source": "orchestration-manifest",
+        "slug": "page-glance-extension",
+        "projectPath": "page-glance-extension",
+        "status": "docs_only",
+        "type": "docs",
+        "language": "other",
+        "entry": "page-glance-extension/README.md",
+        "apiOrPackage": "N/A",
+        "publisherId": "openclaw-official",
+        "trustMode": "publisher_signature_once",
+        "commands": {
+          "run": "N/A",
+          "test": "N/A",
+          "lint": "N/A",
+          "build": "N/A",
+          "docs": "N/A"
+        },
+        "distributionMode": "single",
+        "verifyBeforeDeploy": true,
+        "defaultActions": [
+          "verify",
+          "bundle"
+        ],
+        "artifactName": "page-glance-extension.tar.gz",
+        "artifactPath": "../../releases/page-glance-extension.tar.gz",
+        "artifactSha256Snapshot": "087b5400547ac91be8a910b04fb020add3dd285dffc246292b7aa8959f88019a",
+        "executionEntrypoint": "deploy.sh",
+        "clickInstallers": [
+          {
+            "label": "mac",
+            "command": "install.command"
+          },
+          {
+            "label": "linux",
+            "command": "install.sh"
+          },
+          {
+            "label": "windows_powershell",
+            "command": "install.ps1"
+          },
+          {
+            "label": "windows_cmd",
+            "command": "install.bat"
+          },
+          {
+            "label": "cross_platform",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.command"
+          }
+        ],
+        "recommendedActions": [
+          {
+            "label": "default",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.py"
+          },
+          {
+            "label": "verify",
+            "command": "deploy.sh verify"
+          },
+          {
+            "label": "bundle",
+            "command": "deploy.sh bundle"
+          },
+          {
+            "label": "run",
+            "command": "deploy.sh run"
+          }
+        ]
+      }
+    },
+    {
+      "id": "proj_i2pronbumm0hb65u",
+      "name": "gridnote",
+      "slug": "gridnote",
+      "summary": "gridnote 项目，等待自动摘要补全。",
+      "techStack": [
+        "nodejs",
+        "@remotion/google-fonts",
+        "@remotion/media",
+        "@supabase/supabase-js",
+        "katex",
+        "react",
+        "react-dom",
+        "remotion"
+      ],
+      "tags": [
+        "gridnote"
+      ],
+      "activityScore": 50,
+      "commitCount30d": 2,
+      "relationCount": 2,
+      "lastCommitAt": "2026-02-28T10:07:50.000Z",
+      "productionUrl": null,
+      "sourceUrl": "https://github.com/LiDeChi/latti",
+      "subdomain": "p-gridnote",
+      "subdomainUrl": "https://p-gridnote.wordm.us",
+      "detail": {
+        "source": "orchestration-manifest",
+        "slug": "gridnote",
+        "projectPath": "gridnote",
+        "status": "ready",
+        "type": "app",
+        "language": "js",
+        "entry": "gridnote/README.md",
+        "apiOrPackage": "gridnote",
+        "publisherId": "openclaw-official",
+        "trustMode": "publisher_signature_once",
+        "commands": {
+          "run": "npm run dev",
+          "test": "npm run test",
+          "lint": "N/A",
+          "build": "npm run build",
+          "docs": "N/A"
+        },
+        "distributionMode": "single",
+        "verifyBeforeDeploy": true,
+        "defaultActions": [
+          "verify",
+          "bundle"
+        ],
+        "artifactName": "gridnote.tar.gz",
+        "artifactPath": "../../releases/gridnote.tar.gz",
+        "artifactSha256Snapshot": "a9dcba06732160f205d0ac914ea295d8a69bb0d8fc7bb721fb751832a0ed9cc9",
+        "executionEntrypoint": "deploy.sh",
+        "clickInstallers": [
+          {
+            "label": "mac",
+            "command": "install.command"
+          },
+          {
+            "label": "linux",
+            "command": "install.sh"
+          },
+          {
+            "label": "windows_powershell",
+            "command": "install.ps1"
+          },
+          {
+            "label": "windows_cmd",
+            "command": "install.bat"
+          },
+          {
+            "label": "cross_platform",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.command"
+          }
+        ],
+        "recommendedActions": [
+          {
+            "label": "default",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.py"
+          },
+          {
+            "label": "verify",
+            "command": "deploy.sh verify"
+          },
+          {
+            "label": "bundle",
+            "command": "deploy.sh bundle"
+          },
+          {
+            "label": "run",
+            "command": "deploy.sh run"
+          }
+        ]
+      }
     },
     {
       "id": "proj_dqcu4pvimm0hb65n",
       "name": "PersonalInflationBasket",
       "slug": "personalinflationbasket",
-      "summary": "My Cost Index is an iOS 17+ SwiftUI app that turns receipts (photos, scans, PDFs) into:",
+      "summary": "PersonalInflationBasket",
       "techStack": [],
       "tags": [
         "personalinflationbasket",
@@ -91,18 +455,95 @@
       ],
       "activityScore": 46,
       "commitCount30d": 17,
-      "relationCount": 3,
+      "relationCount": 0,
       "lastCommitAt": "2026-02-03T12:36:18.000Z",
-      "productionUrl": "https://github.com/LiDeChi/PersonalInflationBasket",
+      "productionUrl": null,
       "sourceUrl": "https://github.com/LiDeChi/PersonalInflationBasket",
       "subdomain": "p-personalinflationbasket",
-      "subdomainUrl": "https://p-personalinflationbasket.wordm.us"
+      "subdomainUrl": "https://p-personalinflationbasket.wordm.us",
+      "detail": {
+        "source": "orchestration-manifest",
+        "slug": "personalinflationbasket",
+        "projectPath": "PersonalInflationBasket",
+        "status": "docs_only",
+        "type": "docs",
+        "language": "other",
+        "entry": "PersonalInflationBasket/README.md",
+        "apiOrPackage": "N/A",
+        "publisherId": "openclaw-official",
+        "trustMode": "publisher_signature_once",
+        "commands": {
+          "run": "N/A",
+          "test": "N/A",
+          "lint": "N/A",
+          "build": "N/A",
+          "docs": "N/A"
+        },
+        "distributionMode": "single",
+        "verifyBeforeDeploy": true,
+        "defaultActions": [
+          "verify",
+          "bundle"
+        ],
+        "artifactName": "personalinflationbasket.tar.gz",
+        "artifactPath": "../../releases/personalinflationbasket.tar.gz",
+        "artifactSha256Snapshot": "f5856561323409be75d5d66166d51641c51511686c015ec664944580e5baec1c",
+        "executionEntrypoint": "deploy.sh",
+        "clickInstallers": [
+          {
+            "label": "mac",
+            "command": "install.command"
+          },
+          {
+            "label": "linux",
+            "command": "install.sh"
+          },
+          {
+            "label": "windows_powershell",
+            "command": "install.ps1"
+          },
+          {
+            "label": "windows_cmd",
+            "command": "install.bat"
+          },
+          {
+            "label": "cross_platform",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.command"
+          }
+        ],
+        "recommendedActions": [
+          {
+            "label": "default",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.py"
+          },
+          {
+            "label": "verify",
+            "command": "deploy.sh verify"
+          },
+          {
+            "label": "bundle",
+            "command": "deploy.sh bundle"
+          },
+          {
+            "label": "run",
+            "command": "deploy.sh run"
+          }
+        ]
+      }
     },
     {
       "id": "proj_asulqs5wmm0hb65p",
       "name": "apple-notes-webclipper",
       "slug": "apple-notes-webclipper",
-      "summary": "把网页 / X(Twitter) 保存到 Apple Notes：正文尽量保留 Markdown 源文本，图片尽量按原位置插入（作为 ，由 Native Host 下载并缓存为本地文件，再让 Notes 嵌入）。",
+      "summary": "Apple Notes Web Clipper (Markdown-first)",
       "techStack": [
         "nodejs",
         "@mozilla/readability",
@@ -124,18 +565,95 @@
       ],
       "activityScore": 46,
       "commitCount30d": 14,
-      "relationCount": 3,
+      "relationCount": 1,
       "lastCommitAt": "2026-02-03T05:16:45.000Z",
-      "productionUrl": "https://github.com/LiDeChi/apple-notes-webclipper",
+      "productionUrl": null,
       "sourceUrl": "https://github.com/LiDeChi/apple-notes-webclipper",
       "subdomain": "p-apple-notes-webclipper",
-      "subdomainUrl": "https://p-apple-notes-webclipper.wordm.us"
+      "subdomainUrl": "https://p-apple-notes-webclipper.wordm.us",
+      "detail": {
+        "source": "orchestration-manifest",
+        "slug": "apple-notes-webclipper",
+        "projectPath": "apple-notes-webclipper",
+        "status": "ready",
+        "type": "app",
+        "language": "js",
+        "entry": "apple-notes-webclipper/README.md",
+        "apiOrPackage": "apple-notes-webclipper",
+        "publisherId": "openclaw-official",
+        "trustMode": "publisher_signature_once",
+        "commands": {
+          "run": "N/A",
+          "test": "N/A",
+          "lint": "N/A",
+          "build": "npm run build",
+          "docs": "N/A"
+        },
+        "distributionMode": "single",
+        "verifyBeforeDeploy": true,
+        "defaultActions": [
+          "verify",
+          "bundle"
+        ],
+        "artifactName": "apple-notes-webclipper.tar.gz",
+        "artifactPath": "../../releases/apple-notes-webclipper.tar.gz",
+        "artifactSha256Snapshot": "9e110db640d698bd395e52c7d503a8fb45ff5fc3fd580444e4846e3863d6aeec",
+        "executionEntrypoint": "deploy.sh",
+        "clickInstallers": [
+          {
+            "label": "mac",
+            "command": "install.command"
+          },
+          {
+            "label": "linux",
+            "command": "install.sh"
+          },
+          {
+            "label": "windows_powershell",
+            "command": "install.ps1"
+          },
+          {
+            "label": "windows_cmd",
+            "command": "install.bat"
+          },
+          {
+            "label": "cross_platform",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.command"
+          }
+        ],
+        "recommendedActions": [
+          {
+            "label": "default",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.py"
+          },
+          {
+            "label": "verify",
+            "command": "deploy.sh verify"
+          },
+          {
+            "label": "bundle",
+            "command": "deploy.sh bundle"
+          },
+          {
+            "label": "run",
+            "command": "deploy.sh run"
+          }
+        ]
+      }
     },
     {
       "id": "proj_5vn0l2xcmm0hb65u",
       "name": "llm-layer",
       "slug": "llm-layer",
-      "summary": "Personal standard for a shared, multi-project LLM layer:",
+      "summary": "llm-layer",
       "techStack": [],
       "tags": [
         "llm",
@@ -149,18 +667,95 @@
       ],
       "activityScore": 38,
       "commitCount30d": 10,
-      "relationCount": 3,
+      "relationCount": 0,
       "lastCommitAt": "2026-02-06T11:08:00.000Z",
-      "productionUrl": "https://github.com/LiDeChi/llm-layer",
+      "productionUrl": null,
       "sourceUrl": "https://github.com/LiDeChi/llm-layer",
       "subdomain": "p-llm-layer",
-      "subdomainUrl": "https://p-llm-layer.wordm.us"
+      "subdomainUrl": "https://p-llm-layer.wordm.us",
+      "detail": {
+        "source": "orchestration-manifest",
+        "slug": "llm-layer",
+        "projectPath": "llm-layer",
+        "status": "docs_only",
+        "type": "docs",
+        "language": "other",
+        "entry": "llm-layer/README.md",
+        "apiOrPackage": "N/A",
+        "publisherId": "openclaw-official",
+        "trustMode": "publisher_signature_once",
+        "commands": {
+          "run": "N/A",
+          "test": "N/A",
+          "lint": "N/A",
+          "build": "N/A",
+          "docs": "N/A"
+        },
+        "distributionMode": "single",
+        "verifyBeforeDeploy": true,
+        "defaultActions": [
+          "verify",
+          "bundle"
+        ],
+        "artifactName": "llm-layer.tar.gz",
+        "artifactPath": "../../releases/llm-layer.tar.gz",
+        "artifactSha256Snapshot": "0517dbc0f397b491394038b38620d5c10a613aa89e5e3a1c8a37ffeca569660b",
+        "executionEntrypoint": "deploy.sh",
+        "clickInstallers": [
+          {
+            "label": "mac",
+            "command": "install.command"
+          },
+          {
+            "label": "linux",
+            "command": "install.sh"
+          },
+          {
+            "label": "windows_powershell",
+            "command": "install.ps1"
+          },
+          {
+            "label": "windows_cmd",
+            "command": "install.bat"
+          },
+          {
+            "label": "cross_platform",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.command"
+          }
+        ],
+        "recommendedActions": [
+          {
+            "label": "default",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.py"
+          },
+          {
+            "label": "verify",
+            "command": "deploy.sh verify"
+          },
+          {
+            "label": "bundle",
+            "command": "deploy.sh bundle"
+          },
+          {
+            "label": "run",
+            "command": "deploy.sh run"
+          }
+        ]
+      }
     },
     {
       "id": "proj_2wf1l1xemm0hb65s",
       "name": "focusor",
       "slug": "focusor",
-      "summary": "Intent-aware overlay that accelerates web interactions:",
+      "summary": "Focusor (Chrome Extension MVP)",
       "techStack": [
         "nodejs",
         "preact",
@@ -183,55 +778,95 @@
       ],
       "activityScore": 36,
       "commitCount30d": 9,
-      "relationCount": 3,
+      "relationCount": 2,
       "lastCommitAt": "2026-02-09T05:17:31.000Z",
       "productionUrl": null,
       "sourceUrl": "https://github.com/LiDeChi/focusor-chrome-mvp",
       "subdomain": "p-focusor",
-      "subdomainUrl": "https://p-focusor.wordm.us"
-    },
-    {
-      "id": "proj_cuoy8zgxmm0hb65n",
-      "name": "Manim Docs",
-      "slug": "manim-docs",
-      "summary": "Manim Docs 项目，等待自动摘要补全。",
-      "techStack": [],
-      "tags": [
-        "manim",
-        "docs"
-      ],
-      "activityScore": 32,
-      "commitCount30d": 7,
-      "relationCount": 0,
-      "lastCommitAt": "2026-01-29T14:21:39.000Z",
-      "productionUrl": null,
-      "sourceUrl": null,
-      "subdomain": "p-manim-docs",
-      "subdomainUrl": "https://p-manim-docs.wordm.us"
-    },
-    {
-      "id": "proj_lsa3hteemm0hb65x",
-      "name": "vs2ios",
-      "slug": "vs2ios",
-      "summary": "vs2ios 项目，等待自动摘要补全。",
-      "techStack": [],
-      "tags": [
-        "vs2ios"
-      ],
-      "activityScore": 28,
-      "commitCount30d": 5,
-      "relationCount": 0,
-      "lastCommitAt": "2026-01-27T03:39:53.000Z",
-      "productionUrl": null,
-      "sourceUrl": null,
-      "subdomain": "p-vs2ios",
-      "subdomainUrl": "https://p-vs2ios.wordm.us"
+      "subdomainUrl": "https://p-focusor.wordm.us",
+      "detail": {
+        "source": "orchestration-manifest",
+        "slug": "focusor",
+        "projectPath": "focusor",
+        "status": "ready",
+        "type": "app",
+        "language": "js",
+        "entry": "focusor/README.md",
+        "apiOrPackage": "focusor",
+        "publisherId": "openclaw-official",
+        "trustMode": "publisher_signature_once",
+        "commands": {
+          "run": "npm run dev",
+          "test": "N/A",
+          "lint": "N/A",
+          "build": "npm run build",
+          "docs": "N/A"
+        },
+        "distributionMode": "single",
+        "verifyBeforeDeploy": true,
+        "defaultActions": [
+          "verify",
+          "bundle"
+        ],
+        "artifactName": "focusor.tar.gz",
+        "artifactPath": "../../releases/focusor.tar.gz",
+        "artifactSha256Snapshot": "d086f4d80f3298bed7ac5bab663a5bfdf22248bbb998b0e96deb449eee93d8ae",
+        "executionEntrypoint": "deploy.sh",
+        "clickInstallers": [
+          {
+            "label": "mac",
+            "command": "install.command"
+          },
+          {
+            "label": "linux",
+            "command": "install.sh"
+          },
+          {
+            "label": "windows_powershell",
+            "command": "install.ps1"
+          },
+          {
+            "label": "windows_cmd",
+            "command": "install.bat"
+          },
+          {
+            "label": "cross_platform",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.command"
+          }
+        ],
+        "recommendedActions": [
+          {
+            "label": "default",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.py"
+          },
+          {
+            "label": "verify",
+            "command": "deploy.sh verify"
+          },
+          {
+            "label": "bundle",
+            "command": "deploy.sh bundle"
+          },
+          {
+            "label": "run",
+            "command": "deploy.sh run"
+          }
+        ]
+      }
     },
     {
       "id": "proj_l47qtzufmm0hb65q",
       "name": "code-agent-demo",
       "slug": "code-agent-demo",
-      "summary": "A local-first multi-agent orchestration panel for Codex CLI.",
+      "summary": "Codex Agent Panel MVP",
       "techStack": [
         "nodejs",
         "@types/node",
@@ -251,12 +886,89 @@
       ],
       "activityScore": 24,
       "commitCount30d": 3,
-      "relationCount": 3,
+      "relationCount": 1,
       "lastCommitAt": "2026-02-09T11:22:09.000Z",
-      "productionUrl": "https://github.com/LiDeChi/code-agent-demo",
+      "productionUrl": null,
       "sourceUrl": "https://github.com/LiDeChi/code-agent-demo",
       "subdomain": "p-code-agent-demo",
-      "subdomainUrl": "https://p-code-agent-demo.wordm.us"
+      "subdomainUrl": "https://p-code-agent-demo.wordm.us",
+      "detail": {
+        "source": "orchestration-manifest",
+        "slug": "code-agent-demo",
+        "projectPath": "code-agent-demo",
+        "status": "ready",
+        "type": "app",
+        "language": "js",
+        "entry": "code-agent-demo/README.md",
+        "apiOrPackage": "codex-agent-panel",
+        "publisherId": "openclaw-official",
+        "trustMode": "publisher_signature_once",
+        "commands": {
+          "run": "npm run dev",
+          "test": "npm run test",
+          "lint": "npm run lint",
+          "build": "npm run build",
+          "docs": "N/A"
+        },
+        "distributionMode": "single",
+        "verifyBeforeDeploy": true,
+        "defaultActions": [
+          "verify",
+          "bundle"
+        ],
+        "artifactName": "code-agent-demo.tar.gz",
+        "artifactPath": "../../releases/code-agent-demo.tar.gz",
+        "artifactSha256Snapshot": "671b91ff0312520c6597b96784eede71fe5e6ad239a53ddeb8551563a58a3553",
+        "executionEntrypoint": "deploy.sh",
+        "clickInstallers": [
+          {
+            "label": "mac",
+            "command": "install.command"
+          },
+          {
+            "label": "linux",
+            "command": "install.sh"
+          },
+          {
+            "label": "windows_powershell",
+            "command": "install.ps1"
+          },
+          {
+            "label": "windows_cmd",
+            "command": "install.bat"
+          },
+          {
+            "label": "cross_platform",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.command"
+          }
+        ],
+        "recommendedActions": [
+          {
+            "label": "default",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.py"
+          },
+          {
+            "label": "verify",
+            "command": "deploy.sh verify"
+          },
+          {
+            "label": "bundle",
+            "command": "deploy.sh bundle"
+          },
+          {
+            "label": "run",
+            "command": "deploy.sh run"
+          }
+        ]
+      }
     },
     {
       "id": "proj_1onptky2mm0hb65w",
@@ -273,12 +985,185 @@
       ],
       "activityScore": 20,
       "commitCount30d": 1,
-      "relationCount": 2,
+      "relationCount": 0,
       "lastCommitAt": "2026-02-06T13:03:45.000Z",
       "productionUrl": null,
       "sourceUrl": null,
       "subdomain": "p-openclaw-dashboard",
-      "subdomainUrl": "https://p-openclaw-dashboard.wordm.us"
+      "subdomainUrl": "https://p-openclaw-dashboard.wordm.us",
+      "detail": {
+        "source": "orchestration-manifest",
+        "slug": "openclaw-dashboard",
+        "projectPath": "openclaw-dashboard",
+        "status": "partial",
+        "type": "app",
+        "language": "js",
+        "entry": "openclaw-dashboard/README.md",
+        "apiOrPackage": "openclaw-context-dashboard",
+        "publisherId": "openclaw-official",
+        "trustMode": "publisher_signature_once",
+        "commands": {
+          "run": "npm run dev",
+          "test": "N/A",
+          "lint": "N/A",
+          "build": "N/A",
+          "docs": "N/A"
+        },
+        "distributionMode": "single",
+        "verifyBeforeDeploy": true,
+        "defaultActions": [
+          "verify",
+          "bundle"
+        ],
+        "artifactName": "openclaw-dashboard.tar.gz",
+        "artifactPath": "../../releases/openclaw-dashboard.tar.gz",
+        "artifactSha256Snapshot": "7171dc1e281d1ff2d2c463aa7372cb7f7697e6791db9ddeeca8c81536138d86f",
+        "executionEntrypoint": "deploy.sh",
+        "clickInstallers": [
+          {
+            "label": "mac",
+            "command": "install.command"
+          },
+          {
+            "label": "linux",
+            "command": "install.sh"
+          },
+          {
+            "label": "windows_powershell",
+            "command": "install.ps1"
+          },
+          {
+            "label": "windows_cmd",
+            "command": "install.bat"
+          },
+          {
+            "label": "cross_platform",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.command"
+          }
+        ],
+        "recommendedActions": [
+          {
+            "label": "default",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.py"
+          },
+          {
+            "label": "verify",
+            "command": "deploy.sh verify"
+          },
+          {
+            "label": "bundle",
+            "command": "deploy.sh bundle"
+          },
+          {
+            "label": "run",
+            "command": "deploy.sh run"
+          }
+        ]
+      }
+    },
+    {
+      "id": "proj_cuoy8zgxmm0hb65n",
+      "name": "Manim Docs",
+      "slug": "manim-docs",
+      "summary": "Manim Docs 项目，等待自动摘要补全。",
+      "techStack": [],
+      "tags": [
+        "manim",
+        "docs"
+      ],
+      "activityScore": 18,
+      "commitCount30d": 0,
+      "relationCount": 0,
+      "lastCommitAt": "2026-01-29T14:21:39.000Z",
+      "productionUrl": null,
+      "sourceUrl": null,
+      "subdomain": "p-manim-docs",
+      "subdomainUrl": "https://p-manim-docs.wordm.us",
+      "detail": {
+        "source": "orchestration-manifest",
+        "slug": "manim-docs",
+        "projectPath": "Manim Docs",
+        "status": "docs_only",
+        "type": "docs",
+        "language": "other",
+        "entry": "Manim Docs/README.md",
+        "apiOrPackage": "N/A",
+        "publisherId": "openclaw-official",
+        "trustMode": "publisher_signature_once",
+        "commands": {
+          "run": "N/A",
+          "test": "N/A",
+          "lint": "N/A",
+          "build": "N/A",
+          "docs": "N/A"
+        },
+        "distributionMode": "single",
+        "verifyBeforeDeploy": true,
+        "defaultActions": [
+          "verify",
+          "bundle"
+        ],
+        "artifactName": "manim-docs.tar.gz",
+        "artifactPath": "../../releases/manim-docs.tar.gz",
+        "artifactSha256Snapshot": "0d0d6f91c99e3b9b40b5482668c3522cf9a041ee6d902fdac4bec0ce546393a4",
+        "executionEntrypoint": "deploy.sh",
+        "clickInstallers": [
+          {
+            "label": "mac",
+            "command": "install.command"
+          },
+          {
+            "label": "linux",
+            "command": "install.sh"
+          },
+          {
+            "label": "windows_powershell",
+            "command": "install.ps1"
+          },
+          {
+            "label": "windows_cmd",
+            "command": "install.bat"
+          },
+          {
+            "label": "cross_platform",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.command"
+          }
+        ],
+        "recommendedActions": [
+          {
+            "label": "default",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.py"
+          },
+          {
+            "label": "verify",
+            "command": "deploy.sh verify"
+          },
+          {
+            "label": "bundle",
+            "command": "deploy.sh bundle"
+          },
+          {
+            "label": "run",
+            "command": "deploy.sh run"
+          }
+        ]
+      }
     },
     {
       "id": "proj_uzzc8klumm0hb65p",
@@ -291,70 +1176,186 @@
         "test",
         "2"
       ],
-      "activityScore": 20,
-      "commitCount30d": 1,
-      "relationCount": 2,
-      "lastCommitAt": "2026-01-30T08:53:03.000Z",
-      "productionUrl": "https://github.com/LiDeChi/auto-test-2",
-      "sourceUrl": "https://github.com/LiDeChi/auto-test-2",
-      "subdomain": "p-auto-test-2",
-      "subdomainUrl": "https://p-auto-test-2.wordm.us"
-    },
-    {
-      "id": "proj_bmc03xpkmm0hb65r",
-      "name": "dmxapi-model-registry",
-      "slug": "dmxapi-model-registry",
-      "summary": "这是一套基于 Cloudflare Workers + KV 的轻量级“模型索引”服务：",
-      "techStack": [
-        "nodejs",
-        "@cloudflare/workers-types",
-        "wrangler"
-      ],
-      "tags": [
-        "dmxapi",
-        "model",
-        "registry",
-        "cloudflare",
-        "workers",
-        "rmb.dmxapi.cn",
-        "json",
-        "https"
-      ],
       "activityScore": 14,
       "commitCount30d": 1,
-      "relationCount": 3,
-      "lastCommitAt": "2026-01-28T05:06:13.000Z",
-      "productionUrl": "https://rmb.dmxapi.cn/?api=models",
-      "sourceUrl": "https://github.com/LiDeChi/dmxapi-model-registry",
-      "subdomain": "p-dmxapi-model-registry",
-      "subdomainUrl": "https://p-dmxapi-model-registry.wordm.us"
+      "relationCount": 0,
+      "lastCommitAt": "2026-01-30T08:53:03.000Z",
+      "productionUrl": null,
+      "sourceUrl": "https://github.com/LiDeChi/auto-test-2",
+      "subdomain": "p-auto-test-2",
+      "subdomainUrl": "https://p-auto-test-2.wordm.us",
+      "detail": {
+        "source": "orchestration-manifest",
+        "slug": "auto-test-2",
+        "projectPath": "auto-test-2",
+        "status": "docs_only",
+        "type": "docs",
+        "language": "other",
+        "entry": "auto-test-2/README.md",
+        "apiOrPackage": "N/A",
+        "publisherId": "openclaw-official",
+        "trustMode": "publisher_signature_once",
+        "commands": {
+          "run": "N/A",
+          "test": "N/A",
+          "lint": "N/A",
+          "build": "N/A",
+          "docs": "N/A"
+        },
+        "distributionMode": "single",
+        "verifyBeforeDeploy": true,
+        "defaultActions": [
+          "verify",
+          "bundle"
+        ],
+        "artifactName": "auto-test-2.tar.gz",
+        "artifactPath": "../../releases/auto-test-2.tar.gz",
+        "artifactSha256Snapshot": "dccc6949934e072a6fb0d433e182a34374e0ca4b3ca2ef116f6b3b450060bfe7",
+        "executionEntrypoint": "deploy.sh",
+        "clickInstallers": [
+          {
+            "label": "mac",
+            "command": "install.command"
+          },
+          {
+            "label": "linux",
+            "command": "install.sh"
+          },
+          {
+            "label": "windows_powershell",
+            "command": "install.ps1"
+          },
+          {
+            "label": "windows_cmd",
+            "command": "install.bat"
+          },
+          {
+            "label": "cross_platform",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.command"
+          }
+        ],
+        "recommendedActions": [
+          {
+            "label": "default",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.py"
+          },
+          {
+            "label": "verify",
+            "command": "deploy.sh verify"
+          },
+          {
+            "label": "bundle",
+            "command": "deploy.sh bundle"
+          },
+          {
+            "label": "run",
+            "command": "deploy.sh run"
+          }
+        ]
+      }
     },
     {
-      "id": "proj_i2pronbumm0hb65u",
-      "name": "gridnote",
-      "slug": "gridnote",
-      "summary": "gridnote 项目，等待自动摘要补全。",
-      "techStack": [
-        "nodejs",
-        "@remotion/google-fonts",
-        "@remotion/media",
-        "@supabase/supabase-js",
-        "katex",
-        "react",
-        "react-dom",
-        "remotion"
-      ],
+      "id": "proj_lsa3hteemm0hb65x",
+      "name": "vs2ios",
+      "slug": "vs2ios",
+      "summary": "vs2ios 项目，等待自动摘要补全。",
+      "techStack": [],
       "tags": [
-        "gridnote"
+        "vs2ios"
       ],
       "activityScore": 10,
       "commitCount30d": 0,
-      "relationCount": 2,
-      "lastCommitAt": "2026-01-23T10:54:29.000Z",
-      "productionUrl": "https://github.com/LiDeChi/latti",
-      "sourceUrl": "https://github.com/LiDeChi/latti",
-      "subdomain": "p-gridnote",
-      "subdomainUrl": "https://p-gridnote.wordm.us"
+      "relationCount": 0,
+      "lastCommitAt": "2026-01-27T03:39:53.000Z",
+      "productionUrl": null,
+      "sourceUrl": null,
+      "subdomain": "p-vs2ios",
+      "subdomainUrl": "https://p-vs2ios.wordm.us",
+      "detail": {
+        "source": "orchestration-manifest",
+        "slug": "vs2ios",
+        "projectPath": "vs2ios",
+        "status": "docs_only",
+        "type": "docs",
+        "language": "other",
+        "entry": "vs2ios/README.md",
+        "apiOrPackage": "N/A",
+        "publisherId": "openclaw-official",
+        "trustMode": "publisher_signature_once",
+        "commands": {
+          "run": "N/A",
+          "test": "N/A",
+          "lint": "N/A",
+          "build": "N/A",
+          "docs": "N/A"
+        },
+        "distributionMode": "single",
+        "verifyBeforeDeploy": true,
+        "defaultActions": [
+          "verify",
+          "bundle"
+        ],
+        "artifactName": "vs2ios.tar.gz",
+        "artifactPath": "../../releases/vs2ios.tar.gz",
+        "artifactSha256Snapshot": "47fd698d43372edf41e053b5871a4010151b1c5957c968cdd9f6c2d5b076f931",
+        "executionEntrypoint": "deploy.sh",
+        "clickInstallers": [
+          {
+            "label": "mac",
+            "command": "install.command"
+          },
+          {
+            "label": "linux",
+            "command": "install.sh"
+          },
+          {
+            "label": "windows_powershell",
+            "command": "install.ps1"
+          },
+          {
+            "label": "windows_cmd",
+            "command": "install.bat"
+          },
+          {
+            "label": "cross_platform",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.command"
+          }
+        ],
+        "recommendedActions": [
+          {
+            "label": "default",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.py"
+          },
+          {
+            "label": "verify",
+            "command": "deploy.sh verify"
+          },
+          {
+            "label": "bundle",
+            "command": "deploy.sh bundle"
+          },
+          {
+            "label": "run",
+            "command": "deploy.sh run"
+          }
+        ]
+      }
     },
     {
       "id": "proj_zopsdjsqmm0hb65o",
@@ -372,13 +1373,90 @@
       "productionUrl": null,
       "sourceUrl": null,
       "subdomain": "p-vs",
-      "subdomainUrl": "https://p-vs.wordm.us"
+      "subdomainUrl": "https://p-vs.wordm.us",
+      "detail": {
+        "source": "orchestration-manifest",
+        "slug": "vs",
+        "projectPath": "VS",
+        "status": "docs_only",
+        "type": "docs",
+        "language": "other",
+        "entry": "VS/README.md",
+        "apiOrPackage": "N/A",
+        "publisherId": "openclaw-official",
+        "trustMode": "publisher_signature_once",
+        "commands": {
+          "run": "N/A",
+          "test": "N/A",
+          "lint": "N/A",
+          "build": "N/A",
+          "docs": "N/A"
+        },
+        "distributionMode": "single",
+        "verifyBeforeDeploy": true,
+        "defaultActions": [
+          "verify",
+          "bundle"
+        ],
+        "artifactName": "vs.tar.gz",
+        "artifactPath": "../../releases/vs.tar.gz",
+        "artifactSha256Snapshot": "9e95da9953eff0ec1db953eb0a47d973f055afc506cd4c66bb8b70523c6d84de",
+        "executionEntrypoint": "deploy.sh",
+        "clickInstallers": [
+          {
+            "label": "mac",
+            "command": "install.command"
+          },
+          {
+            "label": "linux",
+            "command": "install.sh"
+          },
+          {
+            "label": "windows_powershell",
+            "command": "install.ps1"
+          },
+          {
+            "label": "windows_cmd",
+            "command": "install.bat"
+          },
+          {
+            "label": "cross_platform",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.command"
+          }
+        ],
+        "recommendedActions": [
+          {
+            "label": "default",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.py"
+          },
+          {
+            "label": "verify",
+            "command": "deploy.sh verify"
+          },
+          {
+            "label": "bundle",
+            "command": "deploy.sh bundle"
+          },
+          {
+            "label": "run",
+            "command": "deploy.sh run"
+          }
+        ]
+      }
     },
     {
       "id": "proj_dp3egih3mm0hb65y",
       "name": "wordm",
       "slug": "wordm",
-      "summary": "This repository contains the public homepage for unauthenticated visitors.",
+      "summary": "WordM Homepage",
       "techStack": [],
       "tags": [
         "wordm",
@@ -392,18 +1470,95 @@
       ],
       "activityScore": 10,
       "commitCount30d": 0,
-      "relationCount": 3,
+      "relationCount": 1,
       "lastCommitAt": "2026-01-20T13:51:38.000Z",
       "productionUrl": "https://gridnote.wordm.us/",
       "sourceUrl": "https://github.com/LiDeChi/wordm",
       "subdomain": "p-wordm",
-      "subdomainUrl": "https://p-wordm.wordm.us"
+      "subdomainUrl": "https://p-wordm.wordm.us",
+      "detail": {
+        "source": "orchestration-manifest",
+        "slug": "wordm",
+        "projectPath": "wordm",
+        "status": "ready",
+        "type": "app",
+        "language": "js",
+        "entry": "N/A",
+        "apiOrPackage": "homepage",
+        "publisherId": "openclaw-official",
+        "trustMode": "publisher_signature_once",
+        "commands": {
+          "run": "cd homepage && npm run dev",
+          "test": "cd homepage && npm run test",
+          "lint": "N/A",
+          "build": "cd homepage && npm run build",
+          "docs": "N/A"
+        },
+        "distributionMode": "single",
+        "verifyBeforeDeploy": true,
+        "defaultActions": [
+          "verify",
+          "bundle"
+        ],
+        "artifactName": "wordm.tar.gz",
+        "artifactPath": "../../releases/wordm.tar.gz",
+        "artifactSha256Snapshot": "5e61fe313cbff392dbbf41cb301ef0252df3127f9382b454b38b0f6637ed0709",
+        "executionEntrypoint": "deploy.sh",
+        "clickInstallers": [
+          {
+            "label": "mac",
+            "command": "install.command"
+          },
+          {
+            "label": "linux",
+            "command": "install.sh"
+          },
+          {
+            "label": "windows_powershell",
+            "command": "install.ps1"
+          },
+          {
+            "label": "windows_cmd",
+            "command": "install.bat"
+          },
+          {
+            "label": "cross_platform",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.command"
+          }
+        ],
+        "recommendedActions": [
+          {
+            "label": "default",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.py"
+          },
+          {
+            "label": "verify",
+            "command": "deploy.sh verify"
+          },
+          {
+            "label": "bundle",
+            "command": "deploy.sh bundle"
+          },
+          {
+            "label": "run",
+            "command": "deploy.sh run"
+          }
+        ]
+      }
     },
     {
       "id": "proj_53fzujlfmm0hb65s",
       "name": "film-talk",
       "slug": "film-talk",
-      "summary": "基于Anthropic Claude API的多智能体协作系统，通过输入提示词生成完整的20分钟电影剧本。",
+      "summary": "Film Talk - 电影剧本多智能体生成系统",
       "techStack": [
         "python",
         "project",
@@ -426,18 +1581,95 @@
       ],
       "activityScore": 10,
       "commitCount30d": 0,
-      "relationCount": 2,
+      "relationCount": 0,
       "lastCommitAt": "2026-01-17T07:02:14.000Z",
       "productionUrl": null,
       "sourceUrl": null,
       "subdomain": "p-film-talk",
-      "subdomainUrl": "https://p-film-talk.wordm.us"
+      "subdomainUrl": "https://p-film-talk.wordm.us",
+      "detail": {
+        "source": "orchestration-manifest",
+        "slug": "film-talk",
+        "projectPath": "film-talk",
+        "status": "partial",
+        "type": "app",
+        "language": "python",
+        "entry": "film-talk/README.md",
+        "apiOrPackage": "film-talk",
+        "publisherId": "openclaw-official",
+        "trustMode": "publisher_signature_once",
+        "commands": {
+          "run": "N/A",
+          "test": "N/A",
+          "lint": "N/A",
+          "build": "N/A",
+          "docs": "N/A"
+        },
+        "distributionMode": "single",
+        "verifyBeforeDeploy": true,
+        "defaultActions": [
+          "verify",
+          "bundle"
+        ],
+        "artifactName": "film-talk.tar.gz",
+        "artifactPath": "../../releases/film-talk.tar.gz",
+        "artifactSha256Snapshot": "9453824f1331defed37fa9f86a2f1c9ce66a4036419ec098371f7e9ce1f177cc",
+        "executionEntrypoint": "deploy.sh",
+        "clickInstallers": [
+          {
+            "label": "mac",
+            "command": "install.command"
+          },
+          {
+            "label": "linux",
+            "command": "install.sh"
+          },
+          {
+            "label": "windows_powershell",
+            "command": "install.ps1"
+          },
+          {
+            "label": "windows_cmd",
+            "command": "install.bat"
+          },
+          {
+            "label": "cross_platform",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.command"
+          }
+        ],
+        "recommendedActions": [
+          {
+            "label": "default",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.py"
+          },
+          {
+            "label": "verify",
+            "command": "deploy.sh verify"
+          },
+          {
+            "label": "bundle",
+            "command": "deploy.sh bundle"
+          },
+          {
+            "label": "run",
+            "command": "deploy.sh run"
+          }
+        ]
+      }
     },
     {
       "id": "proj_jinzn1ddmm0hb65x",
       "name": "video_api_doc",
       "slug": "video-api-doc",
-      "summary": "本项目是一个自动化的知识库构建与查询系统，专门用于阿里云百炼（Bailian）视频生成大模型 API 的文档爬取、索引与智能查询。",
+      "summary": "阿里云百炼视频生成 API 知识库 & 爬虫项目",
       "techStack": [
         "python",
         "crawl4ai",
@@ -455,18 +1687,95 @@
       ],
       "activityScore": 10,
       "commitCount30d": 0,
-      "relationCount": 3,
+      "relationCount": 2,
       "lastCommitAt": "2026-01-17T04:13:41.000Z",
-      "productionUrl": "https://github.com/LiDeChi/video_api_doc",
+      "productionUrl": null,
       "sourceUrl": "https://github.com/LiDeChi/video_api_doc",
       "subdomain": "p-video-api-doc",
-      "subdomainUrl": "https://p-video-api-doc.wordm.us"
+      "subdomainUrl": "https://p-video-api-doc.wordm.us",
+      "detail": {
+        "source": "orchestration-manifest",
+        "slug": "video-api-doc",
+        "projectPath": "video_api_doc",
+        "status": "partial",
+        "type": "service",
+        "language": "python",
+        "entry": "video_api_doc/README.md",
+        "apiOrPackage": "N/A",
+        "publisherId": "openclaw-official",
+        "trustMode": "publisher_signature_once",
+        "commands": {
+          "run": "N/A",
+          "test": "N/A",
+          "lint": "N/A",
+          "build": "N/A",
+          "docs": "N/A"
+        },
+        "distributionMode": "single",
+        "verifyBeforeDeploy": true,
+        "defaultActions": [
+          "verify",
+          "bundle"
+        ],
+        "artifactName": "video_api_doc.tar.gz",
+        "artifactPath": "../../releases/video_api_doc.tar.gz",
+        "artifactSha256Snapshot": "c32b0ca198834a88d6987d0cff7e9b24a452b67fc0bd0816cb9231c84af0489a",
+        "executionEntrypoint": "deploy.sh",
+        "clickInstallers": [
+          {
+            "label": "mac",
+            "command": "install.command"
+          },
+          {
+            "label": "linux",
+            "command": "install.sh"
+          },
+          {
+            "label": "windows_powershell",
+            "command": "install.ps1"
+          },
+          {
+            "label": "windows_cmd",
+            "command": "install.bat"
+          },
+          {
+            "label": "cross_platform",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.command"
+          }
+        ],
+        "recommendedActions": [
+          {
+            "label": "default",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.py"
+          },
+          {
+            "label": "verify",
+            "command": "deploy.sh verify"
+          },
+          {
+            "label": "bundle",
+            "command": "deploy.sh bundle"
+          },
+          {
+            "label": "run",
+            "command": "deploy.sh run"
+          }
+        ]
+      }
     },
     {
       "id": "proj_oayfwj1wmm0hb65o",
       "name": "TgBooks",
       "slug": "tgbooks",
-      "summary": "基于 Telethon 的 Telegram 机器人交互工具，专为 Z-Library 搜索优化。",
+      "summary": "TgBooks - Z-Library 机器人自动化工具",
       "techStack": [
         "python",
         "telethon",
@@ -489,18 +1798,95 @@
       ],
       "activityScore": 10,
       "commitCount30d": 0,
-      "relationCount": 2,
+      "relationCount": 0,
       "lastCommitAt": "2026-01-15T09:15:55.000Z",
       "productionUrl": null,
       "sourceUrl": null,
       "subdomain": "p-tgbooks",
-      "subdomainUrl": "https://p-tgbooks.wordm.us"
+      "subdomainUrl": "https://p-tgbooks.wordm.us",
+      "detail": {
+        "source": "orchestration-manifest",
+        "slug": "tgbooks",
+        "projectPath": "TgBooks",
+        "status": "partial",
+        "type": "app",
+        "language": "python",
+        "entry": "TgBooks/main.py",
+        "apiOrPackage": "N/A",
+        "publisherId": "openclaw-official",
+        "trustMode": "publisher_signature_once",
+        "commands": {
+          "run": "N/A",
+          "test": "N/A",
+          "lint": "N/A",
+          "build": "N/A",
+          "docs": "N/A"
+        },
+        "distributionMode": "single",
+        "verifyBeforeDeploy": true,
+        "defaultActions": [
+          "verify",
+          "bundle"
+        ],
+        "artifactName": "tgbooks.tar.gz",
+        "artifactPath": "../../releases/tgbooks.tar.gz",
+        "artifactSha256Snapshot": "5b4768c035c299057bda27f2a1eda4a44f51881eb958cebf173dfcc2bb18d498",
+        "executionEntrypoint": "deploy.sh",
+        "clickInstallers": [
+          {
+            "label": "mac",
+            "command": "install.command"
+          },
+          {
+            "label": "linux",
+            "command": "install.sh"
+          },
+          {
+            "label": "windows_powershell",
+            "command": "install.ps1"
+          },
+          {
+            "label": "windows_cmd",
+            "command": "install.bat"
+          },
+          {
+            "label": "cross_platform",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.command"
+          }
+        ],
+        "recommendedActions": [
+          {
+            "label": "default",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.py"
+          },
+          {
+            "label": "verify",
+            "command": "deploy.sh verify"
+          },
+          {
+            "label": "bundle",
+            "command": "deploy.sh bundle"
+          },
+          {
+            "label": "run",
+            "command": "deploy.sh run"
+          }
+        ]
+      }
     },
     {
       "id": "proj_ldcq2e58mm0hb65w",
       "name": "oversea_news",
       "slug": "oversea-news",
-      "summary": "监控并聚合海外中国政策分析类文章，支持国内部署访问。",
+      "summary": "海外中国资讯聚合系统",
       "techStack": [
         "docker"
       ],
@@ -518,16 +1904,93 @@
       "commitCount30d": 0,
       "relationCount": 1,
       "lastCommitAt": "2026-01-12T12:30:32.000Z",
-      "productionUrl": "https://github.com/LiDeChi/WildNews",
+      "productionUrl": null,
       "sourceUrl": "https://github.com/LiDeChi/WildNews",
       "subdomain": "p-oversea-news",
-      "subdomainUrl": "https://p-oversea-news.wordm.us"
+      "subdomainUrl": "https://p-oversea-news.wordm.us",
+      "detail": {
+        "source": "orchestration-manifest",
+        "slug": "oversea-news",
+        "projectPath": "oversea_news",
+        "status": "partial",
+        "type": "app",
+        "language": "python",
+        "entry": "backend/main.py",
+        "apiOrPackage": "N/A",
+        "publisherId": "openclaw-official",
+        "trustMode": "publisher_signature_once",
+        "commands": {
+          "run": "N/A",
+          "test": "N/A",
+          "lint": "N/A",
+          "build": "N/A",
+          "docs": "N/A"
+        },
+        "distributionMode": "single",
+        "verifyBeforeDeploy": true,
+        "defaultActions": [
+          "verify",
+          "bundle"
+        ],
+        "artifactName": "oversea_news.tar.gz",
+        "artifactPath": "../../releases/oversea_news.tar.gz",
+        "artifactSha256Snapshot": "95e2654160c6a085f17df12016a218b64551ab738158d64c7c86a86d18fd2735",
+        "executionEntrypoint": "deploy.sh",
+        "clickInstallers": [
+          {
+            "label": "mac",
+            "command": "install.command"
+          },
+          {
+            "label": "linux",
+            "command": "install.sh"
+          },
+          {
+            "label": "windows_powershell",
+            "command": "install.ps1"
+          },
+          {
+            "label": "windows_cmd",
+            "command": "install.bat"
+          },
+          {
+            "label": "cross_platform",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.command"
+          }
+        ],
+        "recommendedActions": [
+          {
+            "label": "default",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.py"
+          },
+          {
+            "label": "verify",
+            "command": "deploy.sh verify"
+          },
+          {
+            "label": "bundle",
+            "command": "deploy.sh bundle"
+          },
+          {
+            "label": "run",
+            "command": "deploy.sh run"
+          }
+        ]
+      }
     },
     {
       "id": "proj_ukdrv6j5mm0hb65t",
       "name": "gridgraph-product",
       "slug": "gridgraph-product",
-      "summary": "This is a [Next.js](https://nextjs.org) project bootstrapped with [create-next-app](https://nextjs.org/docs/app/api-reference/cli/create-next-app).",
+      "summary": "This is a Next.js project bootstrapped with create-next-app.",
       "techStack": [
         "nodejs",
         "next",
@@ -555,13 +2018,90 @@
       "productionUrl": "https://nextjs.org/",
       "sourceUrl": null,
       "subdomain": "p-gridgraph-product",
-      "subdomainUrl": "https://p-gridgraph-product.wordm.us"
+      "subdomainUrl": "https://p-gridgraph-product.wordm.us",
+      "detail": {
+        "source": "orchestration-manifest",
+        "slug": "gridgraph-product",
+        "projectPath": "gridgraph-product",
+        "status": "partial",
+        "type": "app",
+        "language": "js",
+        "entry": "gridgraph-product/README.md",
+        "apiOrPackage": "gridgraph-product",
+        "publisherId": "openclaw-official",
+        "trustMode": "publisher_signature_once",
+        "commands": {
+          "run": "npm run dev",
+          "test": "N/A",
+          "lint": "npm run lint",
+          "build": "npm run build",
+          "docs": "N/A"
+        },
+        "distributionMode": "single",
+        "verifyBeforeDeploy": true,
+        "defaultActions": [
+          "verify",
+          "bundle"
+        ],
+        "artifactName": "gridgraph-product.tar.gz",
+        "artifactPath": "../../releases/gridgraph-product.tar.gz",
+        "artifactSha256Snapshot": "e21569de67b6596c22b23a633e9522bec9b4e246a54ad89dbf75fd734e4ac1ec",
+        "executionEntrypoint": "deploy.sh",
+        "clickInstallers": [
+          {
+            "label": "mac",
+            "command": "install.command"
+          },
+          {
+            "label": "linux",
+            "command": "install.sh"
+          },
+          {
+            "label": "windows_powershell",
+            "command": "install.ps1"
+          },
+          {
+            "label": "windows_cmd",
+            "command": "install.bat"
+          },
+          {
+            "label": "cross_platform",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.command"
+          }
+        ],
+        "recommendedActions": [
+          {
+            "label": "default",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.py"
+          },
+          {
+            "label": "verify",
+            "command": "deploy.sh verify"
+          },
+          {
+            "label": "bundle",
+            "command": "deploy.sh bundle"
+          },
+          {
+            "label": "run",
+            "command": "deploy.sh run"
+          }
+        ]
+      }
     },
     {
       "id": "proj_sii2v2gimm0hb65s",
       "name": "gridgraph",
       "slug": "gridgraph",
-      "summary": "This is a [Next.js](https://nextjs.org) project bootstrapped with [create-next-app](https://nextjs.org/docs/app/api-reference/cli/create-next-app).",
+      "summary": "This is a Next.js project bootstrapped with create-next-app.",
       "techStack": [
         "nodejs",
         "class-variance-authority",
@@ -589,13 +2129,90 @@
       "productionUrl": "https://nextjs.org/",
       "sourceUrl": null,
       "subdomain": "p-gridgraph",
-      "subdomainUrl": "https://p-gridgraph.wordm.us"
+      "subdomainUrl": "https://p-gridgraph.wordm.us",
+      "detail": {
+        "source": "orchestration-manifest",
+        "slug": "gridgraph",
+        "projectPath": "gridgraph",
+        "status": "partial",
+        "type": "app",
+        "language": "js",
+        "entry": "gridgraph/README.md",
+        "apiOrPackage": "gridgraph",
+        "publisherId": "openclaw-official",
+        "trustMode": "publisher_signature_once",
+        "commands": {
+          "run": "npm run dev",
+          "test": "N/A",
+          "lint": "npm run lint",
+          "build": "npm run build",
+          "docs": "N/A"
+        },
+        "distributionMode": "single",
+        "verifyBeforeDeploy": true,
+        "defaultActions": [
+          "verify",
+          "bundle"
+        ],
+        "artifactName": "gridgraph.tar.gz",
+        "artifactPath": "../../releases/gridgraph.tar.gz",
+        "artifactSha256Snapshot": "cd4018e2be0035564d40b9a7ce74841f8181308ade1fe1160fdac92771825aa5",
+        "executionEntrypoint": "deploy.sh",
+        "clickInstallers": [
+          {
+            "label": "mac",
+            "command": "install.command"
+          },
+          {
+            "label": "linux",
+            "command": "install.sh"
+          },
+          {
+            "label": "windows_powershell",
+            "command": "install.ps1"
+          },
+          {
+            "label": "windows_cmd",
+            "command": "install.bat"
+          },
+          {
+            "label": "cross_platform",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.command"
+          }
+        ],
+        "recommendedActions": [
+          {
+            "label": "default",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.py"
+          },
+          {
+            "label": "verify",
+            "command": "deploy.sh verify"
+          },
+          {
+            "label": "bundle",
+            "command": "deploy.sh bundle"
+          },
+          {
+            "label": "run",
+            "command": "deploy.sh run"
+          }
+        ]
+      }
     },
     {
       "id": "proj_zc5uxl4bmm0hb65v",
       "name": "open_deep_research",
       "slug": "open-deep-research",
-      "summary": "open_deep_research 项目详情可查看项目页与源码。",
+      "summary": "Open Deep Research",
       "techStack": [
         "python",
         "project",
@@ -623,7 +2240,84 @@
       "productionUrl": "https://blog.langchain.com/open-deep-research/",
       "sourceUrl": "https://github.com/LiDeChi/open_deep_research",
       "subdomain": "p-open-deep-research",
-      "subdomainUrl": "https://p-open-deep-research.wordm.us"
+      "subdomainUrl": "https://p-open-deep-research.wordm.us",
+      "detail": {
+        "source": "orchestration-manifest",
+        "slug": "open-deep-research",
+        "projectPath": "open_deep_research",
+        "status": "partial",
+        "type": "app",
+        "language": "python",
+        "entry": "open_deep_research/README.md",
+        "apiOrPackage": "open_deep_research",
+        "publisherId": "openclaw-official",
+        "trustMode": "publisher_signature_once",
+        "commands": {
+          "run": "N/A",
+          "test": "N/A",
+          "lint": "N/A",
+          "build": "N/A",
+          "docs": "N/A"
+        },
+        "distributionMode": "single",
+        "verifyBeforeDeploy": true,
+        "defaultActions": [
+          "verify",
+          "bundle"
+        ],
+        "artifactName": "open_deep_research.tar.gz",
+        "artifactPath": "../../releases/open_deep_research.tar.gz",
+        "artifactSha256Snapshot": "5185b1cf8733f619849f26b0801dca533bf3e21e6fce40947f505b4d2aa821e8",
+        "executionEntrypoint": "deploy.sh",
+        "clickInstallers": [
+          {
+            "label": "mac",
+            "command": "install.command"
+          },
+          {
+            "label": "linux",
+            "command": "install.sh"
+          },
+          {
+            "label": "windows_powershell",
+            "command": "install.ps1"
+          },
+          {
+            "label": "windows_cmd",
+            "command": "install.bat"
+          },
+          {
+            "label": "cross_platform",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.command"
+          }
+        ],
+        "recommendedActions": [
+          {
+            "label": "default",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.py"
+          },
+          {
+            "label": "verify",
+            "command": "deploy.sh verify"
+          },
+          {
+            "label": "bundle",
+            "command": "deploy.sh bundle"
+          },
+          {
+            "label": "run",
+            "command": "deploy.sh run"
+          }
+        ]
+      }
     },
     {
       "id": "proj_e1h10aa7mm0hb65m",
@@ -651,12 +2345,89 @@
       ],
       "activityScore": 6,
       "commitCount30d": 0,
-      "relationCount": 1,
+      "relationCount": 0,
       "lastCommitAt": "2025-08-03T10:42:54.000Z",
       "productionUrl": null,
       "sourceUrl": null,
       "subdomain": "p-17-autowriting",
-      "subdomainUrl": "https://p-17-autowriting.wordm.us"
+      "subdomainUrl": "https://p-17-autowriting.wordm.us",
+      "detail": {
+        "source": "orchestration-manifest",
+        "slug": "17-autowriting",
+        "projectPath": "17_AutoWriting",
+        "status": "partial",
+        "type": "app",
+        "language": "python",
+        "entry": "17_AutoWriting/main.py",
+        "apiOrPackage": "N/A",
+        "publisherId": "openclaw-official",
+        "trustMode": "publisher_signature_once",
+        "commands": {
+          "run": "N/A",
+          "test": "N/A",
+          "lint": "N/A",
+          "build": "N/A",
+          "docs": "N/A"
+        },
+        "distributionMode": "single",
+        "verifyBeforeDeploy": true,
+        "defaultActions": [
+          "verify",
+          "bundle"
+        ],
+        "artifactName": "17_autowriting.tar.gz",
+        "artifactPath": "../../releases/17_autowriting.tar.gz",
+        "artifactSha256Snapshot": "3d58a5d38fbb8bfcb91599e15b9add5011c803fe90640c0108fba94af6042ca5",
+        "executionEntrypoint": "deploy.sh",
+        "clickInstallers": [
+          {
+            "label": "mac",
+            "command": "install.command"
+          },
+          {
+            "label": "linux",
+            "command": "install.sh"
+          },
+          {
+            "label": "windows_powershell",
+            "command": "install.ps1"
+          },
+          {
+            "label": "windows_cmd",
+            "command": "install.bat"
+          },
+          {
+            "label": "cross_platform",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.command"
+          }
+        ],
+        "recommendedActions": [
+          {
+            "label": "default",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.py"
+          },
+          {
+            "label": "verify",
+            "command": "deploy.sh verify"
+          },
+          {
+            "label": "bundle",
+            "command": "deploy.sh bundle"
+          },
+          {
+            "label": "run",
+            "command": "deploy.sh run"
+          }
+        ]
+      }
     },
     {
       "id": "proj_rv5yw11qmm0hb65l",
@@ -679,12 +2450,306 @@
       ],
       "activityScore": 6,
       "commitCount30d": 0,
-      "relationCount": 1,
+      "relationCount": 0,
       "lastCommitAt": "2025-07-31T06:06:32.000Z",
       "productionUrl": null,
       "sourceUrl": null,
       "subdomain": "p-01-joyplay",
-      "subdomainUrl": "https://p-01-joyplay.wordm.us"
+      "subdomainUrl": "https://p-01-joyplay.wordm.us",
+      "detail": {
+        "source": "orchestration-manifest",
+        "slug": "01-joyplay",
+        "projectPath": "01_Joyplay",
+        "status": "partial",
+        "type": "app",
+        "language": "other",
+        "entry": "01_Joyplay/README.md",
+        "apiOrPackage": "N/A",
+        "publisherId": "openclaw-official",
+        "trustMode": "publisher_signature_once",
+        "commands": {
+          "run": "N/A",
+          "test": "N/A",
+          "lint": "N/A",
+          "build": "N/A",
+          "docs": "N/A"
+        },
+        "distributionMode": "single",
+        "verifyBeforeDeploy": true,
+        "defaultActions": [
+          "verify",
+          "bundle"
+        ],
+        "artifactName": "01_joyplay.tar.gz",
+        "artifactPath": "../../releases/01_joyplay.tar.gz",
+        "artifactSha256Snapshot": "be741a55f6a1b35c9da8ff7d1a7c2581508aa36fef95bb6dc397cee540305b12",
+        "executionEntrypoint": "deploy.sh",
+        "clickInstallers": [
+          {
+            "label": "mac",
+            "command": "install.command"
+          },
+          {
+            "label": "linux",
+            "command": "install.sh"
+          },
+          {
+            "label": "windows_powershell",
+            "command": "install.ps1"
+          },
+          {
+            "label": "windows_cmd",
+            "command": "install.bat"
+          },
+          {
+            "label": "cross_platform",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.command"
+          }
+        ],
+        "recommendedActions": [
+          {
+            "label": "default",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.py"
+          },
+          {
+            "label": "verify",
+            "command": "deploy.sh verify"
+          },
+          {
+            "label": "bundle",
+            "command": "deploy.sh bundle"
+          },
+          {
+            "label": "run",
+            "command": "deploy.sh run"
+          }
+        ]
+      }
+    },
+    {
+      "id": "proj_bmc03xpkmm0hb65r",
+      "name": "dmxapi-model-registry",
+      "slug": "dmxapi-model-registry",
+      "summary": "DMXAPI 模型价格聚合",
+      "techStack": [
+        "nodejs",
+        "@cloudflare/workers-types",
+        "wrangler"
+      ],
+      "tags": [
+        "dmxapi",
+        "model",
+        "registry",
+        "cloudflare",
+        "workers",
+        "rmb.dmxapi.cn",
+        "json",
+        "https"
+      ],
+      "activityScore": 4,
+      "commitCount30d": 0,
+      "relationCount": 0,
+      "lastCommitAt": "2026-01-28T05:06:13.000Z",
+      "productionUrl": "https://rmb.dmxapi.cn/?api=models",
+      "sourceUrl": "https://github.com/LiDeChi/dmxapi-model-registry",
+      "subdomain": "p-dmxapi-model-registry",
+      "subdomainUrl": "https://p-dmxapi-model-registry.wordm.us",
+      "detail": {
+        "source": "orchestration-manifest",
+        "slug": "dmxapi-model-registry",
+        "projectPath": "dmxapi-model-registry",
+        "status": "partial",
+        "type": "service",
+        "language": "js",
+        "entry": "dmxapi-model-registry/README.md",
+        "apiOrPackage": "dmxapi-model-registry",
+        "publisherId": "openclaw-official",
+        "trustMode": "publisher_signature_once",
+        "commands": {
+          "run": "npm run dev",
+          "test": "N/A",
+          "lint": "N/A",
+          "build": "N/A",
+          "docs": "N/A"
+        },
+        "distributionMode": "single",
+        "verifyBeforeDeploy": true,
+        "defaultActions": [
+          "verify",
+          "bundle"
+        ],
+        "artifactName": "dmxapi-model-registry.tar.gz",
+        "artifactPath": "../../releases/dmxapi-model-registry.tar.gz",
+        "artifactSha256Snapshot": "3df3d327bd7c5b7c471554893952cb0d01333d54a8e6dfcb56dd9ed91308750a",
+        "executionEntrypoint": "deploy.sh",
+        "clickInstallers": [
+          {
+            "label": "mac",
+            "command": "install.command"
+          },
+          {
+            "label": "linux",
+            "command": "install.sh"
+          },
+          {
+            "label": "windows_powershell",
+            "command": "install.ps1"
+          },
+          {
+            "label": "windows_cmd",
+            "command": "install.bat"
+          },
+          {
+            "label": "cross_platform",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.command"
+          }
+        ],
+        "recommendedActions": [
+          {
+            "label": "default",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.py"
+          },
+          {
+            "label": "verify",
+            "command": "deploy.sh verify"
+          },
+          {
+            "label": "bundle",
+            "command": "deploy.sh bundle"
+          },
+          {
+            "label": "run",
+            "command": "deploy.sh run"
+          }
+        ]
+      }
+    },
+    {
+      "id": "proj_g0r9osczmm0hb65p",
+      "name": "ai-progress-compare",
+      "slug": "ai-progress-compare",
+      "summary": "Welcome to your Lovable project",
+      "techStack": [
+        "nodejs",
+        "@capacitor/android",
+        "@capacitor/cli",
+        "@capacitor/core",
+        "@capacitor/ios",
+        "@hookform/resolvers",
+        "@radix-ui/react-accordion",
+        "@radix-ui/react-alert-dialog"
+      ],
+      "tags": [
+        "ai",
+        "progress",
+        "compare",
+        "welcome",
+        "your",
+        "lovable",
+        "project",
+        "info"
+      ],
+      "activityScore": 4,
+      "commitCount30d": 0,
+      "relationCount": 0,
+      "lastCommitAt": "2026-01-28T04:20:14.000Z",
+      "productionUrl": null,
+      "sourceUrl": "https://github.com/LiDeChi/ai-progress-compare",
+      "subdomain": "p-ai-progress-compare",
+      "subdomainUrl": "https://p-ai-progress-compare.wordm.us",
+      "detail": {
+        "source": "orchestration-manifest",
+        "slug": "ai-progress-compare",
+        "projectPath": "ai-progress-compare",
+        "status": "ready",
+        "type": "app",
+        "language": "js",
+        "entry": "ai-progress-compare/README.md",
+        "apiOrPackage": "vite_react_shadcn_ts",
+        "publisherId": "openclaw-official",
+        "trustMode": "publisher_signature_once",
+        "commands": {
+          "run": "npm run dev",
+          "test": "npm run test",
+          "lint": "npm run lint",
+          "build": "npm run build",
+          "docs": "N/A"
+        },
+        "distributionMode": "single",
+        "verifyBeforeDeploy": true,
+        "defaultActions": [
+          "verify",
+          "bundle"
+        ],
+        "artifactName": "ai-progress-compare.tar.gz",
+        "artifactPath": "../../releases/ai-progress-compare.tar.gz",
+        "artifactSha256Snapshot": "977f606d3df1af4e663ba295112bf3f619a6bcd682f2ca1f5a30a4274afe70f6",
+        "executionEntrypoint": "deploy.sh",
+        "clickInstallers": [
+          {
+            "label": "mac",
+            "command": "install.command"
+          },
+          {
+            "label": "linux",
+            "command": "install.sh"
+          },
+          {
+            "label": "windows_powershell",
+            "command": "install.ps1"
+          },
+          {
+            "label": "windows_cmd",
+            "command": "install.bat"
+          },
+          {
+            "label": "cross_platform",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.command"
+          }
+        ],
+        "recommendedActions": [
+          {
+            "label": "default",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.py"
+          },
+          {
+            "label": "verify",
+            "command": "deploy.sh verify"
+          },
+          {
+            "label": "bundle",
+            "command": "deploy.sh bundle"
+          },
+          {
+            "label": "run",
+            "command": "deploy.sh run"
+          }
+        ]
+      }
     },
     {
       "id": "proj_18332wnxmm0hb65o",
@@ -702,13 +2767,90 @@
       "productionUrl": null,
       "sourceUrl": null,
       "subdomain": "p-reloo",
-      "subdomainUrl": "https://p-reloo.wordm.us"
+      "subdomainUrl": "https://p-reloo.wordm.us",
+      "detail": {
+        "source": "orchestration-manifest",
+        "slug": "reloo",
+        "projectPath": "ReLoo",
+        "status": "docs_only",
+        "type": "docs",
+        "language": "other",
+        "entry": "ReLoo/README.md",
+        "apiOrPackage": "N/A",
+        "publisherId": "openclaw-official",
+        "trustMode": "publisher_signature_once",
+        "commands": {
+          "run": "N/A",
+          "test": "N/A",
+          "lint": "N/A",
+          "build": "N/A",
+          "docs": "N/A"
+        },
+        "distributionMode": "single",
+        "verifyBeforeDeploy": true,
+        "defaultActions": [
+          "verify",
+          "bundle"
+        ],
+        "artifactName": "reloo.tar.gz",
+        "artifactPath": "../../releases/reloo.tar.gz",
+        "artifactSha256Snapshot": "e37cad8880318eb9aa835de85405c0b7e9aeed4d73e03f81de138cd8d3920ee8",
+        "executionEntrypoint": "deploy.sh",
+        "clickInstallers": [
+          {
+            "label": "mac",
+            "command": "install.command"
+          },
+          {
+            "label": "linux",
+            "command": "install.sh"
+          },
+          {
+            "label": "windows_powershell",
+            "command": "install.ps1"
+          },
+          {
+            "label": "windows_cmd",
+            "command": "install.bat"
+          },
+          {
+            "label": "cross_platform",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.command"
+          }
+        ],
+        "recommendedActions": [
+          {
+            "label": "default",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.py"
+          },
+          {
+            "label": "verify",
+            "command": "deploy.sh verify"
+          },
+          {
+            "label": "bundle",
+            "command": "deploy.sh bundle"
+          },
+          {
+            "label": "run",
+            "command": "deploy.sh run"
+          }
+        ]
+      }
     },
     {
       "id": "proj_yl5txdrimm0hb65s",
       "name": "dynamic-delegate-2",
       "slug": "dynamic-delegate-2",
-      "summary": "基于 Python + Claude Agent SDK 的动态子代理编排与交接管理系统。",
+      "summary": "Dynamic Sub-agent Orchestration System",
       "techStack": [
         "python",
         "claude-agent-sdk",
@@ -730,18 +2872,95 @@
       ],
       "activityScore": 4,
       "commitCount30d": 0,
-      "relationCount": 3,
+      "relationCount": 1,
       "lastCommitAt": "2026-01-20T10:19:50.000Z",
-      "productionUrl": "https://github.com/LiDeChi/dynamic-delegate-2",
+      "productionUrl": null,
       "sourceUrl": "https://github.com/LiDeChi/dynamic-delegate-2",
       "subdomain": "p-dynamic-delegate-2",
-      "subdomainUrl": "https://p-dynamic-delegate-2.wordm.us"
+      "subdomainUrl": "https://p-dynamic-delegate-2.wordm.us",
+      "detail": {
+        "source": "orchestration-manifest",
+        "slug": "dynamic-delegate-2",
+        "projectPath": "dynamic-delegate-2",
+        "status": "partial",
+        "type": "app",
+        "language": "python",
+        "entry": "dynamic-delegate-2/README.md",
+        "apiOrPackage": "N/A",
+        "publisherId": "openclaw-official",
+        "trustMode": "publisher_signature_once",
+        "commands": {
+          "run": "N/A",
+          "test": "N/A",
+          "lint": "N/A",
+          "build": "N/A",
+          "docs": "N/A"
+        },
+        "distributionMode": "single",
+        "verifyBeforeDeploy": true,
+        "defaultActions": [
+          "verify",
+          "bundle"
+        ],
+        "artifactName": "dynamic-delegate-2.tar.gz",
+        "artifactPath": "../../releases/dynamic-delegate-2.tar.gz",
+        "artifactSha256Snapshot": "ca1ad37dadbf755ced80fc07d934f42d076c88770528f750931b2cfba428ce9d",
+        "executionEntrypoint": "deploy.sh",
+        "clickInstallers": [
+          {
+            "label": "mac",
+            "command": "install.command"
+          },
+          {
+            "label": "linux",
+            "command": "install.sh"
+          },
+          {
+            "label": "windows_powershell",
+            "command": "install.ps1"
+          },
+          {
+            "label": "windows_cmd",
+            "command": "install.bat"
+          },
+          {
+            "label": "cross_platform",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.command"
+          }
+        ],
+        "recommendedActions": [
+          {
+            "label": "default",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.py"
+          },
+          {
+            "label": "verify",
+            "command": "deploy.sh verify"
+          },
+          {
+            "label": "bundle",
+            "command": "deploy.sh bundle"
+          },
+          {
+            "label": "run",
+            "command": "deploy.sh run"
+          }
+        ]
+      }
     },
     {
       "id": "proj_7pnn99s7mm0hb65v",
       "name": "nlm-api",
       "slug": "nlm-api",
-      "summary": "基于 [notebooklm-py](https://github.com/teng-lin/notebooklm-py) 的移动端友好网页应用，采用 Warm Editorial 设计风格。",
+      "summary": "NotebookLM Web App",
       "techStack": [
         "docker"
       ],
@@ -757,12 +2976,89 @@
       ],
       "activityScore": 4,
       "commitCount30d": 0,
-      "relationCount": 3,
+      "relationCount": 2,
       "lastCommitAt": "2026-01-19T10:18:52.000Z",
       "productionUrl": "https://www.docker.com/products/docker-desktop/",
       "sourceUrl": "https://github.com/LiDeChi/nlm-api",
       "subdomain": "p-nlm-api",
-      "subdomainUrl": "https://p-nlm-api.wordm.us"
+      "subdomainUrl": "https://p-nlm-api.wordm.us",
+      "detail": {
+        "source": "orchestration-manifest",
+        "slug": "nlm-api",
+        "projectPath": "nlm-api",
+        "status": "partial",
+        "type": "service",
+        "language": "other",
+        "entry": "nlm-api/README.md",
+        "apiOrPackage": "N/A",
+        "publisherId": "openclaw-official",
+        "trustMode": "publisher_signature_once",
+        "commands": {
+          "run": "N/A",
+          "test": "N/A",
+          "lint": "N/A",
+          "build": "N/A",
+          "docs": "N/A"
+        },
+        "distributionMode": "single",
+        "verifyBeforeDeploy": true,
+        "defaultActions": [
+          "verify",
+          "bundle"
+        ],
+        "artifactName": "nlm-api.tar.gz",
+        "artifactPath": "../../releases/nlm-api.tar.gz",
+        "artifactSha256Snapshot": "abd63ff951e6968844a6da7e070499c3c24e262b9cc9b61de3b0d02668ad1157",
+        "executionEntrypoint": "deploy.sh",
+        "clickInstallers": [
+          {
+            "label": "mac",
+            "command": "install.command"
+          },
+          {
+            "label": "linux",
+            "command": "install.sh"
+          },
+          {
+            "label": "windows_powershell",
+            "command": "install.ps1"
+          },
+          {
+            "label": "windows_cmd",
+            "command": "install.bat"
+          },
+          {
+            "label": "cross_platform",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.command"
+          }
+        ],
+        "recommendedActions": [
+          {
+            "label": "default",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.py"
+          },
+          {
+            "label": "verify",
+            "command": "deploy.sh verify"
+          },
+          {
+            "label": "bundle",
+            "command": "deploy.sh bundle"
+          },
+          {
+            "label": "run",
+            "command": "deploy.sh run"
+          }
+        ]
+      }
     }
   ]
 }

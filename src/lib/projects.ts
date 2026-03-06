@@ -105,5 +105,6 @@ export async function fetchProjectsFromApi(apiUrl: string): Promise<PortfolioPro
     sourceUrl: project.sourceUrl || null,
     subdomain: project.subdomain || `p-${project.slug}`,
     subdomainUrl: project.subdomainUrl || `https://p-${project.slug}.wordm.us`,
+    detail: project.detail || null,
   }))
 }

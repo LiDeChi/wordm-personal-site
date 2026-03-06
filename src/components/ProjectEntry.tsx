@@ -11,6 +11,7 @@ type ProjectEntryProps = {
   canUseFreeUnlock: boolean
   unlockBusy: boolean
   shareToken?: string | null
+  onSelectProject: (projectSlug: string) => void
   onUnlockSingle: (projectSlug: string) => void
   onUnlockFree: (projectSlug: string) => void
 }
@@ -80,6 +81,7 @@ export function ProjectEntry({
   canUseFreeUnlock,
   unlockBusy,
   shareToken = null,
+  onSelectProject,
   onUnlockSingle,
   onUnlockFree,
 }: ProjectEntryProps) {
@@ -99,25 +101,14 @@ export function ProjectEntry({
 
   return (
     <article className={cardClassNames} id={`project-${project.slug}`}>
-      {unlocked ? (
-        <a className="gallery-cover" href={localizedSubdomainUrl} target="_blank" rel="noreferrer">
-          <div className="gallery-cover-grid" aria-hidden="true" />
-          <div className="gallery-cover-initials" style={{ color: accent }}>
-            {coverInitials || 'PJ'}
-          </div>
-          <div className="gallery-cover-subdomain mono">{project.subdomain}.wordm.us</div>
-          <div className="gallery-lock-badge mono">{cardTitle}</div>
-        </a>
-      ) : (
-        <div className="gallery-cover">
-          <div className="gallery-cover-grid" aria-hidden="true" />
-          <div className="gallery-cover-initials" style={{ color: accent }}>
-            {coverInitials || 'PJ'}
-          </div>
-          <div className="gallery-cover-subdomain mono">{project.subdomain}.wordm.us</div>
-          <div className="gallery-lock-badge mono">{cardTitle}</div>
+      <button type="button" className="gallery-cover gallery-cover-button" onClick={() => onSelectProject(project.slug)}>
+        <div className="gallery-cover-grid" aria-hidden="true" />
+        <div className="gallery-cover-initials" style={{ color: accent }}>
+          {coverInitials || 'PJ'}
         </div>
-      )}
+        <div className="gallery-cover-subdomain mono">{project.subdomain}.wordm.us</div>
+        <div className="gallery-lock-badge mono">{cardTitle}</div>
+      </button>
 
       <div className="gallery-card-body">
         <div className="paper-meta gallery-meta">
@@ -130,13 +121,9 @@ export function ProjectEntry({
           </span>
         </div>
 
-        {unlocked ? (
-          <a className="paper-title gallery-title" href={localizedSubdomainUrl} target="_blank" rel="noreferrer">
-            {project.name}
-          </a>
-        ) : (
-          <span className="paper-title gallery-title gallery-title-locked">{project.name}</span>
-        )}
+        <button type="button" className={`paper-title gallery-title gallery-title-button${!unlocked ? ' gallery-title-locked' : ''}`} onClick={() => onSelectProject(project.slug)}>
+          {project.name}
+        </button>
 
         <div className="paper-authors gallery-scope">
           {copy.scopePrefix}: {project.relationCount}

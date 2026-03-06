@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useState } from 'react'
 import { DebugPanel } from './components/DebugPanel'
+import { ProjectDetailPage } from './components/ProjectDetailPage'
 import { ProjectEntry } from './components/ProjectEntry'
 import { ResumeAccessDenied } from './components/ResumeAccessDenied'
 import { ShareAccessDenied } from './components/ShareAccessDenied'
 import { ResumePage } from './components/ResumePage'
 import { Sidebar } from './components/Sidebar'
+import { SiteTopBar } from './components/SiteTopBar'
 import { SubdomainProjectLocked } from './components/SubdomainProjectLocked'
 import { SubdomainProjectView } from './components/SubdomainProjectView'
 import { BLOG_ARTICLES } from './data/blogArticles'
@@ -462,6 +464,7 @@ function App() {
   const initialApi = params.get('centerApi') || import.meta.env.VITE_CENTER_CONTROL_API || ''
   const initialShowSlugs = parseShowSlugs(params.get('show'))
   const initialRootView = toRootView(params.get('view'))
+  const initialProjectSlug = normalizeSlug(params.get('project'))
   const initialUnlockSlug = normalizeSlug(params.get('unlock'))
   const initialCheckoutSlug = normalizeSlug(params.get('checkout_slug'))
   const initialShareToken = params.get('share')?.trim() || null
@@ -522,6 +525,7 @@ function App() {
   const [unlockBusy, setUnlockBusy] = useState(false)
   const [checkoutBusyKind, setCheckoutBusyKind] = useState<UnlockCheckoutKind | null>(null)
   const [unlockStatusMessage, setUnlockStatusMessage] = useState('')
+  const [selectedProjectSlug, setSelectedProjectSlug] = useState<string | null>(initialProjectSlug)
   const [unlockTargetSlug, setUnlockTargetSlug] = useState<string | null>(initialUnlockSlug)
   const [deployTarget, setDeployTarget] = useState<DeployTarget>('local')
   const [deployPort, setDeployPort] = useState('8080')
@@ -568,6 +572,12 @@ function App() {
       next.searchParams.delete('lang')
     }
 
+    if (selectedProjectSlug && rootView === 'portfolio') {
+      next.searchParams.set('project', selectedProjectSlug)
+    } else {
+      next.searchParams.delete('project')
+    }
+
     if (unlockTargetSlug) {
       next.searchParams.set('unlock', unlockTargetSlug)
     } else {
@@ -581,7 +591,7 @@ function App() {
     }
 
     window.history.replaceState({}, '', next)
-  }, [rootView, lang, unlockTargetSlug, shareToken])
+  }, [rootView, lang, selectedProjectSlug, unlockTargetSlug, shareToken])
 
   useEffect(() => {
     if (!initialPurchaseSuccess && !initialPurchaseCanceled) {
@@ -663,9 +673,12 @@ function App() {
     }
 
     if (rootView === 'portfolio') {
-      setActiveSection('projects')
+      setActiveSection(selectedProjectSlug ? 'project-detail' : 'projects')
+      return
     }
-  }, [rootView])
+
+    setSelectedProjectSlug(null)
+  }, [rootView, selectedProjectSlug])
 
   useEffect(() => {
     if (rootView !== 'portfolio') {
@@ -1312,6 +1325,27 @@ function App() {
     return chooseProjects(projects, fallbackSlugs)
   }, [projects, selectedSlugs])
 
+  const visibleProjects = useMemo(() => {
+    if (!shareToken || !shareAccess || shareAccess.scope.allowAllProjects) {
+      return featuredProjects
+    }
+
+    const filtered = featuredProjects.filter((project) => canShareAccessProject(project.slug, shareAccess))
+    if (filtered.length) {
+      return filtered
+    }
+
+    return projects.filter((project) => canShareAccessProject(project.slug, shareAccess))
+  }, [featuredProjects, projects, shareAccess, shareToken])
+
+  const selectedProject = useMemo(() => {
+    if (!selectedProjectSlug) {
+      return null
+    }
+
+    return projects.find((project) => project.slug === selectedProjectSlug) ?? null
+  }, [projects, selectedProjectSlug])
+
   const subdomainProject = useMemo(
     () => resolveSubdomainView(projects, window.location.hostname, forcedSubdomain),
     [projects, forcedSubdomain],
@@ -1404,6 +1438,12 @@ function App() {
     shareResolveStatus,
     allowedByShare: subdomainProject ? canShareAccessProject(subdomainProject.slug, shareAccess) : false,
     bypass: subdomainProject ? canAccessProject(subdomainProject.slug, authRole, unlockState) : false,
+  })
+  const projectDetailShareDeniedStatus = resolveShareDeniedStatus({
+    shareToken,
+    shareResolveStatus,
+    allowedByShare: selectedProject ? canShareAccessView('portfolio', shareAccess) && canShareAccessProject(selectedProject.slug, shareAccess) : false,
+    bypass: selectedProject ? canAccessProject(selectedProject.slug, authRole, unlockState) || canManageShares : false,
   })
   const authPanelProps = {
     lang,
@@ -1678,13 +1718,12 @@ function App() {
     }
     return (
       <div className="page-container blog-page">
+        <SiteTopBar lang={lang} mode="blog" onLangChange={setLang} onModeChange={setRootView} />
         <Sidebar
           lang={lang}
           mode="blog"
           activeKey={activeArticle.id}
           lastUpdated={lastUpdated}
-          onLangChange={setLang}
-          onModeChange={setRootView}
           onNavigate={jumpToArticle}
           tocItems={BLOG_ARTICLES.map((article) => ({
             id: article.id,
@@ -1751,13 +1790,12 @@ function App() {
 
     return (
       <div className="page-container">
+        <SiteTopBar lang={lang} mode="portfolio" onLangChange={setLang} onModeChange={setRootView} />
         <Sidebar
           lang={lang}
           mode="portfolio"
           activeKey={activeSection}
           lastUpdated={lastUpdated}
-          onLangChange={setLang}
-          onModeChange={setRootView}
           onNavigate={(id) => {
             setActiveSection(id)
             const target = document.getElementById(id)
@@ -1876,15 +1914,19 @@ function App() {
 
   return (
     <div className="page-container">
+      <SiteTopBar lang={lang} mode="portfolio" onLangChange={setLang} onModeChange={setRootView} />
       <Sidebar
         lang={lang}
         mode="portfolio"
         activeKey={activeSection}
         lastUpdated={lastUpdated}
-        onLangChange={setLang}
-        onModeChange={setRootView}
-        onNavigate={(id) => setActiveSection(id)}
-        tocItems={[
+        onNavigate={(id) => {
+          setActiveSection(id)
+          if (id === 'projects' && selectedProjectSlug) {
+            setSelectedProjectSlug(null)
+          }
+        }}
+        tocItems={selectedProject ? [{ id: 'project-detail', label: selectedProject.name }, { id: 'contact', label: copy.tocContact }] : [
           { id: 'projects', label: copy.tocProjects },
           { id: 'contact', label: copy.tocContact },
         ]}
@@ -1892,7 +1934,7 @@ function App() {
       />
 
       <main className="main-content portfolio-main-content">
-        <section id="projects">
+        <section id={selectedProject ? 'project-detail' : 'projects'}>
           {debugMode ? (
             <DebugPanel
               lang={lang}
@@ -1938,7 +1980,6 @@ function App() {
           ) : null}
 
           <h2>{copy.portfolioTitle}</h2>
-          <p className="visual-intro">{copy.portfolioIntro}</p>
           <section className="unlock-control-panel" aria-live="polite">
             <div className="paper-meta unlock-control-meta">
               <span>{copy.unlockPanelTitle}</span>
@@ -1984,22 +2025,43 @@ function App() {
             {unlockStatusMessage ? <p className="unlock-status-message">{unlockStatusMessage}</p> : null}
           </section>
 
-          <div className="portfolio-gallery">
-            {featuredProjects.map((project) => (
-              <ProjectEntry
+          {selectedProject ? (
+            projectDetailShareDeniedStatus ? (
+              <ShareAccessDenied lang={lang} status={projectDetailShareDeniedStatus} authPanel={authPanelProps} fallbackSharedUrl={shareEntryUrl} />
+            ) : (
+              <ProjectDetailPage
                 lang={lang}
-                key={project.id}
-                project={project}
-                unlocked={isProjectUnlocked(project.slug)}
-                focused={unlockTargetSlug === project.slug}
+                project={selectedProject}
+                lastUpdated={lastUpdated}
+                unlocked={isProjectUnlocked(selectedProject.slug)}
                 canUseFreeUnlock={canUseFreeUnlock}
                 unlockBusy={unlockActionDisabled}
+                statusMessage={unlockStatusMessage}
                 shareToken={shareToken}
+                onBack={() => setSelectedProjectSlug(null)}
                 onUnlockSingle={(slug) => void handleUnlockSingle(slug)}
                 onUnlockFree={(slug) => void handleUnlockFree(slug)}
               />
-            ))}
-          </div>
+            )
+          ) : (
+            <div className="portfolio-gallery">
+              {visibleProjects.map((project) => (
+                <ProjectEntry
+                  lang={lang}
+                  key={project.id}
+                  project={project}
+                  unlocked={isProjectUnlocked(project.slug)}
+                  focused={unlockTargetSlug === project.slug}
+                  canUseFreeUnlock={canUseFreeUnlock}
+                  unlockBusy={unlockActionDisabled}
+                  shareToken={shareToken}
+                  onSelectProject={(slug) => setSelectedProjectSlug(slug)}
+                  onUnlockSingle={(slug) => void handleUnlockSingle(slug)}
+                  onUnlockFree={(slug) => void handleUnlockFree(slug)}
+                />
+              ))}
+            </div>
+          )}
         </section>
 
         <footer id="contact">

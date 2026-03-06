@@ -1,10 +1,11 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-const DEFAULT_SOURCE =
-  '/Users/lidechi/Documents/Github/center-control/data/exports/projects.json'
+const DEFAULT_SOURCE = '/Users/lidechi/Documents/Github/center-control/data/exports/projects.json'
+const DEFAULT_ORCHESTRATION_DEPLOY_ROOT = '/Users/lidechi/Documents/Github/orchestration/deploy/projects'
 
 const sourcePath = process.env.CENTER_CONTROL_EXPORT || DEFAULT_SOURCE
+const orchestrationDeployRoot = process.env.ORCHESTRATION_DEPLOY_ROOT || DEFAULT_ORCHESTRATION_DEPLOY_ROOT
 const outputPath = path.resolve(process.cwd(), 'src/data/projects.snapshot.json')
 
 function normalizeGithub(url) {
@@ -95,6 +96,103 @@ function buildSubdomain(slug, used) {
   return candidate
 }
 
+function toNullableString(value) {
+  return typeof value === 'string' && value.trim() ? value.trim() : null
+}
+
+function normalizeCommandMap(raw) {
+  const value = raw && typeof raw === 'object' ? raw : {}
+  return {
+    run: toNullableString(value.run),
+    test: toNullableString(value.test),
+    lint: toNullableString(value.lint),
+    build: toNullableString(value.build),
+    docs: toNullableString(value.docs),
+  }
+}
+
+function normalizeRecordEntries(raw) {
+  if (!raw || typeof raw !== 'object') {
+    return []
+  }
+
+  return Object.entries(raw)
+    .map(([label, command]) => ({
+      label,
+      command: typeof command === 'string' && command.trim() ? command.trim() : '',
+    }))
+    .filter((entry) => entry.command)
+}
+
+function basenameFromGithub(url) {
+  if (!url) {
+    return null
+  }
+
+  try {
+    const parsed = new URL(url)
+    const tail = parsed.pathname.split('/').filter(Boolean).at(-1) || ''
+    return tail ? tail.toLowerCase() : null
+  } catch {
+    return null
+  }
+}
+
+function manifestCandidates(slug, sourceUrl) {
+  const base = basenameFromGithub(sourceUrl)
+  return [...new Set([
+    slug,
+    slug.replace(/-/g, '_'),
+    slug.replace(/-/g, ''),
+    base,
+    base ? base.replace(/-/g, '_') : null,
+    base ? base.replace(/-/g, '') : null,
+  ].filter(Boolean))]
+}
+
+function readManifestDetail(slug, sourceUrl) {
+  if (!fs.existsSync(orchestrationDeployRoot)) {
+    return null
+  }
+
+  for (const candidate of manifestCandidates(slug, sourceUrl)) {
+    const manifestPath = path.join(orchestrationDeployRoot, candidate, 'manifest.json')
+    if (!fs.existsSync(manifestPath)) {
+      continue
+    }
+
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'))
+    const artifact = Array.isArray(manifest.distribution?.artifacts) ? manifest.distribution.artifacts[0] || null : null
+
+    return {
+      source: 'orchestration-manifest',
+      slug: safeSlug(manifest.slug, candidate),
+      projectPath: toNullableString(manifest.path),
+      status: toNullableString(manifest.status),
+      type: toNullableString(manifest.type),
+      language: toNullableString(manifest.lang),
+      entry: toNullableString(manifest.entry),
+      apiOrPackage: toNullableString(manifest.api_or_package),
+      publisherId: toNullableString(manifest.publisher?.publisher_id),
+      trustMode: toNullableString(manifest.publisher?.trust_mode),
+      commands: normalizeCommandMap(manifest.commands),
+      distributionMode: toNullableString(manifest.distribution?.mode),
+      verifyBeforeDeploy: Boolean(manifest.distribution?.verify_before_deploy),
+      defaultActions: Array.isArray(manifest.distribution?.default_actions)
+        ? manifest.distribution.default_actions.filter((item) => typeof item === 'string')
+        : [],
+      artifactName: toNullableString(artifact?.name),
+      artifactPath: toNullableString(artifact?.path),
+      artifactSha256Snapshot: toNullableString(artifact?.sha256_snapshot),
+      executionEntrypoint: toNullableString(manifest.execution?.entrypoint),
+      clickInstallers: normalizeRecordEntries(manifest.click_installers),
+      recommendedActions: normalizeRecordEntries(manifest.recommended_actions),
+    }
+  }
+
+  return null
+}
+
 if (!fs.existsSync(sourcePath)) {
   console.error(`[sync-center-control] source not found: ${sourcePath}`)
   process.exit(1)
@@ -126,6 +224,7 @@ const projects = (raw.projects || [])
       sourceUrl,
       subdomain,
       subdomainUrl: `https://${subdomain}.wordm.us`,
+      detail: readManifestDetail(slug, sourceUrl),
     }
   })
   .sort((a, b) => {
