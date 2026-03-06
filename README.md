@@ -181,7 +181,15 @@ npx wrangler whoami
 npm run deploy:pages
 ```
 
-如需让线上构建启用登录，请确保执行部署时本地环境包含 `VITE_SUPABASE_URL` 和 `VITE_SUPABASE_ANON_KEY`。
+`deploy:pages` 现在默认走 `scripts/deploy-pages.sh`，会在发布前自动检查 Supabase 配置：
+
+- 优先使用当前 shell 里的 `VITE_SUPABASE_URL`、`VITE_SUPABASE_ANON_KEY`
+- 未设置时按顺序尝试读取：
+  - `my-blog/.env.local`
+  - `my-blog/.env`
+  - `../gridnote/.env.local`
+- 若仍缺失会直接中止部署（防止发布出“未配置 Supabase”的线上包）
+- Pages 项目名优先读取 `CF_PAGES_PROJECT`，默认值是 `wordm-personal-home`
 
 3. 部署子域名 Worker（自动绑定简历子域名 + 项目子域名）：
 
@@ -213,3 +221,63 @@ npm run deploy:subdomains
 npm run lint
 npm run build
 ```
+
+<!-- ORCHESTRATOR:BEGIN -->
+## Status
+ready
+## What it is
+my-blog is a web application project in this workspace.
+## Runtime Profile
+- surface_bucket: `web_ui`
+- platform: `web`
+- platforms: `web`
+- mode: `ui`
+- entry_kind: `browser_url`
+- entry_hint: `npm run dev`
+## Quickstart / How to use / How to read
+- README.md
+- AGENTS.md
+- Read `README.md`, `AGENTS.md` first.
+- Start the local UI with `npm run dev`.
+- Open the first local URL emitted by the dev server and confirm the home screen loads.
+## Main surface
+- Browser home screen captured at `screenshots/runtime-home.png`.
+## Deep exploration flow
+- Visit `http://127.0.0.1:44014/?show=page-glance-extension%2Capple-notes-webclipper%2Cpersonalinflationbasket%2Cllm-layer%2Cfocusor%2Ccode-agent-demo%2Copen-deep-research%2Cdynamic-delegate-2&debug=1`.
+- Visit `http://127.0.0.1:44014/auth-role-rules.json`.
+- Visit `http://127.0.0.1:44014/jian-yongjie-resume.pdf`.
+- Replay `button` interaction `中文`.
+- Replay `button` interaction `EN`.
+## Acceptance chain
+- Run `npm run dev` and wait for a local browser URL.
+- Confirm `screenshots/runtime-home.png` still matches the main UI (`screenshots/runtime-home.png`).
+- Replay the saved flow in `orchestration/reports/runtime_flows/my-blog.json`.
+- Revisit the recorded deep pages and successful interactions listed above.
+## Commands
+- run: `npm run dev`
+- test: `N/A`
+- lint: `npm run lint`
+- build: `npm run build`
+- docs: `N/A`
+## Runtime Evidence
+- runtime_cover: `screenshots/runtime-home.png`
+- static_cover_asset: `screenshots/runtime-home.png`
+- runtime_ui_home: `screenshots/runtime-home.png`
+- acceptance_flow: `orchestration/reports/runtime_flows/my-blog.json`
+- runtime_url: `http://127.0.0.1:44014`
+- runtime_local_port: `44014`
+- runtime_url_purpose: `Main browser preview for the running project.`
+- evidence_requirement: `real_ui_screenshot`
+- evidence_status: `captured`
+- evidence_reason: `runtime_ui_home_present`
+## Structure
+- `AGENTS.md`
+- `docs/`
+- `eslint.config.js`
+- `index.html`
+- `package-lock.json`
+- `package.json`
+## Notes
+- Missing command(s): test, docs. Add real scripts/targets if support exists.
+- Metadata note: effective_root=my-blog detected_via=package.json raw_lang=javascript markers=my-blog/package.json commands missing: test, docs; next: add matching script/target in package.json or Makefile. probe=npm run lint=ok; npm run build=ok
+<!-- ORCHESTRATOR:END -->

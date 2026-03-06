@@ -10,7 +10,7 @@
     "preview": "vite preview",
     "sync:projects": "node scripts/sync-center-control.mjs",
     "roles": "node scripts/manage-auth-roles.mjs",
-    "deploy:pages": "npm run build && npx wrangler pages deploy dist --project-name wordm-personal-home",
+    "deploy:pages": "./scripts/deploy-pages.sh",
     "deploy:subdomains": "./scripts/deploy-subdomain-worker.sh"
   },
   "dependencies": {
