@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { DebugPanel } from './components/DebugPanel'
 import { ProjectEntry } from './components/ProjectEntry'
 import { ResumeAccessDenied } from './components/ResumeAccessDenied'
+import { ShareAccessDenied } from './components/ShareAccessDenied'
 import { ResumePage } from './components/ResumePage'
 import { Sidebar } from './components/Sidebar'
 import { SubdomainProjectLocked } from './components/SubdomainProjectLocked'
@@ -9,9 +10,22 @@ import { SubdomainProjectView } from './components/SubdomainProjectView'
 import { BLOG_ARTICLES } from './data/blogArticles'
 import { type Lang, resolveInitialLang } from './i18n/lang'
 import projectsSnapshotRaw from './data/projects.snapshot.json'
-import { withLangParam } from './lib/lang-url'
+import { withSiteParams } from './lib/lang-url'
 import { createUnlockCheckoutUrl, type UnlockCheckoutKind } from './lib/unlock-billing'
 import { createDeployTicket } from './lib/deploy-ticket'
+import {
+  buildShareEntryUrl,
+  canShareAccessProject,
+  canShareAccessView,
+  createShareLink,
+  listOwnShareLinks,
+  resolveShareLink,
+  revokeShareLink,
+  type ShareAccess,
+  type ShareLinkRecord,
+  type ShareResolveStatus,
+  type ShareScope,
+} from './lib/share-links'
 import { applyUnlockGrantFromSupabase, fetchUnlockStateFromSupabase } from './lib/unlock-remote'
 import {
   canAccessProject,
@@ -158,6 +172,21 @@ const APP_COPY = {
     deployBackPortfolio: '返回作品集',
     deployOpenUnlockedProject: '打开已解锁项目',
     deployWindowsHint: 'Windows 建议在 WSL / Git Bash 中执行命令。',
+    shareChecking: '正在验证分享链接...',
+    shareCreateSuccess: '分享链接已生成。',
+    shareCreateFailed: '生成分享链接失败，请稍后重试。',
+    shareCopySuccess: '分享链接已复制。',
+    shareCopyFailed: '复制分享链接失败，请手动复制。',
+    shareRevokeSuccess: '分享链接已撤销。',
+    shareRevokeFailed: '撤销分享链接失败，请稍后重试。',
+    shareNeedProjects: '当前未勾选任何项目，请先勾选要分享的项目，或切换为全部项目子域。',
+    shareEntitlementRequired: '当前账号暂无分享权限，请先使用有权限的账号登录。',
+    shareResumeRestricted: '简历页仅允许管理员或测试账号加入分享链接。',
+    shareListLoadFailed: '加载分享链接失败，请稍后重试。',
+    shareInvalid: '分享链接无效。',
+    shareExpired: '分享链接已过期。',
+    shareRevoked: '分享链接已撤销。',
+    shareRestricted: '当前分享链接未开放此页面或项目。',
   },
   en: {
     sourceSnapshot: 'Project snapshot',
@@ -257,6 +286,21 @@ const APP_COPY = {
     deployBackPortfolio: 'Back to portfolio',
     deployOpenUnlockedProject: 'Open unlocked project',
     deployWindowsHint: 'On Windows, use WSL or Git Bash to run the command.',
+    shareChecking: 'Validating share link...',
+    shareCreateSuccess: 'Share link created.',
+    shareCreateFailed: 'Failed to create share link. Please try again later.',
+    shareCopySuccess: 'Share link copied.',
+    shareCopyFailed: 'Failed to copy share link. Please copy it manually.',
+    shareRevokeSuccess: 'Share link revoked.',
+    shareRevokeFailed: 'Failed to revoke share link. Please try again later.',
+    shareNeedProjects: 'No project is selected. Select projects first, or switch to all project subdomains.',
+    shareEntitlementRequired: 'This account cannot create share links. Log in with an authorized account first.',
+    shareResumeRestricted: 'Resume access can only be included by admin or tester accounts.',
+    shareListLoadFailed: 'Failed to load share links. Please try again later.',
+    shareInvalid: 'Share link is invalid.',
+    shareExpired: 'Share link has expired.',
+    shareRevoked: 'Share link has been revoked.',
+    shareRestricted: 'This share link does not include this page or project.',
   },
 } as const
 
@@ -359,6 +403,56 @@ function shellQuote(raw: string): string {
   return `'${raw.replace(/'/g, `'"'"'`)}'`
 }
 
+function defaultShareScope(): ShareScope {
+  return {
+    allowPortfolio: true,
+    allowBlog: true,
+    allowDeploy: true,
+    allowResume: true,
+    allowAllProjects: true,
+    allowedProjectSlugs: [],
+  }
+}
+
+function resolveShareStatusFromError(error: unknown): Exclude<ShareResolveStatus, 'idle' | 'loading' | 'active'> {
+  const detail = normalizeAuthError(error, '').toUpperCase()
+  if (detail.includes('EXPIRED')) {
+    return 'expired'
+  }
+  if (detail.includes('REVOKED')) {
+    return 'revoked'
+  }
+  if (detail.includes('INVALID')) {
+    return 'invalid'
+  }
+  return 'error'
+}
+
+function resolveShareDeniedStatus(options: {
+  shareToken: string | null
+  shareResolveStatus: ShareResolveStatus
+  allowedByShare: boolean
+  bypass: boolean
+}): ShareResolveStatus | null {
+  if (!options.shareToken || options.bypass) {
+    return null
+  }
+
+  if (options.shareResolveStatus === 'loading') {
+    return 'loading'
+  }
+
+  if (options.shareResolveStatus === 'active') {
+    return options.allowedByShare ? null : 'active'
+  }
+
+  if (options.shareResolveStatus === 'idle') {
+    return 'invalid'
+  }
+
+  return options.shareResolveStatus
+}
+
 function App() {
   const params = new URLSearchParams(window.location.search)
   const hostname = window.location.hostname.toLowerCase()
@@ -370,6 +464,7 @@ function App() {
   const initialRootView = toRootView(params.get('view'))
   const initialUnlockSlug = normalizeSlug(params.get('unlock'))
   const initialCheckoutSlug = normalizeSlug(params.get('checkout_slug'))
+  const initialShareToken = params.get('share')?.trim() || null
   const initialPurchaseSuccess = params.get('purchase_success') === '1'
   const initialPurchaseCanceled = params.get('purchase_cancel') === '1'
   const initialLang = resolveInitialLang(window.location)
@@ -432,6 +527,17 @@ function App() {
   const [deployPort, setDeployPort] = useState('8080')
   const [deployRemoteHost, setDeployRemoteHost] = useState('')
   const [deployStatusMessage, setDeployStatusMessage] = useState('')
+  const [shareToken] = useState<string | null>(initialShareToken)
+  const [shareAccess, setShareAccess] = useState<ShareAccess | null>(null)
+  const [shareResolveStatus, setShareResolveStatus] = useState<ShareResolveStatus>(initialShareToken ? 'loading' : 'idle')
+  const [shareBusy, setShareBusy] = useState(false)
+  const [shareManageStatusMessage, setShareManageStatusMessage] = useState('')
+  const [shareLabel, setShareLabel] = useState('')
+  const [shareExpiresInDays, setShareExpiresInDays] = useState('3')
+  const [shareScope, setShareScope] = useState<ShareScope>(() => defaultShareScope())
+  const [shareLinks, setShareLinks] = useState<ShareLinkRecord[]>([])
+  const [lastCreatedShareUrl, setLastCreatedShareUrl] = useState('')
+  const [lastCreatedShareId, setLastCreatedShareId] = useState<string | null>(null)
   const [selectedSlugs, setSelectedSlugs] = useState<string[]>(() => {
     if (initialShowSlugs.length) {
       return initialShowSlugs
@@ -468,8 +574,14 @@ function App() {
       next.searchParams.delete('unlock')
     }
 
+    if (shareToken) {
+      next.searchParams.set('share', shareToken)
+    } else {
+      next.searchParams.delete('share')
+    }
+
     window.history.replaceState({}, '', next)
-  }, [rootView, lang, unlockTargetSlug])
+  }, [rootView, lang, unlockTargetSlug, shareToken])
 
   useEffect(() => {
     if (!initialPurchaseSuccess && !initialPurchaseCanceled) {
@@ -503,6 +615,46 @@ function App() {
     initialPurchaseCanceled,
     initialPurchaseSuccess,
   ])
+
+
+  useEffect(() => {
+    if (!shareToken) {
+      setShareAccess(null)
+      setShareResolveStatus('idle')
+      return
+    }
+
+    if (!authConfig.supabaseUrl) {
+      setShareAccess(null)
+      setShareResolveStatus('error')
+      return
+    }
+
+    let active = true
+    setShareResolveStatus('loading')
+
+    void resolveShareLink(authConfig.supabaseUrl, shareToken)
+      .then((access) => {
+        if (!active) {
+          return
+        }
+
+        setShareAccess(access)
+        setShareResolveStatus('active')
+      })
+      .catch((error) => {
+        if (!active) {
+          return
+        }
+
+        setShareAccess(null)
+        setShareResolveStatus(resolveShareStatusFromError(error))
+      })
+
+    return () => {
+      active = false
+    }
+  }, [authConfig.supabaseUrl, shareToken])
 
   useEffect(() => {
     if (rootView === 'deploy') {
@@ -731,6 +883,32 @@ function App() {
   }, [authUser, unlockState])
 
   useEffect(() => {
+    if (!authUser || (authUser.role !== 'admin' && authUser.role !== 'tester')) {
+      setShareLinks([])
+      return
+    }
+
+    let active = true
+    void listOwnShareLinks(authConfig)
+      .then((links) => {
+        if (!active) {
+          return
+        }
+        setShareLinks(links)
+      })
+      .catch(() => {
+        if (!active) {
+          return
+        }
+        setShareManageStatusMessage(copy.shareListLoadFailed)
+      })
+
+    return () => {
+      active = false
+    }
+  }, [authConfig, authUser, copy.shareListLoadFailed])
+
+  useEffect(() => {
     if (!unlockTargetSlug) {
       return
     }
@@ -895,7 +1073,8 @@ function App() {
       return
     }
 
-    if (!authEnabled || !authUser) {
+    const canUseShareDeploy = Boolean(shareToken && shareResolveStatus === 'active' && canShareAccessView('deploy', shareAccess))
+    if ((!authEnabled || !authUser) && !canUseShareDeploy) {
       setDeployStatusMessage(copy.deployNeedLogin)
       return
     }
@@ -907,6 +1086,7 @@ function App() {
         scope: 'center_control_personal',
         target: deployTarget,
         expiresInSec: 600,
+        shareToken: !authUser && canUseShareDeploy ? shareToken : null,
       })
 
       const installScriptUrl = deployTicket.installScriptUrl || selfHostInstallScriptUrl
@@ -921,8 +1101,110 @@ function App() {
         setDeployStatusMessage(copy.deployNeedLogin)
         return
       }
+      if (code.includes('DEPLOY_SHARE_')) {
+        setDeployStatusMessage(shareNoticeForStatus(resolveShareStatusFromError(error)))
+        return
+      }
 
       setDeployStatusMessage(copy.deployTicketFailed)
+    }
+  }
+
+  function shareNoticeForStatus(status: ShareResolveStatus) {
+    if (status === 'expired') {
+      return copy.shareExpired
+    }
+    if (status === 'revoked') {
+      return copy.shareRevoked
+    }
+    if (status === 'active') {
+      return copy.shareRestricted
+    }
+    return copy.shareInvalid
+  }
+
+  async function handleCreateShareLink() {
+    if (!authUser) {
+      setShareManageStatusMessage(copy.shareEntitlementRequired)
+      return
+    }
+
+    const normalizedDays = Number(shareExpiresInDays.trim() || '3')
+    const selectedProjectSlugs = shareScope.allowAllProjects ? [] : selectedSlugs
+    const scope = {
+      ...shareScope,
+      allowedProjectSlugs: selectedProjectSlugs,
+    }
+
+    if (
+      !scope.allowPortfolio &&
+      !scope.allowBlog &&
+      !scope.allowDeploy &&
+      !scope.allowResume &&
+      !scope.allowAllProjects &&
+      scope.allowedProjectSlugs.length === 0
+    ) {
+      setShareManageStatusMessage(copy.shareNeedProjects)
+      return
+    }
+
+    setShareBusy(true)
+    try {
+      const created = await createShareLink(authConfig, {
+        label: shareLabel,
+        expiresInDays: normalizedDays,
+        scope,
+      })
+      const shareUrl = buildShareEntryUrl(created.token, lang, created.scope, projects)
+      setLastCreatedShareId(created.id)
+      setLastCreatedShareUrl(shareUrl)
+      setShareManageStatusMessage(copy.shareCreateSuccess)
+      setShareLinks(await listOwnShareLinks(authConfig))
+    } catch (error) {
+      const code = unlockErrorCode(error)
+      if (code.includes('SHARE_SCOPE_EMPTY')) {
+        setShareManageStatusMessage(copy.shareNeedProjects)
+        return
+      }
+      if (code.includes('SHARE_RESUME_RESTRICTED')) {
+        setShareManageStatusMessage(copy.shareResumeRestricted)
+        return
+      }
+      if (code.includes('SHARE_ENTITLEMENT_REQUIRED') || code.includes('UNAUTHENTICATED')) {
+        setShareManageStatusMessage(copy.shareEntitlementRequired)
+        return
+      }
+      setShareManageStatusMessage(copy.shareCreateFailed)
+    } finally {
+      setShareBusy(false)
+    }
+  }
+
+  async function handleCopyLastShareLink() {
+    if (!lastCreatedShareUrl) {
+      setShareManageStatusMessage(copy.shareCopyFailed)
+      return
+    }
+
+    const copied = await copyTextToClipboard(lastCreatedShareUrl)
+    setShareManageStatusMessage(copied ? copy.shareCopySuccess : copy.shareCopyFailed)
+  }
+
+  async function handleRevokeShareLink(shareLinkId: string) {
+    setShareBusy(true)
+    try {
+      await revokeShareLink(authConfig, shareLinkId)
+      const nextLinks = await listOwnShareLinks(authConfig)
+      setShareLinks(nextLinks)
+      if (lastCreatedShareId === shareLinkId) {
+        setLastCreatedShareId(null)
+        setLastCreatedShareUrl('')
+      }
+      setShareManageStatusMessage(copy.shareRevokeSuccess)
+    } catch {
+      setShareManageStatusMessage(copy.shareRevokeFailed)
+    } finally {
+      setShareBusy(false)
     }
   }
 
@@ -1043,7 +1325,9 @@ function App() {
   const activeArticle = BLOG_ARTICLES[activeArticleIndex] || BLOG_ARTICLES[0]
   const nextArticle = BLOG_ARTICLES[activeArticleIndex + 1] || null
   const authRole: AuthRole = authUser?.role ?? 'guest'
-  const canAccessResume = authRole === 'admin' || authRole === 'tester'
+  const canManageShares = authRole === 'admin' || authRole === 'tester'
+  const shareEntryUrl = shareToken && shareAccess ? buildShareEntryUrl(shareToken, lang, shareAccess.scope, projects) : null
+  const canAccessResume = canManageShares || canShareAccessView('resume', shareAccess)
   const projectCatalogSlugs = useMemo(() => projects.map((project) => project.slug), [projects])
   const deployTargetProject = useMemo(
     () => (unlockTargetSlug ? projects.find((project) => project.slug === unlockTargetSlug) ?? null : null),
@@ -1087,10 +1371,40 @@ function App() {
     normalizedDeployPort,
     selfHostInstallScriptUrl,
   ])
-  const deployProjectUrl = deployTargetProject ? withLangParam(deployTargetProject.subdomainUrl, lang) : null
+  const deployProjectUrl = deployTargetProject ? withSiteParams(deployTargetProject.subdomainUrl, { lang, shareToken }) : null
   const subdomainProjectUnlocked = subdomainProject
-    ? canAccessProject(subdomainProject.slug, authRole, unlockState)
+    ? canAccessProject(subdomainProject.slug, authRole, unlockState) || canShareAccessProject(subdomainProject.slug, shareAccess)
     : false
+  const portfolioShareDeniedStatus = resolveShareDeniedStatus({
+    shareToken,
+    shareResolveStatus,
+    allowedByShare: canShareAccessView('portfolio', shareAccess),
+    bypass: Boolean(authUser),
+  })
+  const blogShareDeniedStatus = resolveShareDeniedStatus({
+    shareToken,
+    shareResolveStatus,
+    allowedByShare: canShareAccessView('blog', shareAccess),
+    bypass: Boolean(authUser),
+  })
+  const deployShareDeniedStatus = resolveShareDeniedStatus({
+    shareToken,
+    shareResolveStatus,
+    allowedByShare: canShareAccessView('deploy', shareAccess),
+    bypass: Boolean(authUser),
+  })
+  const resumeShareDeniedStatus = resolveShareDeniedStatus({
+    shareToken,
+    shareResolveStatus,
+    allowedByShare: canShareAccessView('resume', shareAccess),
+    bypass: authRole === 'admin' || authRole === 'tester',
+  })
+  const subdomainShareDeniedStatus = resolveShareDeniedStatus({
+    shareToken,
+    shareResolveStatus,
+    allowedByShare: subdomainProject ? canShareAccessProject(subdomainProject.slug, shareAccess) : false,
+    bypass: subdomainProject ? canAccessProject(subdomainProject.slug, authRole, unlockState) : false,
+  })
   const authPanelProps = {
     lang,
     enabled: authEnabled,
@@ -1109,7 +1423,7 @@ function App() {
   }
 
   function isProjectUnlocked(slug: string) {
-    return canAccessProject(slug, authRole, unlockState)
+    return canAccessProject(slug, authRole, unlockState) || canShareAccessProject(slug, shareAccess)
   }
 
   function ensureCanUnlock() {
@@ -1322,6 +1636,10 @@ function App() {
   }
 
   if (subdomainProject) {
+    if (subdomainShareDeniedStatus) {
+      return <ShareAccessDenied lang={lang} status={subdomainShareDeniedStatus} authPanel={authPanelProps} fallbackSharedUrl={shareEntryUrl} />
+    }
+
     if (!subdomainProjectUnlocked) {
       return (
         <SubdomainProjectLocked
@@ -1332,6 +1650,7 @@ function App() {
           canUseFreeUnlock={canUseFreeUnlock}
           unlockBusy={unlockActionDisabled}
           freeRemaining={freeOfferStatus.remaining}
+          shareToken={shareToken}
           authPanel={authPanelProps}
           onUnlockSingle={(slug) => void handleUnlockSingle(slug)}
           onUnlockFree={(slug) => void handleUnlockFree(slug)}
@@ -1339,17 +1658,24 @@ function App() {
       )
     }
 
-    return <SubdomainProjectView lang={lang} project={subdomainProject} lastUpdated={lastUpdated} authPanel={authPanelProps} />
+    return <SubdomainProjectView lang={lang} project={subdomainProject} lastUpdated={lastUpdated} shareToken={shareToken} authPanel={authPanelProps} />
   }
 
   if (isResumeView) {
-    if (!canAccessResume) {
-      return <ResumeAccessDenied lang={lang} role={authRole} authPanel={authPanelProps} />
+    if (resumeShareDeniedStatus) {
+      return <ShareAccessDenied lang={lang} status={resumeShareDeniedStatus} authPanel={authPanelProps} fallbackSharedUrl={shareEntryUrl} />
     }
-    return <ResumePage lang={lang} lastUpdated={lastUpdated} authPanel={authPanelProps} />
+
+    if (!canAccessResume) {
+      return <ResumeAccessDenied lang={lang} role={authRole} shareToken={shareToken} authPanel={authPanelProps} />
+    }
+    return <ResumePage lang={lang} lastUpdated={lastUpdated} shareToken={shareToken} authPanel={authPanelProps} />
   }
 
   if (rootView === 'blog') {
+    if (blogShareDeniedStatus) {
+      return <ShareAccessDenied lang={lang} status={blogShareDeniedStatus} authPanel={authPanelProps} fallbackSharedUrl={shareEntryUrl} />
+    }
     return (
       <div className="page-container blog-page">
         <Sidebar
@@ -1419,6 +1745,10 @@ function App() {
   }
 
   if (rootView === 'deploy') {
+    if (deployShareDeniedStatus) {
+      return <ShareAccessDenied lang={lang} status={deployShareDeniedStatus} authPanel={authPanelProps} fallbackSharedUrl={shareEntryUrl} />
+    }
+
     return (
       <div className="page-container">
         <Sidebar
@@ -1540,6 +1870,10 @@ function App() {
     )
   }
 
+  if (portfolioShareDeniedStatus) {
+    return <ShareAccessDenied lang={lang} status={portfolioShareDeniedStatus} authPanel={authPanelProps} fallbackSharedUrl={shareEntryUrl} />
+  }
+
   return (
     <div className="page-container">
       <Sidebar
@@ -1568,6 +1902,14 @@ function App() {
               sourceLabel={sourceLabel}
               loadState={loadState}
               errorMessage={errorMessage}
+              canManageShares={canManageShares}
+              shareBusy={shareBusy}
+              shareStatusMessage={shareManageStatusMessage}
+              shareLabel={shareLabel}
+              shareExpiresInDays={shareExpiresInDays}
+              shareScope={shareScope}
+              shareLinks={shareLinks}
+              lastCreatedShareUrl={lastCreatedShareUrl}
               onCenterApiChange={setCenterApi}
               onLoadLive={loadLiveProjects}
               onToggleProject={(slug) => {
@@ -1581,6 +1923,17 @@ function App() {
               }}
               onSelectFeatured={() => setSelectedSlugs(defaultSelection(projects, snapshot.featured))}
               onSelectAll={() => setSelectedSlugs(projects.map((project) => project.slug))}
+              onShareLabelChange={setShareLabel}
+              onShareExpiresInDaysChange={setShareExpiresInDays}
+              onToggleShareFlag={(key) => {
+                setShareScope((prev) => ({
+                  ...prev,
+                  [key]: !prev[key],
+                }))
+              }}
+              onCreateShareLink={() => void handleCreateShareLink()}
+              onCopyLastShareLink={() => void handleCopyLastShareLink()}
+              onRevokeShareLink={(shareLinkId) => void handleRevokeShareLink(shareLinkId)}
             />
           ) : null}
 
@@ -1641,6 +1994,7 @@ function App() {
                 focused={unlockTargetSlug === project.slug}
                 canUseFreeUnlock={canUseFreeUnlock}
                 unlockBusy={unlockActionDisabled}
+                shareToken={shareToken}
                 onUnlockSingle={(slug) => void handleUnlockSingle(slug)}
                 onUnlockFree={(slug) => void handleUnlockFree(slug)}
               />

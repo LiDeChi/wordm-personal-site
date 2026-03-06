@@ -1,7 +1,7 @@
 import type { PortfolioProject } from '../types'
 import { formatMonth } from '../lib/projects'
 import type { Lang } from '../i18n/lang'
-import { withLangParam } from '../lib/lang-url'
+import { withSiteParams } from '../lib/lang-url'
 
 type ProjectEntryProps = {
   lang: Lang
@@ -10,6 +10,7 @@ type ProjectEntryProps = {
   focused?: boolean
   canUseFreeUnlock: boolean
   unlockBusy: boolean
+  shareToken?: string | null
   onUnlockSingle: (projectSlug: string) => void
   onUnlockFree: (projectSlug: string) => void
 }
@@ -78,13 +79,14 @@ export function ProjectEntry({
   focused = false,
   canUseFreeUnlock,
   unlockBusy,
+  shareToken = null,
   onUnlockSingle,
   onUnlockFree,
 }: ProjectEntryProps) {
   const copy = PROJECT_COPY[lang]
   const coverInitials = initials(project.name)
   const accent = slugAccent(project.slug)
-  const localizedSubdomainUrl = withLangParam(project.subdomainUrl, lang)
+  const localizedSubdomainUrl = withSiteParams(project.subdomainUrl, { lang, shareToken })
   const cardClassNames = [
     'gallery-card',
     unlocked ? 'gallery-card-unlocked' : 'gallery-card-locked',

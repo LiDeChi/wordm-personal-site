@@ -2,12 +2,13 @@ import { AuthPanel, type AuthPanelProps } from './AuthPanel'
 import type { PortfolioProject } from '../types'
 import { formatDate } from '../lib/projects'
 import type { Lang } from '../i18n/lang'
-import { withLangParam } from '../lib/lang-url'
+import { withSiteParams } from '../lib/lang-url'
 
 type SubdomainProjectViewProps = {
   lang: Lang
   project: PortfolioProject
   lastUpdated: string
+  shareToken?: string | null
   authPanel: Omit<AuthPanelProps, 'className'>
 }
 
@@ -34,9 +35,9 @@ const SUBDOMAIN_COPY = {
   },
 } as const
 
-export function SubdomainProjectView({ lang, project, lastUpdated, authPanel }: SubdomainProjectViewProps) {
+export function SubdomainProjectView({ lang, project, lastUpdated, shareToken = null, authPanel }: SubdomainProjectViewProps) {
   const copy = SUBDOMAIN_COPY[lang]
-  const homeUrl = withLangParam('https://wordm.us', lang)
+  const homeUrl = withSiteParams('https://wordm.us', { lang, shareToken })
 
   return (
     <div className="subdomain-page">

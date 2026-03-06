@@ -68,6 +68,10 @@ VITE_SELFHOST_INSTALL_SCRIPT_URL=https://raw.githubusercontent.com/LiDeChi/cente
   - 支付成功后自动跳转到 `?view=deploy` 部署页（默认“当前机器”）。
   - 部署页支持“当前机器 / 远程服务器”两种目标，复制命令前会向 Supabase 申请一次性 deploy ticket。
   - 部署页仍保留安装指南入口；你也可返回作品集再次点击解锁完成授权同步。
+- 免登录分享：
+  - 管理员/测试账号可在 `?debug=1` 面板里生成带到期时间的分享链接。
+  - 分享链接可按条目控制：作品集、博客、部署页、简历页、全部项目子域或当前勾选项目。
+  - 对方无需注册登录，直接通过 `?share=...` 访问；到期或撤销后自动失效。
 
 ### 初始化 Supabase 解锁表与函数
 
@@ -84,6 +88,15 @@ VITE_SELFHOST_INSTALL_SCRIPT_URL=https://raw.githubusercontent.com/LiDeChi/cente
 - `public.wordm_unlock_plan_tier(uuid)` RPC
 - `public.wordm_get_unlock_state()` RPC
 - `public.wordm_apply_unlock_grant(...)` RPC
+
+另外，分享链接功能依赖：
+
+- `supabase/migrations/20260306120000_wordm_share_links.sql`
+- `supabase/functions/create-share-link`
+- `supabase/functions/resolve-share-link`
+- `supabase/functions/revoke-share-link`
+- 其中 `resolve-share-link` 需要以 `--no-verify-jwt` 部署，供游客免登录访问
+- 若希望分享链接直接进入部署页，`create-deploy-ticket` 也要以 `--no-verify-jwt` 部署
 
 ### 部署票据（Deploy Ticket）配置
 
@@ -144,6 +157,7 @@ npm run deploy:pages
 
 ```text
 http://localhost:5173/?debug=1
+https://wordm.us/?debug=1
 ```
 
 可用参数：

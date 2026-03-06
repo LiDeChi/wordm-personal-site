@@ -1,13 +1,14 @@
 import type { AuthConfig } from './auth'
 import { getSupabaseClient } from './auth'
+import type { DeployTarget } from './share-links'
 
 export type DeployTicketScope = 'center_control_personal'
-export type DeployTarget = 'local' | 'remote'
 
 type CreateDeployTicketInput = {
   scope: DeployTicketScope
   target: DeployTarget
   expiresInSec?: number
+  shareToken?: string | null
 }
 
 type CreateDeployTicketPayload = {
@@ -40,22 +41,28 @@ export async function createDeployTicket(
     throw error
   }
 
-  const accessToken = data.session?.access_token
-  if (!accessToken) {
+  const accessToken = data.session?.access_token ?? null
+  if (!accessToken && !input.shareToken) {
     throw new Error('UNAUTHENTICATED')
+  }
+
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  }
+
+  if (accessToken) {
+    headers.Authorization = `Bearer ${accessToken}`
   }
 
   const endpoint = `${config.supabaseUrl.replace(/\/$/, '')}/functions/v1/create-deploy-ticket`
   const response = await fetch(endpoint, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${accessToken}`,
-    },
+    headers,
     body: JSON.stringify({
       scope: input.scope,
       target: input.target,
       expiresInSec: input.expiresInSec ?? 600,
+      shareToken: input.shareToken ?? null,
     }),
   })
 

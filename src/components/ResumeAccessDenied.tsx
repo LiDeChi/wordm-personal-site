@@ -2,12 +2,13 @@ import { AuthPanel, type AuthPanelProps } from './AuthPanel'
 import type { AuthRole } from '../lib/auth'
 import type { Lang } from '../i18n/lang'
 import { roleLabel } from '../i18n/roles'
-import { withLangParam } from '../lib/lang-url'
+import { withSiteParams } from '../lib/lang-url'
 
 type ResumeAccessDeniedProps = {
   lang: Lang
   authPanel: Omit<AuthPanelProps, 'className'>
   role: AuthRole
+  shareToken?: string | null
 }
 
 const DENIED_COPY = {
@@ -25,9 +26,9 @@ const DENIED_COPY = {
   },
 } as const
 
-export function ResumeAccessDenied({ lang, authPanel, role }: ResumeAccessDeniedProps) {
+export function ResumeAccessDenied({ lang, authPanel, role, shareToken = null }: ResumeAccessDeniedProps) {
   const copy = DENIED_COPY[lang]
-  const homeUrl = withLangParam('https://wordm.us', lang)
+  const homeUrl = withSiteParams('https://wordm.us', { lang, shareToken })
 
   return (
     <div className="subdomain-page">

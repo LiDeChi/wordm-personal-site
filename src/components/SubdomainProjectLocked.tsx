@@ -3,7 +3,7 @@ import type { PortfolioProject } from '../types'
 import type { Lang } from '../i18n/lang'
 import type { AuthRole } from '../lib/auth'
 import { roleLabel } from '../i18n/roles'
-import { withLangParam } from '../lib/lang-url'
+import { withSiteParams } from '../lib/lang-url'
 
 type SubdomainProjectLockedProps = {
   lang: Lang
@@ -13,6 +13,7 @@ type SubdomainProjectLockedProps = {
   canUseFreeUnlock: boolean
   unlockBusy: boolean
   freeRemaining: number
+  shareToken?: string | null
   authPanel: Omit<AuthPanelProps, 'className'>
   onUnlockSingle: (projectSlug: string) => void
   onUnlockFree: (projectSlug: string) => void
@@ -51,12 +52,16 @@ export function SubdomainProjectLocked({
   canUseFreeUnlock,
   unlockBusy,
   freeRemaining,
+  shareToken = null,
   authPanel,
   onUnlockSingle,
   onUnlockFree,
 }: SubdomainProjectLockedProps) {
   const copy = LOCKED_COPY[lang]
-  const portfolioUrl = withLangParam(`https://wordm.us?view=portfolio&unlock=${encodeURIComponent(project.slug)}`, lang)
+  const portfolioUrl = withSiteParams(`https://wordm.us?view=portfolio&unlock=${encodeURIComponent(project.slug)}`, {
+    lang,
+    shareToken,
+  })
 
   return (
     <div className="subdomain-page">

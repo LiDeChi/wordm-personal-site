@@ -1,11 +1,12 @@
 import { AuthPanel, type AuthPanelProps } from './AuthPanel'
 import { ResumeSection } from './ResumeSection'
 import type { Lang } from '../i18n/lang'
-import { withLangParam } from '../lib/lang-url'
+import { withSiteParams } from '../lib/lang-url'
 
 type ResumePageProps = {
   lang: Lang
   lastUpdated: string
+  shareToken?: string | null
   authPanel: Omit<AuthPanelProps, 'className'>
 }
 
@@ -24,9 +25,9 @@ const PAGE_COPY = {
   },
 } as const
 
-export function ResumePage({ lang, lastUpdated, authPanel }: ResumePageProps) {
+export function ResumePage({ lang, lastUpdated, shareToken = null, authPanel }: ResumePageProps) {
   const copy = PAGE_COPY[lang]
-  const homeUrl = withLangParam('https://wordm.us', lang)
+  const homeUrl = withSiteParams('https://wordm.us', { lang, shareToken })
 
   return (
     <div className="subdomain-page">

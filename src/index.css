@@ -1406,3 +1406,131 @@ footer {
     grid-template-columns: 1fr;
   }
 }
+
+.debug-share-panel {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--c-ink-faint);
+}
+
+.debug-share-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.debug-share-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.debug-share-field span {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: #666;
+}
+
+.debug-share-field input {
+  border: 1px solid var(--c-ink-faint);
+  background: #fff;
+  color: #111;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  padding: 7px 8px;
+}
+
+.debug-share-toggles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.debug-share-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--c-ink-faint);
+  background: #fff;
+  padding: 7px 9px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+}
+
+.debug-share-toggle.checked {
+  border-color: var(--c-ink);
+  background: #f8f8f8;
+}
+
+.debug-share-toggle input {
+  margin: 0;
+}
+
+.debug-share-url,
+.debug-share-empty,
+.debug-share-card-meta,
+.debug-share-card-scope {
+  text-align: left;
+}
+
+.debug-share-url {
+  margin: 8px 0;
+  border: 1px solid var(--c-ink-faint);
+  background: #f7f7f7;
+  padding: 8px;
+  font-size: 0.72rem;
+  word-break: break-all;
+}
+
+.debug-share-list {
+  margin-top: 14px;
+}
+
+.debug-share-list h4 {
+  margin-bottom: 8px;
+  font-size: 0.92rem;
+}
+
+.debug-share-card {
+  border: 1px solid var(--c-ink-faint);
+  background: #fcfcfc;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.debug-share-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.debug-share-card-head button {
+  border: 1px solid var(--c-ink-faint);
+  background: #fff;
+  color: #111;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  padding: 6px 8px;
+  cursor: pointer;
+}
+
+.debug-share-card-head button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.debug-share-card-meta {
+  margin: 0;
+  font-size: 0.72rem;
+  color: #666;
+}
+
+.debug-share-card-scope {
+  margin: 0 0 6px;
+  font-size: 0.76rem;
+  color: #222;
+}
