@@ -224,12 +224,14 @@ p {
 
 .auth-panel-compact .auth-form.compact input {
   min-width: 0;
+  width: 100%;
 }
 
 .auth-panel-compact .auth-form.compact .auth-primary-btn {
   white-space: nowrap;
   padding: 6px 8px;
   font-size: 0.66rem;
+  align-self: stretch;
 }
 
 .auth-panel-compact .auth-user-card.compact {
@@ -249,7 +251,7 @@ p {
   font-size: 0.66rem;
 }
 
-.auth-panel-compact .auth-primary-btn {
+.auth-panel-compact .auth-user-card.compact .auth-primary-btn {
   grid-column: 2 / 3;
   grid-row: 1 / span 2;
 }
@@ -263,7 +265,7 @@ p {
     grid-template-columns: 1fr;
   }
 
-  .auth-panel-compact .auth-primary-btn {
+  .auth-panel-compact .auth-user-card.compact .auth-primary-btn {
     grid-column: auto;
     grid-row: auto;
   }
