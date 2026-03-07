@@ -1728,13 +1728,15 @@ function App() {
     }
     return (
       <div className="page-container blog-page">
-        <SiteTopBar lang={lang} mode="blog" authPanel={authPanelProps} onLangChange={setLang} onModeChange={setRootView} />
+        <SiteTopBar lang={lang} authPanel={authPanelProps} />
         <Sidebar
           lang={lang}
           mode="blog"
           activeKey={activeArticle.id}
           lastUpdated={lastUpdated}
           onNavigate={jumpToArticle}
+          onLangChange={setLang}
+          onModeChange={setRootView}
           tocItems={BLOG_ARTICLES.map((article) => ({
             id: article.id,
             label: article.title[lang],
@@ -1804,7 +1806,7 @@ function App() {
 
     return (
       <div className="page-container">
-        <SiteTopBar lang={lang} mode="portfolio" authPanel={authPanelProps} onLangChange={setLang} onModeChange={setRootView} />
+        <SiteTopBar lang={lang} authPanel={authPanelProps} />
         <Sidebar
           lang={lang}
           mode="portfolio"
@@ -1817,6 +1819,8 @@ function App() {
               target.scrollIntoView({ behavior: 'smooth', block: 'start' })
             }
           }}
+          onLangChange={setLang}
+          onModeChange={setRootView}
           tocItems={[
             { id: 'deploy', label: copy.tocDeploy },
             { id: 'contact', label: copy.tocContact },
@@ -1932,7 +1936,7 @@ function App() {
 
   return (
     <div className="page-container">
-      <SiteTopBar lang={lang} mode="portfolio" authPanel={authPanelProps} onLangChange={setLang} onModeChange={setRootView} />
+      <SiteTopBar lang={lang} authPanel={authPanelProps} />
       <Sidebar
         lang={lang}
         mode="portfolio"
@@ -1944,6 +1948,8 @@ function App() {
             setSelectedProjectSlug(null)
           }
         }}
+        onLangChange={setLang}
+        onModeChange={setRootView}
         tocItems={selectedProject ? [{ id: 'project-detail', label: selectedProject.name }, { id: 'contact', label: copy.tocContact }] : [
           { id: 'projects', label: copy.tocProjects },
           { id: 'contact', label: copy.tocContact },
