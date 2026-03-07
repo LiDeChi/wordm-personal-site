@@ -12,6 +12,7 @@ export type AuthPanelProps = {
   userRole: AuthRole
   statusMessage: string
   className?: string
+  compact?: boolean
   onLogin: (email: string, password: string) => Promise<void> | void
   onSignup: (email: string, password: string) => Promise<void> | void
   onLogout: () => Promise<void> | void
@@ -26,12 +27,8 @@ const PANEL_COPY: Record<
     currentRole: string
     processing: string
     logout: string
-    authModeAria: string
-    loginTab: string
-    signupTab: string
     passwordPlaceholder: string
-    loginAction: string
-    signupAction: string
+    submitAction: string
   }
 > = {
   zh: {
@@ -40,13 +37,9 @@ const PANEL_COPY: Record<
     restoring: '正在恢复登录态...',
     currentRole: '当前身份',
     processing: '处理中...',
-    logout: '退出登录',
-    authModeAria: '账号模式',
-    loginTab: '登录',
-    signupTab: '注册',
-    passwordPlaceholder: '至少 6 位密码',
-    loginAction: '登录账号',
-    signupAction: '创建账号',
+    logout: '退出',
+    passwordPlaceholder: '密码',
+    submitAction: '登录 / 注册',
   },
   en: {
     title: 'Account',
@@ -55,12 +48,8 @@ const PANEL_COPY: Record<
     currentRole: 'Current role',
     processing: 'Processing...',
     logout: 'Log out',
-    authModeAria: 'Authentication mode',
-    loginTab: 'Log in',
-    signupTab: 'Sign up',
-    passwordPlaceholder: 'At least 6 characters',
-    loginAction: 'Log in',
-    signupAction: 'Create account',
+    passwordPlaceholder: 'Password',
+    submitAction: 'Log in / Sign up',
   },
 }
 
@@ -73,16 +62,15 @@ export function AuthPanel({
   userRole,
   statusMessage,
   className,
+  compact = false,
   onLogin,
-  onSignup,
   onLogout,
 }: AuthPanelProps) {
   const copy = PANEL_COPY[lang]
-  const [mode, setMode] = useState<'login' | 'signup'>('login')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const panelClassName = className ? `auth-panel ${className}` : 'auth-panel'
+  const panelClassName = className ? `auth-panel ${className}${compact ? ' auth-panel-compact' : ''}` : `auth-panel${compact ? ' auth-panel-compact' : ''}`
 
   function submit() {
     const normalizedEmail = email.trim()
@@ -90,12 +78,7 @@ export function AuthPanel({
       return
     }
 
-    if (mode === 'login') {
-      void onLogin(normalizedEmail, password)
-      return
-    }
-
-    void onSignup(normalizedEmail, password)
+    void onLogin(normalizedEmail, password)
   }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -114,7 +97,7 @@ export function AuthPanel({
       {enabled && loading ? <p className="auth-muted">{copy.restoring}</p> : null}
 
       {enabled && !loading && userEmail ? (
-        <div className="auth-user-card">
+        <div className={`auth-user-card${compact ? ' compact' : ''}`}>
           <p className="auth-user-email">{userEmail}</p>
           <p className="auth-role">
             {copy.currentRole}: {roleLabel(userRole, lang)}
@@ -126,47 +109,28 @@ export function AuthPanel({
       ) : null}
 
       {enabled && !loading && !userEmail ? (
-        <>
-          <div className="auth-mode-switch" role="tablist" aria-label={copy.authModeAria}>
-            <button
-              type="button"
-              className={`auth-mode-btn ${mode === 'login' ? 'active' : ''}`}
-              onClick={() => setMode('login')}
-            >
-              {copy.loginTab}
-            </button>
-            <button
-              type="button"
-              className={`auth-mode-btn ${mode === 'signup' ? 'active' : ''}`}
-              onClick={() => setMode('signup')}
-            >
-              {copy.signupTab}
-            </button>
-          </div>
-
-          <form className="auth-form" onSubmit={handleSubmit}>
-            <input
-              type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              placeholder="name@example.com"
-              autoComplete="email"
-              required
-            />
-            <input
-              type="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              placeholder={copy.passwordPlaceholder}
-              autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
-              minLength={6}
-              required
-            />
-            <button type="submit" className="auth-primary-btn" disabled={busy}>
-              {busy ? copy.processing : mode === 'login' ? copy.loginAction : copy.signupAction}
-            </button>
-          </form>
-        </>
+        <form className={`auth-form${compact ? ' compact' : ''}`} onSubmit={handleSubmit}>
+          <input
+            type="email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            placeholder="name@example.com"
+            autoComplete="email"
+            required
+          />
+          <input
+            type="password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            placeholder={copy.passwordPlaceholder}
+            autoComplete="current-password"
+            minLength={6}
+            required
+          />
+          <button type="submit" className="auth-primary-btn" disabled={busy}>
+            {busy ? copy.processing : copy.submitAction}
+          </button>
+        </form>
       ) : null}
 
       {!userEmail ? (

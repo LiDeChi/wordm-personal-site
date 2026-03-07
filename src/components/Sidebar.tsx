@@ -1,3 +1,4 @@
+import { AuthPanel, type AuthPanelProps } from './AuthPanel'
 import type { Lang } from '../i18n/lang'
 
 type TocItem = {
@@ -15,13 +16,14 @@ type SidebarProps = {
   onLangChange: (lang: Lang) => void
   onModeChange: (mode: 'blog' | 'portfolio') => void
   tocItems: TocItem[]
+  authPanel: Omit<AuthPanelProps, 'className'>
 }
 
 const SIDEBAR_COPY = {
   zh: {
     lastUpdated: '最近更新',
-    viewSwitchAria: '视图切换',
-    langSwitchAria: '语言切换',
+    langLabel: '语言',
+    modeLabel: '页面',
     blog: '博客',
     portfolio: '作品集',
     zhLabel: '中文',
@@ -29,8 +31,8 @@ const SIDEBAR_COPY = {
   },
   en: {
     lastUpdated: 'Last updated',
-    viewSwitchAria: 'View switch',
-    langSwitchAria: 'Language switch',
+    langLabel: 'Language',
+    modeLabel: 'View',
     blog: 'Blog',
     portfolio: 'Portfolio',
     zhLabel: '中文',
@@ -38,27 +40,29 @@ const SIDEBAR_COPY = {
   },
 } as const
 
-export function Sidebar({ lang, mode, activeKey, lastUpdated, onNavigate, onLangChange, onModeChange, tocItems }: SidebarProps) {
+export function Sidebar({ lang, mode, activeKey, lastUpdated, onNavigate, onLangChange, onModeChange, tocItems, authPanel }: SidebarProps) {
   const copy = SIDEBAR_COPY[lang]
 
   return (
     <aside className={`sidebar ${mode === 'blog' ? 'blog-sidebar' : ''}`}>
-      <div className="lang-switch" role="tablist" aria-label={copy.langSwitchAria}>
-        <button type="button" className={`lang-btn ${lang === 'zh' ? 'active' : ''}`} onClick={() => onLangChange('zh')}>
-          {copy.zhLabel}
-        </button>
-        <button type="button" className={`lang-btn ${lang === 'en' ? 'active' : ''}`} onClick={() => onLangChange('en')}>
-          {copy.enLabel}
-        </button>
-      </div>
+      <AuthPanel {...authPanel} className="sidebar-auth" compact />
 
-      <div className="view-switch" role="tablist" aria-label={copy.viewSwitchAria}>
-        <button type="button" className={`view-btn ${mode === 'blog' ? 'active' : ''}`} onClick={() => onModeChange('blog')}>
-          {copy.blog}
-        </button>
-        <button type="button" className={`view-btn ${mode === 'portfolio' ? 'active' : ''}`} onClick={() => onModeChange('portfolio')}>
-          {copy.portfolio}
-        </button>
+      <div className="sidebar-select-stack">
+        <label className="sidebar-select-field">
+          <span className="mono">{copy.langLabel}</span>
+          <select value={lang} onChange={(event) => onLangChange(event.target.value as Lang)}>
+            <option value="zh">{copy.zhLabel}</option>
+            <option value="en">{copy.enLabel}</option>
+          </select>
+        </label>
+
+        <label className="sidebar-select-field">
+          <span className="mono">{copy.modeLabel}</span>
+          <select value={mode} onChange={(event) => onModeChange(event.target.value as 'blog' | 'portfolio')}>
+            <option value="blog">{copy.blog}</option>
+            <option value="portfolio">{copy.portfolio}</option>
+          </select>
+        </label>
       </div>
 
       <nav>

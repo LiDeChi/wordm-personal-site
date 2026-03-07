@@ -1231,9 +1231,9 @@ function App() {
     }
   }
 
-  async function handleLogin(email: string, password: string) {
+  async function handleAuthSubmit(email: string, password: string) {
     if (!authEnabled) {
-      setAuthStatusMessage(copy.loginUnavailable)
+      setAuthStatusMessage(copy.authUnavailable)
       return
     }
 
@@ -1254,51 +1254,31 @@ function App() {
           ? withEmail(copy.loginSuccess, normalizedUser.email)
           : withDone(copy.loginSuccess, lang),
       )
-    } catch (error) {
-      const detail = normalizeAuthError(error, copy.loginFallback)
-      setAuthStatusMessage(withDetail(copy.loginFailed, detail))
-    } finally {
-      setAuthBusy(false)
-    }
-  }
+    } catch (loginError) {
+      try {
+        const result = await signupWithPassword(authConfig, email, password)
 
-  async function handleSignup(email: string, password: string) {
-    if (!authEnabled) {
-      setAuthStatusMessage(copy.signupUnavailable)
-      return
-    }
+        if (result.outcome === 'exists') {
+          setAuthStatusMessage(copy.emailExists)
+          return
+        }
 
-    if (!email || !password) {
-      setAuthStatusMessage(copy.emailPasswordRequired)
-      return
-    }
+        if (result.outcome === 'confirm') {
+          setAuthStatusMessage(copy.confirmEmail)
+          return
+        }
 
-    setAuthBusy(true)
-    setAuthStatusMessage(copy.signingUp)
-
-    try {
-      const result = await signupWithPassword(authConfig, email, password)
-
-      if (result.outcome === 'exists') {
-        setAuthStatusMessage(copy.emailExists)
-        return
+        const normalizedUser = toAuthUserSummary(result.user, authRoleRules)
+        setAuthUser(normalizedUser)
+        setAuthStatusMessage(
+          normalizedUser?.email
+            ? withEmail(copy.signupAndLoginSuccess, normalizedUser.email)
+            : withDone(copy.signupSuccess, lang),
+        )
+      } catch {
+        const detail = normalizeAuthError(loginError, copy.loginFallback)
+        setAuthStatusMessage(withDetail(copy.loginFailed, detail))
       }
-
-      if (result.outcome === 'confirm') {
-        setAuthStatusMessage(copy.confirmEmail)
-        return
-      }
-
-      const normalizedUser = toAuthUserSummary(result.user, authRoleRules)
-      setAuthUser(normalizedUser)
-      setAuthStatusMessage(
-        normalizedUser?.email
-          ? withEmail(copy.signupAndLoginSuccess, normalizedUser.email)
-          : withDone(copy.signupSuccess, lang),
-      )
-    } catch (error) {
-      const detail = normalizeAuthError(error, copy.signupFallback)
-      setAuthStatusMessage(withDetail(copy.signupFailed, detail))
     } finally {
       setAuthBusy(false)
     }
@@ -1463,8 +1443,8 @@ function App() {
     userEmail: authUser?.email ?? null,
     userRole: authRole,
     statusMessage: authStatusMessage,
-    onLogin: handleLogin,
-    onSignup: handleSignup,
+    onLogin: handleAuthSubmit,
+    onSignup: handleAuthSubmit,
     onLogout: handleLogout,
   }
 
@@ -1742,6 +1722,7 @@ function App() {
             label: article.title[lang],
             meta: article.date,
           }))}
+          authPanel={authPanelProps}
         />
 
         <main className="main-content blog-main">
@@ -1825,6 +1806,7 @@ function App() {
             { id: 'deploy', label: copy.tocDeploy },
             { id: 'contact', label: copy.tocContact },
           ]}
+          authPanel={authPanelProps}
         />
 
         <main className="main-content portfolio-main-content">
@@ -1954,6 +1936,7 @@ function App() {
           { id: 'projects', label: copy.tocProjects },
           { id: 'contact', label: copy.tocContact },
         ]}
+        authPanel={authPanelProps}
       />
 
       <main className="main-content portfolio-main-content">
