@@ -6,7 +6,6 @@ import { ResumeAccessDenied } from './components/ResumeAccessDenied'
 import { ShareAccessDenied } from './components/ShareAccessDenied'
 import { ResumePage } from './components/ResumePage'
 import { Sidebar } from './components/Sidebar'
-import { SiteTopBar } from './components/SiteTopBar'
 import { SubdomainProjectLocked } from './components/SubdomainProjectLocked'
 import { SubdomainProjectView } from './components/SubdomainProjectView'
 import { BLOG_ARTICLES } from './data/blogArticles'
@@ -1708,7 +1707,6 @@ function App() {
     }
     return (
       <div className="page-container blog-page">
-        <SiteTopBar lang={lang} authPanel={authPanelProps} />
         <Sidebar
           lang={lang}
           mode="blog"
@@ -1787,7 +1785,6 @@ function App() {
 
     return (
       <div className="page-container">
-        <SiteTopBar lang={lang} authPanel={authPanelProps} />
         <Sidebar
           lang={lang}
           mode="portfolio"
@@ -1918,7 +1915,6 @@ function App() {
 
   return (
     <div className="page-container">
-      <SiteTopBar lang={lang} authPanel={authPanelProps} />
       <Sidebar
         lang={lang}
         mode="portfolio"
