@@ -1538,10 +1538,16 @@ footer {
 .site-topbar {
   grid-column: 1 / -1;
   display: flex;
-  justify-content: flex-end;
-  gap: 10px;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.site-topbar-controls {
+  display: flex;
+  gap: 8px;
   align-items: center;
-  margin-bottom: 6px;
 }
 
 .site-topbar-group {
@@ -1550,13 +1556,64 @@ footer {
   background: #fcfcfc;
 }
 
+.site-topbar-account {
+  position: relative;
+  min-width: min(420px, 100%);
+  max-width: 480px;
+}
+
+.site-topbar-account-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid var(--c-ink-faint);
+  background: #fcfcfc;
+  color: #444;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+.site-topbar-account-btn.active,
+.site-topbar-account-btn:hover {
+  border-color: #b8b8b8;
+  background: #f7f7f7;
+}
+
+.site-topbar-account-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.site-topbar-account-caret {
+  color: #777;
+  font-size: 0.68rem;
+}
+
+.topbar-auth-panel {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 8px);
+  width: 100%;
+  max-width: 480px;
+  border: 1px solid var(--c-ink-faint);
+  background: #fff;
+  padding: 12px;
+  box-shadow: 0 12px 28px rgb(0 0 0 / 8%);
+  z-index: 30;
+}
+
 .site-topbar .lang-btn,
 .site-topbar .view-btn {
   appearance: none;
   border: 0;
   border-right: 1px solid var(--c-ink-faint);
   background: transparent;
-  color: #666;
+  color: #777;
   font-family: var(--font-mono);
   font-size: 0.68rem;
   padding: 6px 12px;
@@ -1570,7 +1627,7 @@ footer {
 
 .site-topbar .lang-btn.active,
 .site-topbar .view-btn.active {
-  background: #f1f1f1;
+  background: #f4f4f4;
   color: #111;
 }
 
@@ -1699,7 +1756,49 @@ footer {
     margin-bottom: 14px;
   }
 
+  .site-topbar-account {
+    width: 100%;
+    max-width: none;
+  }
+
+  .site-topbar-controls {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .topbar-auth-panel {
+    position: static;
+    margin-top: 8px;
+    max-width: none;
+    box-shadow: none;
+  }
+
   .project-detail-command-row {
     grid-template-columns: 1fr;
   }
+}
+
+
+.scroll-top-btn {
+  position: fixed;
+  right: 24px;
+  bottom: 28px;
+  border: 1px solid rgb(18 18 18 / 12%);
+  background: rgb(255 255 255 / 78%);
+  color: rgb(18 18 18 / 62%);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  padding: 10px 12px;
+  border-radius: 999px;
+  backdrop-filter: blur(10px) saturate(120%);
+  box-shadow: 0 10px 24px rgb(0 0 0 / 10%);
+  cursor: pointer;
+  z-index: 24;
+}
+
+.scroll-top-btn:hover {
+  background: rgb(255 255 255 / 96%);
+  color: #111;
+  border-color: rgb(18 18 18 / 28%);
 }

@@ -88,7 +88,6 @@ const APP_COPY = {
     tocDeploy: '部署',
     tocContact: '联系',
     portfolioTitle: '作品集',
-    portfolioIntro: '以 gallery 形式展示项目卡片，点击任一卡片可进入对应子域名详情页。',
     contactTitle: '联系',
     copyright: '© 2026 Jian Yongjie. All rights reserved.',
     blogMode: 'wordm.us 博客模式',
@@ -202,7 +201,6 @@ const APP_COPY = {
     tocDeploy: 'Deploy',
     tocContact: 'Contact',
     portfolioTitle: 'Portfolio Gallery',
-    portfolioIntro: 'Project cards in a gallery layout. Click any card to open its dedicated subdomain page.',
     contactTitle: 'Contact',
     copyright: '© 2026 Jian Yongjie. All rights reserved.',
     blogMode: 'Blog mode on wordm.us',
@@ -526,6 +524,7 @@ function App() {
   const [checkoutBusyKind, setCheckoutBusyKind] = useState<UnlockCheckoutKind | null>(null)
   const [unlockStatusMessage, setUnlockStatusMessage] = useState('')
   const [selectedProjectSlug, setSelectedProjectSlug] = useState<string | null>(initialProjectSlug)
+  const [showScrollTop, setShowScrollTop] = useState(false)
   const [unlockTargetSlug, setUnlockTargetSlug] = useState<string | null>(initialUnlockSlug)
   const [deployTarget, setDeployTarget] = useState<DeployTarget>('local')
   const [deployPort, setDeployPort] = useState('8080')
@@ -679,6 +678,17 @@ function App() {
 
     setSelectedProjectSlug(null)
   }, [rootView, selectedProjectSlug])
+
+
+  useEffect(() => {
+    function syncScrollTopVisibility() {
+      setShowScrollTop(window.scrollY > 540)
+    }
+
+    syncScrollTopVisibility()
+    window.addEventListener('scroll', syncScrollTopVisibility, { passive: true })
+    return () => window.removeEventListener('scroll', syncScrollTopVisibility)
+  }, [])
 
   useEffect(() => {
     if (rootView !== 'portfolio') {
@@ -1718,7 +1728,7 @@ function App() {
     }
     return (
       <div className="page-container blog-page">
-        <SiteTopBar lang={lang} mode="blog" onLangChange={setLang} onModeChange={setRootView} />
+        <SiteTopBar lang={lang} mode="blog" authPanel={authPanelProps} onLangChange={setLang} onModeChange={setRootView} />
         <Sidebar
           lang={lang}
           mode="blog"
@@ -1730,7 +1740,6 @@ function App() {
             label: article.title[lang],
             meta: article.date,
           }))}
-          authPanel={authPanelProps}
         />
 
         <main className="main-content blog-main">
@@ -1779,6 +1788,11 @@ function App() {
             </span>
           </button>
         </div>
+        {showScrollTop ? (
+          <button type="button" className="scroll-top-btn" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+            TOP
+          </button>
+        ) : null}
       </div>
     )
   }
@@ -1790,7 +1804,7 @@ function App() {
 
     return (
       <div className="page-container">
-        <SiteTopBar lang={lang} mode="portfolio" onLangChange={setLang} onModeChange={setRootView} />
+        <SiteTopBar lang={lang} mode="portfolio" authPanel={authPanelProps} onLangChange={setLang} onModeChange={setRootView} />
         <Sidebar
           lang={lang}
           mode="portfolio"
@@ -1807,7 +1821,6 @@ function App() {
             { id: 'deploy', label: copy.tocDeploy },
             { id: 'contact', label: copy.tocContact },
           ]}
-          authPanel={authPanelProps}
         />
 
         <main className="main-content portfolio-main-content">
@@ -1904,6 +1917,11 @@ function App() {
             </div>
           </footer>
         </main>
+        {showScrollTop ? (
+          <button type="button" className="scroll-top-btn" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+            TOP
+          </button>
+        ) : null}
       </div>
     )
   }
@@ -1914,7 +1932,7 @@ function App() {
 
   return (
     <div className="page-container">
-      <SiteTopBar lang={lang} mode="portfolio" onLangChange={setLang} onModeChange={setRootView} />
+      <SiteTopBar lang={lang} mode="portfolio" authPanel={authPanelProps} onLangChange={setLang} onModeChange={setRootView} />
       <Sidebar
         lang={lang}
         mode="portfolio"
@@ -1930,7 +1948,6 @@ function App() {
           { id: 'projects', label: copy.tocProjects },
           { id: 'contact', label: copy.tocContact },
         ]}
-        authPanel={authPanelProps}
       />
 
       <main className="main-content portfolio-main-content">
@@ -2075,6 +2092,11 @@ function App() {
           </div>
         </footer>
       </main>
+      {showScrollTop ? (
+        <button type="button" className="scroll-top-btn" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+          TOP
+        </button>
+      ) : null}
     </div>
   )
 }

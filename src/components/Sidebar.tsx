@@ -1,4 +1,3 @@
-import { AuthPanel, type AuthPanelProps } from './AuthPanel'
 import type { Lang } from '../i18n/lang'
 
 type TocItem = {
@@ -14,7 +13,6 @@ type SidebarProps = {
   lastUpdated: string
   onNavigate: (key: string) => void
   tocItems: TocItem[]
-  authPanel: Omit<AuthPanelProps, 'className'>
 }
 
 const SIDEBAR_COPY = {
@@ -26,13 +24,11 @@ const SIDEBAR_COPY = {
   },
 } as const
 
-export function Sidebar({ lang, mode, activeKey, lastUpdated, onNavigate, tocItems, authPanel }: SidebarProps) {
+export function Sidebar({ lang, mode, activeKey, lastUpdated, onNavigate, tocItems }: SidebarProps) {
   const copy = SIDEBAR_COPY[lang]
 
   return (
     <aside className={`sidebar ${mode === 'blog' ? 'blog-sidebar' : ''}`}>
-      <AuthPanel {...authPanel} className="sidebar-auth" />
-
       <nav>
         <ul className="nav-list">
           {tocItems.map((item) => {
