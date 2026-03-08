@@ -1,18 +1,41 @@
+import { AuthPanel, type AuthPanelProps } from './AuthPanel'
 import type { PortfolioProject } from '../types'
 import type { Lang } from '../i18n/lang'
+import type { ShareLinkRecord, ShareScope } from '../lib/share-links'
 import { formatDate } from '../lib/projects'
 import { withSiteParams } from '../lib/lang-url'
+
+type ShareFlagKey = 'allowPortfolio' | 'allowBlog' | 'allowDeploy' | 'allowResume' | 'allowAllProjects'
 
 type AdminPageProps = {
   lang: Lang
   lastUpdated: string
   projects: PortfolioProject[]
+  selectedSlugs: string[]
+  authPanel: Omit<AuthPanelProps, 'className'>
+  canManageShares: boolean
+  shareBusy: boolean
+  shareStatusMessage: string
+  shareLabel: string
+  shareExpiresInDays: string
+  shareScope: ShareScope
+  shareLinks: ShareLinkRecord[]
+  lastCreatedShareUrl: string
+  onToggleProject: (slug: string) => void
+  onSelectFeatured: () => void
+  onSelectAll: () => void
+  onShareLabelChange: (value: string) => void
+  onShareExpiresInDaysChange: (value: string) => void
+  onToggleShareFlag: (key: ShareFlagKey) => void
+  onCreateShareLink: () => void
+  onCopyLastShareLink: () => void
+  onRevokeShareLink: (shareLinkId: string) => void
 }
 
 const COPY = {
   zh: {
     title: '后台系统',
-    subtitle: 'admin.wordm.us 受管理员认证保护，用于管理站点入口与项目分发。',
+    subtitle: 'admin.wordm.us 受管理员认证保护，用于管理站点入口、项目分发与分享链接。',
     projectCount: '项目总数',
     featuredCount: '详情已接入',
     updated: '快照更新',
@@ -32,10 +55,36 @@ const COPY = {
     commandBuild: '构建',
     commandEntry: '入口',
     noCommand: 'N/A',
+    shareTitle: '免登录分享链接',
+    shareHint: '在此登录管理员/测试账号后，可创建免注册的临时完整体验链接。',
+    shareNeedLogin: '当前还没有登录具备权限的账号，因此暂不能生成分享链接。',
+    shareLabel: '链接备注',
+    shareLabelPlaceholder: '例如：给张三 3 天完整体验',
+    shareDays: '有效天数',
+    shareCurrentSelection: '仅分享当前勾选项目',
+    shareCreate: '生成分享链接',
+    shareCopyLatest: '复制最新链接',
+    shareNoLatest: '还没有新生成的链接',
+    shareListTitle: '已生成链接',
+    shareEmpty: '暂无分享链接',
+    shareRevoke: '撤销',
+    shareScopePortfolio: '作品集',
+    shareScopeBlog: '博客',
+    shareScopeDeploy: '部署页',
+    shareScopeResume: '简历页',
+    shareScopeAllProjects: '全部项目子域',
+    shareScopeSelectedProjects: '当前勾选项目',
+    shareCreatedAt: '创建',
+    shareExpiresAt: '到期',
+    shareStatusActive: '生效中',
+    shareStatusRevoked: '已撤销',
+    shareStatusExpired: '已过期',
+    resetDefault: '还原默认项目',
+    selectAll: '勾选全部项目',
   },
   en: {
     title: 'Admin Backend',
-    subtitle: 'admin.wordm.us is protected by administrator authentication and is used to manage site entry points and project distribution.',
+    subtitle: 'admin.wordm.us is protected by administrator authentication and manages site entry points, project distribution, and guest share links.',
     projectCount: 'Projects',
     featuredCount: 'With details',
     updated: 'Snapshot updated',
@@ -55,6 +104,32 @@ const COPY = {
     commandBuild: 'Build',
     commandEntry: 'Entry',
     noCommand: 'N/A',
+    shareTitle: 'Guest share links',
+    shareHint: 'Log in with an admin/tester account here to create temporary no-signup full-experience links.',
+    shareNeedLogin: 'No authorized account is signed in yet, so guest share links are unavailable for now.',
+    shareLabel: 'Label',
+    shareLabelPlaceholder: 'Example: Full experience for Alex, 3 days',
+    shareDays: 'Valid days',
+    shareCurrentSelection: 'Share only current selected projects',
+    shareCreate: 'Create share link',
+    shareCopyLatest: 'Copy latest link',
+    shareNoLatest: 'No newly created link yet',
+    shareListTitle: 'Issued links',
+    shareEmpty: 'No share links yet',
+    shareRevoke: 'Revoke',
+    shareScopePortfolio: 'Portfolio',
+    shareScopeBlog: 'Blog',
+    shareScopeDeploy: 'Deploy',
+    shareScopeResume: 'Resume',
+    shareScopeAllProjects: 'All project subdomains',
+    shareScopeSelectedProjects: 'Current selected projects',
+    shareCreatedAt: 'Created',
+    shareExpiresAt: 'Expires',
+    shareStatusActive: 'Active',
+    shareStatusRevoked: 'Revoked',
+    shareStatusExpired: 'Expired',
+    resetDefault: 'Restore default projects',
+    selectAll: 'Select all projects',
   },
 } as const
 
@@ -62,7 +137,78 @@ function commandValue(value: string | null | undefined, fallback: string) {
   return value && value.trim() ? value : fallback
 }
 
-export function AdminPage({ lang, lastUpdated, projects }: AdminPageProps) {
+function formatMetaDate(value: string, lang: Lang) {
+  const date = new Date(value)
+  if (Number.isNaN(date.valueOf())) {
+    return value
+  }
+
+  return new Intl.DateTimeFormat(lang === 'zh' ? 'zh-CN' : 'en-US', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(date)
+}
+
+function summarizeScope(copy: (typeof COPY)[Lang], scope: ShareScope, selectedCount: number) {
+  const parts = []
+  if (scope.allowPortfolio) {
+    parts.push(copy.shareScopePortfolio)
+  }
+  if (scope.allowBlog) {
+    parts.push(copy.shareScopeBlog)
+  }
+  if (scope.allowDeploy) {
+    parts.push(copy.shareScopeDeploy)
+  }
+  if (scope.allowResume) {
+    parts.push(copy.shareScopeResume)
+  }
+  if (scope.allowAllProjects) {
+    parts.push(copy.shareScopeAllProjects)
+  } else if (selectedCount > 0) {
+    parts.push(`${copy.shareScopeSelectedProjects} (${selectedCount})`)
+  }
+  return parts.join(' · ')
+}
+
+function statusLabel(lang: Lang, status: ShareLinkRecord['status']) {
+  const copy = COPY[lang]
+  if (status === 'revoked') {
+    return copy.shareStatusRevoked
+  }
+  if (status === 'expired') {
+    return copy.shareStatusExpired
+  }
+  return copy.shareStatusActive
+}
+
+export function AdminPage({
+  lang,
+  lastUpdated,
+  projects,
+  selectedSlugs,
+  authPanel,
+  canManageShares,
+  shareBusy,
+  shareStatusMessage,
+  shareLabel,
+  shareExpiresInDays,
+  shareScope,
+  shareLinks,
+  lastCreatedShareUrl,
+  onToggleProject,
+  onSelectFeatured,
+  onSelectAll,
+  onShareLabelChange,
+  onShareExpiresInDaysChange,
+  onToggleShareFlag,
+  onCreateShareLink,
+  onCopyLastShareLink,
+  onRevokeShareLink,
+}: AdminPageProps) {
   const copy = COPY[lang]
   const detailedCount = projects.filter((project) => project.detail).length
   const rootPortfolioUrl = withSiteParams('https://wordm.us', { lang })
@@ -104,6 +250,105 @@ export function AdminPage({ lang, lastUpdated, projects }: AdminPageProps) {
             <a href={resumeUrl} target="_blank" rel="noreferrer">{copy.resume}</a>
             <a href={debugUrl} target="_blank" rel="noreferrer">{copy.debug}</a>
           </div>
+        </section>
+
+        <section className="project-detail-section">
+          <h2>{copy.shareTitle}</h2>
+          <p>{copy.shareHint}</p>
+          <div className="admin-auth-wrap">
+            <AuthPanel {...authPanel} className="admin-auth-panel" compact />
+          </div>
+          {!canManageShares ? <p className="unlock-status-message">{copy.shareNeedLogin}</p> : null}
+
+          {canManageShares ? (
+            <>
+              <div className="debug-share-grid admin-share-grid">
+                <label className="debug-share-field">
+                  <span>{copy.shareLabel}</span>
+                  <input value={shareLabel} onChange={(event) => onShareLabelChange(event.target.value)} placeholder={copy.shareLabelPlaceholder} />
+                </label>
+                <label className="debug-share-field">
+                  <span>{copy.shareDays}</span>
+                  <input value={shareExpiresInDays} onChange={(event) => onShareExpiresInDaysChange(event.target.value)} inputMode="numeric" placeholder="3" />
+                </label>
+              </div>
+
+              <div className="debug-share-toggles admin-share-toggles">
+                <label className={`debug-share-toggle${shareScope.allowPortfolio ? ' checked' : ''}`}>
+                  <input type="checkbox" checked={shareScope.allowPortfolio} onChange={() => onToggleShareFlag('allowPortfolio')} />
+                  <span>{copy.shareScopePortfolio}</span>
+                </label>
+                <label className={`debug-share-toggle${shareScope.allowBlog ? ' checked' : ''}`}>
+                  <input type="checkbox" checked={shareScope.allowBlog} onChange={() => onToggleShareFlag('allowBlog')} />
+                  <span>{copy.shareScopeBlog}</span>
+                </label>
+                <label className={`debug-share-toggle${shareScope.allowDeploy ? ' checked' : ''}`}>
+                  <input type="checkbox" checked={shareScope.allowDeploy} onChange={() => onToggleShareFlag('allowDeploy')} />
+                  <span>{copy.shareScopeDeploy}</span>
+                </label>
+                <label className={`debug-share-toggle${shareScope.allowResume ? ' checked' : ''}`}>
+                  <input type="checkbox" checked={shareScope.allowResume} onChange={() => onToggleShareFlag('allowResume')} />
+                  <span>{copy.shareScopeResume}</span>
+                </label>
+                <label className={`debug-share-toggle${shareScope.allowAllProjects ? ' checked' : ''}`}>
+                  <input type="checkbox" checked={shareScope.allowAllProjects} onChange={() => onToggleShareFlag('allowAllProjects')} />
+                  <span>{shareScope.allowAllProjects ? copy.shareScopeAllProjects : `${copy.shareCurrentSelection} (${selectedSlugs.length})`}</span>
+                </label>
+              </div>
+
+              <div className="debug-actions">
+                <button type="button" onClick={onSelectFeatured}>{copy.resetDefault}</button>
+                <button type="button" onClick={onSelectAll}>{copy.selectAll}</button>
+              </div>
+
+              <div className="debug-grid admin-project-picker">
+                {projects.map((project) => {
+                  const checked = selectedSlugs.includes(project.slug)
+                  return (
+                    <label key={project.id} className={`debug-item${checked ? ' checked' : ''}`}>
+                      <input type="checkbox" checked={checked} onChange={() => onToggleProject(project.slug)} />
+                      <span>{project.name}</span>
+                      <span className="mono">{project.subdomain}.wordm.us</span>
+                    </label>
+                  )
+                })}
+              </div>
+
+              <div className="debug-actions admin-share-actions">
+                <button type="button" onClick={onCreateShareLink} disabled={shareBusy}>
+                  {shareBusy ? copy.shareCreate : copy.shareCreate}
+                </button>
+                <button type="button" onClick={onCopyLastShareLink} disabled={!lastCreatedShareUrl}>
+                  {copy.shareCopyLatest}
+                </button>
+              </div>
+
+              {lastCreatedShareUrl ? <p className="debug-share-url mono">{lastCreatedShareUrl}</p> : null}
+              {shareStatusMessage ? <p className="debug-error">{shareStatusMessage}</p> : null}
+
+              <div className="debug-share-list">
+                <h3>{copy.shareListTitle}</h3>
+                {shareLinks.length === 0 ? <p className="debug-share-empty">{copy.shareEmpty}</p> : null}
+                {shareLinks.map((shareLink) => (
+                  <article key={shareLink.id} className="debug-share-card">
+                    <div className="debug-share-card-head">
+                      <div>
+                        <strong>{shareLink.label || shareLink.id.slice(0, 8)}</strong>
+                        <div className="mono debug-share-card-meta">{statusLabel(lang, shareLink.status)}</div>
+                      </div>
+                      <button type="button" onClick={() => onRevokeShareLink(shareLink.id)} disabled={shareBusy || shareLink.status !== 'active'}>
+                        {copy.shareRevoke}
+                      </button>
+                    </div>
+                    <p className="debug-share-card-scope">{summarizeScope(copy, shareLink.scope, shareLink.scope.allowedProjectSlugs.length)}</p>
+                    <p className="debug-share-card-meta">
+                      {copy.shareCreatedAt}: {formatMetaDate(shareLink.createdAt, lang)} · {copy.shareExpiresAt}: {formatMetaDate(shareLink.expiresAt, lang)}
+                    </p>
+                  </article>
+                ))}
+              </div>
+            </>
+          ) : null}
         </section>
 
         <section className="project-detail-section">

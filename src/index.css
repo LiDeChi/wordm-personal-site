@@ -1851,3 +1851,31 @@ footer {
     flex-direction: column;
   }
 }
+
+
+.admin-auth-wrap {
+  margin: 0.75rem 0 1rem;
+}
+
+.admin-auth-panel {
+  width: 100%;
+}
+
+.admin-share-grid {
+  margin-top: 0.5rem;
+}
+
+.admin-share-toggles {
+  margin-bottom: 12px;
+}
+
+.admin-project-picker {
+  max-height: 340px;
+  overflow: auto;
+  margin-bottom: 12px;
+}
+
+.admin-share-actions {
+  margin-top: 10px;
+  margin-bottom: 8px;
+}

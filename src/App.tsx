@@ -1693,7 +1693,45 @@ function App() {
   }
 
   if (isAdminView) {
-    return <AdminPage lang={lang} lastUpdated={lastUpdated} projects={projects} />
+    return (
+      <AdminPage
+        lang={lang}
+        lastUpdated={lastUpdated}
+        projects={projects}
+        selectedSlugs={selectedSlugs}
+        authPanel={authPanelProps}
+        canManageShares={canManageShares}
+        shareBusy={shareBusy}
+        shareStatusMessage={shareManageStatusMessage}
+        shareLabel={shareLabel}
+        shareExpiresInDays={shareExpiresInDays}
+        shareScope={shareScope}
+        shareLinks={shareLinks}
+        lastCreatedShareUrl={lastCreatedShareUrl}
+        onToggleProject={(slug) => {
+          setSelectedSlugs((prev) => {
+            if (prev.includes(slug)) {
+              return prev.filter((item) => item !== slug)
+            }
+
+            return [...prev, slug]
+          })
+        }}
+        onSelectFeatured={() => setSelectedSlugs(defaultSelection(projects, snapshot.featured))}
+        onSelectAll={() => setSelectedSlugs(projects.map((project) => project.slug))}
+        onShareLabelChange={setShareLabel}
+        onShareExpiresInDaysChange={setShareExpiresInDays}
+        onToggleShareFlag={(key) => {
+          setShareScope((prev) => ({
+            ...prev,
+            [key]: !prev[key],
+          }))
+        }}
+        onCreateShareLink={() => void handleCreateShareLink()}
+        onCopyLastShareLink={() => void handleCopyLastShareLink()}
+        onRevokeShareLink={(shareLinkId) => void handleRevokeShareLink(shareLinkId)}
+      />
+    )
   }
 
   if (isResumeView) {
@@ -1952,14 +1990,6 @@ function App() {
               sourceLabel={sourceLabel}
               loadState={loadState}
               errorMessage={errorMessage}
-              canManageShares={canManageShares}
-              shareBusy={shareBusy}
-              shareStatusMessage={shareManageStatusMessage}
-              shareLabel={shareLabel}
-              shareExpiresInDays={shareExpiresInDays}
-              shareScope={shareScope}
-              shareLinks={shareLinks}
-              lastCreatedShareUrl={lastCreatedShareUrl}
               onCenterApiChange={setCenterApi}
               onLoadLive={loadLiveProjects}
               onToggleProject={(slug) => {
@@ -1973,17 +2003,6 @@ function App() {
               }}
               onSelectFeatured={() => setSelectedSlugs(defaultSelection(projects, snapshot.featured))}
               onSelectAll={() => setSelectedSlugs(projects.map((project) => project.slug))}
-              onShareLabelChange={setShareLabel}
-              onShareExpiresInDaysChange={setShareExpiresInDays}
-              onToggleShareFlag={(key) => {
-                setShareScope((prev) => ({
-                  ...prev,
-                  [key]: !prev[key],
-                }))
-              }}
-              onCreateShareLink={() => void handleCreateShareLink()}
-              onCopyLastShareLink={() => void handleCopyLastShareLink()}
-              onRevokeShareLink={(shareLinkId) => void handleRevokeShareLink(shareLinkId)}
             />
           ) : null}
 
