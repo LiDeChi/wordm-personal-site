@@ -95,6 +95,8 @@ export async function fetchProjectsFromApi(apiUrl: string): Promise<PortfolioPro
     name: project.name,
     slug: project.slug,
     summary: project.summary || `${project.name} project`,
+    tagline: project.tagline || project.summary || `${project.name} project`,
+    thumbnailUrl: project.thumbnailUrl || null,
     techStack: Array.isArray(project.techStack) ? project.techStack : [],
     tags: Array.isArray(project.tags) ? project.tags : [],
     activityScore: Number(project.activityScore || 0),

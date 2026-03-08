@@ -1375,17 +1375,19 @@ function App() {
   }, [projects, selectedSlugs])
 
   const visibleProjects = useMemo(() => {
+    const baseProjects = debugMode ? featuredProjects : projects
+
     if (!shareToken || !shareAccess || shareAccess.scope.allowAllProjects) {
-      return featuredProjects
+      return baseProjects
     }
 
-    const filtered = featuredProjects.filter((project) => canShareAccessProject(project.slug, shareAccess))
+    const filtered = baseProjects.filter((project) => canShareAccessProject(project.slug, shareAccess))
     if (filtered.length) {
       return filtered
     }
 
     return projects.filter((project) => canShareAccessProject(project.slug, shareAccess))
-  }, [featuredProjects, projects, shareAccess, shareToken])
+  }, [debugMode, featuredProjects, projects, shareAccess, shareToken])
 
   const selectedProject = useMemo(() => {
     if (!selectedProjectSlug) {
@@ -2004,7 +2006,6 @@ function App() {
                 canUseFreeUnlock={canUseFreeUnlock}
                 unlockBusy={unlockActionDisabled}
                 statusMessage={unlockStatusMessage}
-                shareToken={shareToken}
                 onBack={() => setSelectedProjectSlug(null)}
                 onUnlockSingle={(slug) => void handleUnlockSingle(slug)}
                 onUnlockFree={(slug) => void handleUnlockFree(slug)}
@@ -2019,13 +2020,10 @@ function App() {
                   project={project}
                   unlocked={isProjectUnlocked(project.slug)}
                   focused={unlockTargetSlug === project.slug}
-                  canUseFreeUnlock={canUseFreeUnlock}
-                  unlockBusy={unlockActionDisabled}
-                  shareToken={shareToken}
-                  onSelectProject={(slug) => setSelectedProjectSlug(slug)}
+                    unlockBusy={unlockActionDisabled}
+                    onSelectProject={(slug) => setSelectedProjectSlug(slug)}
                   onUnlockSingle={(slug) => void handleUnlockSingle(slug)}
-                  onUnlockFree={(slug) => void handleUnlockFree(slug)}
-                />
+                  />
               ))}
             </div>
           )}

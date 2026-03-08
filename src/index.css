@@ -532,191 +532,146 @@ p {
 
 .portfolio-gallery {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
-  margin-top: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 28px 22px;
+  align-items: start;
 }
 
 .gallery-card {
+  position: relative;
+  border: 0;
+  background: transparent;
+  min-height: 0;
   display: flex;
   flex-direction: column;
-  min-height: 100%;
-  border: 1px solid var(--c-ink-faint);
-  background: #fff;
-  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+  gap: 10px;
 }
 
 .gallery-card:hover {
-  border-color: var(--c-ink);
-  box-shadow: 0 10px 22px rgb(0 0 0 / 6%);
   transform: translateY(-2px);
 }
 
-.gallery-card-focused {
-  border-color: #222;
-  box-shadow: 0 0 0 1px rgb(34 34 34 / 35%);
-}
-
-.gallery-card-locked {
-  border-color: #dbdbdb;
-  background: #fcfcfc;
-}
-
-.gallery-card-locked:hover {
-  border-color: #cfcfcf;
-  box-shadow: 0 8px 18px rgb(0 0 0 / 5%);
-  transform: translateY(-1px);
+.gallery-card-focused .gallery-cover {
+  outline: 2px solid rgb(17 17 17 / 20%);
+  outline-offset: 4px;
 }
 
 .gallery-cover {
   position: relative;
   display: block;
-  aspect-ratio: 21 / 9;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
-  border-bottom: 1px solid var(--c-ink-faint);
-  background: linear-gradient(180deg, #fcfcfc 0%, #f3f3f3 100%);
+  border-radius: 18px;
+  border: 1px solid rgb(0 0 0 / 6%);
+  background: #f3f0eb;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 40%);
 }
 
-.gallery-cover-grid {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(to right, rgb(0 0 0 / 8%) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(0 0 0 / 8%) 1px, transparent 1px);
-  background-size: 20px 20px;
-  opacity: 0.35;
+.gallery-cover-button {
+  width: 100%;
+  border: 0;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
 }
 
-.gallery-cover-initials {
-  position: absolute;
-  left: 16px;
-  bottom: 12px;
-  font-family: var(--font-main);
-  font-size: 1.5rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+.gallery-cover-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
-.gallery-cover-subdomain {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  padding: 3px 6px;
-  border: 1px solid #d9d9d9;
-  background: rgb(255 255 255 / 82%);
-  color: #555;
-  font-size: 0.62rem;
+.gallery-cover-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 1.25rem;
+  color: #7a746d;
+  background: linear-gradient(180deg, #fbfaf7 0%, #efebe5 100%);
 }
 
 .gallery-lock-badge {
   position: absolute;
   left: 12px;
   top: 12px;
-  border: 1px solid rgb(0 0 0 / 15%);
-  background: rgb(255 255 255 / 78%);
+  border: 1px solid rgb(0 0 0 / 10%);
+  background: rgb(255 255 255 / 86%);
   color: rgb(17 17 17 / 72%);
-  font-size: 0.61rem;
-  padding: 2px 6px;
+  font-size: 0.6rem;
+  padding: 2px 7px;
+  border-radius: 999px;
 }
 
-.gallery-card-locked .gallery-cover-initials {
-  opacity: 0.65;
+.gallery-hover-detail {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 18px 14px 14px;
+  background: linear-gradient(180deg, rgb(20 20 20 / 0%) 0%, rgb(20 20 20 / 82%) 100%);
+  color: #fff;
+  opacity: 0;
+  transition: opacity 0.2s ease;
 }
 
-.gallery-card-body {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: 6px;
-  padding: 10px 12px 12px;
-}
-
-.gallery-meta {
-  margin-bottom: 0;
-  gap: 8px;
-  font-size: 0.64rem;
-}
-
-.gallery-title {
-  width: fit-content;
-  margin-bottom: 0;
-  font-size: 0.98rem;
-  line-height: 1.3;
-}
-
-.gallery-title:hover {
-  background: transparent;
-}
-
-.gallery-title-locked {
-  border-bottom: 0;
-  color: #252525;
-  cursor: default;
-}
-
-.gallery-scope {
-  margin-bottom: 0;
+.gallery-hover-detail p {
+  margin: 0;
   font-size: 0.74rem;
-}
-
-.gallery-summary {
-  margin-bottom: 0;
-  overflow: hidden;
-  color: #454545;
-  font-size: 0.8rem;
+  line-height: 1.45;
   text-align: left;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 4;
+  overflow: hidden;
 }
 
-.gallery-tags {
+.gallery-cover:hover .gallery-hover-detail,
+.gallery-cover:focus-within .gallery-hover-detail,
+.gallery-cover-button:hover .gallery-hover-detail,
+.gallery-cover-button:focus-visible .gallery-hover-detail {
+  opacity: 1;
+}
+
+.gallery-card-body-simple {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 6px;
+  padding: 0 4px;
 }
 
-.gallery-tag {
-  border: 1px solid #ddd;
-  background: #fafafa;
+.gallery-title {
+  width: 100%;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font-size: 0.98rem;
+  line-height: 1.22;
+  text-align: center;
+  cursor: pointer;
+}
+
+.gallery-title-button {
+  appearance: none;
+}
+
+.gallery-tagline {
+  margin: 0;
   color: #666;
-  font-size: 0.58rem;
-  padding: 1px 5px;
+  font-size: 0.76rem;
+  line-height: 1.35;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.gallery-card .paper-stack {
-  margin-bottom: 0;
-  color: #555;
-  font-size: 0.74rem;
-}
-
-.gallery-card .paper-links {
-  margin-top: auto;
-  padding-top: 6px;
-}
-
-.gallery-card .paper-links a {
-  margin-right: 8px;
-  margin-bottom: 6px;
-  display: inline-block;
-}
-
-.gallery-lock-actions {
-  margin-top: auto;
-  padding-top: 6px;
-}
-
-.gallery-lock-hint {
-  margin-bottom: 8px;
-  color: #666;
-  font-size: 0.72rem;
-  text-align: left;
-}
-
-.gallery-lock-buttons {
+.gallery-card-actions {
   display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 4px;
 }
 
 .gallery-unlock-btn {
@@ -725,22 +680,19 @@ p {
   color: #222;
   font-family: var(--font-mono);
   font-size: 0.68rem;
-  padding: 6px 8px;
+  padding: 6px 10px;
+  border-radius: 999px;
   cursor: pointer;
 }
 
 .gallery-unlock-btn:hover {
   border-color: var(--c-ink);
+  background: #111;
+  color: #fff;
 }
 
-.gallery-unlock-btn.ghost {
-  background: #fafafa;
-  color: #555;
-}
-
-.gallery-unlock-btn:disabled,
-.gallery-unlock-btn.ghost:disabled {
-  opacity: 0.52;
+.gallery-unlock-btn:disabled {
+  opacity: 0.55;
   cursor: not-allowed;
 }
 

@@ -34,6 +34,8 @@ export type PortfolioProject = {
   name: string
   slug: string
   summary: string
+  tagline: string
+  thumbnailUrl: string | null
   techStack: string[]
   tags: string[]
   activityScore: number
