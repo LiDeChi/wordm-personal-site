@@ -68,7 +68,6 @@ type UnlockStorageMode = 'remote' | 'local' | 'loading' | 'idle'
 type DeployTarget = 'local' | 'remote'
 
 const snapshot = projectsSnapshotRaw as ProjectsSnapshot
-const portfolioSectionIds = ['projects', 'contact']
 const EMPTY_UNLOCK_STATE: UserUnlockState = {
   grants: [],
   freeOfferTotal: null,
@@ -492,7 +491,6 @@ function App() {
 
   const [rootView, setRootView] = useState<RootView>(initialRootView)
   const [projects, setProjects] = useState<PortfolioProject[]>(snapshot.projects)
-  const [activeSection, setActiveSection] = useState('projects')
   const [centerApi, setCenterApi] = useState(initialApi)
   const [sourceType, setSourceType] = useState<'snapshot' | 'live'>('snapshot')
   const [loadState, setLoadState] = useState<'idle' | 'loading' | 'error'>('idle')
@@ -649,19 +647,10 @@ function App() {
   }, [authConfig.supabaseUrl, shareToken])
 
   useEffect(() => {
-    if (rootView === 'deploy') {
-      setActiveSection('deploy')
-      return
+    if (rootView !== 'portfolio') {
+      setSelectedProjectSlug(null)
     }
-
-    if (rootView === 'portfolio') {
-      setActiveSection(selectedProjectSlug ? 'project-detail' : 'projects')
-      return
-    }
-
-    setSelectedProjectSlug(null)
-  }, [rootView, selectedProjectSlug])
-
+  }, [rootView])
 
   useEffect(() => {
     function syncScrollTopVisibility() {
@@ -673,36 +662,6 @@ function App() {
     return () => window.removeEventListener('scroll', syncScrollTopVisibility)
   }, [])
 
-  useEffect(() => {
-    if (rootView !== 'portfolio') {
-      return
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)
-
-        if (visible[0]) {
-          setActiveSection(visible[0].target.id)
-        }
-      },
-      {
-        rootMargin: '-25% 0px -60% 0px',
-        threshold: [0.2, 0.5, 0.8],
-      },
-    )
-
-    portfolioSectionIds.forEach((id) => {
-      const node = document.getElementById(id)
-      if (node) {
-        observer.observe(node)
-      }
-    })
-
-    return () => observer.disconnect()
-  }, [rootView])
 
 
   useEffect(() => {
@@ -1841,20 +1800,7 @@ function App() {
       <div className="page-container">
         <Sidebar
           lang={lang}
-          activeKey={activeSection}
-          lastUpdated={lastUpdated}
-          onNavigate={(id) => {
-            setActiveSection(id)
-            const target = document.getElementById(id)
-            if (target) {
-              target.scrollIntoView({ behavior: 'smooth', block: 'start' })
-            }
-          }}
           onLangChange={setLang}
-          tocItems={[
-            { id: 'deploy', label: copy.tocDeploy },
-            { id: 'contact', label: copy.tocContact },
-          ]}
           authPanel={authPanelProps}
         />
 
@@ -1969,19 +1915,7 @@ function App() {
     <div className="page-container">
       <Sidebar
         lang={lang}
-        activeKey={activeSection}
-        lastUpdated={lastUpdated}
-        onNavigate={(id) => {
-          setActiveSection(id)
-          if (id === 'projects' && selectedProjectSlug) {
-            setSelectedProjectSlug(null)
-          }
-        }}
         onLangChange={setLang}
-        tocItems={selectedProject ? [{ id: 'project-detail', label: selectedProject.name }, { id: 'contact', label: copy.tocContact }] : [
-          { id: 'projects', label: copy.tocProjects },
-          { id: 'contact', label: copy.tocContact },
-        ]}
         authPanel={authPanelProps}
       />
 
