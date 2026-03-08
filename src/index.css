@@ -1879,3 +1879,25 @@ footer {
   margin-top: 10px;
   margin-bottom: 8px;
 }
+
+
+.admin-link-btn {
+  border: 1px solid var(--c-ink-faint);
+  background: #fff;
+  color: #111;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  padding: 3px 8px;
+  cursor: pointer;
+}
+
+.admin-link-btn:hover {
+  border-color: var(--c-ink);
+  background: #111;
+  color: #fff;
+}
+
+.admin-link-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

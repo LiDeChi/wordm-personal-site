@@ -28,6 +28,9 @@ type AdminPageProps = {
   onShareExpiresInDaysChange: (value: string) => void
   onToggleShareFlag: (key: ShareFlagKey) => void
   onCreateShareLink: () => void
+  onCreateFullExperienceShareLink: () => void
+  onCreateProjectDetailShareLink: (projectSlug: string) => void
+  onCreateProjectSubdomainShareLink: (projectSlug: string) => void
   onCopyLastShareLink: () => void
   onRevokeShareLink: (shareLinkId: string) => void
 }
@@ -63,6 +66,9 @@ const COPY = {
     shareDays: '有效天数',
     shareCurrentSelection: '仅分享当前勾选项目',
     shareCreate: '生成分享链接',
+    shareTemplateFull: '3 天完整体验',
+    shareProjectDetail: '详情分享',
+    shareProjectSubdomain: '子域分享',
     shareCopyLatest: '复制最新链接',
     shareNoLatest: '还没有新生成的链接',
     shareListTitle: '已生成链接',
@@ -112,6 +118,9 @@ const COPY = {
     shareDays: 'Valid days',
     shareCurrentSelection: 'Share only current selected projects',
     shareCreate: 'Create share link',
+    shareTemplateFull: '3-day full access',
+    shareProjectDetail: 'Detail share',
+    shareProjectSubdomain: 'Subdomain share',
     shareCopyLatest: 'Copy latest link',
     shareNoLatest: 'No newly created link yet',
     shareListTitle: 'Issued links',
@@ -206,6 +215,9 @@ export function AdminPage({
   onShareExpiresInDaysChange,
   onToggleShareFlag,
   onCreateShareLink,
+  onCreateFullExperienceShareLink,
+  onCreateProjectDetailShareLink,
+  onCreateProjectSubdomainShareLink,
   onCopyLastShareLink,
   onRevokeShareLink,
 }: AdminPageProps) {
@@ -316,7 +328,10 @@ export function AdminPage({
 
               <div className="debug-actions admin-share-actions">
                 <button type="button" onClick={onCreateShareLink} disabled={shareBusy}>
-                  {shareBusy ? copy.shareCreate : copy.shareCreate}
+                  {copy.shareCreate}
+                </button>
+                <button type="button" onClick={onCreateFullExperienceShareLink} disabled={shareBusy}>
+                  {copy.shareTemplateFull}
                 </button>
                 <button type="button" onClick={onCopyLastShareLink} disabled={!lastCreatedShareUrl}>
                   {copy.shareCopyLatest}
@@ -367,6 +382,12 @@ export function AdminPage({
                     <div className="paper-links">
                       <a href={detailUrl} target="_blank" rel="noreferrer">{copy.detail}</a>
                       <a href={subdomainUrl} target="_blank" rel="noreferrer">{copy.subdomain}</a>
+                      <button type="button" className="admin-link-btn" onClick={() => onCreateProjectDetailShareLink(project.slug)} disabled={shareBusy}>
+                        {copy.shareProjectDetail}
+                      </button>
+                      <button type="button" className="admin-link-btn" onClick={() => onCreateProjectSubdomainShareLink(project.slug)} disabled={shareBusy}>
+                        {copy.shareProjectSubdomain}
+                      </button>
                       {project.productionUrl ? <a href={project.productionUrl} target="_blank" rel="noreferrer">{copy.production}</a> : null}
                       {project.sourceUrl ? <a href={project.sourceUrl} target="_blank" rel="noreferrer">{copy.source}</a> : null}
                     </div>

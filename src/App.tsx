@@ -1146,17 +1146,21 @@ function App() {
     return copy.shareInvalid
   }
 
-  async function handleCreateShareLink() {
+  async function createManagedShareLink(options: {
+    label: string
+    expiresInDays: number
+    scope: ShareScope
+    entryUrlBuilder?: ((token: string) => string) | null
+    copyAfterCreate?: boolean
+  }) {
     if (!authUser) {
       setShareManageStatusMessage(copy.shareEntitlementRequired)
-      return
+      return null
     }
 
-    const normalizedDays = Number(shareExpiresInDays.trim() || '3')
-    const selectedProjectSlugs = shareScope.allowAllProjects ? [] : selectedSlugs
     const scope = {
-      ...shareScope,
-      allowedProjectSlugs: selectedProjectSlugs,
+      ...options.scope,
+      allowedProjectSlugs: options.scope.allowAllProjects ? [] : options.scope.allowedProjectSlugs,
     }
 
     if (
@@ -1168,39 +1172,136 @@ function App() {
       scope.allowedProjectSlugs.length === 0
     ) {
       setShareManageStatusMessage(copy.shareNeedProjects)
-      return
+      return null
     }
 
     setShareBusy(true)
     try {
       const created = await createShareLink(authConfig, {
-        label: shareLabel,
-        expiresInDays: normalizedDays,
+        label: options.label,
+        expiresInDays: options.expiresInDays,
         scope,
       })
-      const shareUrl = buildShareEntryUrl(created.token, lang, created.scope, projects)
+      const fallbackUrl = buildShareEntryUrl(created.token, lang, created.scope, projects)
+      const shareUrl = options.entryUrlBuilder ? options.entryUrlBuilder(created.token) : fallbackUrl
       setLastCreatedShareId(created.id)
       setLastCreatedShareUrl(shareUrl)
-      setShareManageStatusMessage(copy.shareCreateSuccess)
       setShareLinks(await listOwnShareLinks(authConfig))
+
+      if (options.copyAfterCreate) {
+        const copied = await copyTextToClipboard(shareUrl)
+        setShareManageStatusMessage(copied ? copy.shareCopySuccess : copy.shareCopyFailed)
+      } else {
+        setShareManageStatusMessage(copy.shareCreateSuccess)
+      }
+
+      return created
     } catch (error) {
       const code = unlockErrorCode(error)
       if (code.includes('SHARE_SCOPE_EMPTY')) {
         setShareManageStatusMessage(copy.shareNeedProjects)
-        return
+        return null
       }
       if (code.includes('SHARE_RESUME_RESTRICTED')) {
         setShareManageStatusMessage(copy.shareResumeRestricted)
-        return
+        return null
       }
       if (code.includes('SHARE_ENTITLEMENT_REQUIRED') || code.includes('UNAUTHENTICATED')) {
         setShareManageStatusMessage(copy.shareEntitlementRequired)
-        return
+        return null
       }
       setShareManageStatusMessage(copy.shareCreateFailed)
+      return null
     } finally {
       setShareBusy(false)
     }
+  }
+
+  async function handleCreateShareLink() {
+    const normalizedDays = Number(shareExpiresInDays.trim() || '3')
+    const selectedProjectSlugs = shareScope.allowAllProjects ? [] : selectedSlugs
+
+    await createManagedShareLink({
+      label: shareLabel,
+      expiresInDays: normalizedDays,
+      scope: {
+        ...shareScope,
+        allowedProjectSlugs: selectedProjectSlugs,
+      },
+    })
+  }
+
+  async function handleCreateFullExperienceShareLink() {
+    await createManagedShareLink({
+      label: shareLabel || (lang === 'zh' ? '3 天完整体验' : '3-day full experience'),
+      expiresInDays: 3,
+      scope: {
+        allowPortfolio: true,
+        allowBlog: true,
+        allowDeploy: true,
+        allowResume: authRole === 'admin' || authRole === 'tester',
+        allowAllProjects: true,
+        allowedProjectSlugs: [],
+      },
+      copyAfterCreate: true,
+    })
+  }
+
+  async function handleCreateProjectDetailShareLink(projectSlug: string) {
+    const normalizedSlug = normalizeSlug(projectSlug)
+    const project = normalizedSlug ? projects.find((item) => item.slug === normalizedSlug) ?? null : null
+    if (!normalizedSlug || !project) {
+      return
+    }
+
+    await createManagedShareLink({
+      label: `${project.name} · ${lang === 'zh' ? '详情分享' : 'detail share'}`,
+      expiresInDays: 3,
+      scope: {
+        allowPortfolio: true,
+        allowBlog: false,
+        allowDeploy: false,
+        allowResume: false,
+        allowAllProjects: false,
+        allowedProjectSlugs: [normalizedSlug],
+      },
+      entryUrlBuilder: (token) =>
+        withSiteParams(`https://wordm.us?view=portfolio&project=${encodeURIComponent(normalizedSlug)}`, {
+          lang,
+          shareToken: token,
+        }),
+      copyAfterCreate: true,
+    })
+  }
+
+  async function handleCreateProjectSubdomainShareLink(projectSlug: string) {
+    const normalizedSlug = normalizeSlug(projectSlug)
+    const project = normalizedSlug ? projects.find((item) => item.slug === normalizedSlug) ?? null : null
+    if (!normalizedSlug || !project) {
+      return
+    }
+
+    const created = await createManagedShareLink({
+      label: `${project.name} · ${lang === 'zh' ? '子域分享' : 'subdomain share'}`,
+      expiresInDays: 3,
+      scope: {
+        allowPortfolio: false,
+        allowBlog: false,
+        allowDeploy: false,
+        allowResume: false,
+        allowAllProjects: false,
+        allowedProjectSlugs: [normalizedSlug],
+      },
+    })
+
+    if (!created) {
+      return
+    }
+
+    const shareUrl = withSiteParams(project.subdomainUrl, { lang, shareToken: created.token })
+    setLastCreatedShareUrl(shareUrl)
+    const copied = await copyTextToClipboard(shareUrl)
+    setShareManageStatusMessage(copied ? copy.shareCopySuccess : copy.shareCopyFailed)
   }
 
   async function handleCopyLastShareLink() {
@@ -1728,6 +1829,9 @@ function App() {
           }))
         }}
         onCreateShareLink={() => void handleCreateShareLink()}
+        onCreateFullExperienceShareLink={() => void handleCreateFullExperienceShareLink()}
+        onCreateProjectDetailShareLink={(slug) => void handleCreateProjectDetailShareLink(slug)}
+        onCreateProjectSubdomainShareLink={(slug) => void handleCreateProjectSubdomainShareLink(slug)}
         onCopyLastShareLink={() => void handleCopyLastShareLink()}
         onRevokeShareLink={(shareLinkId) => void handleRevokeShareLink(shareLinkId)}
       />
