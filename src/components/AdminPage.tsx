@@ -49,7 +49,6 @@ const COPY = {
     protectedValue: 'HTTP Basic Auth',
     quickLinks: '快捷入口',
     rootPortfolio: '根域作品集',
-    rootBlog: '根域博客',
     resume: '简历子域',
     debug: '根域 Debug',
     projects: '项目管理',
@@ -84,7 +83,6 @@ const COPY = {
     shareEmpty: '暂无分享链接',
     shareRevoke: '撤销',
     shareScopePortfolio: '作品集',
-    shareScopeBlog: '博客',
     shareScopeDeploy: '部署页',
     shareScopeResume: '简历页',
     shareScopeAllProjects: '全部项目子域',
@@ -107,7 +105,6 @@ const COPY = {
     protectedValue: 'HTTP Basic Auth',
     quickLinks: 'Quick links',
     rootPortfolio: 'Root portfolio',
-    rootBlog: 'Root blog',
     resume: 'Resume subdomain',
     debug: 'Root debug',
     projects: 'Project management',
@@ -142,7 +139,6 @@ const COPY = {
     shareEmpty: 'No share links yet',
     shareRevoke: 'Revoke',
     shareScopePortfolio: 'Portfolio',
-    shareScopeBlog: 'Blog',
     shareScopeDeploy: 'Deploy',
     shareScopeResume: 'Resume',
     shareScopeAllProjects: 'All project subdomains',
@@ -180,9 +176,6 @@ function summarizeScope(copy: (typeof COPY)[Lang], scope: ShareScope, selectedCo
   const parts = []
   if (scope.allowPortfolio) {
     parts.push(copy.shareScopePortfolio)
-  }
-  if (scope.allowBlog) {
-    parts.push(copy.shareScopeBlog)
   }
   if (scope.allowDeploy) {
     parts.push(copy.shareScopeDeploy)
@@ -243,7 +236,6 @@ export function AdminPage({
   const [projectSearch, setProjectSearch] = useState('')
   const detailedCount = projects.filter((project) => project.detail).length
   const rootPortfolioUrl = withSiteParams('https://wordm.us', { lang })
-  const rootBlogUrl = withSiteParams('https://wordm.us?view=blog', { lang })
   const debugUrl = withSiteParams('https://wordm.us?debug=1', { lang })
   const resumeUrl = withSiteParams('https://resume.wordm.us', { lang })
   const normalizedShareSearch = shareSearch.trim().toLowerCase()
@@ -300,7 +292,6 @@ export function AdminPage({
           <h2>{copy.quickLinks}</h2>
           <div className="paper-links admin-quick-links">
             <a href={rootPortfolioUrl} target="_blank" rel="noreferrer">{copy.rootPortfolio}</a>
-            <a href={rootBlogUrl} target="_blank" rel="noreferrer">{copy.rootBlog}</a>
             <a href={resumeUrl} target="_blank" rel="noreferrer">{copy.resume}</a>
             <a href={debugUrl} target="_blank" rel="noreferrer">{copy.debug}</a>
           </div>
@@ -331,10 +322,6 @@ export function AdminPage({
                 <label className={`debug-share-toggle${shareScope.allowPortfolio ? ' checked' : ''}`}>
                   <input type="checkbox" checked={shareScope.allowPortfolio} onChange={() => onToggleShareFlag('allowPortfolio')} />
                   <span>{copy.shareScopePortfolio}</span>
-                </label>
-                <label className={`debug-share-toggle${shareScope.allowBlog ? ' checked' : ''}`}>
-                  <input type="checkbox" checked={shareScope.allowBlog} onChange={() => onToggleShareFlag('allowBlog')} />
-                  <span>{copy.shareScopeBlog}</span>
                 </label>
                 <label className={`debug-share-toggle${shareScope.allowDeploy ? ' checked' : ''}`}>
                   <input type="checkbox" checked={shareScope.allowDeploy} onChange={() => onToggleShareFlag('allowDeploy')} />

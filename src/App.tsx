@@ -9,7 +9,6 @@ import { ResumePage } from './components/ResumePage'
 import { Sidebar } from './components/Sidebar'
 import { SubdomainProjectLocked } from './components/SubdomainProjectLocked'
 import { SubdomainProjectView } from './components/SubdomainProjectView'
-import { BLOG_ARTICLES } from './data/blogArticles'
 import { type Lang, resolveInitialLang } from './i18n/lang'
 import projectsSnapshotRaw from './data/projects.snapshot.json'
 import { withSiteParams } from './lib/lang-url'
@@ -90,13 +89,7 @@ const APP_COPY = {
     portfolioTitle: '作品集',
     contactTitle: '联系',
     copyright: '© 2026 Jian Yongjie. All rights reserved.',
-    blogMode: 'wordm.us 博客模式',
     portfolioMode: 'wordm.us 作品集模式',
-    nextLabel: 'NEXT',
-    nextPrefix: '跳到下一篇',
-    nextTitlePrefix: '下一篇',
-    nextAriaPrefix: '跳转到下一篇',
-    noNext: '已经是最后一篇',
     sessionRestoreFailed: '会话恢复失败',
     pleaseRelogin: '请重新登录。',
     loginUnavailable: '未配置 Supabase，无法登录。',
@@ -203,13 +196,7 @@ const APP_COPY = {
     portfolioTitle: 'Portfolio Gallery',
     contactTitle: 'Contact',
     copyright: '© 2026 Jian Yongjie. All rights reserved.',
-    blogMode: 'Blog mode on wordm.us',
     portfolioMode: 'Portfolio mode on wordm.us',
-    nextLabel: 'NEXT',
-    nextPrefix: 'Jump to next',
-    nextTitlePrefix: 'Next',
-    nextAriaPrefix: 'Jump to next article',
-    noNext: 'This is the last article',
     sessionRestoreFailed: 'Session restore failed',
     pleaseRelogin: 'Please log in again.',
     loginUnavailable: 'Supabase is not configured. Login is unavailable.',
@@ -314,10 +301,6 @@ function defaultSelection(projects: PortfolioProject[], preferred: string[]): st
 }
 
 function toRootView(raw: string | null): RootView {
-  if (raw === 'blog') {
-    return 'blog'
-  }
-
   if (raw === 'deploy') {
     return 'deploy'
   }
@@ -509,7 +492,6 @@ function App() {
   const [rootView, setRootView] = useState<RootView>(initialRootView)
   const [projects, setProjects] = useState<PortfolioProject[]>(snapshot.projects)
   const [activeSection, setActiveSection] = useState('projects')
-  const [activeArticleId, setActiveArticleId] = useState(BLOG_ARTICLES[0]?.id || '')
   const [centerApi, setCenterApi] = useState(initialApi)
   const [sourceType, setSourceType] = useState<'snapshot' | 'live'>('snapshot')
   const [loadState, setLoadState] = useState<'idle' | 'loading' | 'error'>('idle')
@@ -721,36 +703,6 @@ function App() {
     return () => observer.disconnect()
   }, [rootView])
 
-  useEffect(() => {
-    if (rootView !== 'blog') {
-      return
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)
-
-        if (visible[0]) {
-          setActiveArticleId(visible[0].target.id)
-        }
-      },
-      {
-        rootMargin: '-30% 0px -55% 0px',
-        threshold: [0.2, 0.45, 0.7],
-      },
-    )
-
-    BLOG_ARTICLES.forEach((article) => {
-      const node = document.getElementById(article.id)
-      if (node) {
-        observer.observe(node)
-      }
-    })
-
-    return () => observer.disconnect()
-  }, [rootView])
 
   useEffect(() => {
     if (!debugMode || rootView !== 'portfolio') {
@@ -1237,7 +1189,7 @@ function App() {
       expiresInDays: 3,
       scope: {
         allowPortfolio: true,
-        allowBlog: true,
+        allowBlog: false,
         allowDeploy: true,
         allowResume: authRole === 'admin' || authRole === 'tester',
         allowAllProjects: true,
@@ -1253,7 +1205,7 @@ function App() {
       expiresInDays: 7,
       scope: {
         allowPortfolio: true,
-        allowBlog: true,
+        allowBlog: false,
         allowDeploy: true,
         allowResume: authRole === 'admin' || authRole === 'tester',
         allowAllProjects: true,
@@ -1269,7 +1221,7 @@ function App() {
       expiresInDays: 30,
       scope: {
         allowPortfolio: true,
-        allowBlog: true,
+        allowBlog: false,
         allowDeploy: true,
         allowResume: authRole === 'admin' || authRole === 'tester',
         allowAllProjects: true,
@@ -1476,12 +1428,6 @@ function App() {
   const isResumeView = forcedPage === 'resume' || hostname === 'resume.wordm.us' || hostname === 'cv.wordm.us'
   const isAdminView = forcedPage === 'admin' || hostname === 'admin.wordm.us'
 
-  const activeArticleIndex = Math.max(
-    0,
-    BLOG_ARTICLES.findIndex((article) => article.id === activeArticleId),
-  )
-  const activeArticle = BLOG_ARTICLES[activeArticleIndex] || BLOG_ARTICLES[0]
-  const nextArticle = BLOG_ARTICLES[activeArticleIndex + 1] || null
   const authRole: AuthRole = authUser?.role ?? 'guest'
   const canManageShares = authRole === 'admin' || authRole === 'tester'
   const shareEntryUrl = shareToken && shareAccess ? buildShareEntryUrl(shareToken, lang, shareAccess.scope, projects) : null
@@ -1537,12 +1483,6 @@ function App() {
     shareToken,
     shareResolveStatus,
     allowedByShare: canShareAccessView('portfolio', shareAccess),
-    bypass: Boolean(authUser),
-  })
-  const blogShareDeniedStatus = resolveShareDeniedStatus({
-    shareToken,
-    shareResolveStatus,
-    allowedByShare: canShareAccessView('blog', shareAccess),
     bypass: Boolean(authUser),
   })
   const deployShareDeniedStatus = resolveShareDeniedStatus({
@@ -1791,13 +1731,6 @@ function App() {
     target.scrollIntoView({ behavior: 'smooth', block: 'center' })
   }, [rootView, unlockTargetSlug])
 
-  function jumpToArticle(id: string) {
-    setActiveArticleId(id)
-    const target = document.getElementById(id)
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }
-  }
 
   if (subdomainProject) {
     if (subdomainShareDeniedStatus) {
@@ -1881,83 +1814,6 @@ function App() {
       return <ResumeAccessDenied lang={lang} role={authRole} shareToken={shareToken} authPanel={authPanelProps} />
     }
     return <ResumePage lang={lang} lastUpdated={lastUpdated} shareToken={shareToken} authPanel={authPanelProps} />
-  }
-
-  if (rootView === 'blog') {
-    if (blogShareDeniedStatus) {
-      return <ShareAccessDenied lang={lang} status={blogShareDeniedStatus} authPanel={authPanelProps} fallbackSharedUrl={shareEntryUrl} />
-    }
-    return (
-      <div className="page-container blog-page">
-        <Sidebar
-          lang={lang}
-          mode="blog"
-          activeKey={activeArticle.id}
-          lastUpdated={lastUpdated}
-          onNavigate={jumpToArticle}
-          onLangChange={setLang}
-          onModeChange={setRootView}
-          tocItems={BLOG_ARTICLES.map((article) => ({
-            id: article.id,
-            label: article.title[lang],
-            meta: article.date,
-          }))}
-          authPanel={authPanelProps}
-        />
-
-        <main className="main-content blog-main">
-          {BLOG_ARTICLES.map((article) => (
-            <article key={article.id} id={article.id} className="blog-article">
-              <div className="paper-meta">
-                <span>{article.date}</span>
-                <span>{article.category[lang]}</span>
-              </div>
-              <h2 className="blog-article-title">{article.title[lang]}</h2>
-              <p className="meta">{article.summary[lang]}</p>
-              {article.paragraphs.map((paragraph, index) => (
-                <p key={`${article.id}-${index}`}>{paragraph[lang]}</p>
-              ))}
-            </article>
-          ))}
-
-          <footer id="contact">
-            <div className="footer-contact-inline">
-              {copy.contactTitle}: 简永杰 / Jian Yongjie · {copy.profileLine1} ·{' '}
-              <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
-            </div>
-            <div className="footer-meta-row">
-              <div>{copy.copyright}</div>
-              <div>{copy.blogMode}</div>
-            </div>
-          </footer>
-        </main>
-        <div className="blog-next-fixed-wrap" aria-live="polite">
-          <button
-            type="button"
-            className="blog-next-fixed-btn"
-            onClick={() => {
-              if (!nextArticle) {
-                return
-              }
-              jumpToArticle(nextArticle.id)
-            }}
-            disabled={!nextArticle}
-            title={nextArticle ? `${copy.nextTitlePrefix}: ${nextArticle.title[lang]}` : copy.noNext}
-            aria-label={nextArticle ? `${copy.nextAriaPrefix}: ${nextArticle.title[lang]}` : copy.noNext}
-          >
-            <span className="mono blog-next-fixed-label">{copy.nextLabel}</span>
-            <span className="blog-next-fixed-text">
-              {nextArticle ? `${copy.nextPrefix}: ${nextArticle.title[lang]}` : copy.noNext}
-            </span>
-          </button>
-        </div>
-        {showScrollTop ? (
-          <button type="button" className="scroll-top-btn" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-            TOP
-          </button>
-        ) : null}
-      </div>
-    )
   }
 
   if (rootView === 'deploy') {

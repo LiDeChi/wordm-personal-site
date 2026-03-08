@@ -24,7 +24,6 @@ const SIDEBAR_COPY = {
     lastUpdated: '最近更新',
     langLabel: '语言',
     modeLabel: '页面',
-    blog: '博客',
     portfolio: '作品集',
     zhLabel: '中文',
     enLabel: 'EN',
@@ -33,7 +32,6 @@ const SIDEBAR_COPY = {
     lastUpdated: 'Last updated',
     langLabel: 'Language',
     modeLabel: 'View',
-    blog: 'Blog',
     portfolio: 'Portfolio',
     zhLabel: '中文',
     enLabel: 'EN',
@@ -59,7 +57,6 @@ export function Sidebar({ lang, mode, activeKey, lastUpdated, onNavigate, onLang
         <label className="sidebar-select-field">
           <span className="mono">{copy.modeLabel}</span>
           <select value={mode} onChange={(event) => onModeChange(event.target.value as 'blog' | 'portfolio')}>
-            <option value="blog">{copy.blog}</option>
             <option value="portfolio">{copy.portfolio}</option>
           </select>
         </label>
