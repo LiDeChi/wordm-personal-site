@@ -1,3 +1,4 @@
+import { useMemo, useState } from 'react'
 import { AuthPanel, type AuthPanelProps } from './AuthPanel'
 import type { PortfolioProject } from '../types'
 import type { Lang } from '../i18n/lang'
@@ -29,6 +30,8 @@ type AdminPageProps = {
   onToggleShareFlag: (key: ShareFlagKey) => void
   onCreateShareLink: () => void
   onCreateFullExperienceShareLink: () => void
+  onCreateSevenDayShareLink: () => void
+  onCreateThirtyDayShareLink: () => void
   onCreateProjectDetailShareLink: (projectSlug: string) => void
   onCreateProjectSubdomainShareLink: (projectSlug: string) => void
   onCopyLastShareLink: () => void
@@ -67,6 +70,12 @@ const COPY = {
     shareCurrentSelection: '仅分享当前勾选项目',
     shareCreate: '生成分享链接',
     shareTemplateFull: '3 天完整体验',
+    shareTemplateSeven: '7 天完整体验',
+    shareTemplateThirty: '30 天完整体验',
+    shareSearchLabel: '搜索分享链接',
+    shareSearchPlaceholder: '按备注或状态筛选',
+    projectSearchLabel: '搜索项目',
+    projectSearchPlaceholder: '按项目名或 slug 筛选',
     shareProjectDetail: '详情分享',
     shareProjectSubdomain: '子域分享',
     shareCopyLatest: '复制最新链接',
@@ -119,6 +128,12 @@ const COPY = {
     shareCurrentSelection: 'Share only current selected projects',
     shareCreate: 'Create share link',
     shareTemplateFull: '3-day full access',
+    shareTemplateSeven: '7-day full access',
+    shareTemplateThirty: '30-day full access',
+    shareSearchLabel: 'Search share links',
+    shareSearchPlaceholder: 'Filter by label or status',
+    projectSearchLabel: 'Search projects',
+    projectSearchPlaceholder: 'Filter by project name or slug',
     shareProjectDetail: 'Detail share',
     shareProjectSubdomain: 'Subdomain share',
     shareCopyLatest: 'Copy latest link',
@@ -216,17 +231,44 @@ export function AdminPage({
   onToggleShareFlag,
   onCreateShareLink,
   onCreateFullExperienceShareLink,
+  onCreateSevenDayShareLink,
+  onCreateThirtyDayShareLink,
   onCreateProjectDetailShareLink,
   onCreateProjectSubdomainShareLink,
   onCopyLastShareLink,
   onRevokeShareLink,
 }: AdminPageProps) {
   const copy = COPY[lang]
+  const [shareSearch, setShareSearch] = useState('')
+  const [projectSearch, setProjectSearch] = useState('')
   const detailedCount = projects.filter((project) => project.detail).length
   const rootPortfolioUrl = withSiteParams('https://wordm.us', { lang })
   const rootBlogUrl = withSiteParams('https://wordm.us?view=blog', { lang })
   const debugUrl = withSiteParams('https://wordm.us?debug=1', { lang })
   const resumeUrl = withSiteParams('https://resume.wordm.us', { lang })
+  const normalizedShareSearch = shareSearch.trim().toLowerCase()
+  const normalizedProjectSearch = projectSearch.trim().toLowerCase()
+  const filteredShareLinks = useMemo(() => {
+    if (!normalizedShareSearch) {
+      return shareLinks
+    }
+
+    return shareLinks.filter((shareLink) => {
+      const label = (shareLink.label || '').toLowerCase()
+      const status = shareLink.status.toLowerCase()
+      return label.includes(normalizedShareSearch) || status.includes(normalizedShareSearch) || shareLink.id.toLowerCase().includes(normalizedShareSearch)
+    })
+  }, [normalizedShareSearch, shareLinks])
+  const filteredProjects = useMemo(() => {
+    if (!normalizedProjectSearch) {
+      return projects
+    }
+
+    return projects.filter((project) => {
+      const haystack = `${project.name} ${project.slug}`.toLowerCase()
+      return haystack.includes(normalizedProjectSearch)
+    })
+  }, [normalizedProjectSearch, projects])
 
   return (
     <div className="subdomain-page admin-page-shell">
@@ -314,7 +356,7 @@ export function AdminPage({
               </div>
 
               <div className="debug-grid admin-project-picker">
-                {projects.map((project) => {
+                {filteredProjects.map((project) => {
                   const checked = selectedSlugs.includes(project.slug)
                   return (
                     <label key={project.id} className={`debug-item${checked ? ' checked' : ''}`}>
@@ -333,9 +375,26 @@ export function AdminPage({
                 <button type="button" onClick={onCreateFullExperienceShareLink} disabled={shareBusy}>
                   {copy.shareTemplateFull}
                 </button>
+                <button type="button" onClick={onCreateSevenDayShareLink} disabled={shareBusy}>
+                  {copy.shareTemplateSeven}
+                </button>
+                <button type="button" onClick={onCreateThirtyDayShareLink} disabled={shareBusy}>
+                  {copy.shareTemplateThirty}
+                </button>
                 <button type="button" onClick={onCopyLastShareLink} disabled={!lastCreatedShareUrl}>
                   {copy.shareCopyLatest}
                 </button>
+              </div>
+
+              <div className="admin-filter-grid">
+                <label className="debug-share-field">
+                  <span>{copy.shareSearchLabel}</span>
+                  <input value={shareSearch} onChange={(event) => setShareSearch(event.target.value)} placeholder={copy.shareSearchPlaceholder} />
+                </label>
+                <label className="debug-share-field">
+                  <span>{copy.projectSearchLabel}</span>
+                  <input value={projectSearch} onChange={(event) => setProjectSearch(event.target.value)} placeholder={copy.projectSearchPlaceholder} />
+                </label>
               </div>
 
               {lastCreatedShareUrl ? <p className="debug-share-url mono">{lastCreatedShareUrl}</p> : null}
@@ -343,8 +402,8 @@ export function AdminPage({
 
               <div className="debug-share-list">
                 <h3>{copy.shareListTitle}</h3>
-                {shareLinks.length === 0 ? <p className="debug-share-empty">{copy.shareEmpty}</p> : null}
-                {shareLinks.map((shareLink) => (
+                {filteredShareLinks.length === 0 ? <p className="debug-share-empty">{copy.shareEmpty}</p> : null}
+                {filteredShareLinks.map((shareLink) => (
                   <article key={shareLink.id} className="debug-share-card">
                     <div className="debug-share-card-head">
                       <div>
@@ -369,7 +428,7 @@ export function AdminPage({
         <section className="project-detail-section">
           <h2>{copy.projects}</h2>
           <div className="admin-project-list">
-            {projects.map((project) => {
+            {filteredProjects.map((project) => {
               const detailUrl = withSiteParams(`https://wordm.us?view=portfolio&project=${encodeURIComponent(project.slug)}`, { lang })
               const subdomainUrl = withSiteParams(project.subdomainUrl, { lang })
               return (

@@ -1247,6 +1247,38 @@ function App() {
     })
   }
 
+  async function handleCreateSevenDayShareLink() {
+    await createManagedShareLink({
+      label: shareLabel || (lang === 'zh' ? '7 天完整体验' : '7-day full experience'),
+      expiresInDays: 7,
+      scope: {
+        allowPortfolio: true,
+        allowBlog: true,
+        allowDeploy: true,
+        allowResume: authRole === 'admin' || authRole === 'tester',
+        allowAllProjects: true,
+        allowedProjectSlugs: [],
+      },
+      copyAfterCreate: true,
+    })
+  }
+
+  async function handleCreateThirtyDayShareLink() {
+    await createManagedShareLink({
+      label: shareLabel || (lang === 'zh' ? '30 天完整体验' : '30-day full experience'),
+      expiresInDays: 30,
+      scope: {
+        allowPortfolio: true,
+        allowBlog: true,
+        allowDeploy: true,
+        allowResume: authRole === 'admin' || authRole === 'tester',
+        allowAllProjects: true,
+        allowedProjectSlugs: [],
+      },
+      copyAfterCreate: true,
+    })
+  }
+
   async function handleCreateProjectDetailShareLink(projectSlug: string) {
     const normalizedSlug = normalizeSlug(projectSlug)
     const project = normalizedSlug ? projects.find((item) => item.slug === normalizedSlug) ?? null : null
@@ -1830,6 +1862,8 @@ function App() {
         }}
         onCreateShareLink={() => void handleCreateShareLink()}
         onCreateFullExperienceShareLink={() => void handleCreateFullExperienceShareLink()}
+        onCreateSevenDayShareLink={() => void handleCreateSevenDayShareLink()}
+        onCreateThirtyDayShareLink={() => void handleCreateThirtyDayShareLink()}
         onCreateProjectDetailShareLink={(slug) => void handleCreateProjectDetailShareLink(slug)}
         onCreateProjectSubdomainShareLink={(slug) => void handleCreateProjectSubdomainShareLink(slug)}
         onCopyLastShareLink={() => void handleCopyLastShareLink()}

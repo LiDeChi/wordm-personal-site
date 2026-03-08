@@ -1901,3 +1901,11 @@ footer {
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+
+.admin-filter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+  margin: 12px 0;
+}
