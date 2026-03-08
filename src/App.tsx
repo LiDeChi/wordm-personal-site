@@ -1825,7 +1825,6 @@ function App() {
       <div className="page-container">
         <Sidebar
           lang={lang}
-          mode="portfolio"
           activeKey={activeSection}
           lastUpdated={lastUpdated}
           onNavigate={(id) => {
@@ -1836,7 +1835,6 @@ function App() {
             }
           }}
           onLangChange={setLang}
-          onModeChange={setRootView}
           tocItems={[
             { id: 'deploy', label: copy.tocDeploy },
             { id: 'contact', label: copy.tocContact },
@@ -1955,7 +1953,6 @@ function App() {
     <div className="page-container">
       <Sidebar
         lang={lang}
-        mode="portfolio"
         activeKey={activeSection}
         lastUpdated={lastUpdated}
         onNavigate={(id) => {
@@ -1965,7 +1962,6 @@ function App() {
           }
         }}
         onLangChange={setLang}
-        onModeChange={setRootView}
         tocItems={selectedProject ? [{ id: 'project-detail', label: selectedProject.name }, { id: 'contact', label: copy.tocContact }] : [
           { id: 'projects', label: copy.tocProjects },
           { id: 'contact', label: copy.tocContact },

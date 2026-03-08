@@ -9,12 +9,10 @@ type TocItem = {
 
 type SidebarProps = {
   lang: Lang
-  mode: 'blog' | 'portfolio'
   activeKey: string
   lastUpdated: string
   onNavigate: (key: string) => void
   onLangChange: (lang: Lang) => void
-  onModeChange: (mode: 'blog' | 'portfolio') => void
   tocItems: TocItem[]
   authPanel: Omit<AuthPanelProps, 'className'>
 }
@@ -23,26 +21,22 @@ const SIDEBAR_COPY = {
   zh: {
     lastUpdated: '最近更新',
     langLabel: '语言',
-    modeLabel: '页面',
-    portfolio: '作品集',
     zhLabel: '中文',
     enLabel: 'EN',
   },
   en: {
     lastUpdated: 'Last updated',
     langLabel: 'Language',
-    modeLabel: 'View',
-    portfolio: 'Portfolio',
     zhLabel: '中文',
     enLabel: 'EN',
   },
 } as const
 
-export function Sidebar({ lang, mode, activeKey, lastUpdated, onNavigate, onLangChange, onModeChange, tocItems, authPanel }: SidebarProps) {
+export function Sidebar({ lang, activeKey, lastUpdated, onNavigate, onLangChange, tocItems, authPanel }: SidebarProps) {
   const copy = SIDEBAR_COPY[lang]
 
   return (
-    <aside className={`sidebar ${mode === 'blog' ? 'blog-sidebar' : ''}`}>
+    <aside className="sidebar">
       <AuthPanel {...authPanel} className="sidebar-auth" compact />
 
       <div className="sidebar-select-stack">
@@ -51,13 +45,6 @@ export function Sidebar({ lang, mode, activeKey, lastUpdated, onNavigate, onLang
           <select value={lang} onChange={(event) => onLangChange(event.target.value as Lang)}>
             <option value="zh">{copy.zhLabel}</option>
             <option value="en">{copy.enLabel}</option>
-          </select>
-        </label>
-
-        <label className="sidebar-select-field">
-          <span className="mono">{copy.modeLabel}</span>
-          <select value={mode} onChange={(event) => onModeChange(event.target.value as 'blog' | 'portfolio')}>
-            <option value="portfolio">{copy.portfolio}</option>
           </select>
         </label>
       </div>
