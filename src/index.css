@@ -1758,3 +1758,96 @@ footer {
   color: #111;
   border-color: rgb(18 18 18 / 28%);
 }
+
+
+.admin-page-shell {
+  padding-top: 20px;
+}
+
+.admin-main {
+  max-width: 1160px;
+}
+
+.admin-overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin: 1.5rem 0;
+}
+
+.admin-overview-card {
+  border: 1px solid var(--c-ink-faint);
+  background: #fcfcfc;
+  padding: 12px;
+}
+
+.admin-overview-card span {
+  display: block;
+  margin-bottom: 4px;
+  color: #666;
+}
+
+.admin-overview-card strong {
+  display: block;
+  font-size: 1rem;
+}
+
+.admin-quick-links {
+  margin-top: 0.75rem;
+}
+
+.admin-project-list {
+  display: grid;
+  gap: 14px;
+}
+
+.admin-project-card {
+  border: 1px solid var(--c-ink-faint);
+  background: #fcfcfc;
+  padding: 14px;
+}
+
+.admin-project-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.admin-project-head h3 {
+  margin-bottom: 4px;
+  font-size: 1.05rem;
+}
+
+.admin-project-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.admin-project-meta-grid div {
+  border: 1px solid var(--c-ink-faint);
+  background: #fff;
+  padding: 8px 10px;
+}
+
+.admin-project-meta-grid span {
+  display: block;
+  margin-bottom: 4px;
+  color: #777;
+}
+
+.admin-project-meta-grid code {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+@media (max-width: 768px) {
+  .admin-project-head {
+    flex-direction: column;
+  }
+}

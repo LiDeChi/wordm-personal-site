@@ -13,7 +13,7 @@ domain_output="$(node - "$SNAPSHOT_FILE" <<'NODE'
 const fs = require('fs')
 const snapshotFile = process.argv[2]
 const payload = JSON.parse(fs.readFileSync(snapshotFile, 'utf8'))
-const set = new Set(['resume.wordm.us', 'cv.wordm.us'])
+const set = new Set(['resume.wordm.us', 'cv.wordm.us', 'admin.wordm.us'])
 
 for (const project of payload.projects || []) {
   const subdomain = typeof project.subdomain === 'string' ? project.subdomain.trim() : ''

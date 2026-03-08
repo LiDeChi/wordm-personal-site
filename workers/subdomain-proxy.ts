@@ -1,6 +1,50 @@
 const ROOT_ORIGIN = 'https://wordm.us'
 
-const STATIC_SUBDOMAINS = new Set(['resume', 'cv'])
+
+const ADMIN_USERNAME = 'parson'
+const ADMIN_PASSWORD = '050966jzl'
+
+function unauthorizedAdminResponse() {
+  return new Response('Authentication required.', {
+    status: 401,
+    headers: {
+      'content-type': 'text/plain; charset=utf-8',
+      'www-authenticate': 'Basic realm="wordm-admin", charset="UTF-8"',
+    },
+  })
+}
+
+function parseBasicAuth(value: string | null): { username: string; password: string } | null {
+  if (!value || !value.startsWith('Basic ')) {
+    return null
+  }
+
+  try {
+    const decoded = atob(value.slice(6))
+    const separatorIndex = decoded.indexOf(':')
+    if (separatorIndex < 0) {
+      return null
+    }
+
+    return {
+      username: decoded.slice(0, separatorIndex),
+      password: decoded.slice(separatorIndex + 1),
+    }
+  } catch {
+    return null
+  }
+}
+
+function isAdminAuthorized(request: Request) {
+  const parsed = parseBasicAuth(request.headers.get('authorization'))
+  if (!parsed) {
+    return false
+  }
+
+  return parsed.username === ADMIN_USERNAME && parsed.password === ADMIN_PASSWORD
+}
+
+const STATIC_SUBDOMAINS = new Set(['resume', 'cv', 'admin'])
 
 function isAllowedSubdomain(subdomain: string): boolean {
   return STATIC_SUBDOMAINS.has(subdomain) || subdomain.startsWith('p-')
@@ -32,10 +76,16 @@ export default {
       })
     }
 
+    if (subdomain === 'admin' && !isAdminAuthorized(request)) {
+      return unauthorizedAdminResponse()
+    }
+
     const targetUrl = new URL(`${incomingUrl.pathname}${incomingUrl.search}`, ROOT_ORIGIN)
     if (incomingUrl.pathname === '/') {
       if (subdomain === 'resume' || subdomain === 'cv') {
         targetUrl.searchParams.set('page', 'resume')
+      } else if (subdomain === 'admin') {
+        targetUrl.searchParams.set('page', 'admin')
       } else {
         targetUrl.searchParams.set('subdomain', subdomain)
       }

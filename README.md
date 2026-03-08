@@ -4,6 +4,7 @@
 
 - 根域 `wordm.us`：个人博客 + 作品集
 - 子域 `resume.wordm.us`：独立简历页（含 PDF 下载，仅管理员/测试账号可访问）
+- 子域 `admin.wordm.us`：后台系统入口（HTTP Basic Auth 保护）
 - 账号系统：Supabase 邮箱登录/注册/退出（`wordm.us` 与全部子域共用一套会话）
 - `center-control` 项目展示（来源：`/Users/lidechi/Documents/Github/center-control/data/exports/projects.json`）
 - `debug` 模式控制展示项目
@@ -217,6 +218,7 @@ npm run deploy:subdomains
 - 自动从 `src/data/projects.snapshot.json` 读取全部 `p-*` 子域并绑定，同时包含：
   - `resume.wordm.us`
   - `cv.wordm.us`
+  - `admin.wordm.us`
 - Worker 访问规则：
   - 固定允许 `resume` / `cv`
   - 所有 `p-` 前缀子域按统一代理规则转发到根域并保留语言参数

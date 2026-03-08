@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { DebugPanel } from './components/DebugPanel'
 import { ProjectDetailPage } from './components/ProjectDetailPage'
+import { AdminPage } from './components/AdminPage'
 import { ProjectEntry } from './components/ProjectEntry'
 import { ResumeAccessDenied } from './components/ResumeAccessDenied'
 import { ShareAccessDenied } from './components/ShareAccessDenied'
@@ -1340,6 +1341,7 @@ function App() {
     [projects, forcedSubdomain],
   )
   const isResumeView = forcedPage === 'resume' || hostname === 'resume.wordm.us' || hostname === 'cv.wordm.us'
+  const isAdminView = forcedPage === 'admin' || hostname === 'admin.wordm.us'
 
   const activeArticleIndex = Math.max(
     0,
@@ -1688,6 +1690,10 @@ function App() {
     }
 
     return <SubdomainProjectView lang={lang} project={subdomainProject} lastUpdated={lastUpdated} shareToken={shareToken} authPanel={authPanelProps} />
+  }
+
+  if (isAdminView) {
+    return <AdminPage lang={lang} lastUpdated={lastUpdated} projects={projects} />
   }
 
   if (isResumeView) {
