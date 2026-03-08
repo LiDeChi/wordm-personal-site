@@ -1878,6 +1878,8 @@ footer {
 .admin-share-actions {
   margin-top: 10px;
   margin-bottom: 8px;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 

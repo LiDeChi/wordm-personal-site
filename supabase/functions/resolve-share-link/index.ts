@@ -55,7 +55,7 @@ const handler = async (req: Request): Promise<Response> => {
   const admin = createClient(supabaseUrl, serviceRoleKey);
   const lookupRes = await admin
     .from("share_links")
-    .select("id, label, status, created_at, expires_at, allow_portfolio, allow_blog, allow_deploy, allow_resume, allow_all_projects, allowed_project_slugs")
+    .select("id, label, status, created_at, expires_at, last_accessed_at, visit_count, allow_portfolio, allow_blog, allow_deploy, allow_resume, allow_all_projects, allowed_project_slugs")
     .eq("token_hash", tokenHash)
     .limit(1)
     .maybeSingle();
@@ -98,19 +98,33 @@ const handler = async (req: Request): Promise<Response> => {
     });
   }
 
+  const accessedAt = new Date().toISOString();
+  const nextVisitCount = Number(row.visit_count ?? 0) + 1;
+  const updateRes = await admin
+    .from("share_links")
+    .update({ last_accessed_at: accessedAt, visit_count: nextVisitCount })
+    .eq("id", row.id)
+    .eq("status", "active")
+    .select("id, label, status, created_at, expires_at, last_accessed_at, visit_count, allow_portfolio, allow_blog, allow_deploy, allow_resume, allow_all_projects, allowed_project_slugs")
+    .maybeSingle();
+
+  const finalRow = updateRes.data ?? row;
+
   return respond(
     JSON.stringify({
-      id: row.id,
-      label: row.label,
-      status: row.status,
-      createdAt: row.created_at,
-      expiresAt: row.expires_at,
-      allowPortfolio: row.allow_portfolio,
-      allowBlog: row.allow_blog,
-      allowDeploy: row.allow_deploy,
-      allowResume: row.allow_resume,
-      allowAllProjects: row.allow_all_projects,
-      allowedProjectSlugs: row.allowed_project_slugs,
+      id: finalRow.id,
+      label: finalRow.label,
+      status: finalRow.status,
+      createdAt: finalRow.created_at,
+      expiresAt: finalRow.expires_at,
+      lastAccessedAt: finalRow.last_accessed_at,
+      visitCount: finalRow.visit_count,
+      allowPortfolio: finalRow.allow_portfolio,
+      allowBlog: finalRow.allow_blog,
+      allowDeploy: finalRow.allow_deploy,
+      allowResume: finalRow.allow_resume,
+      allowAllProjects: finalRow.allow_all_projects,
+      allowedProjectSlugs: finalRow.allowed_project_slugs,
     }),
     {
       status: 200,

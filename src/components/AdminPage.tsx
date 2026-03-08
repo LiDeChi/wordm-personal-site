@@ -35,6 +35,7 @@ type AdminPageProps = {
   onCreateProjectDetailShareLink: (projectSlug: string) => void
   onCreateProjectSubdomainShareLink: (projectSlug: string) => void
   onCopyLastShareLink: () => void
+  onPurgeInactiveShareLinks: () => void
   onRevokeShareLink: (shareLinkId: string) => void
 }
 
@@ -78,6 +79,9 @@ const COPY = {
     shareProjectDetail: '详情分享',
     shareProjectSubdomain: '子域分享',
     shareCopyLatest: '复制最新链接',
+    sharePurgeInactive: '清理失效链接',
+    shareVisits: '访问次数',
+    shareLastAccessed: '最后访问',
     shareNoLatest: '还没有新生成的链接',
     shareListTitle: '已生成链接',
     shareEmpty: '暂无分享链接',
@@ -134,6 +138,9 @@ const COPY = {
     shareProjectDetail: 'Detail share',
     shareProjectSubdomain: 'Subdomain share',
     shareCopyLatest: 'Copy latest link',
+    sharePurgeInactive: 'Purge inactive links',
+    shareVisits: 'Visits',
+    shareLastAccessed: 'Last access',
     shareNoLatest: 'No newly created link yet',
     shareListTitle: 'Issued links',
     shareEmpty: 'No share links yet',
@@ -229,6 +236,7 @@ export function AdminPage({
   onCreateProjectDetailShareLink,
   onCreateProjectSubdomainShareLink,
   onCopyLastShareLink,
+  onPurgeInactiveShareLinks,
   onRevokeShareLink,
 }: AdminPageProps) {
   const copy = COPY[lang]
@@ -371,6 +379,9 @@ export function AdminPage({
                 <button type="button" onClick={onCopyLastShareLink} disabled={!lastCreatedShareUrl}>
                   {copy.shareCopyLatest}
                 </button>
+                <button type="button" onClick={onPurgeInactiveShareLinks} disabled={shareBusy}>
+                  {copy.sharePurgeInactive}
+                </button>
               </div>
 
               <div className="admin-filter-grid">
@@ -404,6 +415,9 @@ export function AdminPage({
                     <p className="debug-share-card-scope">{summarizeScope(copy, shareLink.scope, shareLink.scope.allowedProjectSlugs.length)}</p>
                     <p className="debug-share-card-meta">
                       {copy.shareCreatedAt}: {formatMetaDate(shareLink.createdAt, lang)} · {copy.shareExpiresAt}: {formatMetaDate(shareLink.expiresAt, lang)}
+                    </p>
+                    <p className="debug-share-card-meta">
+                      {copy.shareVisits}: {shareLink.visitCount} · {copy.shareLastAccessed}: {shareLink.lastAccessedAt ? formatMetaDate(shareLink.lastAccessedAt, lang) : copy.noCommand}
                     </p>
                   </article>
                 ))}

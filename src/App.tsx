@@ -21,6 +21,7 @@ import {
   createShareLink,
   listOwnShareLinks,
   resolveShareLink,
+  purgeShareLinks,
   revokeShareLink,
   type ShareAccess,
   type ShareLinkRecord,
@@ -1316,6 +1317,20 @@ function App() {
     }
   }
 
+
+  async function handlePurgeInactiveShareLinks() {
+    setShareBusy(true)
+    try {
+      const deletedCount = await purgeShareLinks(authConfig)
+      setShareLinks(await listOwnShareLinks(authConfig))
+      setShareManageStatusMessage(`${copy.shareRevokeSuccess} (${deletedCount})`)
+    } catch {
+      setShareManageStatusMessage(copy.shareRevokeFailed)
+    } finally {
+      setShareBusy(false)
+    }
+  }
+
   async function handleAuthSubmit(email: string, password: string) {
     if (!authEnabled) {
       setAuthStatusMessage(copy.authUnavailable)
@@ -1800,6 +1815,7 @@ function App() {
         onCreateProjectDetailShareLink={(slug) => void handleCreateProjectDetailShareLink(slug)}
         onCreateProjectSubdomainShareLink={(slug) => void handleCreateProjectSubdomainShareLink(slug)}
         onCopyLastShareLink={() => void handleCopyLastShareLink()}
+        onPurgeInactiveShareLinks={() => void handlePurgeInactiveShareLinks()}
         onRevokeShareLink={(shareLinkId) => void handleRevokeShareLink(shareLinkId)}
       />
     )

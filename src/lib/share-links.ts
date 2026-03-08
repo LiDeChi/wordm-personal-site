@@ -22,6 +22,8 @@ export type ShareLinkRecord = {
   status: ShareLinkStatus
   createdAt: string
   expiresAt: string
+  lastAccessedAt: string | null
+  visitCount: number
   scope: ShareScope
 }
 
@@ -43,6 +45,8 @@ type ShareLinkRow = {
   status: ShareLinkStatus
   created_at: string
   expires_at: string
+  last_accessed_at: string | null
+  visit_count: number | null
   allow_portfolio: boolean
   allow_blog: boolean
   allow_deploy: boolean
@@ -58,12 +62,15 @@ type ShareLinkApiPayload = {
   token?: unknown
   createdAt?: unknown
   expiresAt?: unknown
+  lastAccessedAt?: unknown
+  visitCount?: unknown
   allowPortfolio?: unknown
   allowBlog?: unknown
   allowDeploy?: unknown
   allowResume?: unknown
   allowAllProjects?: unknown
   allowedProjectSlugs?: unknown
+  deletedCount?: unknown
   error?: unknown
 }
 
@@ -75,6 +82,19 @@ function normalizeIso(value: unknown): string {
   const date = new Date(value)
   if (Number.isNaN(date.valueOf())) {
     throw new Error('SHARE_INVALID_DATE')
+  }
+
+  return date.toISOString()
+}
+
+function normalizeOptionalIso(value: unknown): string | null {
+  if (typeof value !== 'string' || !value.trim()) {
+    return null
+  }
+
+  const date = new Date(value)
+  if (Number.isNaN(date.valueOf())) {
+    return null
   }
 
   return date.toISOString()
@@ -107,6 +127,8 @@ function toShareLinkRecord(row: ShareLinkRow): ShareLinkRecord {
     status: isExpired ? 'expired' : row.status,
     createdAt: normalizeIso(row.created_at),
     expiresAt,
+    lastAccessedAt: normalizeOptionalIso(row.last_accessed_at),
+    visitCount: Number(row.visit_count || 0),
     scope: normalizeScope({
       allowPortfolio: row.allow_portfolio,
       allowBlog: row.allow_blog,
@@ -230,6 +252,8 @@ export async function createShareLink(config: AuthConfig, input: CreateShareLink
     status: (typeof payload?.status === 'string' ? payload.status : 'active') as ShareLinkStatus,
     created_at: typeof payload?.createdAt === 'string' ? payload.createdAt : '',
     expires_at: typeof payload?.expiresAt === 'string' ? payload.expiresAt : '',
+    last_accessed_at: typeof payload?.lastAccessedAt === 'string' ? payload.lastAccessedAt : null,
+    visit_count: typeof payload?.visitCount === 'number' ? payload.visitCount : 0,
     allow_portfolio: Boolean(payload?.allowPortfolio),
     allow_blog: Boolean(payload?.allowBlog),
     allow_deploy: Boolean(payload?.allowDeploy),
@@ -272,6 +296,8 @@ export async function resolveShareLink(supabaseUrl: string, token: string): Prom
     status: (typeof payload?.status === 'string' ? payload.status : 'active') as ShareLinkStatus,
     created_at: typeof payload?.createdAt === 'string' ? payload.createdAt : '',
     expires_at: typeof payload?.expiresAt === 'string' ? payload.expiresAt : '',
+    last_accessed_at: typeof payload?.lastAccessedAt === 'string' ? payload.lastAccessedAt : null,
+    visit_count: typeof payload?.visitCount === 'number' ? payload.visitCount : 0,
     allow_portfolio: Boolean(payload?.allowPortfolio),
     allow_blog: Boolean(payload?.allowBlog),
     allow_deploy: Boolean(payload?.allowDeploy),
@@ -310,12 +336,41 @@ export async function revokeShareLink(config: AuthConfig, shareLinkId: string): 
   }
 }
 
+export async function purgeShareLinks(config: AuthConfig): Promise<number> {
+  const client = getSupabaseClient(config)
+  const { data, error } = await client.auth.getSession()
+  if (error) {
+    throw error
+  }
+
+  const accessToken = data.session?.access_token
+  if (!accessToken) {
+    throw new Error('UNAUTHENTICATED')
+  }
+
+  const response = await fetch(`${config.supabaseUrl.replace(/\/$/, '')}/functions/v1/purge-share-links`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify({}),
+  })
+
+  const payload = (await response.json().catch(() => null)) as ShareLinkApiPayload | null
+  if (!response.ok) {
+    throw new Error(normalizeShareError(payload, response.status))
+  }
+
+  return typeof payload?.deletedCount === 'number' ? payload.deletedCount : 0
+}
+
 export async function listOwnShareLinks(config: AuthConfig): Promise<ShareLinkRecord[]> {
   const client = getSupabaseClient(config)
   const { data, error } = await client
     .from('share_links')
     .select(
-      'id, label, status, created_at, expires_at, allow_portfolio, allow_blog, allow_deploy, allow_resume, allow_all_projects, allowed_project_slugs',
+      'id, label, status, created_at, expires_at, last_accessed_at, visit_count, allow_portfolio, allow_blog, allow_deploy, allow_resume, allow_all_projects, allowed_project_slugs',
     )
     .order('created_at', { ascending: false })
 
