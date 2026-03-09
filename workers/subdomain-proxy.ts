@@ -1,4 +1,5 @@
 const ROOT_ORIGIN = 'https://wordm.us'
+const ADMIN_SUPABASE_API_ORIGIN = 'https://uswackifoqjxfitesflz.supabase.co'
 
 
 const ADMIN_USERNAME = 'parson'
@@ -33,6 +34,23 @@ function parseBasicAuth(value: string | null): { username: string; password: str
   } catch {
     return null
   }
+}
+
+
+function proxyAdminApi(request: Request): Promise<Response> {
+  const targetUrl = new URL('/functions/v1/admin-share-links', ADMIN_SUPABASE_API_ORIGIN)
+  const headers = new Headers(request.headers)
+  const authorization = request.headers.get('authorization')
+  if (authorization) {
+    headers.set('x-admin-basic-auth', authorization)
+  }
+  headers.delete('host')
+  return fetch(new Request(targetUrl.toString(), {
+    method: request.method,
+    headers,
+    body: request.method === 'GET' || request.method === 'HEAD' ? undefined : request.body,
+    redirect: 'follow',
+  }))
 }
 
 function isAdminAuthorized(request: Request) {
@@ -78,6 +96,10 @@ export default {
 
     if (subdomain === 'admin' && !isAdminAuthorized(request)) {
       return unauthorizedAdminResponse()
+    }
+
+    if (subdomain === 'admin' && incomingUrl.pathname.startsWith('/__admin_api/')) {
+      return proxyAdminApi(request)
     }
 
     const targetUrl = new URL(`${incomingUrl.pathname}${incomingUrl.search}`, ROOT_ORIGIN)

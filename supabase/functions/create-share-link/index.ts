@@ -198,6 +198,8 @@ const handler = async (req: Request): Promise<Response> => {
     .from("share_links")
     .insert({
       user_id: user.id,
+      issued_by: "user",
+      issued_by_label: user.email ?? null,
       label,
       token_hash: tokenHash,
       status: "active",
@@ -209,7 +211,7 @@ const handler = async (req: Request): Promise<Response> => {
       allowed_project_slugs: scope.allowedProjectSlugs,
       expires_at: expiresAtIso,
     })
-    .select("id, label, status, created_at, expires_at, allow_portfolio, allow_blog, allow_deploy, allow_resume, allow_all_projects, allowed_project_slugs")
+    .select("id, label, status, created_at, expires_at, last_accessed_at, visit_count, issued_by, issued_by_label, allow_portfolio, allow_blog, allow_deploy, allow_resume, allow_all_projects, allowed_project_slugs")
     .single();
 
   if (insertRes.error) {
@@ -227,6 +229,8 @@ const handler = async (req: Request): Promise<Response> => {
       status: insertRes.data.status,
       createdAt: insertRes.data.created_at,
       expiresAt: insertRes.data.expires_at,
+      issuedBy: insertRes.data.issued_by,
+      issuedByLabel: insertRes.data.issued_by_label,
       allowPortfolio: insertRes.data.allow_portfolio,
       allowBlog: insertRes.data.allow_blog,
       allowDeploy: insertRes.data.allow_deploy,

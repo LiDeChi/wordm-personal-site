@@ -28,6 +28,12 @@ import {
   type ShareResolveStatus,
   type ShareScope,
 } from './lib/share-links'
+import {
+  createAdminShareLink,
+  listAdminShareLinks,
+  purgeAdminShareLinks,
+  revokeAdminShareLink,
+} from './lib/admin-share'
 import { applyUnlockGrantFromSupabase, fetchUnlockStateFromSupabase } from './lib/unlock-remote'
 import {
   canAccessProject,
@@ -439,6 +445,7 @@ function resolveShareDeniedStatus(options: {
 function App() {
   const params = new URLSearchParams(window.location.search)
   const hostname = window.location.hostname.toLowerCase()
+  const isAdminHost = hostname === 'admin.wordm.us' || params.get('page') === 'admin'
   const debugMode = params.get('debug') === '1' || import.meta.env.DEV
   const forcedSubdomain = params.get('subdomain')
   const forcedPage = params.get('page')
@@ -818,30 +825,42 @@ function App() {
   }, [authUser, unlockState])
 
   useEffect(() => {
-    if (!authUser || (authUser.role !== 'admin' && authUser.role !== 'tester')) {
-      setShareLinks([])
-      return
+    let active = true
+
+    async function loadShareLinks() {
+      try {
+        if (isAdminHost) {
+          const links = await listAdminShareLinks()
+          if (active) {
+            setShareLinks(links)
+          }
+          return
+        }
+
+        if (!authUser || (authUser.role !== 'admin' && authUser.role !== 'tester')) {
+          if (active) {
+            setShareLinks([])
+          }
+          return
+        }
+
+        const links = await listOwnShareLinks(authConfig)
+        if (active) {
+          setShareLinks(links)
+        }
+      } catch {
+        if (active) {
+          setShareManageStatusMessage(copy.shareListLoadFailed)
+        }
+      }
     }
 
-    let active = true
-    void listOwnShareLinks(authConfig)
-      .then((links) => {
-        if (!active) {
-          return
-        }
-        setShareLinks(links)
-      })
-      .catch(() => {
-        if (!active) {
-          return
-        }
-        setShareManageStatusMessage(copy.shareListLoadFailed)
-      })
+    void loadShareLinks()
 
     return () => {
       active = false
     }
-  }, [authConfig, authUser, copy.shareListLoadFailed])
+  }, [authConfig, authUser, copy.shareListLoadFailed, isAdminHost])
 
   useEffect(() => {
     if (!unlockTargetSlug) {
@@ -1065,7 +1084,7 @@ function App() {
     entryUrlBuilder?: ((token: string) => string) | null
     copyAfterCreate?: boolean
   }) {
-    if (!authUser) {
+    if (!authUser && !isAdminHost) {
       setShareManageStatusMessage(copy.shareEntitlementRequired)
       return null
     }
@@ -1089,16 +1108,22 @@ function App() {
 
     setShareBusy(true)
     try {
-      const created = await createShareLink(authConfig, {
-        label: options.label,
-        expiresInDays: options.expiresInDays,
-        scope,
-      })
+      const created = isAdminHost
+        ? await createAdminShareLink({
+            label: options.label,
+            expiresInDays: options.expiresInDays,
+            scope,
+          })
+        : await createShareLink(authConfig, {
+            label: options.label,
+            expiresInDays: options.expiresInDays,
+            scope,
+          })
       const fallbackUrl = buildShareEntryUrl(created.token, lang, created.scope, projects)
       const shareUrl = options.entryUrlBuilder ? options.entryUrlBuilder(created.token) : fallbackUrl
       setLastCreatedShareId(created.id)
       setLastCreatedShareUrl(shareUrl)
-      setShareLinks(await listOwnShareLinks(authConfig))
+      setShareLinks(isAdminHost ? await listAdminShareLinks() : await listOwnShareLinks(authConfig))
 
       if (options.copyAfterCreate) {
         const copied = await copyTextToClipboard(shareUrl)
@@ -1261,8 +1286,12 @@ function App() {
   async function handleRevokeShareLink(shareLinkId: string) {
     setShareBusy(true)
     try {
-      await revokeShareLink(authConfig, shareLinkId)
-      const nextLinks = await listOwnShareLinks(authConfig)
+      if (isAdminHost) {
+        await revokeAdminShareLink(shareLinkId)
+      } else {
+        await revokeShareLink(authConfig, shareLinkId)
+      }
+      const nextLinks = isAdminHost ? await listAdminShareLinks() : await listOwnShareLinks(authConfig)
       setShareLinks(nextLinks)
       if (lastCreatedShareId === shareLinkId) {
         setLastCreatedShareId(null)
@@ -1280,8 +1309,8 @@ function App() {
   async function handlePurgeInactiveShareLinks() {
     setShareBusy(true)
     try {
-      const deletedCount = await purgeShareLinks(authConfig)
-      setShareLinks(await listOwnShareLinks(authConfig))
+      const deletedCount = isAdminHost ? await purgeAdminShareLinks() : await purgeShareLinks(authConfig)
+      setShareLinks(isAdminHost ? await listAdminShareLinks() : await listOwnShareLinks(authConfig))
       setShareManageStatusMessage(`${copy.shareRevokeSuccess} (${deletedCount})`)
     } catch {
       setShareManageStatusMessage(copy.shareRevokeFailed)
@@ -1405,7 +1434,7 @@ function App() {
   const isAdminView = forcedPage === 'admin' || hostname === 'admin.wordm.us'
 
   const authRole: AuthRole = authUser?.role ?? 'guest'
-  const canManageShares = authRole === 'admin' || authRole === 'tester'
+  const canManageShares = isAdminHost || authRole === 'admin' || authRole === 'tester'
   const shareEntryUrl = shareToken && shareAccess ? buildShareEntryUrl(shareToken, lang, shareAccess.scope, projects) : null
   const canAccessResume = canManageShares || canShareAccessView('resume', shareAccess)
   const projectCatalogSlugs = useMemo(() => projects.map((project) => project.slug), [projects])
