@@ -686,17 +686,17 @@ p {
 
 .site-topbar {
   position: sticky;
-  top: 16px;
+  top: 0;
   z-index: 28;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 18px 24px;
   margin-bottom: 18px;
-  padding: 10px 0 14px;
+  padding: 14px 0 16px;
   border-bottom: 1px solid rgb(17 17 17 / 9%);
-  background: rgb(255 255 255 / 92%);
-  backdrop-filter: blur(10px) saturate(110%);
+  background: #fff;
+  backdrop-filter: none;
 }
 
 .site-topbar-primary {
@@ -709,6 +709,7 @@ p {
   justify-content: flex-end;
   gap: 12px;
   flex-wrap: nowrap;
+  min-width: 0;
 }
 
 .site-topbar-tabs {
@@ -2230,8 +2231,12 @@ footer {
     flex-wrap: wrap;
   }
 
-  .topbar-account-meta {
-    text-align: left;
+  .topbar-account-overview {
+    max-width: 100%;
+  }
+
+  .topbar-account-email {
+    max-width: 100%;
   }
 
   .portfolio-showcase-slide-button {
@@ -2562,24 +2567,11 @@ footer {
   color: #222;
 }
 
-.site-topbar {
-  position: sticky;
-  top: 16px;
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 18px 24px;
-  margin-bottom: 18px;
-  padding: 10px 0 14px;
-  border-bottom: 1px solid rgb(17 17 17 / 9%);
-  background: rgb(255 255 255 / 92%);
-  backdrop-filter: blur(10px) saturate(110%);
-}
-
 .site-topbar-account {
   position: relative;
-  min-width: min(220px, 100%);
-  max-width: 252px;
+  min-width: 0;
+  max-width: none;
+  flex: 0 1 auto;
 }
 
 .site-topbar-account-btn {
@@ -2622,57 +2614,89 @@ footer {
 .account-entry-topbar {
   display: flex;
   align-items: center;
-  gap: 10px;
-  min-height: 34px;
+  gap: 8px;
+  min-height: 38px;
+  min-width: 0;
 }
 
 .account-entry-topbar-guest {
   justify-content: flex-end;
 }
 
-.topbar-account-meta {
-  display: grid;
-  gap: 2px;
+.topbar-account-overview {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   min-width: 0;
-  text-align: right;
+  min-height: 38px;
+  padding: 0 12px;
+  border: 1px solid rgb(17 17 17 / 10%);
+  border-radius: 999px;
+  background: #f7f4ef;
 }
 
 .topbar-account-email {
+  display: inline-block;
+  max-width: 220px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   color: #222;
   font-size: 0.72rem;
-  line-height: 1.2;
+  line-height: 1;
 }
 
 .topbar-account-role {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  padding: 0 8px;
+  border: 1px solid rgb(17 17 17 / 10%);
+  border-radius: 999px;
+  background: #fff;
   color: #6e6963;
-  font-size: 0.6rem;
-  line-height: 1.2;
+  font-size: 0.58rem;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .topbar-account-actions {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
 
 .topbar-account-btn,
 .topbar-account-enter-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   min-height: 34px;
   padding: 0 12px;
   border-radius: 999px;
   background: #fff;
+  border: 1px solid rgb(17 17 17 / 10%);
+  color: #111;
+  text-decoration: none;
   white-space: nowrap;
 }
 
 .topbar-account-btn {
   font-size: 0.64rem;
+  padding-inline: 12px;
 }
 
 .topbar-account-enter-link {
   padding-inline: 14px;
+}
+
+.topbar-account-btn:hover,
+.topbar-account-btn:focus-visible,
+.topbar-account-enter-link:hover,
+.topbar-account-enter-link:focus-visible {
+  border-color: #111;
+  background: #111;
+  color: #fff;
 }
 
 .gallery-cover-button {

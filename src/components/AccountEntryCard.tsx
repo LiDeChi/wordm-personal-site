@@ -20,14 +20,14 @@ const ENTRY_COPY = {
   zh: {
     currentRole: '当前身份',
     enter: 'Enter',
-    manage: '账户页',
+    manage: '账户',
     logout: '退出',
     processing: '处理中...',
   },
   en: {
     currentRole: 'Current role',
     enter: 'Enter',
-    manage: 'Account page',
+    manage: 'Account',
     logout: 'Log out',
     processing: 'Processing...',
   },
@@ -65,11 +65,11 @@ export function AccountEntryCard({
 
     return (
       <section className={compactUserClassName}>
-        <div className="topbar-account-meta">
-          <span className="topbar-account-email">{userEmail}</span>
-          <span className="topbar-account-role">
-            {lang === 'zh' ? '身份' : 'Role'}: {roleLabel(userRole, lang)}
+        <div className="topbar-account-overview">
+          <span className="topbar-account-email" title={userEmail}>
+            {userEmail}
           </span>
+          <span className="topbar-account-role">{roleLabel(userRole, lang)}</span>
         </div>
         <div className="topbar-account-actions">
           <a className="auth-primary-btn topbar-account-btn" href={loginHref}>
