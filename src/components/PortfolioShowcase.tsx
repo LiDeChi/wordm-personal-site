@@ -35,6 +35,18 @@ function wrapIndex(index: number, total: number) {
   return (index + total) % total
 }
 
+function ArrowIcon({ direction }: { direction: 'left' | 'right' }) {
+  return (
+    <svg viewBox="0 0 20 20" aria-hidden="true">
+      {direction === 'left' ? (
+        <path d="M11.8 4.6 6.4 10l5.4 5.4-1.4 1.4L3.6 10l6.8-6.8 1.4 1.4Z" />
+      ) : (
+        <path d="m8.2 4.6 1.4-1.4L16.4 10l-6.8 6.8-1.4-1.4 5.4-5.4-5.4-5.4Z" />
+      )}
+    </svg>
+  )
+}
+
 export function PortfolioShowcase({ lang, projects, onSelectProject }: PortfolioShowcaseProps) {
   const copy = COPY[lang]
   const items = useMemo<ShowcaseItem[]>(() => {
@@ -81,18 +93,18 @@ export function PortfolioShowcase({ lang, projects, onSelectProject }: Portfolio
     <section className="portfolio-showcase" aria-label={copy.ariaLabel}>
       <div className="portfolio-showcase-stage">
         <div className="portfolio-showcase-carousel">
-          {items.length > 1 ? (
-            <button
-              type="button"
-              className="portfolio-showcase-nav portfolio-showcase-nav-prev"
-              onClick={() => moveBy(-1)}
-              aria-label={copy.previous}
-            >
-              PREV
-            </button>
-          ) : null}
-
           <div className="portfolio-showcase-viewport">
+            {items.length > 1 ? (
+              <button
+                type="button"
+                className="portfolio-showcase-nav portfolio-showcase-nav-prev"
+                onClick={() => moveBy(-1)}
+                aria-label={copy.previous}
+              >
+                <ArrowIcon direction="left" />
+              </button>
+            ) : null}
+
             <div className="portfolio-showcase-track" style={{ transform: `translateX(-${safeActiveIndex * 100}%)` }}>
               {items.map((item, index) => {
                 const steps = item.clipSteps.slice(0, 3)
@@ -145,18 +157,18 @@ export function PortfolioShowcase({ lang, projects, onSelectProject }: Portfolio
                 )
               })}
             </div>
-          </div>
 
-          {items.length > 1 ? (
-            <button
-              type="button"
-              className="portfolio-showcase-nav portfolio-showcase-nav-next"
-              onClick={() => moveBy(1)}
-              aria-label={copy.next}
-            >
-              NEXT
-            </button>
-          ) : null}
+            {items.length > 1 ? (
+              <button
+                type="button"
+                className="portfolio-showcase-nav portfolio-showcase-nav-next"
+                onClick={() => moveBy(1)}
+                aria-label={copy.next}
+              >
+                <ArrowIcon direction="right" />
+              </button>
+            ) : null}
+          </div>
         </div>
 
         {items.length > 1 ? (

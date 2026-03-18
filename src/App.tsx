@@ -8,7 +8,6 @@ import { ProjectEntry } from './components/ProjectEntry'
 import { ResumeAccessDenied } from './components/ResumeAccessDenied'
 import { ShareAccessDenied } from './components/ShareAccessDenied'
 import { ResumePage } from './components/ResumePage'
-import { Sidebar } from './components/Sidebar'
 import { SubdomainProjectView } from './components/SubdomainProjectView'
 import { BLOG_ARTICLES } from './data/blogArticles'
 import { FEATURED_PROJECT_SLUGS, getProjectPresentation } from './data/projectPresentation'
@@ -2307,49 +2306,54 @@ function App() {
 
   return (
     <div className="page-container">
-      <Sidebar lang={lang} onLangChange={setLang} />
-
       <main className={`main-content portfolio-main-content${rootView === 'blog' ? ' blog-main' : ''}`}>
         <div className="site-topbar">
-          <div className="site-topbar-account">
-            <AccountEntryCard {...authPanelProps} loginHref={loginHref} className="topbar-account-entry" />
+          <div className="site-topbar-primary">
+            <nav className="collection-switch-tabs site-topbar-tabs" aria-label={lang === 'zh' ? '内容切换' : 'Content switch'}>
+              <button
+                type="button"
+                className={`collection-switch-tab${rootView === 'portfolio' ? ' active' : ''}`}
+                onClick={() => setRootView('portfolio')}
+              >
+                {copy.tocProjects}
+              </button>
+              <button
+                type="button"
+                className={`collection-switch-tab${rootView === 'blog' ? ' active' : ''}`}
+                onClick={() => setRootView('blog')}
+              >
+                {copy.tocBlog}
+              </button>
+            </nav>
+          </div>
+
+          <div className="site-topbar-secondary">
+            <label className="site-topbar-lang">
+              <span className="mono">{lang === 'zh' ? '语言' : 'Language'}</span>
+              <select value={lang} onChange={(event) => setLang(event.target.value as Lang)}>
+                <option value="zh">中文</option>
+                <option value="en">EN</option>
+              </select>
+            </label>
+
+            <div className="collection-corner-links site-topbar-links">
+              <a href="https://substack.com/@parson1" target="_blank" rel="noreferrer">
+                {copy.cornerSubstack}
+              </a>
+              <a href="https://x.com/parsonjian" target="_blank" rel="noreferrer">
+                {copy.cornerX}
+              </a>
+            </div>
+
+            <div className="site-topbar-account">
+              <AccountEntryCard {...authPanelProps} loginHref={loginHref} className="topbar-account-entry" />
+            </div>
           </div>
         </div>
 		        <section id="collection" className="main-collection-shell">
-		          <div className="collection-switch-head">
-	            <div className="collection-switch-title-block">
-	              <nav className="collection-switch-tabs" aria-label={lang === 'zh' ? '内容切换' : 'Content switch'}>
-	                <button
-	                  type="button"
-	                  className={`collection-switch-tab${rootView === 'portfolio' ? ' active' : ''}`}
-	                  onClick={() => setRootView('portfolio')}
-	                >
-	                  {copy.tocProjects}
-	                </button>
-	                <button
-	                  type="button"
-	                  className={`collection-switch-tab${rootView === 'blog' ? ' active' : ''}`}
-	                  onClick={() => setRootView('blog')}
-	                >
-	                  {copy.tocBlog}
-	                </button>
-	              </nav>
-	              {rootView === 'blog' ? <p className="visual-intro collection-switch-intro">{copy.blogIntro}</p> : null}
-	            </div>
-	
-	            <div className="collection-switch-side">
-	              <div className="collection-corner-links">
-	                <a href="https://substack.com/@parson1" target="_blank" rel="noreferrer">
-	                  {copy.cornerSubstack}
-                </a>
-                <a href="https://x.com/parsonjian" target="_blank" rel="noreferrer">
-                  {copy.cornerX}
-                </a>
-              </div>
-            </div>
-          </div>
+              {rootView === 'blog' ? <p className="visual-intro collection-switch-intro">{copy.blogIntro}</p> : null}
 
-          {debugMode && rootView === 'portfolio' ? (
+	          {debugMode && rootView === 'portfolio' ? (
             <DebugPanel
               lang={lang}
               allProjects={projects}
