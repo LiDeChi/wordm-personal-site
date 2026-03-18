@@ -113,7 +113,7 @@ p {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  gap: 10px;
+  gap: 6px;
 }
 
 .profile-block {
@@ -196,7 +196,7 @@ p {
 .sidebar-select-stack {
   display: grid;
   gap: 10px;
-  margin-top: 4px;
+  margin-top: 0;
 }
 
 .sidebar-unlock-panel {
@@ -1048,7 +1048,7 @@ p {
 .portfolio-showcase-slide-button {
   position: relative;
   width: 100%;
-  min-height: 540px;
+  height: clamp(300px, 30vw, 380px);
   border: 1px solid rgb(17 17 17 / 8%);
   border-radius: 30px;
   background: linear-gradient(180deg, #faf8f3 0%, #ece7de 100%);
@@ -1074,6 +1074,8 @@ p {
 }
 
 .portfolio-showcase-slide-image {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   display: block;
@@ -1118,20 +1120,20 @@ p {
 
 .portfolio-showcase-slide-copy {
   position: absolute;
-  left: 24px;
-  right: 24px;
-  bottom: 24px;
+  left: 18px;
+  right: 18px;
+  bottom: 18px;
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 18px;
+  gap: 14px;
 }
 
 .portfolio-showcase-slide-copy-body {
-  width: min(560px, 100%);
+  width: min(500px, 100%);
   display: grid;
-  gap: 12px;
-  padding: 18px 18px 16px;
+  gap: 10px;
+  padding: 14px 14px 12px;
   border: 1px solid rgb(17 17 17 / 8%);
   border-radius: 24px;
   background: rgb(252 249 244 / 86%);
@@ -1150,30 +1152,30 @@ p {
 
 .portfolio-showcase-slide-title {
   margin: 0;
-  font-size: clamp(2rem, 4vw, 3rem);
-  line-height: 0.98;
+  font-size: clamp(1.6rem, 2.8vw, 2.45rem);
+  line-height: 1.02;
 }
 
 .portfolio-showcase-slide-tagline {
   margin: 0;
   max-width: 44ch;
   color: #3c3732;
-  font-size: 0.98rem;
-  line-height: 1.65;
+  font-size: 0.88rem;
+  line-height: 1.5;
   text-align: left;
 }
 
 .portfolio-showcase-step-list {
   display: grid;
-  gap: 8px;
+  gap: 6px;
 }
 
 .portfolio-showcase-step-item {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
-  gap: 10px;
+  gap: 8px;
   align-items: center;
-  padding: 10px 12px;
+  padding: 8px 10px;
   border: 1px solid rgb(17 17 17 / 8%);
   border-radius: 16px;
   background: rgb(255 255 255 / 62%);
@@ -1186,21 +1188,21 @@ p {
 
 .portfolio-showcase-step-label {
   color: #2b2825;
-  font-size: 0.84rem;
-  line-height: 1.45;
+  font-size: 0.78rem;
+  line-height: 1.35;
   text-align: left;
 }
 
 .portfolio-showcase-open-hint {
   display: inline-flex;
   align-items: center;
-  min-height: 42px;
-  padding: 0 16px;
+  min-height: 36px;
+  padding: 0 14px;
   border: 1px solid rgb(255 255 255 / 32%);
   border-radius: 999px;
   background: rgb(17 17 17 / 56%);
   color: #fff;
-  font-size: 0.68rem;
+  font-size: 0.62rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   white-space: nowrap;
@@ -2133,7 +2135,7 @@ footer {
   }
 
   .portfolio-showcase-slide-button {
-    min-height: 460px;
+    height: clamp(280px, 74vw, 340px);
     border-radius: 24px;
   }
 
@@ -2464,8 +2466,8 @@ footer {
 
 .site-topbar-account {
   position: relative;
-  min-width: min(420px, 100%);
-  max-width: 480px;
+  min-width: min(300px, 100%);
+  max-width: 360px;
 }
 
 .site-topbar-account-btn {
@@ -2498,6 +2500,44 @@ footer {
 .site-topbar-account-caret {
   color: #777;
   font-size: 0.68rem;
+}
+
+.topbar-account-entry {
+  width: 100%;
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: rgb(252 252 252 / 92%);
+  box-shadow: 0 12px 28px rgb(0 0 0 / 6%);
+}
+
+.topbar-account-entry.account-entry-panel {
+  justify-content: flex-end;
+}
+
+.topbar-account-entry .auth-panel-head {
+  margin-bottom: 4px;
+}
+
+.topbar-account-entry .auth-user-card {
+  gap: 6px;
+}
+
+.topbar-account-entry .auth-user-email {
+  font-size: 0.74rem;
+}
+
+.topbar-account-entry .auth-role {
+  font-size: 0.66rem;
+}
+
+.topbar-account-entry .account-entry-actions {
+  gap: 5px;
+}
+
+.topbar-account-entry .account-enter-link {
+  width: 100%;
+  background: #fff;
 }
 
 .gallery-cover-button {

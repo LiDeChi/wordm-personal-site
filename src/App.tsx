@@ -1,4 +1,5 @@
 import { Suspense, lazy, useEffect, useMemo, useState } from 'react'
+import { AccountEntryCard } from './components/AccountEntryCard'
 import { DebugPanel } from './components/DebugPanel'
 import { LoginPage } from './components/LoginPage'
 import { AdminPage } from './components/AdminPage'
@@ -45,7 +46,6 @@ import {
 import {
   applyCheckoutProductFallbacks,
   DEFAULT_SITE_PRICING_CONFIG,
-  formatUnlockActionLabel,
   getProjectOfferState,
   getProjectUnlockOptions,
   type ProjectOfferState,
@@ -597,8 +597,6 @@ function App() {
   const [lang, setLang] = useState<Lang>(initialLang)
   const [offerNow, setOfferNow] = useState(() => Date.now())
   const copy = APP_COPY[lang]
-  const selfHostInstallGuideUrl =
-    import.meta.env.VITE_SELFHOST_INSTALL_URL || 'https://github.com/LiDeChi/center-control#付费用户一键安装deploy-ticket'
   const envPricingFallback = useMemo(
     () =>
       applyCheckoutProductFallbacks(DEFAULT_SITE_PRICING_CONFIG, {
@@ -1647,14 +1645,6 @@ function App() {
     }
   }
 
-  function openInstallGuide() {
-    if (typeof window === 'undefined') {
-      return
-    }
-
-    window.open(selfHostInstallGuideUrl, '_blank', 'noopener,noreferrer')
-  }
-
   function redirectAfterDedicatedLogin() {
     if (rootView !== 'login' || typeof window === 'undefined') {
       return false
@@ -1926,14 +1916,6 @@ function App() {
   const canAccessResume = canManageShares || canShareAccessView('resume', shareAccess)
   const projectCatalogSlugs = useMemo(() => projects.map((project) => project.slug), [projects])
   const unlockActionDisabled = unlockBusy || checkoutBusyKind !== null || unlockStorageMode === 'loading'
-  const unlockStorageLabel =
-    unlockStorageMode === 'remote'
-      ? copy.unlockStorageRemote
-      : unlockStorageMode === 'local'
-        ? copy.unlockStorageLocal
-        : unlockStorageMode === 'loading'
-          ? copy.unlockStorageLoading
-          : copy.unlockStorageIdle
   const subdomainProjectPaidAccess = subdomainProject
     ? hasProjectPremiumAccess(subdomainProject.slug, authRole, unlockState) ||
       canShareAccessProject(subdomainProject.slug, shareAccess)
@@ -2323,43 +2305,18 @@ function App() {
     return <ShareAccessDenied lang={lang} status={portfolioShareDeniedStatus} authPanel={authPanelProps} fallbackSharedUrl={shareEntryUrl} />
   }
 
-  const sidebarUnlockPanel =
-    rootView === 'portfolio'
-      ? {
-          title: copy.unlockPanelTitle,
-          storageLabel: unlockStorageLabel,
-          intro: copy.unlockPanelIntro,
-          summary: copy.unlockPanelSummary,
-          installHintPrefix: copy.unlockInstallHintPrefix,
-          installHintLinkLabel: copy.unlockInstallHintLink,
-          installGuideUrl: selfHostInstallGuideUrl,
-          bypassNotice: null,
-          statusMessage: unlockStatusMessage,
-          primaryActionLabel: copy.unlockInstallHintLink,
-          primaryActionDisabled: false,
-          onPrimaryAction: openInstallGuide,
-          secondaryActionLabel:
-            authRole === 'admin' || authRole === 'tester' || !pricingConfig.allAccess.enabled
-              ? undefined
-              : formatUnlockActionLabel(
-                  copy.deployUpgradeAction,
-                  lang === 'zh' ? pricingConfig.allAccess.priceZh : pricingConfig.allAccess.priceEn,
-                ),
-          secondaryActionDisabled: unlockActionDisabled,
-          onSecondaryAction:
-            authRole === 'admin' || authRole === 'tester' || !pricingConfig.allAccess.enabled
-              ? null
-              : () => void handleUnlockAllAccess(),
-        }
-      : null
-
   return (
     <div className="page-container">
-      <Sidebar lang={lang} onLangChange={setLang} authPanel={authPanelProps} loginHref={loginHref} unlockPanel={sidebarUnlockPanel} />
+      <Sidebar lang={lang} onLangChange={setLang} />
 
       <main className={`main-content portfolio-main-content${rootView === 'blog' ? ' blog-main' : ''}`}>
-	        <section id="collection" className="main-collection-shell">
-	          <div className="collection-switch-head">
+        <div className="site-topbar">
+          <div className="site-topbar-account">
+            <AccountEntryCard {...authPanelProps} loginHref={loginHref} className="topbar-account-entry" />
+          </div>
+        </div>
+		        <section id="collection" className="main-collection-shell">
+		          <div className="collection-switch-head">
 	            <div className="collection-switch-title-block">
 	              <nav className="collection-switch-tabs" aria-label={lang === 'zh' ? '内容切换' : 'Content switch'}>
 	                <button

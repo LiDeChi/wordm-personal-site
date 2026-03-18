@@ -11,6 +11,7 @@ type AccountEntryCardProps = {
   userRole: AuthRole
   statusMessage: string
   loginHref: string
+  className?: string
   onLogout: () => Promise<void> | void
 }
 
@@ -40,13 +41,16 @@ export function AccountEntryCard({
   userRole,
   statusMessage,
   loginHref,
+  className = '',
   onLogout,
 }: AccountEntryCardProps) {
   const copy = ENTRY_COPY[lang]
+  const guestClassName = ['auth-panel', 'account-entry-panel', className].filter(Boolean).join(' ')
+  const userClassName = ['auth-panel', className].filter(Boolean).join(' ')
 
   if (!userEmail) {
     return (
-      <section className="auth-panel sidebar-auth account-entry-panel">
+      <section className={guestClassName}>
         <a className="account-enter-link" href={loginHref}>
           {copy.enter}
         </a>
@@ -55,7 +59,7 @@ export function AccountEntryCard({
   }
 
   return (
-    <section className="auth-panel sidebar-auth">
+    <section className={userClassName}>
       <div className="auth-panel-head">
         <span className="mono">{lang === 'zh' ? '账号' : 'Account'}</span>
       </div>
