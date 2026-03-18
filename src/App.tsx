@@ -199,9 +199,9 @@ const APP_COPY = {
     logoutSuccess: '已退出登录。',
     logoutFailed: '退出失败',
     logoutFallback: '请稍后重试。',
-    unlockPanelTitle: '作品解锁与安装',
-    unlockPanelIntro: '解锁后可进入项目子域名并一键安装到本地设备。',
-    unlockPanelSummary: '每个作品可按后台配置单独解锁，也可一次性全部解锁。',
+    unlockPanelTitle: 'Center Control 一键部署',
+    unlockPanelIntro: '所有用户都可直接部署免费版；登录并升级后，安装脚本会自动切到包含付费部分的完整版。',
+    unlockPanelSummary: '作品访问权限和部署版本是两条独立规则：即使没登录或没升级，也能部署，只是默认得到免费版。',
     unlockPlanSingleLabel: '单作品解锁',
     unlockPlanAllAccess: '全部解锁，后续作品免费',
     unlockPlanUnavailable: '当前未开放这个解锁方式。',
@@ -210,16 +210,17 @@ const APP_COPY = {
     unlockAllAccessSuccess: '已完成全部解锁，后续作品也将免费。',
     unlockSingleSuccessPrefix: '已解锁作品',
     unlockBypassNotice: '当前身份可直接访问全部作品，无需解锁。',
-    unlockStorageRemote: '权限存储: Supabase',
-    unlockStorageLocal: '权限存储: 本地缓存（只读）',
-    unlockStorageLoading: '权限存储: 同步中...',
-    unlockStorageIdle: '权限存储: 登录后可用',
+    unlockStorageRemote: '部署版本: 默认免费版；如当前账号已有权益，会自动切到完整版',
+    unlockStorageLocal: '部署版本: 默认免费版；本地仅缓存作品访问权限',
+    unlockStorageLoading: '部署版本: 正在同步当前账号权益...',
+    unlockStorageIdle: '部署版本: 默认免费版（登录并升级后切到完整版）',
     unlockRemoteFallback: 'Supabase 解锁服务暂不可用，当前仅可读取本地缓存的已解锁权限。',
     unlockPaidRequired: '该解锁需要付费权益，请先在 latti.wordm.us 完成订阅或购买。',
     unlockLifetimeRequired: '该解锁仅对终身权益用户开放。',
     unlockPaidServerRequired: '付费解锁服务暂不可用，请稍后再试。',
-    unlockInstallHintPrefix: '付费后可一键自部署：',
+    unlockInstallHintPrefix: '安装脚本与说明：',
     unlockInstallHintLink: '打开安装指南',
+    deployUpgradeAction: '升级到完整版',
     unlockCheckoutStarting: '正在跳转支付...',
     unlockCheckoutProductMissing: '未配置该解锁方案的商品，请先在 latti.wordm.us 完成升级。',
     unlockCheckoutFailed: '拉起支付失败，请稍后重试。',
@@ -322,9 +323,9 @@ const APP_COPY = {
     logoutSuccess: 'Logged out.',
     logoutFailed: 'Logout failed',
     logoutFallback: 'Please try again later.',
-    unlockPanelTitle: 'Unlock & Install',
-    unlockPanelIntro: 'Unlock to access project subdomains and one-click install to your device.',
-    unlockPanelSummary: 'Each project can be unlocked individually through backend pricing, or you can unlock everything at once.',
+    unlockPanelTitle: 'One-Click Center Control Deploy',
+    unlockPanelIntro: 'Everyone can deploy the free edition directly. After sign-in and upgrade, the install script switches to the full edition with paid modules.',
+    unlockPanelSummary: 'Project access rules and deployment edition are separate: even without login or upgrade, deployment still works and defaults to the free edition.',
     unlockPlanSingleLabel: 'Single project unlock',
     unlockPlanAllAccess: 'Unlock all projects, future projects included',
     unlockPlanUnavailable: 'This unlock path is not available right now.',
@@ -333,16 +334,17 @@ const APP_COPY = {
     unlockAllAccessSuccess: 'All projects are unlocked, including future ones.',
     unlockSingleSuccessPrefix: 'Unlocked project',
     unlockBypassNotice: 'Your role can access all projects without unlock limits.',
-    unlockStorageRemote: 'Storage: Supabase',
-    unlockStorageLocal: 'Storage: Local cache (read-only)',
-    unlockStorageLoading: 'Storage: syncing...',
-    unlockStorageIdle: 'Storage: available after login',
+    unlockStorageRemote: 'Deployment tier: defaults to free, and auto-switches to full if this account already has entitlement',
+    unlockStorageLocal: 'Deployment tier: defaults to free; local cache only affects project access state',
+    unlockStorageLoading: 'Deployment tier: syncing current account entitlement...',
+    unlockStorageIdle: 'Deployment tier: free by default (sign in and upgrade to switch to full)',
     unlockRemoteFallback: 'Supabase unlock service is unavailable. Only previously cached access can be read right now.',
     unlockPaidRequired: 'This unlock requires paid entitlement. Complete purchase on latti.wordm.us first.',
     unlockLifetimeRequired: 'This unlock is available for lifetime entitlement only.',
     unlockPaidServerRequired: 'Paid unlock service is unavailable. Please try again later.',
-    unlockInstallHintPrefix: 'After payment, one-click self-host is available here:',
+    unlockInstallHintPrefix: 'Install guide and script:',
     unlockInstallHintLink: 'Open install guide',
+    deployUpgradeAction: 'Upgrade to full edition',
     unlockCheckoutStarting: 'Redirecting to checkout...',
     unlockCheckoutProductMissing: 'No product is configured for this unlock mode. Upgrade on latti.wordm.us first.',
     unlockCheckoutFailed: 'Failed to start checkout. Please try again later.',
@@ -1645,6 +1647,14 @@ function App() {
     }
   }
 
+  function openInstallGuide() {
+    if (typeof window === 'undefined') {
+      return
+    }
+
+    window.open(selfHostInstallGuideUrl, '_blank', 'noopener,noreferrer')
+  }
+
   function redirectAfterDedicatedLogin() {
     if (rootView !== 'login' || typeof window === 'undefined') {
       return false
@@ -2259,16 +2269,23 @@ function App() {
           installHintPrefix: copy.unlockInstallHintPrefix,
           installHintLinkLabel: copy.unlockInstallHintLink,
           installGuideUrl: selfHostInstallGuideUrl,
-          bypassNotice: authRole === 'admin' || authRole === 'tester' ? copy.unlockBypassNotice : null,
+          bypassNotice: null,
           statusMessage: unlockStatusMessage,
-          actionsDisabled: unlockActionDisabled,
-          primaryActionLabel: pricingConfig.allAccess.enabled
-            ? formatUnlockActionLabel(
-                copy.unlockPlanAllAccess,
-                lang === 'zh' ? pricingConfig.allAccess.priceZh : pricingConfig.allAccess.priceEn,
-              )
-            : null,
-          onPrimaryAction: pricingConfig.allAccess.enabled ? () => void handleUnlockAllAccess() : null,
+          primaryActionLabel: copy.unlockInstallHintLink,
+          primaryActionDisabled: false,
+          onPrimaryAction: openInstallGuide,
+          secondaryActionLabel:
+            authRole === 'admin' || authRole === 'tester' || !pricingConfig.allAccess.enabled
+              ? undefined
+              : formatUnlockActionLabel(
+                  copy.deployUpgradeAction,
+                  lang === 'zh' ? pricingConfig.allAccess.priceZh : pricingConfig.allAccess.priceEn,
+                ),
+          secondaryActionDisabled: unlockActionDisabled,
+          onSecondaryAction:
+            authRole === 'admin' || authRole === 'tester' || !pricingConfig.allAccess.enabled
+              ? null
+              : () => void handleUnlockAllAccess(),
         }
       : null
 

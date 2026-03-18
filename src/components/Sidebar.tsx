@@ -17,10 +17,11 @@ type SidebarProps = {
     installGuideUrl: string
     bypassNotice: string | null
     statusMessage: string
-    actionsDisabled: boolean
     primaryActionLabel: string | null
+    primaryActionDisabled?: boolean
     onPrimaryAction?: (() => void) | null
     secondaryActionLabel?: string
+    secondaryActionDisabled?: boolean
     onSecondaryAction?: (() => void) | null
   } | null
 }
@@ -82,7 +83,7 @@ export function Sidebar({ lang, onLangChange, authPanel, loginHref, unlockPanel 
                 <button
                   type="button"
                   className="unlock-plan-btn"
-                  disabled={unlockPanel.actionsDisabled}
+                  disabled={unlockPanel.primaryActionDisabled}
                   onClick={unlockPanel.onPrimaryAction}
                 >
                   {unlockPanel.primaryActionLabel}
@@ -92,7 +93,7 @@ export function Sidebar({ lang, onLangChange, authPanel, loginHref, unlockPanel 
                 <button
                   type="button"
                   className="unlock-plan-btn"
-                  disabled={unlockPanel.actionsDisabled}
+                  disabled={unlockPanel.secondaryActionDisabled}
                   onClick={unlockPanel.onSecondaryAction}
                 >
                   {unlockPanel.secondaryActionLabel}
