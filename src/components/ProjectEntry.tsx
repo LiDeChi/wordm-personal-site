@@ -1,14 +1,19 @@
-import type { PortfolioProject } from '../types'
 import type { Lang } from '../i18n/lang'
+import {
+  formatProjectOfferCountdown,
+  formatProjectOfferLabel,
+  type ProjectOfferState,
+} from '../lib/project-offers'
+import { getProjectPresentation } from '../data/projectPresentation'
+import type { PortfolioProject } from '../types'
 
 type ProjectEntryProps = {
   lang: Lang
   project: PortfolioProject
-  unlocked: boolean
+  accessible: boolean
+  offerState: ProjectOfferState
   focused?: boolean
-  unlockBusy: boolean
   onSelectProject: (projectSlug: string) => void
-  onUnlockSingle: (projectSlug: string) => void
 }
 
 function initials(name: string): string {
@@ -21,34 +26,29 @@ function initials(name: string): string {
     .join('')
 }
 
-const PROJECT_COPY = {
-  zh: {
-    unlocked: '已解锁',
-    locked: '未解锁',
-    unlockSingle: '解锁作品',
-    viewDetail: '查看详情',
-  },
-  en: {
-    unlocked: 'Unlocked',
-    locked: 'Locked',
-    unlockSingle: 'Unlock',
-    viewDetail: 'View detail',
-  },
-} as const
-
 export function ProjectEntry({
   lang,
   project,
-  unlocked,
+  accessible,
+  offerState,
   focused = false,
-  unlockBusy,
   onSelectProject,
-  onUnlockSingle,
 }: ProjectEntryProps) {
-  const copy = PROJECT_COPY[lang]
+  const presentation = getProjectPresentation(project, lang)
+  const offerVariant =
+    offerState.baseKind === 'free'
+      ? 'gallery-card-free'
+      : offerState.baseKind === 'limited_free' && offerState.effectiveKind === 'free'
+        ? 'gallery-card-limited-free'
+        : 'gallery-card-paid'
+  const offerLabel = formatProjectOfferLabel(offerState, lang)
+  const countdown = formatProjectOfferCountdown(offerState, lang)
+  const countdownLabel = countdown ? (lang === 'zh' ? `剩余 ${countdown}` : `Ends in ${countdown}`) : null
+  const showLock = offerState.effectiveKind === 'paid' && !accessible
   const cardClassNames = [
     'gallery-card',
-    unlocked ? 'gallery-card-unlocked' : 'gallery-card-locked',
+    accessible ? 'gallery-card-unlocked' : 'gallery-card-locked',
+    offerVariant,
     focused ? 'gallery-card-focused' : '',
   ]
     .filter(Boolean)
@@ -57,32 +57,32 @@ export function ProjectEntry({
   return (
     <article className={cardClassNames} id={`project-${project.slug}`}>
       <button type="button" className="gallery-cover gallery-cover-button" onClick={() => onSelectProject(project.slug)}>
-        {project.thumbnailUrl ? (
-          <img className="gallery-cover-image" src={project.thumbnailUrl} alt={project.name} loading="lazy" />
+        <div className="gallery-cover-topline">
+          <span className="gallery-offer-badge mono">{offerLabel}</span>
+          {countdownLabel ? <span className="gallery-offer-countdown mono">{countdownLabel}</span> : null}
+        </div>
+        {presentation.thumbnailUrl ? (
+          <img className="gallery-cover-image" src={presentation.thumbnailUrl} alt={presentation.name} loading="lazy" />
         ) : (
-          <div className="gallery-cover-placeholder">{initials(project.name) || 'PJ'}</div>
+          <div className="gallery-cover-placeholder">{initials(presentation.name) || 'PJ'}</div>
         )}
-        <div className="gallery-lock-badge mono">{unlocked ? copy.unlocked : copy.locked}</div>
+        {showLock ? (
+          <span className="gallery-lock-indicator" aria-hidden="true">
+            <svg viewBox="0 0 16 16" focusable="false">
+              <path d="M5.5 6V4.75a2.5 2.5 0 1 1 5 0V6h.75A1.75 1.75 0 0 1 13 7.75v4.5A1.75 1.75 0 0 1 11.25 14h-6.5A1.75 1.75 0 0 1 3 12.25v-4.5A1.75 1.75 0 0 1 4.75 6H5.5Zm1 0h3V4.75a1.5 1.5 0 1 0-3 0V6Z" />
+            </svg>
+          </span>
+        ) : null}
         <div className="gallery-hover-detail">
-          <p>{project.summary}</p>
+          <p>{presentation.summary}</p>
         </div>
       </button>
 
       <div className="gallery-card-body gallery-card-body-simple">
         <button type="button" className="paper-title gallery-title gallery-title-button" onClick={() => onSelectProject(project.slug)}>
-          {project.name}
+          {presentation.name}
         </button>
-        <p className="gallery-tagline">{project.tagline}</p>
-        <div className="gallery-card-actions">
-          <button
-            type="button"
-            className="gallery-unlock-btn"
-            disabled={unlockBusy}
-            onClick={() => (unlocked ? onSelectProject(project.slug) : onUnlockSingle(project.slug))}
-          >
-            {unlocked ? copy.viewDetail : copy.unlockSingle}
-          </button>
-        </div>
+        <p className="gallery-tagline">{presentation.tagline}</p>
       </div>
     </article>
   )

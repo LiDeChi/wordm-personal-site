@@ -65,9 +65,47 @@ function hasDocument() {
   return typeof document !== 'undefined'
 }
 
+function sanitizeAuthRedirectUrl(rawUrl: string) {
+  const url = new URL(rawUrl)
+
+  for (const key of [
+    'code',
+    'error',
+    'error_code',
+    'error_description',
+    'provider_token',
+    'provider_refresh_token',
+  ]) {
+    url.searchParams.delete(key)
+  }
+
+  const hashParams = new URLSearchParams(url.hash.replace(/^#/, ''))
+  const hasAuthHash = [
+    'access_token',
+    'refresh_token',
+    'expires_at',
+    'expires_in',
+    'provider_token',
+    'provider_refresh_token',
+    'token_type',
+    'type',
+  ].some((key) => hashParams.has(key))
+
+  if (hasAuthHash) {
+    url.hash = ''
+  }
+
+  return url.toString()
+}
+
 function isWordmHost(hostname: string) {
   const host = hostname.toLowerCase()
   return host === 'wordm.us' || host.endsWith('.wordm.us')
+}
+
+function isLocalAuthHost(hostname: string) {
+  const host = hostname.toLowerCase()
+  return host === 'localhost' || host === '127.0.0.1'
 }
 
 function parseRoleFromMetadata(user: User): AuthRole | null {
@@ -82,6 +120,25 @@ function parseRoleFromMetadata(user: User): AuthRole | null {
 
 function normalizeEmail(email: string | null | undefined) {
   return (email ?? '').trim().toLowerCase()
+}
+
+export function resolveSafeAuthRedirectUrl(rawUrl: string | null | undefined) {
+  if (!rawUrl) {
+    return null
+  }
+
+  try {
+    const baseUrl = hasWindow() ? window.location.origin : 'https://wordm.us'
+    const url = new URL(rawUrl, baseUrl)
+
+    if (!isWordmHost(url.hostname) && !isLocalAuthHost(url.hostname)) {
+      return null
+    }
+
+    return sanitizeAuthRedirectUrl(url.toString())
+  } catch {
+    return null
+  }
 }
 
 function resolveCookieDomain() {
@@ -377,6 +434,32 @@ export async function loginWithPassword(config: AuthConfig, email: string, passw
   }
 
   return data.user
+}
+
+export async function loginWithGoogle(config: AuthConfig, redirectTo?: string | null) {
+  const client = getSupabaseClient(config)
+  const nextRedirectTo =
+    resolveSafeAuthRedirectUrl(redirectTo) ?? (hasWindow() ? sanitizeAuthRedirectUrl(window.location.href) : undefined)
+  const { data, error } = await client.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: nextRedirectTo,
+      queryParams: {
+        prompt: 'select_account',
+      },
+    },
+  })
+
+  if (error) {
+    throw error
+  }
+
+  if (hasWindow() && data.url) {
+    window.location.assign(data.url)
+    return true
+  }
+
+  return false
 }
 
 export async function signupWithPassword(config: AuthConfig, email: string, password: string): Promise<SignupResult> {

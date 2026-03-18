@@ -1,5 +1,6 @@
 import fs from 'node:fs'
 import path from 'node:path'
+import { execFileSync } from 'node:child_process'
 
 const DEFAULT_ORCHESTRATION_ROOT = '/Users/lidechi/Documents/Github/orchestration'
 const DEFAULT_GITHUB_ROOT = '/Users/lidechi/Documents/Github'
@@ -38,6 +39,29 @@ function normalizeGithub(url) {
   }
 
   return trimmed.endsWith('.git') ? trimmed.slice(0, -4) : trimmed
+}
+
+function readGitOriginUrl(projectPath) {
+  const normalizedPath = toNullableString(projectPath)
+  if (!normalizedPath) {
+    return null
+  }
+
+  const repoPath = path.join(githubRoot, normalizedPath)
+  if (!fs.existsSync(repoPath)) {
+    return null
+  }
+
+  try {
+    const originUrl = execFileSync('git', ['remote', 'get-url', 'origin'], {
+      cwd: repoPath,
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore'],
+    }).trim()
+    return normalizeGithub(originUrl)
+  } catch {
+    return null
+  }
 }
 
 function toNullableString(value) {
@@ -273,7 +297,9 @@ const projects = (rawIndex.projects || [])
     const slug = safeSlug(item.slug || manifest.slug, item.name || manifest.name)
     const detail = readManifestDetail(manifest, manifestPath)
     const subdomain = buildSubdomain(slug, usedSubdomains)
-    const sourceUrl = normalizeGithub(detail.apiOrPackage && detail.apiOrPackage.includes('/') ? detail.apiOrPackage : null)
+    const sourceUrl =
+      readGitOriginUrl(detail.projectPath) ||
+      normalizeGithub(detail.apiOrPackage && detail.apiOrPackage.includes('/') ? detail.apiOrPackage : null)
     const readmeText = readProjectReadme(detail.entry, manifestPath)
     const paragraph = pickReadmeParagraph(readmeText, manifest.name || item.name || slug)
     const tagline = buildTagline(paragraph, manifest, manifest.name || item.name || slug)

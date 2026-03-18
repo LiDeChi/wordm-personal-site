@@ -5,6 +5,7 @@ import type { Lang } from '../i18n/lang'
 import type { ShareLinkRecord, ShareScope } from '../lib/share-links'
 import { formatDate } from '../lib/projects'
 import { withSiteParams } from '../lib/lang-url'
+import type { ProjectOfferKind, ProjectPricingOverride, SitePricingConfig } from '../lib/project-offers'
 
 type ShareFlagKey = 'allowPortfolio' | 'allowBlog' | 'allowDeploy' | 'allowResume' | 'allowAllProjects'
 
@@ -22,6 +23,10 @@ type AdminPageProps = {
   shareScope: ShareScope
   shareLinks: ShareLinkRecord[]
   lastCreatedShareUrl: string
+  canManagePricing: boolean
+  pricingBusy: boolean
+  pricingStatusMessage: string
+  pricingConfig: SitePricingConfig
   onToggleProject: (slug: string) => void
   onSelectFeatured: () => void
   onSelectAll: () => void
@@ -37,6 +42,9 @@ type AdminPageProps = {
   onCopyLastShareLink: () => void
   onPurgeInactiveShareLinks: () => void
   onRevokeShareLink: (shareLinkId: string) => void
+  onPricingConfigChange: (value: SitePricingConfig) => void
+  onPricingReload: () => void
+  onPricingSave: () => void
 }
 
 const COPY = {
@@ -53,6 +61,27 @@ const COPY = {
     resume: '简历子域',
     debug: '根域 Debug',
     projects: '项目管理',
+    pricingTitle: '定价与解锁规则',
+    pricingHint: '这里的配置会写入 Supabase，作为前台真实生效的单作品 / 全部解锁规则。',
+    pricingNeedLogin: '请先登录管理员或测试账号，才能保存后台定价配置。',
+    pricingGlobalSingle: '默认单作品解锁',
+    pricingGlobalAllAccess: '全部解锁',
+    pricingEnabled: '启用',
+    pricingPriceZh: '中文价格',
+    pricingPriceEn: '英文价格',
+    pricingCheckoutId: 'Checkout Product ID',
+    pricingUpdatedAt: '后台更新时间',
+    pricingReload: '重新加载',
+    pricingSave: '保存定价配置',
+    pricingProjectOverrides: '项目级覆盖',
+    pricingAccess: '访问方式',
+    pricingAccessFree: '免费',
+    pricingAccessLimitedFree: '限时免费',
+    pricingAccessPaid: '付费',
+    pricingFreeUntil: '限免截止时间',
+    pricingSingleEnabled: '允许单独解锁',
+    pricingResetProject: '清空项目覆盖',
+    pricingInherited: '留空则继承全局',
     detail: '查看详情',
     subdomain: '项目子域',
     source: '源码',
@@ -112,6 +141,27 @@ const COPY = {
     resume: 'Resume subdomain',
     debug: 'Root debug',
     projects: 'Project management',
+    pricingTitle: 'Pricing & Unlock Rules',
+    pricingHint: 'These settings are saved to Supabase and drive the live single-project and all-access offers.',
+    pricingNeedLogin: 'Log in with an admin or tester account before saving backend pricing.',
+    pricingGlobalSingle: 'Default single-project unlock',
+    pricingGlobalAllAccess: 'All-access unlock',
+    pricingEnabled: 'Enabled',
+    pricingPriceZh: 'Chinese price label',
+    pricingPriceEn: 'English price label',
+    pricingCheckoutId: 'Checkout product ID',
+    pricingUpdatedAt: 'Backend updated',
+    pricingReload: 'Reload',
+    pricingSave: 'Save pricing config',
+    pricingProjectOverrides: 'Per-project overrides',
+    pricingAccess: 'Access model',
+    pricingAccessFree: 'Free',
+    pricingAccessLimitedFree: 'Limited free',
+    pricingAccessPaid: 'Paid',
+    pricingFreeUntil: 'Free until',
+    pricingSingleEnabled: 'Single unlock enabled',
+    pricingResetProject: 'Clear project override',
+    pricingInherited: 'Leave blank to inherit global values',
     detail: 'View detail',
     subdomain: 'Project subdomain',
     source: 'Source',
@@ -209,6 +259,57 @@ function statusLabel(lang: Lang, status: ShareLinkRecord['status']) {
   return copy.shareStatusActive
 }
 
+function formatDateTimeLocal(value: string | null | undefined) {
+  if (!value) {
+    return ''
+  }
+
+  const date = new Date(value)
+  if (Number.isNaN(date.valueOf())) {
+    return ''
+  }
+
+  const pad = (part: number) => String(part).padStart(2, '0')
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`
+}
+
+function toIsoOrNull(value: string) {
+  const normalized = value.trim()
+  if (!normalized) {
+    return null
+  }
+
+  const date = new Date(normalized)
+  if (Number.isNaN(date.valueOf())) {
+    return null
+  }
+
+  return date.toISOString()
+}
+
+function hasProjectOverride(value: ProjectPricingOverride | undefined) {
+  if (!value) {
+    return false
+  }
+
+  return Boolean(
+    value.access ||
+      value.freeUntil ||
+      value.singleUnlockEnabled !== null && value.singleUnlockEnabled !== undefined ||
+      value.priceZh ||
+      value.priceEn ||
+      value.checkoutProductId,
+  )
+}
+
+function accessOptions(copy: (typeof COPY)[Lang]): Array<{ value: ProjectOfferKind; label: string }> {
+  return [
+    { value: 'free', label: copy.pricingAccessFree },
+    { value: 'limited_free', label: copy.pricingAccessLimitedFree },
+    { value: 'paid', label: copy.pricingAccessPaid },
+  ]
+}
+
 export function AdminPage({
   lang,
   lastUpdated,
@@ -223,6 +324,10 @@ export function AdminPage({
   shareScope,
   shareLinks,
   lastCreatedShareUrl,
+  canManagePricing,
+  pricingBusy,
+  pricingStatusMessage,
+  pricingConfig,
   onToggleProject,
   onSelectFeatured,
   onSelectAll,
@@ -238,6 +343,9 @@ export function AdminPage({
   onCopyLastShareLink,
   onPurgeInactiveShareLinks,
   onRevokeShareLink,
+  onPricingConfigChange,
+  onPricingReload,
+  onPricingSave,
 }: AdminPageProps) {
   const copy = COPY[lang]
   const [shareSearch, setShareSearch] = useState('')
@@ -269,6 +377,188 @@ export function AdminPage({
       return haystack.includes(normalizedProjectSearch)
     })
   }, [normalizedProjectSearch, projects])
+  const pricingAccessOptions = useMemo(() => accessOptions(copy), [copy])
+  const pricingInputsDisabled = pricingBusy || !canManagePricing
+  const updatePricingConfig = (updater: (current: SitePricingConfig) => SitePricingConfig) => {
+    onPricingConfigChange(updater(pricingConfig))
+  }
+  const updateSingleUnlock = (
+    field: 'enabled' | 'defaultPriceZh' | 'defaultPriceEn' | 'defaultCheckoutProductId',
+    value: boolean | string | null,
+  ) => {
+    updatePricingConfig((current) => ({
+      ...current,
+      singleUnlock: {
+        ...current.singleUnlock,
+        [field]: value,
+      },
+    }))
+  }
+  const updateAllAccess = (
+    field: 'enabled' | 'priceZh' | 'priceEn' | 'checkoutProductId',
+    value: boolean | string | null,
+  ) => {
+    updatePricingConfig((current) => ({
+      ...current,
+      allAccess: {
+        ...current.allAccess,
+        [field]: value,
+      },
+    }))
+  }
+  const updateProjectOverride = (
+    slug: string,
+    updater: (current: ProjectPricingOverride) => ProjectPricingOverride,
+  ) => {
+    updatePricingConfig((current) => ({
+      ...current,
+      projects: {
+        ...current.projects,
+        [slug]: updater(current.projects[slug] ?? {}),
+      },
+    }))
+  }
+  const clearProjectOverride = (slug: string) => {
+    updatePricingConfig((current) => {
+      const nextProjects = { ...current.projects }
+      delete nextProjects[slug]
+      return {
+        ...current,
+        projects: nextProjects,
+      }
+    })
+  }
+  const shareControls = (
+    <section className="admin-sidebar-panel">
+      <div className="admin-sidebar-group">
+        <h2>{copy.shareTitle}</h2>
+        <p className="admin-sidebar-copy">{copy.shareHint}</p>
+        <div className="admin-auth-wrap">
+          <AuthPanel {...authPanel} className="admin-auth-panel" compact />
+        </div>
+        {!canManageShares ? <p className="unlock-status-message">{copy.shareNeedLogin}</p> : null}
+      </div>
+
+      {canManageShares ? (
+        <>
+          <div className="admin-sidebar-group">
+            <div className="debug-share-grid admin-share-grid">
+              <label className="debug-share-field">
+                <span>{copy.shareLabel}</span>
+                <input value={shareLabel} onChange={(event) => onShareLabelChange(event.target.value)} placeholder={copy.shareLabelPlaceholder} />
+              </label>
+              <label className="debug-share-field">
+                <span>{copy.shareDays}</span>
+                <input value={shareExpiresInDays} onChange={(event) => onShareExpiresInDaysChange(event.target.value)} inputMode="numeric" placeholder="3" />
+              </label>
+            </div>
+
+            <div className="debug-share-toggles admin-share-toggles">
+              <label className={`debug-share-toggle${shareScope.allowPortfolio ? ' checked' : ''}`}>
+                <input type="checkbox" checked={shareScope.allowPortfolio} onChange={() => onToggleShareFlag('allowPortfolio')} />
+                <span>{copy.shareScopePortfolio}</span>
+              </label>
+              <label className={`debug-share-toggle${shareScope.allowDeploy ? ' checked' : ''}`}>
+                <input type="checkbox" checked={shareScope.allowDeploy} onChange={() => onToggleShareFlag('allowDeploy')} />
+                <span>{copy.shareScopeDeploy}</span>
+              </label>
+              <label className={`debug-share-toggle${shareScope.allowResume ? ' checked' : ''}`}>
+                <input type="checkbox" checked={shareScope.allowResume} onChange={() => onToggleShareFlag('allowResume')} />
+                <span>{copy.shareScopeResume}</span>
+              </label>
+              <label className={`debug-share-toggle${shareScope.allowAllProjects ? ' checked' : ''}`}>
+                <input type="checkbox" checked={shareScope.allowAllProjects} onChange={() => onToggleShareFlag('allowAllProjects')} />
+                <span>{shareScope.allowAllProjects ? copy.shareScopeAllProjects : `${copy.shareCurrentSelection} (${selectedSlugs.length})`}</span>
+              </label>
+            </div>
+
+            <div className="admin-filter-grid admin-filter-grid-compact">
+              <label className="debug-share-field">
+                <span>{copy.shareSearchLabel}</span>
+                <input value={shareSearch} onChange={(event) => setShareSearch(event.target.value)} placeholder={copy.shareSearchPlaceholder} />
+              </label>
+              <label className="debug-share-field">
+                <span>{copy.projectSearchLabel}</span>
+                <input value={projectSearch} onChange={(event) => setProjectSearch(event.target.value)} placeholder={copy.projectSearchPlaceholder} />
+              </label>
+            </div>
+
+            <div className="debug-actions">
+              <button type="button" onClick={onSelectFeatured}>{copy.resetDefault}</button>
+              <button type="button" onClick={onSelectAll}>{copy.selectAll}</button>
+            </div>
+
+            <div className="debug-grid admin-project-picker">
+              {filteredProjects.map((project) => {
+                const checked = selectedSlugs.includes(project.slug)
+                return (
+                  <label key={project.id} className={`debug-item${checked ? ' checked' : ''}`}>
+                    <input type="checkbox" checked={checked} onChange={() => onToggleProject(project.slug)} />
+                    <span>{project.name}</span>
+                    <span className="mono">{project.subdomain}.wordm.us</span>
+                  </label>
+                )
+              })}
+            </div>
+          </div>
+
+          <div className="admin-sidebar-group">
+            <div className="debug-actions admin-share-actions">
+              <button type="button" onClick={onCreateShareLink} disabled={shareBusy}>
+                {copy.shareCreate}
+              </button>
+              <button type="button" onClick={onCreateFullExperienceShareLink} disabled={shareBusy}>
+                {copy.shareTemplateFull}
+              </button>
+              <button type="button" onClick={onCreateSevenDayShareLink} disabled={shareBusy}>
+                {copy.shareTemplateSeven}
+              </button>
+              <button type="button" onClick={onCreateThirtyDayShareLink} disabled={shareBusy}>
+                {copy.shareTemplateThirty}
+              </button>
+              <button type="button" onClick={onCopyLastShareLink} disabled={!lastCreatedShareUrl}>
+                {copy.shareCopyLatest}
+              </button>
+              <button type="button" onClick={onPurgeInactiveShareLinks} disabled={shareBusy}>
+                {copy.sharePurgeInactive}
+              </button>
+            </div>
+
+            {lastCreatedShareUrl ? <p className="debug-share-url mono">{lastCreatedShareUrl}</p> : null}
+            {shareStatusMessage ? <p className="debug-error">{shareStatusMessage}</p> : null}
+          </div>
+        </>
+      ) : null}
+    </section>
+  )
+  const shareLinksSection = canManageShares ? (
+    <section className="project-detail-section admin-content-section">
+      <h2>{copy.shareListTitle}</h2>
+      <div className="debug-share-list">
+        {filteredShareLinks.length === 0 ? <p className="debug-share-empty">{copy.shareEmpty}</p> : null}
+        {filteredShareLinks.map((shareLink) => (
+          <article key={shareLink.id} className="debug-share-card">
+            <div className="debug-share-card-head">
+              <div>
+                <strong>{shareLink.label || shareLink.id.slice(0, 8)}</strong>
+                <div className="mono debug-share-card-meta">{statusLabel(lang, shareLink.status)}</div>
+              </div>
+              <button type="button" onClick={() => onRevokeShareLink(shareLink.id)} disabled={shareBusy || shareLink.status !== 'active'}>
+                {copy.shareRevoke}
+              </button>
+            </div>
+            <p className="debug-share-card-scope">{summarizeScope(copy, shareLink.scope, shareLink.scope.allowedProjectSlugs.length)}</p>
+            <p className="debug-share-card-meta">
+              {copy.shareCreatedAt}: {formatMetaDate(shareLink.createdAt, lang)} · {copy.shareExpiresAt}: {formatMetaDate(shareLink.expiresAt, lang)}
+            </p>
+            <p className="debug-share-card-meta">
+              {copy.shareVisits}: {shareLink.visitCount} · {copy.shareLastAccessed}: {shareLink.lastAccessedAt ? formatMetaDate(shareLink.lastAccessedAt, lang) : copy.noCommand}
+            </p>
+          </article>
+        ))}
+      </div>
+    </section>
+  ) : null
 
   return (
     <div className="subdomain-page admin-page-shell">
@@ -276,204 +566,323 @@ export function AdminPage({
         <p className="mono subdomain-tag">admin.wordm.us</p>
         <h1>{copy.title}</h1>
         <p>{copy.subtitle}</p>
+        <div className="admin-console-layout">
+          <aside className="admin-console-sidebar">
+            <div className="admin-console-sidebar-inner">
+              <section className="admin-sidebar-panel">
+                <div className="admin-overview-grid admin-overview-grid-compact">
+                  <div className="admin-overview-card">
+                    <span className="mono">{copy.projectCount}</span>
+                    <strong>{projects.length}</strong>
+                  </div>
+                  <div className="admin-overview-card">
+                    <span className="mono">{copy.featuredCount}</span>
+                    <strong>{detailedCount}</strong>
+                  </div>
+                  <div className="admin-overview-card">
+                    <span className="mono">{copy.updated}</span>
+                    <strong>{lastUpdated}</strong>
+                  </div>
+                  <div className="admin-overview-card">
+                    <span className="mono">{copy.protected}</span>
+                    <strong>{copy.protectedValue}</strong>
+                  </div>
+                </div>
 
-        <section className="admin-overview-grid">
-          <div className="admin-overview-card">
-            <span className="mono">{copy.projectCount}</span>
-            <strong>{projects.length}</strong>
-          </div>
-          <div className="admin-overview-card">
-            <span className="mono">{copy.featuredCount}</span>
-            <strong>{detailedCount}</strong>
-          </div>
-          <div className="admin-overview-card">
-            <span className="mono">{copy.updated}</span>
-            <strong>{lastUpdated}</strong>
-          </div>
-          <div className="admin-overview-card">
-            <span className="mono">{copy.protected}</span>
-            <strong>{copy.protectedValue}</strong>
-          </div>
-        </section>
+                <div className="admin-sidebar-group">
+                  <h2>{copy.quickLinks}</h2>
+                  <div className="paper-links admin-quick-links">
+                    <a href={rootPortfolioUrl} target="_blank" rel="noreferrer">{copy.rootPortfolio}</a>
+                    <a href={resumeUrl} target="_blank" rel="noreferrer">{copy.resume}</a>
+                    <a href={debugUrl} target="_blank" rel="noreferrer">{copy.debug}</a>
+                  </div>
+                </div>
+              </section>
 
-        <section className="project-detail-section">
-          <h2>{copy.quickLinks}</h2>
-          <div className="paper-links admin-quick-links">
-            <a href={rootPortfolioUrl} target="_blank" rel="noreferrer">{copy.rootPortfolio}</a>
-            <a href={resumeUrl} target="_blank" rel="noreferrer">{copy.resume}</a>
-            <a href={debugUrl} target="_blank" rel="noreferrer">{copy.debug}</a>
-          </div>
-        </section>
+              {shareControls}
+            </div>
+          </aside>
 
-        <section className="project-detail-section">
-          <h2>{copy.shareTitle}</h2>
-          <p>{copy.shareHint}</p>
-          <div className="admin-auth-wrap">
-            <AuthPanel {...authPanel} className="admin-auth-panel" compact />
-          </div>
-          {!canManageShares ? <p className="unlock-status-message">{copy.shareNeedLogin}</p> : null}
+          <div className="admin-console-content">
+            <section className="project-detail-section admin-content-section">
+              <h2>{copy.pricingTitle}</h2>
+              <p>{copy.pricingHint}</p>
+              {!canManagePricing ? <p className="unlock-status-message">{copy.pricingNeedLogin}</p> : null}
 
-          {canManageShares ? (
-            <>
-              <div className="debug-share-grid admin-share-grid">
-                <label className="debug-share-field">
-                  <span>{copy.shareLabel}</span>
-                  <input value={shareLabel} onChange={(event) => onShareLabelChange(event.target.value)} placeholder={copy.shareLabelPlaceholder} />
-                </label>
-                <label className="debug-share-field">
-                  <span>{copy.shareDays}</span>
-                  <input value={shareExpiresInDays} onChange={(event) => onShareExpiresInDaysChange(event.target.value)} inputMode="numeric" placeholder="3" />
-                </label>
-              </div>
-
-              <div className="debug-share-toggles admin-share-toggles">
-                <label className={`debug-share-toggle${shareScope.allowPortfolio ? ' checked' : ''}`}>
-                  <input type="checkbox" checked={shareScope.allowPortfolio} onChange={() => onToggleShareFlag('allowPortfolio')} />
-                  <span>{copy.shareScopePortfolio}</span>
-                </label>
-                <label className={`debug-share-toggle${shareScope.allowDeploy ? ' checked' : ''}`}>
-                  <input type="checkbox" checked={shareScope.allowDeploy} onChange={() => onToggleShareFlag('allowDeploy')} />
-                  <span>{copy.shareScopeDeploy}</span>
-                </label>
-                <label className={`debug-share-toggle${shareScope.allowResume ? ' checked' : ''}`}>
-                  <input type="checkbox" checked={shareScope.allowResume} onChange={() => onToggleShareFlag('allowResume')} />
-                  <span>{copy.shareScopeResume}</span>
-                </label>
-                <label className={`debug-share-toggle${shareScope.allowAllProjects ? ' checked' : ''}`}>
-                  <input type="checkbox" checked={shareScope.allowAllProjects} onChange={() => onToggleShareFlag('allowAllProjects')} />
-                  <span>{shareScope.allowAllProjects ? copy.shareScopeAllProjects : `${copy.shareCurrentSelection} (${selectedSlugs.length})`}</span>
-                </label>
-              </div>
-
-              <div className="debug-actions">
-                <button type="button" onClick={onSelectFeatured}>{copy.resetDefault}</button>
-                <button type="button" onClick={onSelectAll}>{copy.selectAll}</button>
-              </div>
-
-              <div className="debug-grid admin-project-picker">
-                {filteredProjects.map((project) => {
-                  const checked = selectedSlugs.includes(project.slug)
-                  return (
-                    <label key={project.id} className={`debug-item${checked ? ' checked' : ''}`}>
-                      <input type="checkbox" checked={checked} onChange={() => onToggleProject(project.slug)} />
-                      <span>{project.name}</span>
-                      <span className="mono">{project.subdomain}.wordm.us</span>
+              <div className="admin-pricing-global-grid">
+                <article className="admin-project-card admin-pricing-card">
+                  <div className="admin-project-head">
+                    <div>
+                      <h3>{copy.pricingGlobalSingle}</h3>
+                      <p className="meta">{copy.pricingInherited}</p>
+                    </div>
+                  </div>
+                  <div className="admin-pricing-field-grid">
+                    <label className="debug-share-field">
+                      <span>{copy.pricingEnabled}</span>
+                      <input
+                        type="checkbox"
+                        checked={pricingConfig.singleUnlock.enabled}
+                        disabled={pricingInputsDisabled}
+                        onChange={(event) => updateSingleUnlock('enabled', event.target.checked)}
+                      />
                     </label>
-                  )
-                })}
+                    <label className="debug-share-field">
+                      <span>{copy.pricingPriceZh}</span>
+                      <input
+                        value={pricingConfig.singleUnlock.defaultPriceZh ?? ''}
+                        disabled={pricingInputsDisabled}
+                        onChange={(event) => updateSingleUnlock('defaultPriceZh', event.target.value || null)}
+                        placeholder="￥39"
+                      />
+                    </label>
+                    <label className="debug-share-field">
+                      <span>{copy.pricingPriceEn}</span>
+                      <input
+                        value={pricingConfig.singleUnlock.defaultPriceEn ?? ''}
+                        disabled={pricingInputsDisabled}
+                        onChange={(event) => updateSingleUnlock('defaultPriceEn', event.target.value || null)}
+                        placeholder="$5"
+                      />
+                    </label>
+                    <label className="debug-share-field admin-pricing-field-wide">
+                      <span>{copy.pricingCheckoutId}</span>
+                      <input
+                        value={pricingConfig.singleUnlock.defaultCheckoutProductId ?? ''}
+                        disabled={pricingInputsDisabled}
+                        onChange={(event) => updateSingleUnlock('defaultCheckoutProductId', event.target.value || null)}
+                        placeholder="prod_xxx"
+                      />
+                    </label>
+                  </div>
+                </article>
+
+                <article className="admin-project-card admin-pricing-card">
+                  <div className="admin-project-head">
+                    <div>
+                      <h3>{copy.pricingGlobalAllAccess}</h3>
+                      <p className="meta">
+                        {copy.pricingUpdatedAt}: {pricingConfig.updatedAt ? formatMetaDate(pricingConfig.updatedAt, lang) : copy.noCommand}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="admin-pricing-field-grid">
+                    <label className="debug-share-field">
+                      <span>{copy.pricingEnabled}</span>
+                      <input
+                        type="checkbox"
+                        checked={pricingConfig.allAccess.enabled}
+                        disabled={pricingInputsDisabled}
+                        onChange={(event) => updateAllAccess('enabled', event.target.checked)}
+                      />
+                    </label>
+                    <label className="debug-share-field">
+                      <span>{copy.pricingPriceZh}</span>
+                      <input
+                        value={pricingConfig.allAccess.priceZh ?? ''}
+                        disabled={pricingInputsDisabled}
+                        onChange={(event) => updateAllAccess('priceZh', event.target.value || null)}
+                        placeholder="￥199"
+                      />
+                    </label>
+                    <label className="debug-share-field">
+                      <span>{copy.pricingPriceEn}</span>
+                      <input
+                        value={pricingConfig.allAccess.priceEn ?? ''}
+                        disabled={pricingInputsDisabled}
+                        onChange={(event) => updateAllAccess('priceEn', event.target.value || null)}
+                        placeholder="$29"
+                      />
+                    </label>
+                    <label className="debug-share-field admin-pricing-field-wide">
+                      <span>{copy.pricingCheckoutId}</span>
+                      <input
+                        value={pricingConfig.allAccess.checkoutProductId ?? ''}
+                        disabled={pricingInputsDisabled}
+                        onChange={(event) => updateAllAccess('checkoutProductId', event.target.value || null)}
+                        placeholder="prod_xxx"
+                      />
+                    </label>
+                  </div>
+                </article>
               </div>
 
               <div className="debug-actions admin-share-actions">
-                <button type="button" onClick={onCreateShareLink} disabled={shareBusy}>
-                  {copy.shareCreate}
+                <button type="button" onClick={onPricingReload} disabled={pricingBusy}>
+                  {copy.pricingReload}
                 </button>
-                <button type="button" onClick={onCreateFullExperienceShareLink} disabled={shareBusy}>
-                  {copy.shareTemplateFull}
-                </button>
-                <button type="button" onClick={onCreateSevenDayShareLink} disabled={shareBusy}>
-                  {copy.shareTemplateSeven}
-                </button>
-                <button type="button" onClick={onCreateThirtyDayShareLink} disabled={shareBusy}>
-                  {copy.shareTemplateThirty}
-                </button>
-                <button type="button" onClick={onCopyLastShareLink} disabled={!lastCreatedShareUrl}>
-                  {copy.shareCopyLatest}
-                </button>
-                <button type="button" onClick={onPurgeInactiveShareLinks} disabled={shareBusy}>
-                  {copy.sharePurgeInactive}
+                <button type="button" onClick={onPricingSave} disabled={pricingBusy || !canManagePricing}>
+                  {copy.pricingSave}
                 </button>
               </div>
+              {pricingStatusMessage ? <p className="debug-error">{pricingStatusMessage}</p> : null}
+            </section>
 
-              <div className="admin-filter-grid">
-                <label className="debug-share-field">
-                  <span>{copy.shareSearchLabel}</span>
-                  <input value={shareSearch} onChange={(event) => setShareSearch(event.target.value)} placeholder={copy.shareSearchPlaceholder} />
-                </label>
-                <label className="debug-share-field">
-                  <span>{copy.projectSearchLabel}</span>
-                  <input value={projectSearch} onChange={(event) => setProjectSearch(event.target.value)} placeholder={copy.projectSearchPlaceholder} />
-                </label>
+            {shareLinksSection}
+
+            <section className="project-detail-section admin-content-section">
+              <h2>{copy.projects}</h2>
+              <div className="admin-project-list">
+                {filteredProjects.map((project) => {
+                  const detailUrl = withSiteParams(`https://wordm.us?view=portfolio&project=${encodeURIComponent(project.slug)}`, { lang })
+                  const subdomainUrl = withSiteParams(project.subdomainUrl, { lang })
+                  const projectOverride = pricingConfig.projects[project.slug] ?? {}
+                  const accessValue = projectOverride.access ?? 'paid'
+                  const freeUntilValue = formatDateTimeLocal(projectOverride.freeUntil)
+                  const hasOverride = hasProjectOverride(projectOverride)
+                  return (
+                    <article key={project.id} className="admin-project-card">
+                      <div className="admin-project-head">
+                        <div>
+                          <h3>{project.name}</h3>
+                          <p className="meta">{formatDate(project.lastCommitAt)} · {project.slug}</p>
+                        </div>
+                        <div className="paper-links">
+                          <a href={detailUrl} target="_blank" rel="noreferrer">{copy.detail}</a>
+                          <a href={subdomainUrl} target="_blank" rel="noreferrer">{copy.subdomain}</a>
+                          <button type="button" className="admin-link-btn" onClick={() => onCreateProjectDetailShareLink(project.slug)} disabled={shareBusy}>
+                            {copy.shareProjectDetail}
+                          </button>
+                          <button type="button" className="admin-link-btn" onClick={() => onCreateProjectSubdomainShareLink(project.slug)} disabled={shareBusy}>
+                            {copy.shareProjectSubdomain}
+                          </button>
+                          {project.productionUrl ? <a href={project.productionUrl} target="_blank" rel="noreferrer">{copy.production}</a> : null}
+                          {project.sourceUrl ? <a href={project.sourceUrl} target="_blank" rel="noreferrer">{copy.source}</a> : null}
+                        </div>
+                      </div>
+                      <p>{project.summary}</p>
+                      {project.detail ? (
+                        <div className="admin-project-meta-grid">
+                          <div>
+                            <span className="mono">{copy.commandRun}</span>
+                            <code>{commandValue(project.detail.commands.run, copy.noCommand)}</code>
+                          </div>
+                          <div>
+                            <span className="mono">{copy.commandBuild}</span>
+                            <code>{commandValue(project.detail.commands.build, copy.noCommand)}</code>
+                          </div>
+                          <div>
+                            <span className="mono">{copy.commandEntry}</span>
+                            <code>{commandValue(project.detail.entry, copy.noCommand)}</code>
+                          </div>
+                        </div>
+                      ) : null}
+
+                      <section className="admin-pricing-project-section">
+                        <div className="admin-project-head">
+                          <div>
+                            <h3>{copy.pricingProjectOverrides}</h3>
+                            <p className="meta">{copy.pricingInherited}</p>
+                          </div>
+                          <button
+                            type="button"
+                            className="admin-link-btn"
+                            onClick={() => clearProjectOverride(project.slug)}
+                            disabled={pricingInputsDisabled || !hasOverride}
+                          >
+                            {copy.pricingResetProject}
+                          </button>
+                        </div>
+                        <div className="admin-pricing-field-grid">
+                          <label className="debug-share-field">
+                            <span>{copy.pricingAccess}</span>
+                            <select
+                              value={accessValue}
+                              disabled={pricingInputsDisabled}
+                              onChange={(event) =>
+                                updateProjectOverride(project.slug, (current) => ({
+                                  ...current,
+                                  access: event.target.value as ProjectOfferKind,
+                                  freeUntil: event.target.value === 'limited_free' ? current.freeUntil ?? null : null,
+                                }))
+                              }
+                            >
+                              {pricingAccessOptions.map((option) => (
+                                <option key={option.value} value={option.value}>
+                                  {option.label}
+                                </option>
+                              ))}
+                            </select>
+                          </label>
+                          <label className="debug-share-field">
+                            <span>{copy.pricingFreeUntil}</span>
+                            <input
+                              type="datetime-local"
+                              value={freeUntilValue}
+                              disabled={pricingInputsDisabled || accessValue !== 'limited_free'}
+                              onChange={(event) =>
+                                updateProjectOverride(project.slug, (current) => ({
+                                  ...current,
+                                  freeUntil: toIsoOrNull(event.target.value),
+                                }))
+                              }
+                            />
+                          </label>
+                          <label className="debug-share-field">
+                            <span>{copy.pricingSingleEnabled}</span>
+                            <input
+                              type="checkbox"
+                              checked={projectOverride.singleUnlockEnabled ?? true}
+                              disabled={pricingInputsDisabled}
+                              onChange={(event) =>
+                                updateProjectOverride(project.slug, (current) => ({
+                                  ...current,
+                                  singleUnlockEnabled: event.target.checked,
+                                }))
+                              }
+                            />
+                          </label>
+                          <label className="debug-share-field">
+                            <span>{copy.pricingPriceZh}</span>
+                            <input
+                              value={projectOverride.priceZh ?? ''}
+                              disabled={pricingInputsDisabled}
+                              onChange={(event) =>
+                                updateProjectOverride(project.slug, (current) => ({
+                                  ...current,
+                                  priceZh: event.target.value || null,
+                                }))
+                              }
+                              placeholder={pricingConfig.singleUnlock.defaultPriceZh ?? ''}
+                            />
+                          </label>
+                          <label className="debug-share-field">
+                            <span>{copy.pricingPriceEn}</span>
+                            <input
+                              value={projectOverride.priceEn ?? ''}
+                              disabled={pricingInputsDisabled}
+                              onChange={(event) =>
+                                updateProjectOverride(project.slug, (current) => ({
+                                  ...current,
+                                  priceEn: event.target.value || null,
+                                }))
+                              }
+                              placeholder={pricingConfig.singleUnlock.defaultPriceEn ?? ''}
+                            />
+                          </label>
+                          <label className="debug-share-field admin-pricing-field-wide">
+                            <span>{copy.pricingCheckoutId}</span>
+                            <input
+                              value={projectOverride.checkoutProductId ?? ''}
+                              disabled={pricingInputsDisabled}
+                              onChange={(event) =>
+                                updateProjectOverride(project.slug, (current) => ({
+                                  ...current,
+                                  checkoutProductId: event.target.value || null,
+                                }))
+                              }
+                              placeholder={pricingConfig.singleUnlock.defaultCheckoutProductId ?? 'prod_xxx'}
+                            />
+                          </label>
+                        </div>
+                      </section>
+                    </article>
+                  )
+                })}
               </div>
-
-              {lastCreatedShareUrl ? <p className="debug-share-url mono">{lastCreatedShareUrl}</p> : null}
-              {shareStatusMessage ? <p className="debug-error">{shareStatusMessage}</p> : null}
-
-              <div className="debug-share-list">
-                <h3>{copy.shareListTitle}</h3>
-                {filteredShareLinks.length === 0 ? <p className="debug-share-empty">{copy.shareEmpty}</p> : null}
-                {filteredShareLinks.map((shareLink) => (
-                  <article key={shareLink.id} className="debug-share-card">
-                    <div className="debug-share-card-head">
-                      <div>
-                        <strong>{shareLink.label || shareLink.id.slice(0, 8)}</strong>
-                        <div className="mono debug-share-card-meta">{statusLabel(lang, shareLink.status)}</div>
-                      </div>
-                      <button type="button" onClick={() => onRevokeShareLink(shareLink.id)} disabled={shareBusy || shareLink.status !== 'active'}>
-                        {copy.shareRevoke}
-                      </button>
-                    </div>
-                    <p className="debug-share-card-scope">{summarizeScope(copy, shareLink.scope, shareLink.scope.allowedProjectSlugs.length)}</p>
-                    <p className="debug-share-card-meta">
-                      {copy.shareCreatedAt}: {formatMetaDate(shareLink.createdAt, lang)} · {copy.shareExpiresAt}: {formatMetaDate(shareLink.expiresAt, lang)}
-                    </p>
-                    <p className="debug-share-card-meta">
-                      {copy.shareVisits}: {shareLink.visitCount} · {copy.shareLastAccessed}: {shareLink.lastAccessedAt ? formatMetaDate(shareLink.lastAccessedAt, lang) : copy.noCommand}
-                    </p>
-                  </article>
-                ))}
-              </div>
-            </>
-          ) : null}
-        </section>
-
-        <section className="project-detail-section">
-          <h2>{copy.projects}</h2>
-          <div className="admin-project-list">
-            {filteredProjects.map((project) => {
-              const detailUrl = withSiteParams(`https://wordm.us?view=portfolio&project=${encodeURIComponent(project.slug)}`, { lang })
-              const subdomainUrl = withSiteParams(project.subdomainUrl, { lang })
-              return (
-                <article key={project.id} className="admin-project-card">
-                  <div className="admin-project-head">
-                    <div>
-                      <h3>{project.name}</h3>
-                      <p className="meta">{formatDate(project.lastCommitAt)} · {project.slug}</p>
-                    </div>
-                    <div className="paper-links">
-                      <a href={detailUrl} target="_blank" rel="noreferrer">{copy.detail}</a>
-                      <a href={subdomainUrl} target="_blank" rel="noreferrer">{copy.subdomain}</a>
-                      <button type="button" className="admin-link-btn" onClick={() => onCreateProjectDetailShareLink(project.slug)} disabled={shareBusy}>
-                        {copy.shareProjectDetail}
-                      </button>
-                      <button type="button" className="admin-link-btn" onClick={() => onCreateProjectSubdomainShareLink(project.slug)} disabled={shareBusy}>
-                        {copy.shareProjectSubdomain}
-                      </button>
-                      {project.productionUrl ? <a href={project.productionUrl} target="_blank" rel="noreferrer">{copy.production}</a> : null}
-                      {project.sourceUrl ? <a href={project.sourceUrl} target="_blank" rel="noreferrer">{copy.source}</a> : null}
-                    </div>
-                  </div>
-                  <p>{project.summary}</p>
-                  {project.detail ? (
-                    <div className="admin-project-meta-grid">
-                      <div>
-                        <span className="mono">{copy.commandRun}</span>
-                        <code>{commandValue(project.detail.commands.run, copy.noCommand)}</code>
-                      </div>
-                      <div>
-                        <span className="mono">{copy.commandBuild}</span>
-                        <code>{commandValue(project.detail.commands.build, copy.noCommand)}</code>
-                      </div>
-                      <div>
-                        <span className="mono">{copy.commandEntry}</span>
-                        <code>{commandValue(project.detail.entry, copy.noCommand)}</code>
-                      </div>
-                    </div>
-                  ) : null}
-                </article>
-              )
-            })}
+            </section>
           </div>
-        </section>
+        </div>
       </main>
     </div>
   )

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-08T11:36:11.241Z",
+  "generatedAt": "2026-03-16T03:59:14.130Z",
   "sourcePath": "/Users/lidechi/Documents/Github/orchestration/deploy/index.json",
   "centerControlGeneratedAt": null,
   "domain": "wordm.us",
@@ -147,7 +147,7 @@
       "relationCount": 0,
       "lastCommitAt": null,
       "productionUrl": null,
-      "sourceUrl": null,
+      "sourceUrl": "https://github.com/LiDeChi/ai-progress-compare",
       "subdomain": "p-ai-progress-compare",
       "subdomainUrl": "https://p-ai-progress-compare.wordm.us",
       "detail": {
@@ -246,7 +246,7 @@
       "relationCount": 0,
       "lastCommitAt": null,
       "productionUrl": null,
-      "sourceUrl": null,
+      "sourceUrl": "https://github.com/LiDeChi/ai-stroke-writer",
       "subdomain": "p-ai-stroke-writer",
       "subdomainUrl": "https://p-ai-stroke-writer.wordm.us",
       "detail": {
@@ -543,7 +543,7 @@
       "relationCount": 0,
       "lastCommitAt": null,
       "productionUrl": null,
-      "sourceUrl": null,
+      "sourceUrl": "https://github.com/LiDeChi/center-control",
       "subdomain": "p-center-control",
       "subdomainUrl": "https://p-center-control.wordm.us",
       "detail": {
@@ -741,7 +741,7 @@
       "relationCount": 0,
       "lastCommitAt": null,
       "productionUrl": null,
-      "sourceUrl": null,
+      "sourceUrl": "https://github.com/LiDeChi/code-agent-demo",
       "subdomain": "p-code-agent-demo",
       "subdomainUrl": "https://p-code-agent-demo.wordm.us",
       "detail": {
@@ -840,7 +840,7 @@
       "relationCount": 0,
       "lastCommitAt": null,
       "productionUrl": null,
-      "sourceUrl": null,
+      "sourceUrl": "https://github.com/LiDeChi/dmxapi-model-registry",
       "subdomain": "p-dmxapi-model-registry",
       "subdomainUrl": "https://p-dmxapi-model-registry.wordm.us",
       "detail": {
@@ -1038,7 +1038,7 @@
       "relationCount": 0,
       "lastCommitAt": null,
       "productionUrl": null,
-      "sourceUrl": null,
+      "sourceUrl": "https://github.com/LiDeChi/focusor-chrome-mvp",
       "subdomain": "p-focusor",
       "subdomainUrl": "https://p-focusor.wordm.us",
       "detail": {
@@ -1335,7 +1335,7 @@
       "relationCount": 0,
       "lastCommitAt": null,
       "productionUrl": null,
-      "sourceUrl": null,
+      "sourceUrl": "https://github.com/LiDeChi/latti",
       "subdomain": "p-gridnote",
       "subdomainUrl": "https://p-gridnote.wordm.us",
       "detail": {
@@ -1434,7 +1434,7 @@
       "relationCount": 0,
       "lastCommitAt": null,
       "productionUrl": null,
-      "sourceUrl": null,
+      "sourceUrl": "https://github.com/vercel-labs/json-render",
       "subdomain": "p-json-render",
       "subdomainUrl": "https://p-json-render.wordm.us",
       "detail": {
@@ -1533,7 +1533,7 @@
       "relationCount": 0,
       "lastCommitAt": null,
       "productionUrl": null,
-      "sourceUrl": null,
+      "sourceUrl": "https://github.com/LiDeChi/wordm-personal-site",
       "subdomain": "p-my-blog",
       "subdomainUrl": "https://p-my-blog.wordm.us",
       "detail": {
@@ -2028,7 +2028,7 @@
       "relationCount": 0,
       "lastCommitAt": null,
       "productionUrl": null,
-      "sourceUrl": null,
+      "sourceUrl": "https://github.com/LiDeChi/wordm",
       "subdomain": "p-wordm",
       "subdomainUrl": "https://p-wordm.wordm.us",
       "detail": {
@@ -3117,7 +3117,7 @@
       "relationCount": 0,
       "lastCommitAt": null,
       "productionUrl": null,
-      "sourceUrl": null,
+      "sourceUrl": "https://github.com/2noise/ChatTTS",
       "subdomain": "p-41-chattts",
       "subdomainUrl": "https://p-41-chattts.wordm.us",
       "detail": {
@@ -3711,7 +3711,7 @@
       "relationCount": 0,
       "lastCommitAt": null,
       "productionUrl": null,
-      "sourceUrl": null,
+      "sourceUrl": "https://github.com/LiDeChi/apple-notes-webclipper",
       "subdomain": "p-apple-notes-webclipper",
       "subdomainUrl": "https://p-apple-notes-webclipper.wordm.us",
       "detail": {
@@ -4008,7 +4008,7 @@
       "relationCount": 0,
       "lastCommitAt": null,
       "productionUrl": null,
-      "sourceUrl": null,
+      "sourceUrl": "https://github.com/LiDeChi/auto-test-2",
       "subdomain": "p-auto-test-2",
       "subdomainUrl": "https://p-auto-test-2.wordm.us",
       "detail": {
@@ -4800,7 +4800,7 @@
       "relationCount": 0,
       "lastCommitAt": null,
       "productionUrl": null,
-      "sourceUrl": null,
+      "sourceUrl": "https://github.com/LiDeChi/CleanMarkdownExporter-SafariApp-2",
       "subdomain": "p-cleanmarkdownexporter-safariapp-2",
       "subdomainUrl": "https://p-cleanmarkdownexporter-safariapp-2.wordm.us",
       "detail": {
@@ -5196,7 +5196,7 @@
       "relationCount": 0,
       "lastCommitAt": null,
       "productionUrl": null,
-      "sourceUrl": null,
+      "sourceUrl": "https://github.com/LiDeChi/dynamic-delegate-2",
       "subdomain": "p-dynamic-delegate-2",
       "subdomainUrl": "https://p-dynamic-delegate-2.wordm.us",
       "detail": {
@@ -5889,7 +5889,7 @@
       "relationCount": 0,
       "lastCommitAt": null,
       "productionUrl": null,
-      "sourceUrl": null,
+      "sourceUrl": "https://github.com/LiDeChi/llm-layer",
       "subdomain": "p-llm-layer",
       "subdomainUrl": "https://p-llm-layer.wordm.us",
       "detail": {
@@ -5988,7 +5988,7 @@
       "relationCount": 0,
       "lastCommitAt": null,
       "productionUrl": null,
-      "sourceUrl": null,
+      "sourceUrl": "https://github.com/3b1b/manim",
       "subdomain": "p-manim",
       "subdomainUrl": "https://p-manim.wordm.us",
       "detail": {
@@ -6285,7 +6285,7 @@
       "relationCount": 0,
       "lastCommitAt": null,
       "productionUrl": null,
-      "sourceUrl": null,
+      "sourceUrl": "https://github.com/makefinks/manim-generator",
       "subdomain": "p-manim-generator",
       "subdomainUrl": "https://p-manim-generator.wordm.us",
       "detail": {
@@ -6780,7 +6780,7 @@
       "relationCount": 0,
       "lastCommitAt": null,
       "productionUrl": null,
-      "sourceUrl": null,
+      "sourceUrl": "https://github.com/qwibitai/nanoclaw",
       "subdomain": "p-nanoclaw",
       "subdomainUrl": "https://p-nanoclaw.wordm.us",
       "detail": {
@@ -6879,7 +6879,7 @@
       "relationCount": 0,
       "lastCommitAt": null,
       "productionUrl": null,
-      "sourceUrl": null,
+      "sourceUrl": "https://github.com/LiDeChi/nlm-api",
       "subdomain": "p-nlm-api",
       "subdomainUrl": "https://p-nlm-api.wordm.us",
       "detail": {
@@ -7176,7 +7176,7 @@
       "relationCount": 0,
       "lastCommitAt": null,
       "productionUrl": null,
-      "sourceUrl": null,
+      "sourceUrl": "https://github.com/LiDeChi/open_deep_research",
       "subdomain": "p-open-deep-research",
       "subdomainUrl": "https://p-open-deep-research.wordm.us",
       "detail": {
@@ -7671,7 +7671,7 @@
       "relationCount": 0,
       "lastCommitAt": null,
       "productionUrl": null,
-      "sourceUrl": null,
+      "sourceUrl": "https://github.com/LiDeChi/WildNews",
       "subdomain": "p-oversea-news",
       "subdomainUrl": "https://p-oversea-news.wordm.us",
       "detail": {
@@ -7770,7 +7770,7 @@
       "relationCount": 0,
       "lastCommitAt": null,
       "productionUrl": null,
-      "sourceUrl": null,
+      "sourceUrl": "https://github.com/LiDeChi/page-glance-extension",
       "subdomain": "p-page-glance-extension",
       "subdomainUrl": "https://p-page-glance-extension.wordm.us",
       "detail": {
@@ -7869,7 +7869,7 @@
       "relationCount": 0,
       "lastCommitAt": null,
       "productionUrl": null,
-      "sourceUrl": null,
+      "sourceUrl": "https://github.com/Byaidu/PDFMathTranslate",
       "subdomain": "p-pdfmathtranslate",
       "subdomainUrl": "https://p-pdfmathtranslate.wordm.us",
       "detail": {
@@ -7968,7 +7968,7 @@
       "relationCount": 0,
       "lastCommitAt": null,
       "productionUrl": null,
-      "sourceUrl": null,
+      "sourceUrl": "https://github.com/LiDeChi/PersonalInflationBasket",
       "subdomain": "p-personalinflationbasket",
       "subdomainUrl": "https://p-personalinflationbasket.wordm.us",
       "detail": {
@@ -8958,7 +8958,7 @@
       "relationCount": 0,
       "lastCommitAt": null,
       "productionUrl": null,
-      "sourceUrl": null,
+      "sourceUrl": "https://github.com/zelestcarlyone/stacks",
       "subdomain": "p-stacks",
       "subdomainUrl": "https://p-stacks.wordm.us",
       "detail": {
@@ -9453,7 +9453,7 @@
       "relationCount": 0,
       "lastCommitAt": null,
       "productionUrl": null,
-      "sourceUrl": null,
+      "sourceUrl": "https://github.com/LiDeChi/video_api_doc",
       "subdomain": "p-video-api-doc",
       "subdomainUrl": "https://p-video-api-doc.wordm.us",
       "detail": {

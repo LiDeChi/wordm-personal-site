@@ -75,4 +75,11 @@ fi
 cd "$ROOT_DIR"
 npm run build
 PAGES_PROJECT="${CF_PAGES_PROJECT:-wordm-personal-home}"
-npx wrangler pages deploy dist --project-name "$PAGES_PROJECT"
+PAGES_BRANCH="${CF_PAGES_BRANCH:-$(git -C "$ROOT_DIR" rev-parse --abbrev-ref HEAD 2>/dev/null || printf 'main')}"
+
+if [[ -z "$PAGES_BRANCH" || "$PAGES_BRANCH" == "HEAD" ]]; then
+  PAGES_BRANCH="main"
+fi
+
+echo "Deploying Pages project '$PAGES_PROJECT' to branch '$PAGES_BRANCH'"
+npx wrangler pages deploy dist --project-name "$PAGES_PROJECT" --branch "$PAGES_BRANCH" --commit-dirty=true

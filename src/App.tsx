@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from 'react'
+import { Suspense, lazy, useEffect, useMemo, useState } from 'react'
 import { DebugPanel } from './components/DebugPanel'
+import { LoginPage } from './components/LoginPage'
 import { ProjectDetailPage } from './components/ProjectDetailPage'
 import { AdminPage } from './components/AdminPage'
 import { ProjectEntry } from './components/ProjectEntry'
@@ -7,13 +8,13 @@ import { ResumeAccessDenied } from './components/ResumeAccessDenied'
 import { ShareAccessDenied } from './components/ShareAccessDenied'
 import { ResumePage } from './components/ResumePage'
 import { Sidebar } from './components/Sidebar'
-import { SubdomainProjectLocked } from './components/SubdomainProjectLocked'
 import { SubdomainProjectView } from './components/SubdomainProjectView'
+import { BLOG_ARTICLES } from './data/blogArticles'
+import { FEATURED_PROJECT_SLUGS, getProjectPresentation } from './data/projectPresentation'
 import { type Lang, resolveInitialLang } from './i18n/lang'
 import projectsSnapshotRaw from './data/projects.snapshot.json'
 import { withSiteParams } from './lib/lang-url'
 import { createUnlockCheckoutUrl, type UnlockCheckoutKind } from './lib/unlock-billing'
-import { createDeployTicket } from './lib/deploy-ticket'
 import {
   buildShareEntryUrl,
   canShareAccessProject,
@@ -36,13 +37,21 @@ import {
 } from './lib/admin-share'
 import { applyUnlockGrantFromSupabase, fetchUnlockStateFromSupabase } from './lib/unlock-remote'
 import {
-  canAccessProject,
-  getFreeOfferStatus,
-  grantFreeProjectUnlock,
+  hasProjectPremiumAccess,
   loadUnlockStateForUser,
   saveUnlockStateForUser,
   type UserUnlockState,
 } from './lib/unlock'
+import {
+  applyCheckoutProductFallbacks,
+  DEFAULT_SITE_PRICING_CONFIG,
+  formatUnlockActionLabel,
+  getProjectOfferState,
+  getProjectUnlockOptions,
+  type ProjectOfferState,
+  type SitePricingConfig,
+} from './lib/project-offers'
+import { fetchPricingConfigFromSupabase, savePricingConfigFromSupabase } from './lib/pricing-remote'
 import {
   type AuthRoleRulesJson,
   type AuthRole,
@@ -50,11 +59,13 @@ import {
   type AuthUserSummary,
   fetchSessionUser,
   isAuthConfigured,
+  loginWithGoogle,
   loginWithPassword,
   logout,
   mergeRoleRules,
   normalizeAuthError,
   parseRoleEmailSet,
+  resolveSafeAuthRedirectUrl,
   signupWithPassword,
   subscribeAuthState,
   toAuthUserSummary,
@@ -64,20 +75,75 @@ import {
   chooseProjects,
   fetchProjectsFromApi,
   formatDate,
+  isProjectDefaultVisible,
   parseShowSlugs,
   resolveSubdomainView,
 } from './lib/projects'
 import type { PortfolioProject, ProjectsSnapshot } from './types'
 
-type RootView = 'blog' | 'portfolio' | 'deploy'
+type RootView = 'blog' | 'portfolio' | 'login'
 type UnlockStorageMode = 'remote' | 'local' | 'loading' | 'idle'
-type DeployTarget = 'local' | 'remote'
 
 const snapshot = projectsSnapshotRaw as ProjectsSnapshot
-const EMPTY_UNLOCK_STATE: UserUnlockState = {
-  grants: [],
-  freeOfferTotal: null,
-  freePickedSlugs: [],
+const PortfolioShowcase = lazy(() =>
+  import('./components/PortfolioShowcase').then((module) => ({
+    default: module.PortfolioShowcase,
+  })),
+)
+const GOOGLE_OAUTH_PENDING_KEY = 'wordm-google-oauth-pending-v1'
+const GOOGLE_OAUTH_PENDING_GRACE_MS = 1500
+
+function readGoogleOAuthPendingAt() {
+  if (typeof window === 'undefined') {
+    return null
+  }
+
+  try {
+    const raw = window.sessionStorage.getItem(GOOGLE_OAUTH_PENDING_KEY)
+    if (!raw) {
+      return null
+    }
+
+    const value = Number(raw)
+    return Number.isFinite(value) ? value : null
+  } catch {
+    return null
+  }
+}
+
+function markGoogleOAuthPending() {
+  if (typeof window === 'undefined') {
+    return
+  }
+
+  try {
+    window.sessionStorage.setItem(GOOGLE_OAUTH_PENDING_KEY, String(Date.now()))
+  } catch {
+    // Ignore storage write failures.
+  }
+}
+
+function clearGoogleOAuthPending() {
+  if (typeof window === 'undefined') {
+    return
+  }
+
+  try {
+    window.sessionStorage.removeItem(GOOGLE_OAUTH_PENDING_KEY)
+  } catch {
+    // Ignore storage removal failures.
+  }
+}
+
+function applyRuntimePricingFallback(
+  config: SitePricingConfig,
+  fallback: { singleCheckoutProductId?: string | null; allAccessCheckoutProductId?: string | null },
+) {
+  if (config.updatedAt) {
+    return config
+  }
+
+  return applyCheckoutProductFallbacks(config, fallback)
 }
 
 const APP_COPY = {
@@ -90,12 +156,24 @@ const APP_COPY = {
     profileLine2: 'AI + Design + Engineering',
     profileLine3: 'Base: New York / Beijing',
     tocProjects: '项目',
+    tocBlog: '文章',
     tocDeploy: '部署',
     tocContact: '联系',
     portfolioTitle: '作品集',
+    blogTitle: '文章',
+    blogIntro: '把短帖和长文放在同一条时间线上，方便从一个地方连续读完。',
+    blogSourceSite: '站内',
+    blogSourceX: '归档自 X',
+    blogSourceSubstack: '归档自 Substack',
+    blogOriginalPrefix: '原始发布时间',
+    blogReadSource: '查看原文',
+    blogNextLabel: '下一篇',
+    blogEndOfList: '已经到最后一篇。',
     contactTitle: '联系',
     copyright: '© 2026 Jian Yongjie. All rights reserved.',
     portfolioMode: 'wordm.us 作品集模式',
+    cornerSubstack: 'Substack',
+    cornerX: 'X',
     sessionRestoreFailed: '会话恢复失败',
     pleaseRelogin: '请重新登录。',
     loginUnavailable: '未配置 Supabase，无法登录。',
@@ -106,6 +184,10 @@ const APP_COPY = {
     loginSuccess: '登录成功',
     loginFailed: '登录失败',
     loginFallback: '请检查邮箱或密码。',
+    googleLoggingIn: '正在跳转到 Google 登录...',
+    googleLoginFailed: 'Google 登录失败',
+    googleLoginFallback: '请稍后重试，或检查 Supabase 的 Google 登录配置。',
+    googleLoginCancelled: '已取消 Google 登录。',
     signingUp: '注册中...',
     emailExists: '该邮箱已注册，请直接登录。',
     confirmEmail: '注册成功，请先到邮箱点击确认链接，再回来登录。',
@@ -119,29 +201,23 @@ const APP_COPY = {
     logoutFallback: '请稍后重试。',
     unlockPanelTitle: '作品解锁与安装',
     unlockPanelIntro: '解锁后可进入项目子域名并一键安装到本地设备。',
+    unlockPanelSummary: '每个作品可按后台配置单独解锁，也可一次性全部解锁。',
     unlockPlanSingleLabel: '单作品解锁',
-    unlockPlanAllCurrent: '解锁当前全部作品',
-    unlockPlanAllCurrentPlusYear: '解锁当前作品 + 一年内新作品',
+    unlockPlanAllAccess: '全部解锁，后续作品免费',
+    unlockPlanUnavailable: '当前未开放这个解锁方式。',
     unlockNeedLogin: '请先登录后再解锁作品。',
     unlockActionFailed: '解锁失败，请稍后重试。',
-    unlockAllCurrentSuccess: '已解锁当前全部作品。',
-    unlockAllCurrentPlusYearSuccess: '已解锁当前作品，并开启一年新作品解锁。',
+    unlockAllAccessSuccess: '已完成全部解锁，后续作品也将免费。',
     unlockSingleSuccessPrefix: '已解锁作品',
-    unlockFreeSuccessPrefix: '已使用免费名额解锁',
-    unlockFreeEmpty: '免费解锁名额已用完。',
-    unlockFreeQuotaPrefix: '免费解锁额度',
-    unlockQuotaFormatPrefix: '总额度',
-    unlockQuotaUsed: '已用',
-    unlockQuotaRemaining: '剩余',
     unlockBypassNotice: '当前身份可直接访问全部作品，无需解锁。',
     unlockStorageRemote: '权限存储: Supabase',
-    unlockStorageLocal: '权限存储: 本地回退',
+    unlockStorageLocal: '权限存储: 本地缓存（只读）',
     unlockStorageLoading: '权限存储: 同步中...',
     unlockStorageIdle: '权限存储: 登录后可用',
-    unlockRemoteFallback: 'Supabase 解锁服务不可用，已切换到本地模式。',
+    unlockRemoteFallback: 'Supabase 解锁服务暂不可用，当前仅可读取本地缓存的已解锁权限。',
     unlockPaidRequired: '该解锁需要付费权益，请先在 latti.wordm.us 完成订阅或购买。',
     unlockLifetimeRequired: '该解锁仅对终身权益用户开放。',
-    unlockPaidServerRequired: '付费校验服务暂不可用，当前仅支持免费名额解锁。',
+    unlockPaidServerRequired: '付费解锁服务暂不可用，请稍后再试。',
     unlockInstallHintPrefix: '付费后可一键自部署：',
     unlockInstallHintLink: '打开安装指南',
     unlockCheckoutStarting: '正在跳转支付...',
@@ -149,9 +225,15 @@ const APP_COPY = {
     unlockCheckoutFailed: '拉起支付失败，请稍后重试。',
     unlockCheckoutSuccess: '支付回调已返回。你可以直接使用下方自部署入口，或再次点击解锁按钮完成授权同步。',
     unlockCheckoutCanceled: '已取消支付。',
+    pricingLoadFallback: '定价配置加载失败，当前使用前端回退配置。',
+    pricingReloadSuccess: '已重新加载后台定价配置。',
+    pricingSaveSuccess: '定价配置已保存。',
+    pricingSaveFailed: '保存定价配置失败',
+    pricingManageLogin: '请使用管理员或测试账号登录后再保存定价配置。',
+    pricingUnavailable: '未配置 Supabase，无法保存后台定价配置。',
     deployTitle: 'Center Control 一键部署',
-    deployIntro: '付费后可将 Center Control 一键部署到你的机器或你自己的服务器。',
-    deployAutoReady: '已完成支付，正在引导你部署。',
+    deployIntro: '所有用户都可部署免费版；登录并升级后，会切换为包含付费部分的完整版。',
+    deployAutoReady: '已识别到完整版权益，正在按完整版部署。',
     deployMachineLocal: '当前机器（默认）',
     deployMachineRemote: '远程服务器',
     deployMachineLocalDesc: '在当前机器终端执行下面命令，约 1~3 分钟可用。',
@@ -162,7 +244,7 @@ const APP_COPY = {
     deployRemoteHostRequired: '请先填写服务器地址（user@host）。',
     deployCopyCommand: '复制部署命令',
     deployGeneratingTicket: '正在生成一次性部署凭证...',
-    deployNeedLogin: '请先登录并确保账号具备付费权益。',
+    deployNeedLogin: '未登录或未升级时会部署免费版；登录并升级后才会切到完整版。',
     deployTicketFailed: '生成部署凭证失败，请稍后重试。',
     deployCopySuccess: '部署命令已复制，请到终端粘贴执行。',
     deployCopyFailed: '复制失败，请手动复制命令。',
@@ -197,12 +279,24 @@ const APP_COPY = {
     profileLine2: 'AI + Design + Engineering',
     profileLine3: 'Base: New York / Beijing',
     tocProjects: 'Projects',
+    tocBlog: 'Articles',
     tocDeploy: 'Deploy',
     tocContact: 'Contact',
     portfolioTitle: 'Portfolio Gallery',
+    blogTitle: 'Articles',
+    blogIntro: 'Short notes and long-form pieces live on one timeline so the reading flow stays continuous.',
+    blogSourceSite: 'On site',
+    blogSourceX: 'Archived from X',
+    blogSourceSubstack: 'Archived from Substack',
+    blogOriginalPrefix: 'Originally posted',
+    blogReadSource: 'Open source',
+    blogNextLabel: 'Next',
+    blogEndOfList: 'You are at the last article.',
     contactTitle: 'Contact',
     copyright: '© 2026 Jian Yongjie. All rights reserved.',
     portfolioMode: 'Portfolio mode on wordm.us',
+    cornerSubstack: 'Substack',
+    cornerX: 'X',
     sessionRestoreFailed: 'Session restore failed',
     pleaseRelogin: 'Please log in again.',
     loginUnavailable: 'Supabase is not configured. Login is unavailable.',
@@ -213,6 +307,10 @@ const APP_COPY = {
     loginSuccess: 'Login successful',
     loginFailed: 'Login failed',
     loginFallback: 'Please check your email and password.',
+    googleLoggingIn: 'Redirecting to Google sign-in...',
+    googleLoginFailed: 'Google sign-in failed',
+    googleLoginFallback: 'Please try again, or check the Supabase Google provider configuration.',
+    googleLoginCancelled: 'Google sign-in was canceled.',
     signingUp: 'Creating account...',
     emailExists: 'This email already exists. Please log in directly.',
     confirmEmail: 'Sign-up successful. Confirm your email first, then log in.',
@@ -226,29 +324,23 @@ const APP_COPY = {
     logoutFallback: 'Please try again later.',
     unlockPanelTitle: 'Unlock & Install',
     unlockPanelIntro: 'Unlock to access project subdomains and one-click install to your device.',
+    unlockPanelSummary: 'Each project can be unlocked individually through backend pricing, or you can unlock everything at once.',
     unlockPlanSingleLabel: 'Single project unlock',
-    unlockPlanAllCurrent: 'Unlock all current projects',
-    unlockPlanAllCurrentPlusYear: 'Unlock current + 1-year new projects',
+    unlockPlanAllAccess: 'Unlock all projects, future projects included',
+    unlockPlanUnavailable: 'This unlock path is not available right now.',
     unlockNeedLogin: 'Please log in before unlocking projects.',
     unlockActionFailed: 'Unlock failed. Please try again later.',
-    unlockAllCurrentSuccess: 'All current projects are now unlocked.',
-    unlockAllCurrentPlusYearSuccess: 'Current projects unlocked, plus one-year new project access enabled.',
+    unlockAllAccessSuccess: 'All projects are unlocked, including future ones.',
     unlockSingleSuccessPrefix: 'Unlocked project',
-    unlockFreeSuccessPrefix: 'Free unlock used for',
-    unlockFreeEmpty: 'No free unlock quota left.',
-    unlockFreeQuotaPrefix: 'Free unlock quota',
-    unlockQuotaFormatPrefix: 'total',
-    unlockQuotaUsed: 'used',
-    unlockQuotaRemaining: 'remaining',
     unlockBypassNotice: 'Your role can access all projects without unlock limits.',
     unlockStorageRemote: 'Storage: Supabase',
-    unlockStorageLocal: 'Storage: Local fallback',
+    unlockStorageLocal: 'Storage: Local cache (read-only)',
     unlockStorageLoading: 'Storage: syncing...',
     unlockStorageIdle: 'Storage: available after login',
-    unlockRemoteFallback: 'Supabase unlock service unavailable. Switched to local fallback mode.',
+    unlockRemoteFallback: 'Supabase unlock service is unavailable. Only previously cached access can be read right now.',
     unlockPaidRequired: 'This unlock requires paid entitlement. Complete purchase on latti.wordm.us first.',
     unlockLifetimeRequired: 'This unlock is available for lifetime entitlement only.',
-    unlockPaidServerRequired: 'Paid verification service is unavailable. Only free-pick unlock is available now.',
+    unlockPaidServerRequired: 'Paid unlock service is unavailable. Please try again later.',
     unlockInstallHintPrefix: 'After payment, one-click self-host is available here:',
     unlockInstallHintLink: 'Open install guide',
     unlockCheckoutStarting: 'Redirecting to checkout...',
@@ -256,9 +348,15 @@ const APP_COPY = {
     unlockCheckoutFailed: 'Failed to start checkout. Please try again later.',
     unlockCheckoutSuccess: 'Payment callback received. Use the self-host entry below, or click unlock again to sync entitlement.',
     unlockCheckoutCanceled: 'Checkout canceled.',
+    pricingLoadFallback: 'Pricing config failed to load. Frontend fallback pricing is being used.',
+    pricingReloadSuccess: 'Pricing config reloaded from the backend.',
+    pricingSaveSuccess: 'Pricing config saved.',
+    pricingSaveFailed: 'Failed to save pricing config',
+    pricingManageLogin: 'Log in with an admin or tester account before saving pricing config.',
+    pricingUnavailable: 'Supabase is not configured. Backend pricing cannot be saved.',
     deployTitle: 'One-Click Center Control Deploy',
-    deployIntro: 'After payment, deploy Center Control to your current machine or your own server.',
-    deployAutoReady: 'Payment confirmed. Redirecting you to deployment.',
+    deployIntro: 'Everyone can deploy the free edition. Sign in and upgrade to switch deployment to the full edition with paid modules.',
+    deployAutoReady: 'Full-edition entitlement detected. Preparing a full-edition deployment.',
     deployMachineLocal: 'Current machine (default)',
     deployMachineRemote: 'Remote server',
     deployMachineLocalDesc: 'Run the command below in your current machine terminal. Usually ready in 1-3 minutes.',
@@ -269,7 +367,7 @@ const APP_COPY = {
     deployRemoteHostRequired: 'Please provide the server address (user@host) first.',
     deployCopyCommand: 'Copy deploy command',
     deployGeneratingTicket: 'Generating one-time deploy ticket...',
-    deployNeedLogin: 'Please log in and make sure your account has paid entitlement.',
+    deployNeedLogin: 'Without sign-in or upgrade, deployment falls back to the free edition. Sign in and upgrade to switch to the full edition.',
     deployTicketFailed: 'Failed to generate deploy ticket. Please try again later.',
     deployCopySuccess: 'Deploy command copied. Paste it in your terminal.',
     deployCopyFailed: 'Copy failed. Please copy the command manually.',
@@ -297,18 +395,30 @@ const APP_COPY = {
   },
 } as const
 
-function defaultSelection(projects: PortfolioProject[], preferred: string[]): string[] {
-  const preferredExisting = preferred.filter((slug) => projects.some((project) => project.slug === slug))
+function defaultSelection(projects: PortfolioProject[], preferred: readonly string[]): string[] {
+  const defaultVisibleProjects = projects.filter(isProjectDefaultVisible)
+  const selectionPool = defaultVisibleProjects.length ? defaultVisibleProjects : projects
+  const preferredExisting = preferred.filter((slug) => selectionPool.some((project) => project.slug === slug))
   if (preferredExisting.length) {
-    return preferredExisting
+    return [...preferredExisting]
   }
 
-  return projects.slice(0, 8).map((project) => project.slug)
+  return selectionPool.slice(0, 9).map((project) => project.slug)
 }
 
-function toRootView(raw: string | null): RootView {
-  if (raw === 'deploy') {
-    return 'deploy'
+function toRootView(raw: string | null, pathname: string): RootView {
+  if (pathname === '/login' || pathname === '/login/') {
+    return 'login'
+  }
+
+  if (raw === 'blog') {
+    return 'blog'
+  }
+  if (raw === 'login') {
+    return 'login'
+  }
+  if (raw === 'portfolio') {
+    return 'portfolio'
   }
 
   return 'portfolio'
@@ -323,6 +433,19 @@ function normalizeSlug(raw: string | null): string | null {
   return slug || null
 }
 
+function normalizeBlogArticleId(raw: string | null): string | null {
+  if (!raw) {
+    return null
+  }
+
+  const articleId = raw.trim().toLowerCase()
+  if (!articleId) {
+    return null
+  }
+
+  return BLOG_ARTICLES.some((article) => article.id === articleId) ? articleId : null
+}
+
 function withDetail(prefix: string, detail: string) {
   return `${prefix}: ${detail}`
 }
@@ -335,22 +458,34 @@ function withDone(text: string, lang: Lang) {
   return lang === 'zh' ? `${text}。` : `${text}.`
 }
 
-function detectLikelyOs(): 'windows' | 'mac' | 'linux' | 'other' {
-  if (typeof navigator === 'undefined') {
-    return 'other'
+function relativeRootHref(view: RootView, lang: Lang) {
+  const url = new URL('/', 'https://wordm.us')
+
+  if (view === 'login') {
+    url.searchParams.set('view', 'login')
+  } else if (view === 'blog') {
+    url.searchParams.set('view', 'blog')
   }
 
-  const value = `${navigator.platform} ${navigator.userAgent}`.toLowerCase()
-  if (value.includes('win')) {
-    return 'windows'
+  if (lang === 'en') {
+    url.searchParams.set('lang', 'en')
   }
-  if (value.includes('mac')) {
-    return 'mac'
+
+  const search = url.searchParams.toString()
+  return `${url.pathname}${search ? `?${search}` : ''}`
+}
+
+function withAuthReturnTo(href: string, returnTo: string | null) {
+  const url = new URL(href, 'https://wordm.us')
+
+  if (returnTo) {
+    url.searchParams.set('return_to', returnTo)
+  } else {
+    url.searchParams.delete('return_to')
   }
-  if (value.includes('linux')) {
-    return 'linux'
-  }
-  return 'other'
+
+  const search = url.searchParams.toString()
+  return `${url.pathname}${search ? `?${search}` : ''}`
 }
 
 async function copyTextToClipboard(text: string): Promise<boolean> {
@@ -387,11 +522,6 @@ async function copyTextToClipboard(text: string): Promise<boolean> {
 
   return copied
 }
-
-function shellQuote(raw: string): string {
-  return `'${raw.replace(/'/g, `'"'"'`)}'`
-}
-
 function defaultShareScope(): ShareScope {
   return {
     allowPortfolio: true,
@@ -451,8 +581,10 @@ function App() {
   const forcedPage = params.get('page')
   const initialApi = params.get('centerApi') || import.meta.env.VITE_CENTER_CONTROL_API || ''
   const initialShowSlugs = parseShowSlugs(params.get('show'))
-  const initialRootView = toRootView(params.get('view'))
+  const initialRootView = toRootView(params.get('view'), window.location.pathname)
+  const initialBlogArticleId = normalizeBlogArticleId(params.get('article')) ?? BLOG_ARTICLES[0]?.id ?? null
   const initialProjectSlug = normalizeSlug(params.get('project'))
+  const initialAuthReturnTo = resolveSafeAuthRedirectUrl(params.get('return_to'))
   const initialUnlockSlug = normalizeSlug(params.get('unlock'))
   const initialCheckoutSlug = normalizeSlug(params.get('checkout_slug'))
   const initialShareToken = params.get('share')?.trim() || null
@@ -461,19 +593,20 @@ function App() {
   const initialLang = resolveInitialLang(window.location)
 
   const [lang, setLang] = useState<Lang>(initialLang)
+  const [offerNow, setOfferNow] = useState(() => Date.now())
   const copy = APP_COPY[lang]
   const selfHostInstallGuideUrl =
     import.meta.env.VITE_SELFHOST_INSTALL_URL || 'https://github.com/LiDeChi/center-control#付费用户一键安装deploy-ticket'
-  const selfHostInstallScriptUrl =
-    import.meta.env.VITE_SELFHOST_INSTALL_SCRIPT_URL ||
-    'https://raw.githubusercontent.com/LiDeChi/center-control/main/scripts/install-center-control.sh'
-  const clientOs = useMemo(() => detectLikelyOs(), [])
-  const unlockCheckoutProducts = useMemo(
-    () => ({
-      single: import.meta.env.VITE_UNLOCK_PRODUCT_SINGLE || 'prod_4eDxmaC52vCKWPjGqfqIqy',
-      allCurrent: import.meta.env.VITE_UNLOCK_PRODUCT_ALL_CURRENT || 'prod_omAVm07vFxto9HGfmfJ9q',
-      allCurrentPlusYear: import.meta.env.VITE_UNLOCK_PRODUCT_ALL_CURRENT_PLUS_YEAR || 'prod_3WVufccMdH37WNdEVvSL6',
-    }),
+  const envPricingFallback = useMemo(
+    () =>
+      applyCheckoutProductFallbacks(DEFAULT_SITE_PRICING_CONFIG, {
+        singleCheckoutProductId: import.meta.env.VITE_UNLOCK_PRODUCT_SINGLE || 'prod_4eDxmaC52vCKWPjGqfqIqy',
+        allAccessCheckoutProductId:
+          import.meta.env.VITE_UNLOCK_PRODUCT_ALL_ACCESS ||
+          import.meta.env.VITE_UNLOCK_PRODUCT_ALL_CURRENT_PLUS_YEAR ||
+          import.meta.env.VITE_UNLOCK_PRODUCT_ALL_CURRENT ||
+          'prod_3WVufccMdH37WNdEVvSL6',
+      }),
     [],
   )
 
@@ -511,13 +644,14 @@ function App() {
   const [unlockBusy, setUnlockBusy] = useState(false)
   const [checkoutBusyKind, setCheckoutBusyKind] = useState<UnlockCheckoutKind | null>(null)
   const [unlockStatusMessage, setUnlockStatusMessage] = useState('')
+  const [pricingConfig, setPricingConfig] = useState<SitePricingConfig>(envPricingFallback)
+  const [pricingStatusMessage, setPricingStatusMessage] = useState('')
+  const [pricingBusy, setPricingBusy] = useState(false)
+  const [adminPricingConfig, setAdminPricingConfig] = useState<SitePricingConfig>(envPricingFallback)
+  const [activeBlogArticleId, setActiveBlogArticleId] = useState<string | null>(initialBlogArticleId)
   const [selectedProjectSlug, setSelectedProjectSlug] = useState<string | null>(initialProjectSlug)
   const [showScrollTop, setShowScrollTop] = useState(false)
   const [unlockTargetSlug, setUnlockTargetSlug] = useState<string | null>(initialUnlockSlug)
-  const [deployTarget, setDeployTarget] = useState<DeployTarget>('local')
-  const [deployPort, setDeployPort] = useState('8080')
-  const [deployRemoteHost, setDeployRemoteHost] = useState('')
-  const [deployStatusMessage, setDeployStatusMessage] = useState('')
   const [shareToken] = useState<string | null>(initialShareToken)
   const [shareAccess, setShareAccess] = useState<ShareAccess | null>(null)
   const [shareResolveStatus, setShareResolveStatus] = useState<ShareResolveStatus>(initialShareToken ? 'loading' : 'idle')
@@ -534,21 +668,35 @@ function App() {
       return initialShowSlugs
     }
 
-    return defaultSelection(snapshot.projects, snapshot.featured)
+    return defaultSelection(snapshot.projects, FEATURED_PROJECT_SLUGS)
   })
 
   const sourceLabel = sourceType === 'live' && centerApi ? `${copy.sourceLivePrefix}: ${centerApi}` : copy.sourceSnapshot
   const contactEmail = 'parsonjian@gmail.com'
+  const defaultHomeHref = new URL(relativeRootHref('portfolio', lang), 'https://wordm.us').toString()
+  const authReturnHref = initialAuthReturnTo ?? defaultHomeHref
+  const currentLocationForAuth =
+    typeof window !== 'undefined'
+      ? (() => {
+          const next = new URL(window.location.href)
+          next.searchParams.delete('return_to')
+          return next.toString()
+        })()
+      : null
+  const loginHref = withAuthReturnTo(relativeRootHref('login', lang), rootView === 'login' ? authReturnHref : resolveSafeAuthRedirectUrl(currentLocationForAuth))
+  const homeHref = authReturnHref
 
   const primaryUpdatedAt = snapshot.centerControlGeneratedAt || snapshot.generatedAt
   const lastUpdated = formatDate(primaryUpdatedAt)
 
   useEffect(() => {
     const next = new URL(window.location.href)
-    if (rootView === 'blog') {
+    next.pathname = '/'
+
+    if (rootView === 'login') {
+      next.searchParams.set('view', 'login')
+    } else if (rootView === 'blog') {
       next.searchParams.set('view', 'blog')
-    } else if (rootView === 'deploy') {
-      next.searchParams.set('view', 'deploy')
     } else {
       next.searchParams.delete('view')
     }
@@ -565,7 +713,13 @@ function App() {
       next.searchParams.delete('project')
     }
 
-    if (unlockTargetSlug) {
+    if (activeBlogArticleId && rootView === 'blog') {
+      next.searchParams.set('article', activeBlogArticleId)
+    } else {
+      next.searchParams.delete('article')
+    }
+
+    if (unlockTargetSlug && rootView !== 'login') {
       next.searchParams.set('unlock', unlockTargetSlug)
     } else {
       next.searchParams.delete('unlock')
@@ -577,8 +731,14 @@ function App() {
       next.searchParams.delete('share')
     }
 
+    if (rootView === 'login' && initialAuthReturnTo) {
+      next.searchParams.set('return_to', initialAuthReturnTo)
+    } else {
+      next.searchParams.delete('return_to')
+    }
+
     window.history.replaceState({}, '', next)
-  }, [rootView, lang, selectedProjectSlug, unlockTargetSlug, shareToken])
+  }, [rootView, lang, selectedProjectSlug, activeBlogArticleId, unlockTargetSlug, shareToken, initialAuthReturnTo])
 
   useEffect(() => {
     if (!initialPurchaseSuccess && !initialPurchaseCanceled) {
@@ -587,12 +747,11 @@ function App() {
 
     if (initialCheckoutSlug) {
       setUnlockTargetSlug(initialCheckoutSlug)
+      setSelectedProjectSlug(initialCheckoutSlug)
     }
 
     if (initialPurchaseSuccess) {
-      setRootView('deploy')
-      setDeployTarget('local')
-      setDeployStatusMessage(copy.deployAutoReady)
+      setRootView('portfolio')
       setUnlockStatusMessage(copy.unlockCheckoutSuccess)
     } else {
       setUnlockStatusMessage(copy.unlockCheckoutCanceled)
@@ -605,13 +764,61 @@ function App() {
     next.searchParams.delete('checkout_slug')
     window.history.replaceState({}, '', next)
   }, [
-    copy.deployAutoReady,
     copy.unlockCheckoutCanceled,
     copy.unlockCheckoutSuccess,
     initialCheckoutSlug,
     initialPurchaseCanceled,
     initialPurchaseSuccess,
   ])
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setOfferNow(Date.now())
+    }, 60_000)
+
+    return () => {
+      window.clearInterval(timer)
+    }
+  }, [])
+
+  useEffect(() => {
+    let active = true
+
+    if (!authConfig.supabaseUrl) {
+      setPricingConfig(envPricingFallback)
+      setAdminPricingConfig(envPricingFallback)
+      setPricingStatusMessage('')
+      return
+    }
+
+    void fetchPricingConfigFromSupabase(authConfig)
+      .then((remoteConfig) => {
+        if (!active) {
+          return
+        }
+
+        const nextConfig = applyRuntimePricingFallback(remoteConfig, {
+          singleCheckoutProductId: envPricingFallback.singleUnlock.defaultCheckoutProductId,
+          allAccessCheckoutProductId: envPricingFallback.allAccess.checkoutProductId,
+        })
+        setPricingConfig(nextConfig)
+        setAdminPricingConfig(nextConfig)
+        setPricingStatusMessage('')
+      })
+      .catch(() => {
+        if (!active) {
+          return
+        }
+
+        setPricingConfig(envPricingFallback)
+        setAdminPricingConfig(envPricingFallback)
+        setPricingStatusMessage(copy.pricingLoadFallback)
+      })
+
+    return () => {
+      active = false
+    }
+  }, [authConfig, copy.pricingLoadFallback, envPricingFallback])
 
 
   useEffect(() => {
@@ -654,8 +861,68 @@ function App() {
   }, [authConfig.supabaseUrl, shareToken])
 
   useEffect(() => {
-    if (rootView !== 'portfolio') {
-      setSelectedProjectSlug(null)
+    if (rootView !== 'blog' || !initialBlogArticleId) {
+      return
+    }
+
+    const frame = window.requestAnimationFrame(() => {
+      const target = document.getElementById(`blog-article-${initialBlogArticleId}`)
+      if (target) {
+        target.scrollIntoView({ behavior: 'auto', block: 'start' })
+      }
+    })
+
+    return () => window.cancelAnimationFrame(frame)
+  }, [initialBlogArticleId, rootView])
+
+  useEffect(() => {
+    if (!BLOG_ARTICLES.length) {
+      setActiveBlogArticleId(null)
+      return
+    }
+
+    setActiveBlogArticleId((current) =>
+      current && BLOG_ARTICLES.some((article) => article.id === current) ? current : BLOG_ARTICLES[0].id,
+    )
+  }, [])
+
+  useEffect(() => {
+    if (rootView !== 'blog' || !BLOG_ARTICLES.length) {
+      return
+    }
+
+    const articleIds = BLOG_ARTICLES.map((article) => article.id)
+    const articleNodes = articleIds
+      .map((articleId) => document.getElementById(`blog-article-${articleId}`))
+      .filter((node): node is HTMLElement => Boolean(node))
+
+    if (!articleNodes.length) {
+      return
+    }
+
+    const updateActiveArticle = () => {
+      let nextArticleId = articleIds[0]
+      const threshold = window.innerHeight * 0.28
+
+      for (const node of articleNodes) {
+        const top = node.getBoundingClientRect().top
+        if (top <= threshold) {
+          nextArticleId = node.dataset.articleId || nextArticleId
+          continue
+        }
+        break
+      }
+
+      setActiveBlogArticleId((current) => (current === nextArticleId ? current : nextArticleId))
+    }
+
+    updateActiveArticle()
+    window.addEventListener('scroll', updateActiveArticle, { passive: true })
+    window.addEventListener('resize', updateActiveArticle)
+
+    return () => {
+      window.removeEventListener('scroll', updateActiveArticle)
+      window.removeEventListener('resize', updateActiveArticle)
     }
   }, [rootView])
 
@@ -735,6 +1002,7 @@ function App() {
     if (!authEnabled) {
       setAuthLoading(false)
       setAuthUser(null)
+      clearGoogleOAuthPending()
       return
     }
 
@@ -776,6 +1044,55 @@ function App() {
       unsubscribe()
     }
   }, [authConfig, authEnabled, authRoleRules, copy.pleaseRelogin, copy.sessionRestoreFailed])
+
+  useEffect(() => {
+    if (!authEnabled) {
+      clearGoogleOAuthPending()
+      return
+    }
+
+    if (authUser) {
+      clearGoogleOAuthPending()
+      setAuthBusy(false)
+      return
+    }
+
+    if (authLoading || typeof window === 'undefined' || typeof document === 'undefined') {
+      return
+    }
+
+    const maybeResetGoogleLogin = () => {
+      const pendingAt = readGoogleOAuthPendingAt()
+      if (!pendingAt) {
+        return
+      }
+
+      if (document.visibilityState === 'hidden') {
+        return
+      }
+
+      if (Date.now() - pendingAt < GOOGLE_OAUTH_PENDING_GRACE_MS) {
+        return
+      }
+
+      clearGoogleOAuthPending()
+      setAuthBusy(false)
+      setAuthStatusMessage((current) =>
+        !current || current === copy.googleLoggingIn ? copy.googleLoginCancelled : current,
+      )
+    }
+
+    maybeResetGoogleLogin()
+    window.addEventListener('pageshow', maybeResetGoogleLogin)
+    window.addEventListener('focus', maybeResetGoogleLogin)
+    document.addEventListener('visibilitychange', maybeResetGoogleLogin)
+
+    return () => {
+      window.removeEventListener('pageshow', maybeResetGoogleLogin)
+      window.removeEventListener('focus', maybeResetGoogleLogin)
+      document.removeEventListener('visibilitychange', maybeResetGoogleLogin)
+    }
+  }, [authEnabled, authLoading, authUser, copy.googleLoggingIn, copy.googleLoginCancelled])
 
   useEffect(() => {
     if (!authUser) {
@@ -899,7 +1216,7 @@ function App() {
           return filtered
         }
 
-        return defaultSelection(liveProjects, snapshot.featured)
+        return defaultSelection(liveProjects, FEATURED_PROJECT_SLUGS)
       })
       setSourceType('live')
       setLoadState('idle')
@@ -914,10 +1231,6 @@ function App() {
     return detail.toUpperCase()
   }
 
-  function isFreeOfferExhaustedError(error: unknown): boolean {
-    return unlockErrorCode(error).includes('FREE_OFFER_EXHAUSTED')
-  }
-
   function isPaymentRequiredError(error: unknown): boolean {
     return unlockErrorCode(error).includes('PAYMENT_REQUIRED')
   }
@@ -929,7 +1242,6 @@ function App() {
   function isBusinessUnlockError(error: unknown): boolean {
     const code = unlockErrorCode(error)
     return (
-      code.includes('FREE_OFFER_EXHAUSTED') ||
       code.includes('PROJECT_SLUG_REQUIRED') ||
       code.includes('CATALOG_SLUGS_REQUIRED') ||
       code.includes('INVALID_UNLOCK_KIND') ||
@@ -948,11 +1260,13 @@ function App() {
     if (normalizedSlug) {
       next.searchParams.set('checkout_slug', normalizedSlug)
       next.searchParams.set('unlock', normalizedSlug)
+      next.searchParams.set('project', normalizedSlug)
     } else {
       next.searchParams.delete('checkout_slug')
+      next.searchParams.delete('project')
     }
 
-    next.searchParams.set('view', 'deploy')
+    next.searchParams.set('view', 'portfolio')
     if (lang === 'en') {
       next.searchParams.set('lang', 'en')
     } else {
@@ -969,8 +1283,10 @@ function App() {
     if (normalizedSlug) {
       next.searchParams.set('checkout_slug', normalizedSlug)
       next.searchParams.set('unlock', normalizedSlug)
+      next.searchParams.set('project', normalizedSlug)
     } else {
       next.searchParams.delete('checkout_slug')
+      next.searchParams.delete('project')
     }
 
     next.searchParams.set('view', 'portfolio')
@@ -988,13 +1304,27 @@ function App() {
       return false
     }
 
+    const unlockOptions = projectSlug ? getUnlockOptionsBySlug(projectSlug) : null
+    const kindEnabled =
+      kind === 'single'
+        ? Boolean(unlockOptions?.singleEnabled)
+        : Boolean(unlockOptions?.allAccessEnabled ?? pricingConfig.allAccess.enabled)
+    if (!kindEnabled) {
+      setUnlockStatusMessage(copy.unlockPlanUnavailable)
+      return false
+    }
+
+    const productId =
+      kind === 'single'
+        ? unlockOptions?.singleCheckoutProductId ?? null
+        : unlockOptions?.allAccessCheckoutProductId ?? pricingConfig.allAccess.checkoutProductId
+
     setCheckoutBusyKind(kind)
     setUnlockStatusMessage(copy.unlockCheckoutStarting)
 
     try {
       const checkoutUrl = await createUnlockCheckoutUrl(authConfig, {
-        kind,
-        products: unlockCheckoutProducts,
+        productId: productId ?? '',
         successUrl: buildCheckoutReturnUrl(kind, projectSlug),
         cancelUrl: buildCheckoutCancelUrl(projectSlug),
       })
@@ -1020,61 +1350,57 @@ function App() {
     }
   }
 
-  async function handleCopyDeployCommand() {
-    const remoteHost = deployRemoteHost.trim()
-    if (deployTarget === 'remote' && !remoteHost) {
-      setDeployStatusMessage(copy.deployRemoteHostRequired)
+  async function reloadPricingConfig(showSuccessMessage = false) {
+    if (!authConfig.supabaseUrl) {
+      setPricingConfig(envPricingFallback)
+      setAdminPricingConfig(envPricingFallback)
+      setPricingStatusMessage(copy.pricingUnavailable)
       return
     }
 
-    const canUseShareDeploy = Boolean(shareToken && shareResolveStatus === 'active' && canShareAccessView('deploy', shareAccess))
-    if ((!authEnabled || !authUser) && !canUseShareDeploy) {
-      setDeployStatusMessage(copy.deployNeedLogin)
-      return
-    }
-
-    setDeployStatusMessage(copy.deployGeneratingTicket)
+    setPricingBusy(true)
 
     try {
-      const deployTicket = await createDeployTicket(authConfig, {
-        scope: 'center_control_personal',
-        target: deployTarget,
-        expiresInSec: 600,
-        shareToken: !authUser && canUseShareDeploy ? shareToken : null,
+      const remoteConfig = await fetchPricingConfigFromSupabase(authConfig)
+      const nextConfig = applyRuntimePricingFallback(remoteConfig, {
+        singleCheckoutProductId: envPricingFallback.singleUnlock.defaultCheckoutProductId,
+        allAccessCheckoutProductId: envPricingFallback.allAccess.checkoutProductId,
       })
-
-      const installScriptUrl = deployTicket.installScriptUrl || selfHostInstallScriptUrl
-      const localCommand = `curl -fsSL ${shellQuote(installScriptUrl)} | bash -s -- --ticket ${shellQuote(deployTicket.ticket)} --resolve-endpoint ${shellQuote(deployTicket.resolveEndpoint)} --port ${normalizedDeployPort}`
-      const command = deployTarget === 'remote' ? `ssh ${remoteHost} ${shellQuote(localCommand)}` : localCommand
-
-      const copied = await copyTextToClipboard(command)
-      setDeployStatusMessage(copied ? copy.deployCopySuccess : copy.deployCopyFailed)
+      setPricingConfig(nextConfig)
+      setAdminPricingConfig(nextConfig)
+      setPricingStatusMessage(showSuccessMessage ? copy.pricingReloadSuccess : '')
     } catch (error) {
-      const code = unlockErrorCode(error)
-      if (code.includes('UNAUTHENTICATED') || code.includes('DEPLOY_ENTITLEMENT_REQUIRED')) {
-        setDeployStatusMessage(copy.deployNeedLogin)
-        return
-      }
-      if (code.includes('DEPLOY_SHARE_')) {
-        setDeployStatusMessage(shareNoticeForStatus(resolveShareStatusFromError(error)))
-        return
-      }
-
-      setDeployStatusMessage(copy.deployTicketFailed)
+      const detail = normalizeAuthError(error, copy.pricingLoadFallback)
+      setPricingStatusMessage(withDetail(copy.pricingLoadFallback, detail))
+    } finally {
+      setPricingBusy(false)
     }
   }
 
-  function shareNoticeForStatus(status: ShareResolveStatus) {
-    if (status === 'expired') {
-      return copy.shareExpired
+  async function handleSavePricingConfig() {
+    if (!authConfig.supabaseUrl) {
+      setPricingStatusMessage(copy.pricingUnavailable)
+      return
     }
-    if (status === 'revoked') {
-      return copy.shareRevoked
+
+    if (!canManagePricing || !authUser) {
+      setPricingStatusMessage(copy.pricingManageLogin)
+      return
     }
-    if (status === 'active') {
-      return copy.shareRestricted
+
+    setPricingBusy(true)
+
+    try {
+      const savedConfig = await savePricingConfigFromSupabase(authConfig, adminPricingConfig)
+      setPricingConfig(savedConfig)
+      setAdminPricingConfig(savedConfig)
+      setPricingStatusMessage(copy.pricingSaveSuccess)
+    } catch (error) {
+      const detail = normalizeAuthError(error, copy.pricingSaveFailed)
+      setPricingStatusMessage(withDetail(copy.pricingSaveFailed, detail))
+    } finally {
+      setPricingBusy(false)
     }
-    return copy.shareInvalid
   }
 
   async function createManagedShareLink(options: {
@@ -1224,7 +1550,7 @@ function App() {
     }
 
     await createManagedShareLink({
-      label: `${project.name} · ${lang === 'zh' ? '详情分享' : 'detail share'}`,
+      label: `${getProjectPresentation(project, lang).name} · ${lang === 'zh' ? '详情分享' : 'detail share'}`,
       expiresInDays: 3,
       scope: {
         allowPortfolio: true,
@@ -1251,7 +1577,7 @@ function App() {
     }
 
     const created = await createManagedShareLink({
-      label: `${project.name} · ${lang === 'zh' ? '子域分享' : 'subdomain share'}`,
+      label: `${getProjectPresentation(project, lang).name} · ${lang === 'zh' ? '子域分享' : 'subdomain share'}`,
       expiresInDays: 3,
       scope: {
         allowPortfolio: false,
@@ -1319,6 +1645,99 @@ function App() {
     }
   }
 
+  function redirectAfterDedicatedLogin() {
+    if (rootView !== 'login' || typeof window === 'undefined') {
+      return false
+    }
+
+    const target = resolveSafeAuthRedirectUrl(authReturnHref) ?? defaultHomeHref
+    const current = resolveSafeAuthRedirectUrl(window.location.href)
+
+    if (current === target) {
+      return false
+    }
+
+    window.location.assign(target)
+    return true
+  }
+
+  async function handleAuthLogin(email: string, password: string) {
+    if (!authEnabled) {
+      setAuthStatusMessage(copy.authUnavailable)
+      return
+    }
+
+    if (!email || !password) {
+      setAuthStatusMessage(copy.emailPasswordRequired)
+      return
+    }
+
+    setAuthBusy(true)
+    setAuthStatusMessage(copy.loggingIn)
+
+    try {
+      const user = await loginWithPassword(authConfig, email, password)
+      const normalizedUser = toAuthUserSummary(user, authRoleRules)
+      setAuthUser(normalizedUser)
+      setAuthStatusMessage(
+        normalizedUser?.email
+          ? withEmail(copy.loginSuccess, normalizedUser.email)
+          : withDone(copy.loginSuccess, lang),
+      )
+
+      redirectAfterDedicatedLogin()
+    } catch (loginError) {
+      const detail = normalizeAuthError(loginError, copy.loginFallback)
+      setAuthStatusMessage(withDetail(copy.loginFailed, detail))
+    } finally {
+      setAuthBusy(false)
+    }
+  }
+
+  async function handleAuthSignup(email: string, password: string) {
+    if (!authEnabled) {
+      setAuthStatusMessage(copy.authUnavailable)
+      return
+    }
+
+    if (!email || !password) {
+      setAuthStatusMessage(copy.emailPasswordRequired)
+      return
+    }
+
+    setAuthBusy(true)
+    setAuthStatusMessage(copy.signingUp)
+
+    try {
+      const result = await signupWithPassword(authConfig, email, password)
+
+      if (result.outcome === 'exists') {
+        setAuthStatusMessage(copy.emailExists)
+        return
+      }
+
+      if (result.outcome === 'confirm') {
+        setAuthStatusMessage(copy.confirmEmail)
+        return
+      }
+
+      const normalizedUser = toAuthUserSummary(result.user, authRoleRules)
+      setAuthUser(normalizedUser)
+      setAuthStatusMessage(
+        normalizedUser?.email
+          ? withEmail(copy.signupAndLoginSuccess, normalizedUser.email)
+          : withDone(copy.signupSuccess, lang),
+      )
+
+      redirectAfterDedicatedLogin()
+    } catch (signupError) {
+      const detail = normalizeAuthError(signupError, copy.signupFallback)
+      setAuthStatusMessage(withDetail(copy.signupFailed, detail))
+    } finally {
+      setAuthBusy(false)
+    }
+  }
+
   async function handleAuthSubmit(email: string, password: string) {
     if (!authEnabled) {
       setAuthStatusMessage(copy.authUnavailable)
@@ -1372,6 +1791,31 @@ function App() {
     }
   }
 
+  async function handleGoogleLogin(redirectTo?: string | null) {
+    if (!authEnabled) {
+      setAuthStatusMessage(copy.authUnavailable)
+      return
+    }
+
+    markGoogleOAuthPending()
+    setAuthBusy(true)
+    setAuthStatusMessage(copy.googleLoggingIn)
+
+    try {
+      const redirected = await loginWithGoogle(authConfig, redirectTo)
+
+      if (!redirected) {
+        clearGoogleOAuthPending()
+        setAuthBusy(false)
+      }
+    } catch (error) {
+      clearGoogleOAuthPending()
+      const detail = normalizeAuthError(error, copy.googleLoginFallback)
+      setAuthStatusMessage(withDetail(copy.googleLoginFailed, detail))
+      setAuthBusy(false)
+    }
+  }
+
   async function handleLogout() {
     if (!authEnabled) {
       setAuthStatusMessage(copy.authUnavailable)
@@ -1399,14 +1843,18 @@ function App() {
       return chosen
     }
 
-    const fallbackSlugs = defaultSelection(projects, snapshot.featured)
+    const fallbackSlugs = defaultSelection(projects, FEATURED_PROJECT_SLUGS)
     return chooseProjects(projects, fallbackSlugs)
   }, [projects, selectedSlugs])
 
   const visibleProjects = useMemo(() => {
-    const baseProjects = debugMode ? featuredProjects : projects
+    if (shareToken && shareAccess?.scope.allowAllProjects) {
+      return projects
+    }
 
-    if (!shareToken || !shareAccess || shareAccess.scope.allowAllProjects) {
+    const baseProjects = featuredProjects
+
+    if (!shareToken || !shareAccess) {
       return baseProjects
     }
 
@@ -1416,7 +1864,7 @@ function App() {
     }
 
     return projects.filter((project) => canShareAccessProject(project.slug, shareAccess))
-  }, [debugMode, featuredProjects, projects, shareAccess, shareToken])
+  }, [featuredProjects, projects, shareAccess, shareToken])
 
   const selectedProject = useMemo(() => {
     if (!selectedProjectSlug) {
@@ -1425,6 +1873,20 @@ function App() {
 
     return projects.find((project) => project.slug === selectedProjectSlug) ?? null
   }, [projects, selectedProjectSlug])
+  const blogArticles = useMemo(() => BLOG_ARTICLES, [])
+  const activeBlogArticle = useMemo(
+    () =>
+      blogArticles.find((article) => article.id === activeBlogArticleId) ??
+      blogArticles[0] ??
+      null,
+    [activeBlogArticleId, blogArticles],
+  )
+  const activeBlogIndex = useMemo(
+    () => (activeBlogArticle ? blogArticles.findIndex((article) => article.id === activeBlogArticle.id) : -1),
+    [activeBlogArticle, blogArticles],
+  )
+  const nextBlogArticle =
+    activeBlogIndex >= 0 && activeBlogIndex + 1 < blogArticles.length ? blogArticles[activeBlogIndex + 1] : null
 
   const subdomainProject = useMemo(
     () => resolveSubdomainView(projects, window.location.hostname, forcedSubdomain),
@@ -1434,21 +1896,19 @@ function App() {
   const isAdminView = forcedPage === 'admin' || hostname === 'admin.wordm.us'
 
   const authRole: AuthRole = authUser?.role ?? 'guest'
+  const projectOfferStates = useMemo(() => {
+    const next = new Map<string, ProjectOfferState>()
+    for (const project of projects) {
+      next.set(project.slug, getProjectOfferState(project, pricingConfig, offerNow))
+    }
+    return next
+  }, [offerNow, pricingConfig, projects])
   const canManageShares = isAdminHost || authRole === 'admin' || authRole === 'tester'
+  const canManagePricing = authRole === 'admin' || authRole === 'tester'
   const shareEntryUrl = shareToken && shareAccess ? buildShareEntryUrl(shareToken, lang, shareAccess.scope, projects) : null
   const canAccessResume = canManageShares || canShareAccessView('resume', shareAccess)
   const projectCatalogSlugs = useMemo(() => projects.map((project) => project.slug), [projects])
-  const deployTargetProject = useMemo(
-    () => (unlockTargetSlug ? projects.find((project) => project.slug === unlockTargetSlug) ?? null : null),
-    [projects, unlockTargetSlug],
-  )
-  const freeOfferStatus = useMemo(
-    () => getFreeOfferStatus(unlockState ?? EMPTY_UNLOCK_STATE, authUser?.createdAt ?? null),
-    [authUser?.createdAt, unlockState],
-  )
   const unlockActionDisabled = unlockBusy || checkoutBusyKind !== null || unlockStorageMode === 'loading'
-  const canUseFreeUnlock = authRole !== 'guest' && freeOfferStatus.remaining > 0 && !unlockActionDisabled
-  const unlockQuotaText = `${copy.unlockQuotaFormatPrefix} ${freeOfferStatus.total} · ${copy.unlockQuotaUsed} ${freeOfferStatus.used} · ${copy.unlockQuotaRemaining} ${freeOfferStatus.remaining}`
   const unlockStorageLabel =
     unlockStorageMode === 'remote'
       ? copy.unlockStorageRemote
@@ -1457,32 +1917,9 @@ function App() {
         : unlockStorageMode === 'loading'
           ? copy.unlockStorageLoading
           : copy.unlockStorageIdle
-  const normalizedDeployPort = useMemo(() => {
-    const value = deployPort.trim()
-    return value || '8080'
-  }, [deployPort])
-  const deployCommandPreview = useMemo(() => {
-    if (deployTarget === 'remote' && !deployRemoteHost.trim()) {
-      return copy.deployRemoteHostRequired
-    }
-
-    const quotedScriptUrl = shellQuote(selfHostInstallScriptUrl)
-
-    if (deployTarget === 'remote') {
-      return `ssh ${deployRemoteHost.trim()} 'curl -fsSL ${quotedScriptUrl} | bash -s -- --ticket <generated-on-copy> --resolve-endpoint <resolve-endpoint> --port ${normalizedDeployPort}'`
-    }
-
-    return `curl -fsSL ${quotedScriptUrl} | bash -s -- --ticket <generated-on-copy> --resolve-endpoint <resolve-endpoint> --port ${normalizedDeployPort}`
-  }, [
-    copy.deployRemoteHostRequired,
-    deployRemoteHost,
-    deployTarget,
-    normalizedDeployPort,
-    selfHostInstallScriptUrl,
-  ])
-  const deployProjectUrl = deployTargetProject ? withSiteParams(deployTargetProject.subdomainUrl, { lang, shareToken }) : null
-  const subdomainProjectUnlocked = subdomainProject
-    ? canAccessProject(subdomainProject.slug, authRole, unlockState) || canShareAccessProject(subdomainProject.slug, shareAccess)
+  const subdomainProjectPaidAccess = subdomainProject
+    ? hasProjectPremiumAccess(subdomainProject.slug, authRole, unlockState) ||
+      canShareAccessProject(subdomainProject.slug, shareAccess)
     : false
   const portfolioShareDeniedStatus = resolveShareDeniedStatus({
     shareToken,
@@ -1490,10 +1927,10 @@ function App() {
     allowedByShare: canShareAccessView('portfolio', shareAccess),
     bypass: Boolean(authUser),
   })
-  const deployShareDeniedStatus = resolveShareDeniedStatus({
+  const blogShareDeniedStatus = resolveShareDeniedStatus({
     shareToken,
     shareResolveStatus,
-    allowedByShare: canShareAccessView('deploy', shareAccess),
+    allowedByShare: canShareAccessView('blog', shareAccess),
     bypass: Boolean(authUser),
   })
   const resumeShareDeniedStatus = resolveShareDeniedStatus({
@@ -1506,13 +1943,14 @@ function App() {
     shareToken,
     shareResolveStatus,
     allowedByShare: subdomainProject ? canShareAccessProject(subdomainProject.slug, shareAccess) : false,
-    bypass: subdomainProject ? canAccessProject(subdomainProject.slug, authRole, unlockState) : false,
+    bypass: subdomainProject ? hasProjectPremiumAccess(subdomainProject.slug, authRole, unlockState) : false,
   })
   const projectDetailShareDeniedStatus = resolveShareDeniedStatus({
     shareToken,
     shareResolveStatus,
     allowedByShare: selectedProject ? canShareAccessView('portfolio', shareAccess) && canShareAccessProject(selectedProject.slug, shareAccess) : false,
-    bypass: selectedProject ? canAccessProject(selectedProject.slug, authRole, unlockState) || canManageShares : false,
+    bypass:
+      selectedProject ? hasProjectPremiumAccess(selectedProject.slug, authRole, unlockState) || canManageShares : false,
   })
   const authPanelProps = {
     lang,
@@ -1524,15 +1962,34 @@ function App() {
     statusMessage: authStatusMessage,
     onLogin: handleAuthSubmit,
     onSignup: handleAuthSubmit,
+    onGoogleLogin: handleGoogleLogin,
     onLogout: handleLogout,
+  }
+
+  function scrollToBlogArticle(articleId: string, behavior: ScrollBehavior = 'smooth') {
+    const target = document.getElementById(`blog-article-${articleId}`)
+    if (!target) {
+      return
+    }
+
+    setActiveBlogArticleId(articleId)
+    target.scrollIntoView({ behavior, block: 'start' })
   }
 
   function getProjectNameBySlug(slug: string) {
     return projects.find((project) => project.slug === slug)?.name || slug
   }
 
+  function getOfferStateBySlug(slug: string): ProjectOfferState {
+    return projectOfferStates.get(slug) ?? getProjectOfferState({ slug }, pricingConfig, offerNow)
+  }
+
+  function getUnlockOptionsBySlug(slug: string) {
+    return getProjectUnlockOptions(slug, pricingConfig, lang)
+  }
+
   function isProjectUnlocked(slug: string) {
-    return canAccessProject(slug, authRole, unlockState) || canShareAccessProject(slug, shareAccess)
+    return hasProjectPremiumAccess(slug, authRole, unlockState) || canShareAccessProject(slug, shareAccess)
   }
 
   function ensureCanUnlock() {
@@ -1558,49 +2015,37 @@ function App() {
     return true
   }
 
-  async function applyUnlockGrant(
-    kind: 'single' | 'all_current' | 'all_current_plus_year' | 'free_pick',
-    projectSlug?: string,
-  ): Promise<UserUnlockState> {
+  async function applyUnlockGrant(kind: 'single' | 'all_access', projectSlug?: string): Promise<UserUnlockState> {
     if (unlockStorageMode === 'remote') {
       try {
         return await applyUnlockGrantFromSupabase(authConfig, {
           kind,
           projectSlug: projectSlug ?? null,
-          catalogSlugs:
-            kind === 'all_current' || kind === 'all_current_plus_year'
-              ? projectCatalogSlugs
-              : null,
+          catalogSlugs: kind === 'all_access' ? projectCatalogSlugs : null,
         })
       } catch (error) {
         if (isBusinessUnlockError(error)) {
           throw error
         }
 
-        if (kind !== 'free_pick') {
-          throw new Error('PAYMENT_BACKEND_REQUIRED')
-        }
-
         setUnlockStorageMode('local')
         setUnlockStatusMessage(copy.unlockRemoteFallback)
+        throw new Error('PAYMENT_BACKEND_REQUIRED')
       }
     }
 
-    if (kind !== 'free_pick') {
-      throw new Error('PAYMENT_BACKEND_REQUIRED')
-    }
-
-    if (!projectSlug) {
-      throw new Error('PROJECT_SLUG_REQUIRED')
-    }
-
-    const currentState = unlockState ?? EMPTY_UNLOCK_STATE
-    return grantFreeProjectUnlock(currentState, projectSlug, authUser?.createdAt ?? null, new Date())
+    throw new Error('PAYMENT_BACKEND_REQUIRED')
   }
 
   async function handleUnlockSingle(projectSlug: string) {
     const normalizedSlug = normalizeSlug(projectSlug)
     if (!normalizedSlug) {
+      return
+    }
+
+    const unlockOptions = getUnlockOptionsBySlug(normalizedSlug)
+    if (!unlockOptions.singleEnabled) {
+      setUnlockStatusMessage(copy.unlockPlanUnavailable)
       return
     }
 
@@ -1621,7 +2066,7 @@ function App() {
       }
 
       if (isLifetimeRequiredError(error)) {
-        await startUnlockCheckout('all_current_plus_year', normalizedSlug)
+        await startUnlockCheckout('all_access', normalizedSlug)
         return
       }
 
@@ -1636,84 +2081,34 @@ function App() {
     }
   }
 
-  async function handleUnlockAllCurrent() {
+  async function handleUnlockAllAccess() {
+    if (!pricingConfig.allAccess.enabled) {
+      setUnlockStatusMessage(copy.unlockPlanUnavailable)
+      return
+    }
+
     if (!ensureCanUnlock()) {
       return
     }
 
     setUnlockBusy(true)
     try {
-      const nextState = await applyUnlockGrant('all_current')
+      const nextState = await applyUnlockGrant('all_access')
       setUnlockState(nextState)
-      setUnlockStatusMessage(copy.unlockAllCurrentSuccess)
-    } catch (error) {
-      if (isPaymentRequiredError(error)) {
-        await startUnlockCheckout('all_current')
-        return
-      }
-
-      if (unlockErrorCode(error).includes('PAYMENT_BACKEND_REQUIRED')) {
-        setUnlockStatusMessage(copy.unlockPaidServerRequired)
-        return
-      }
-
-      setUnlockStatusMessage(copy.unlockActionFailed)
-    } finally {
-      setUnlockBusy(false)
-    }
-  }
-
-  async function handleUnlockAllCurrentPlusYear() {
-    if (!ensureCanUnlock()) {
-      return
-    }
-
-    setUnlockBusy(true)
-    try {
-      const nextState = await applyUnlockGrant('all_current_plus_year')
-      setUnlockState(nextState)
-      setUnlockStatusMessage(copy.unlockAllCurrentPlusYearSuccess)
+      setUnlockStatusMessage(copy.unlockAllAccessSuccess)
     } catch (error) {
       if (isLifetimeRequiredError(error)) {
-        await startUnlockCheckout('all_current_plus_year')
+        await startUnlockCheckout('all_access')
         return
       }
 
       if (isPaymentRequiredError(error)) {
-        await startUnlockCheckout('all_current_plus_year')
+        await startUnlockCheckout('all_access')
         return
       }
 
       if (unlockErrorCode(error).includes('PAYMENT_BACKEND_REQUIRED')) {
         setUnlockStatusMessage(copy.unlockPaidServerRequired)
-        return
-      }
-
-      setUnlockStatusMessage(copy.unlockActionFailed)
-    } finally {
-      setUnlockBusy(false)
-    }
-  }
-
-  async function handleUnlockFree(projectSlug: string) {
-    const normalizedSlug = normalizeSlug(projectSlug)
-    if (!normalizedSlug) {
-      return
-    }
-
-    setUnlockTargetSlug(normalizedSlug)
-    if (!ensureCanUnlock()) {
-      return
-    }
-
-    setUnlockBusy(true)
-    try {
-      const nextState = await applyUnlockGrant('free_pick', normalizedSlug)
-      setUnlockState(nextState)
-      setUnlockStatusMessage(`${copy.unlockFreeSuccessPrefix}: ${getProjectNameBySlug(normalizedSlug)}`)
-    } catch (error) {
-      if (isFreeOfferExhaustedError(error)) {
-        setUnlockStatusMessage(copy.unlockFreeEmpty)
         return
       }
 
@@ -1742,25 +2137,22 @@ function App() {
       return <ShareAccessDenied lang={lang} status={subdomainShareDeniedStatus} authPanel={authPanelProps} fallbackSharedUrl={shareEntryUrl} />
     }
 
-    if (!subdomainProjectUnlocked) {
-      return (
-        <SubdomainProjectLocked
-          lang={lang}
-          role={authRole}
-          project={subdomainProject}
-          statusMessage={unlockStatusMessage}
-          canUseFreeUnlock={canUseFreeUnlock}
-          unlockBusy={unlockActionDisabled}
-          freeRemaining={freeOfferStatus.remaining}
-          shareToken={shareToken}
-          authPanel={authPanelProps}
-          onUnlockSingle={(slug) => void handleUnlockSingle(slug)}
-          onUnlockFree={(slug) => void handleUnlockFree(slug)}
-        />
-      )
-    }
-
-    return <SubdomainProjectView lang={lang} project={subdomainProject} lastUpdated={lastUpdated} shareToken={shareToken} authPanel={authPanelProps} />
+    return (
+      <SubdomainProjectView
+        lang={lang}
+        project={subdomainProject}
+        lastUpdated={lastUpdated}
+        shareToken={shareToken}
+        authPanel={authPanelProps}
+        paidAccess={subdomainProjectPaidAccess}
+        offerState={getOfferStateBySlug(subdomainProject.slug)}
+        unlockOptions={getUnlockOptionsBySlug(subdomainProject.slug)}
+        unlockBusy={unlockActionDisabled}
+        statusMessage={unlockStatusMessage}
+        onUnlockSingle={(slug) => void handleUnlockSingle(slug)}
+        onUnlockAllAccess={() => void handleUnlockAllAccess()}
+      />
+    )
   }
 
   if (isAdminView) {
@@ -1779,6 +2171,10 @@ function App() {
         shareScope={shareScope}
         shareLinks={shareLinks}
         lastCreatedShareUrl={lastCreatedShareUrl}
+        canManagePricing={canManagePricing}
+        pricingBusy={pricingBusy}
+        pricingStatusMessage={pricingStatusMessage}
+        pricingConfig={adminPricingConfig}
         onToggleProject={(slug) => {
           setSelectedSlugs((prev) => {
             if (prev.includes(slug)) {
@@ -1788,7 +2184,7 @@ function App() {
             return [...prev, slug]
           })
         }}
-        onSelectFeatured={() => setSelectedSlugs(defaultSelection(projects, snapshot.featured))}
+        onSelectFeatured={() => setSelectedSlugs(defaultSelection(projects, FEATURED_PROJECT_SLUGS))}
         onSelectAll={() => setSelectedSlugs(projects.map((project) => project.slug))}
         onShareLabelChange={setShareLabel}
         onShareExpiresInDaysChange={setShareExpiresInDays}
@@ -1807,6 +2203,9 @@ function App() {
         onCopyLastShareLink={() => void handleCopyLastShareLink()}
         onPurgeInactiveShareLinks={() => void handlePurgeInactiveShareLinks()}
         onRevokeShareLink={(shareLinkId) => void handleRevokeShareLink(shareLinkId)}
+        onPricingConfigChange={setAdminPricingConfig}
+        onPricingReload={() => void reloadPricingConfig(true)}
+        onPricingSave={() => void handleSavePricingConfig()}
       />
     )
   }
@@ -1822,137 +2221,97 @@ function App() {
     return <ResumePage lang={lang} lastUpdated={lastUpdated} shareToken={shareToken} authPanel={authPanelProps} />
   }
 
-  if (rootView === 'deploy') {
-    if (deployShareDeniedStatus) {
-      return <ShareAccessDenied lang={lang} status={deployShareDeniedStatus} authPanel={authPanelProps} fallbackSharedUrl={shareEntryUrl} />
-    }
-
+  if (rootView === 'login') {
     return (
-      <div className="page-container">
-        <Sidebar
-          lang={lang}
-          onLangChange={setLang}
-          authPanel={authPanelProps}
-        />
-
-        <main className="main-content portfolio-main-content">
-          <section id="deploy">
-            <h2>{copy.deployTitle}</h2>
-            <p className="visual-intro">{copy.deployIntro}</p>
-            <section className="unlock-control-panel" aria-live="polite">
-              <div className="unlock-plan-actions">
-                <button
-                  type="button"
-                  className={`unlock-plan-btn ${deployTarget === 'local' ? 'active' : ''}`}
-                  onClick={() => setDeployTarget('local')}
-                >
-                  {copy.deployMachineLocal}
-                </button>
-                <button
-                  type="button"
-                  className={`unlock-plan-btn ${deployTarget === 'remote' ? 'active' : ''}`}
-                  onClick={() => setDeployTarget('remote')}
-                >
-                  {copy.deployMachineRemote}
-                </button>
-              </div>
-
-              <p className="unlock-control-intro">
-                {deployTarget === 'local' ? copy.deployMachineLocalDesc : copy.deployMachineRemoteDesc}
-              </p>
-              {clientOs === 'windows' ? <p className="unlock-status-message">{copy.deployWindowsHint}</p> : null}
-
-              <div className="deploy-form-grid">
-                <label className="deploy-field">
-                  <span>{copy.deployPortLabel}</span>
-                  <input
-                    className="deploy-input"
-                    value={deployPort}
-                    onChange={(event) => setDeployPort(event.target.value)}
-                    inputMode="numeric"
-                    placeholder="8080"
-                  />
-                </label>
-                {deployTarget === 'remote' ? (
-                  <label className="deploy-field">
-                    <span>{copy.deployRemoteHostLabel}</span>
-                    <input
-                      className="deploy-input"
-                      value={deployRemoteHost}
-                      onChange={(event) => setDeployRemoteHost(event.target.value)}
-                      placeholder={copy.deployRemoteHostPlaceholder}
-                    />
-                  </label>
-                ) : null}
-              </div>
-
-              <pre className="deploy-command-block">
-                <code>{deployCommandPreview}</code>
-              </pre>
-
-              <div className="unlock-plan-actions">
-                <button type="button" className="unlock-plan-btn" onClick={() => void handleCopyDeployCommand()}>
-                  {copy.deployCopyCommand}
-                </button>
-                <a className="unlock-plan-btn deploy-link-btn" href={selfHostInstallGuideUrl} target="_blank" rel="noreferrer">
-                  {copy.deployOpenGuide}
-                </a>
-                <a className="unlock-plan-btn deploy-link-btn" href={selfHostInstallScriptUrl} target="_blank" rel="noreferrer">
-                  {copy.deployOpenScript}
-                </a>
-              </div>
-
-              {deployStatusMessage ? <p className="unlock-status-message">{deployStatusMessage}</p> : null}
-              <p className="unlock-control-intro">{copy.deployAfterDone}</p>
-
-              <div className="unlock-plan-actions">
-                <button type="button" className="unlock-plan-btn" onClick={() => setRootView('portfolio')}>
-                  {copy.deployBackPortfolio}
-                </button>
-                {deployTargetProject && deployProjectUrl && isProjectUnlocked(deployTargetProject.slug) ? (
-                  <a className="unlock-plan-btn deploy-link-btn" href={deployProjectUrl} target="_blank" rel="noreferrer">
-                    {copy.deployOpenUnlockedProject}
-                  </a>
-                ) : null}
-              </div>
-            </section>
-          </section>
-
-          <footer id="contact">
-            <div className="footer-contact-inline">
-              {copy.contactTitle}: 简永杰 / Jian Yongjie · {copy.profileLine1} ·{' '}
-              <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
-            </div>
-            <div className="footer-meta-row">
-              <div>{copy.copyright}</div>
-              <div>{copy.portfolioMode}</div>
-            </div>
-          </footer>
-        </main>
-        {showScrollTop ? (
-          <button type="button" className="scroll-top-btn" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-            TOP
-          </button>
-        ) : null}
-      </div>
+      <LoginPage
+        lang={lang}
+        enabled={authEnabled}
+        loading={authLoading}
+        busy={authBusy}
+        userEmail={authUser?.email ?? null}
+        userRole={authRole}
+        statusMessage={authStatusMessage}
+        homeHref={homeHref}
+        onLangChange={setLang}
+        onLogin={handleAuthLogin}
+        onSignup={handleAuthSignup}
+        onGoogleLogin={() => handleGoogleLogin(authReturnHref)}
+        onLogout={handleLogout}
+      />
     )
   }
 
-  if (portfolioShareDeniedStatus) {
+  if (rootView === 'blog' && blogShareDeniedStatus) {
+    return <ShareAccessDenied lang={lang} status={blogShareDeniedStatus} authPanel={authPanelProps} fallbackSharedUrl={shareEntryUrl} />
+  }
+
+  if (rootView === 'portfolio' && portfolioShareDeniedStatus) {
     return <ShareAccessDenied lang={lang} status={portfolioShareDeniedStatus} authPanel={authPanelProps} fallbackSharedUrl={shareEntryUrl} />
   }
 
+  const sidebarUnlockPanel =
+    rootView === 'portfolio'
+      ? {
+          title: copy.unlockPanelTitle,
+          storageLabel: unlockStorageLabel,
+          intro: copy.unlockPanelIntro,
+          summary: copy.unlockPanelSummary,
+          installHintPrefix: copy.unlockInstallHintPrefix,
+          installHintLinkLabel: copy.unlockInstallHintLink,
+          installGuideUrl: selfHostInstallGuideUrl,
+          bypassNotice: authRole === 'admin' || authRole === 'tester' ? copy.unlockBypassNotice : null,
+          statusMessage: unlockStatusMessage,
+          actionsDisabled: unlockActionDisabled,
+          primaryActionLabel: pricingConfig.allAccess.enabled
+            ? formatUnlockActionLabel(
+                copy.unlockPlanAllAccess,
+                lang === 'zh' ? pricingConfig.allAccess.priceZh : pricingConfig.allAccess.priceEn,
+              )
+            : null,
+          onPrimaryAction: pricingConfig.allAccess.enabled ? () => void handleUnlockAllAccess() : null,
+        }
+      : null
+
   return (
     <div className="page-container">
-      <Sidebar
-        lang={lang}
-        onLangChange={setLang}
-        authPanel={authPanelProps}
-      />
+      <Sidebar lang={lang} onLangChange={setLang} authPanel={authPanelProps} loginHref={loginHref} unlockPanel={sidebarUnlockPanel} />
 
-      <main className="main-content portfolio-main-content">
-        <section id={selectedProject ? 'project-detail' : 'projects'}>
-          {debugMode ? (
+      <main className={`main-content portfolio-main-content${rootView === 'blog' ? ' blog-main' : ''}`}>
+	        <section id="collection" className="main-collection-shell">
+	          <div className="collection-switch-head">
+	            <div className="collection-switch-title-block">
+	              <nav className="collection-switch-tabs" aria-label={lang === 'zh' ? '内容切换' : 'Content switch'}>
+	                <button
+	                  type="button"
+	                  className={`collection-switch-tab${rootView === 'portfolio' ? ' active' : ''}`}
+	                  onClick={() => setRootView('portfolio')}
+	                >
+	                  {copy.tocProjects}
+	                </button>
+	                <button
+	                  type="button"
+	                  className={`collection-switch-tab${rootView === 'blog' ? ' active' : ''}`}
+	                  onClick={() => setRootView('blog')}
+	                >
+	                  {copy.tocBlog}
+	                </button>
+	              </nav>
+	              {rootView === 'blog' ? <p className="visual-intro collection-switch-intro">{copy.blogIntro}</p> : null}
+	            </div>
+	
+	            <div className="collection-switch-side">
+	              <div className="collection-corner-links">
+	                <a href="https://substack.com/@parson1" target="_blank" rel="noreferrer">
+	                  {copy.cornerSubstack}
+                </a>
+                <a href="https://x.com/parsonjian" target="_blank" rel="noreferrer">
+                  {copy.cornerX}
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {debugMode && rootView === 'portfolio' ? (
             <DebugPanel
               lang={lang}
               allProjects={projects}
@@ -1972,58 +2331,56 @@ function App() {
                   return [...prev, slug]
                 })
               }}
-              onSelectFeatured={() => setSelectedSlugs(defaultSelection(projects, snapshot.featured))}
+              onSelectFeatured={() => setSelectedSlugs(defaultSelection(projects, FEATURED_PROJECT_SLUGS))}
               onSelectAll={() => setSelectedSlugs(projects.map((project) => project.slug))}
             />
           ) : null}
 
-          <h2>{copy.portfolioTitle}</h2>
-          <section className="unlock-control-panel" aria-live="polite">
-            <div className="paper-meta unlock-control-meta">
-              <span>{copy.unlockPanelTitle}</span>
-              <span>
-                {copy.unlockFreeQuotaPrefix}: {unlockQuotaText}
-              </span>
-              <span>{unlockStorageLabel}</span>
+          {rootView === 'blog' ? (
+            <div className="blog-page">
+              <aside className="blog-sidebar">
+                <ul className="nav-list">
+                  {blogArticles.map((article) => (
+                    <li key={article.id} className="nav-item">
+                      <button
+                        type="button"
+                        className={`nav-link sidebar-nav-button${activeBlogArticle?.id === article.id ? ' active' : ''}`}
+                        onClick={() => scrollToBlogArticle(article.id)}
+                      >
+                        {article.title[lang]}
+                        <span className="toc-meta">
+                          {article.date} · {article.category[lang]}
+                        </span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </aside>
+
+              <div className="blog-article-list">
+                {blogArticles.map((article) => (
+                  <article
+                    key={article.id}
+                    id={`blog-article-${article.id}`}
+                    data-article-id={article.id}
+                    className={`blog-article${activeBlogArticle?.id === article.id ? ' blog-article-active' : ''}`}
+                  >
+                    <div className="paper-meta">
+                      <span>{article.date}</span>
+                      <span>{article.category[lang]}</span>
+                      {article.originalPublishedAt ? <span>{copy.blogOriginalPrefix}: {article.originalPublishedAt}</span> : null}
+                    </div>
+                    <h3 className="blog-article-title">{article.title[lang]}</h3>
+	                    <p className="blog-article-summary">{article.summary[lang]}</p>
+	                    {article.note[lang].trim() ? <p className="blog-article-note">{article.note[lang]}</p> : null}
+	                    {article.paragraphs.map((paragraph, index) => (
+	                      <p key={`${article.id}-${index}`}>{paragraph[lang]}</p>
+	                    ))}
+	                  </article>
+	                ))}
+	              </div>
             </div>
-            <p className="unlock-control-intro">{copy.unlockPanelIntro}</p>
-            <p className="unlock-plan-summary">
-              {copy.unlockPlanSingleLabel} (card) · {copy.unlockPlanAllCurrent} · {copy.unlockPlanAllCurrentPlusYear}
-            </p>
-            <p className="unlock-control-intro">
-              {copy.unlockInstallHintPrefix}{' '}
-              <a href={selfHostInstallGuideUrl} target="_blank" rel="noreferrer">
-                {copy.unlockInstallHintLink}
-              </a>
-            </p>
-
-            {authRole === 'admin' || authRole === 'tester' ? (
-              <p className="unlock-status-message">{copy.unlockBypassNotice}</p>
-            ) : (
-              <div className="unlock-plan-actions">
-                <button
-                  type="button"
-                  className="unlock-plan-btn"
-                  disabled={unlockActionDisabled}
-                  onClick={() => void handleUnlockAllCurrent()}
-                >
-                  {copy.unlockPlanAllCurrent}
-                </button>
-                <button
-                  type="button"
-                  className="unlock-plan-btn"
-                  disabled={unlockActionDisabled}
-                  onClick={() => void handleUnlockAllCurrentPlusYear()}
-                >
-                  {copy.unlockPlanAllCurrentPlusYear}
-                </button>
-              </div>
-            )}
-
-            {unlockStatusMessage ? <p className="unlock-status-message">{unlockStatusMessage}</p> : null}
-          </section>
-
-          {selectedProject ? (
+          ) : selectedProject ? (
             projectDetailShareDeniedStatus ? (
               <ShareAccessDenied lang={lang} status={projectDetailShareDeniedStatus} authPanel={authPanelProps} fallbackSharedUrl={shareEntryUrl} />
             ) : (
@@ -2032,29 +2389,34 @@ function App() {
                 project={selectedProject}
                 lastUpdated={lastUpdated}
                 unlocked={isProjectUnlocked(selectedProject.slug)}
-                canUseFreeUnlock={canUseFreeUnlock}
+                offerState={getOfferStateBySlug(selectedProject.slug)}
+                unlockOptions={getUnlockOptionsBySlug(selectedProject.slug)}
                 unlockBusy={unlockActionDisabled}
                 statusMessage={unlockStatusMessage}
                 onBack={() => setSelectedProjectSlug(null)}
                 onUnlockSingle={(slug) => void handleUnlockSingle(slug)}
-                onUnlockFree={(slug) => void handleUnlockFree(slug)}
+                onUnlockAllAccess={() => void handleUnlockAllAccess()}
               />
             )
-          ) : (
-            <div className="portfolio-gallery">
-              {visibleProjects.map((project) => (
-                <ProjectEntry
-                  lang={lang}
-                  key={project.id}
-                  project={project}
-                  unlocked={isProjectUnlocked(project.slug)}
-                  focused={unlockTargetSlug === project.slug}
-                    unlockBusy={unlockActionDisabled}
+	          ) : (
+	            <>
+	              <Suspense fallback={<div className="portfolio-showcase-loading" aria-hidden="true" />}>
+	                <PortfolioShowcase lang={lang} projects={visibleProjects} />
+	              </Suspense>
+	              <div className="portfolio-gallery">
+	                {visibleProjects.map((project) => (
+                  <ProjectEntry
+                    key={project.id}
+                    lang={lang}
+                    project={project}
+                    accessible={isProjectUnlocked(project.slug)}
+                    offerState={getOfferStateBySlug(project.slug)}
+                    focused={unlockTargetSlug === project.slug}
                     onSelectProject={(slug) => setSelectedProjectSlug(slug)}
-                  onUnlockSingle={(slug) => void handleUnlockSingle(slug)}
                   />
-              ))}
-            </div>
+                ))}
+              </div>
+            </>
           )}
         </section>
 
@@ -2069,6 +2431,25 @@ function App() {
           </div>
         </footer>
       </main>
+      {rootView === 'blog'
+        ? nextBlogArticle
+          ? (
+              <div className="blog-next-fixed-wrap">
+                <button type="button" className="blog-next-fixed-btn" onClick={() => scrollToBlogArticle(nextBlogArticle.id)}>
+                  <span className="blog-next-fixed-label">{copy.blogNextLabel}</span>
+                  <span className="blog-next-fixed-text">{nextBlogArticle.title[lang]}</span>
+                </button>
+              </div>
+            )
+          : (
+              <div className="blog-next-fixed-wrap">
+                <button type="button" className="blog-next-fixed-btn" disabled>
+                  <span className="blog-next-fixed-label">{copy.blogNextLabel}</span>
+                  <span className="blog-next-fixed-text">{copy.blogEndOfList}</span>
+                </button>
+              </div>
+            )
+        : null}
       {showScrollTop ? (
         <button type="button" className="scroll-top-btn" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
           TOP

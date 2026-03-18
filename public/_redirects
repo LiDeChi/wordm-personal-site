@@ -1,3 +1,5 @@
+/login /?view=login 301
+/login/ /?view=login 301
 /zh /?lang=zh 301
 /en /?lang=en 301
 /api/* https://gridnote.wordm.us/api/:splat 308

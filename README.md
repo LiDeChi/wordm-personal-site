@@ -5,7 +5,7 @@
 - 根域 `wordm.us`：个人博客 + 作品集
 - 子域 `resume.wordm.us`：独立简历页（含 PDF 下载，仅管理员/测试账号可访问）
 - 子域 `admin.wordm.us`：后台系统入口（HTTP Basic Auth 保护）
-- 账号系统：Supabase 邮箱登录/注册/退出（`wordm.us` 与全部子域共用一套会话）
+- 账号系统：Supabase 邮箱密码 + Google 登录/注册/退出（`wordm.us` 与全部子域共用一套会话）
 - `center-control` 项目展示（来源：`/Users/lidechi/Documents/Github/center-control/data/exports/projects.json`）
 - `debug` 模式控制展示项目
 - 项目子域名展示（`p-*.wordm.us`）
@@ -31,6 +31,7 @@ VITE_SUPABASE_ANON_KEY=...
 VITE_AUTH_ADMIN_EMAILS=admin1@example.com,admin2@example.com
 VITE_AUTH_TEST_EMAILS=test1@example.com,test2@example.com
 VITE_UNLOCK_PRODUCT_SINGLE=prod_xxx
+VITE_UNLOCK_PRODUCT_ALL_ACCESS=prod_yyy
 VITE_UNLOCK_PRODUCT_ALL_CURRENT=prod_yyy
 VITE_UNLOCK_PRODUCT_ALL_CURRENT_PLUS_YEAR=prod_zzz
 VITE_SELFHOST_INSTALL_URL=https://github.com/LiDeChi/center-control#付费用户一键安装deploy-ticket
@@ -38,10 +39,13 @@ VITE_SELFHOST_INSTALL_SCRIPT_URL=https://raw.githubusercontent.com/LiDeChi/cente
 ```
 
 - 推荐使用你提到的同一套 Supabase 项目（`latti-wordm`）来保证账号一致。
-- 三个 `VITE_UNLOCK_PRODUCT_*` 对应作品集三种付费解锁模式，前端会调用 Supabase Edge Function `creem-checkout` 拉起支付。
+- Google 登录不需要新增前端环境变量，但需要在 Supabase Dashboard 里启用 Google provider，并填好 Google OAuth Client ID / Secret。
+- Google provider 的回调地址使用 Supabase 默认值；另外要把站点实际访问地址加入 Supabase Auth 的重定向白名单，例如生产域名 `https://wordm.us`、相关子域，以及本地开发地址。
+- `VITE_UNLOCK_PRODUCT_SINGLE` / `VITE_UNLOCK_PRODUCT_ALL_ACCESS` 仅作为前端回退值；正式价格与商品 ID 以 Supabase 后台配置为准。
+- `VITE_UNLOCK_PRODUCT_ALL_CURRENT` / `VITE_UNLOCK_PRODUCT_ALL_CURRENT_PLUS_YEAR` 仍可作为兼容回退值；前端会优先读取 `VITE_UNLOCK_PRODUCT_ALL_ACCESS`。
 - `VITE_SELFHOST_INSTALL_URL` 用于支付成功后的“自部署安装”入口，默认指向 `center-control` 安装说明。
 - `VITE_SELFHOST_INSTALL_SCRIPT_URL` 用于部署页生成一键部署命令，默认指向 `center-control` 官方安装脚本。
-- 若不配置，会使用 `latti` 当前公开计划商品作为默认值（Basic 月付 / Pro 月付 / Pro 年付）。
+- 若不配置，会使用 `latti` 当前公开计划商品作为默认值。
 - 站点会将 Supabase 会话同步到 `.wordm.us` 域级 cookie，因此 `wordm.us`、`resume.wordm.us`、`p-*.wordm.us` 会共享登录态。
 - 账号角色共四类：`admin`（管理员）、`tester`（测试账号）、`user`（普通账号）、`guest`（游客）。
 - 角色判定顺序：Supabase 用户 metadata 的 `role` 字段 > `public/auth-role-rules.json` 邮箱名单（与环境变量合并）> 默认 `user`。
@@ -51,19 +55,20 @@ VITE_SELFHOST_INSTALL_SCRIPT_URL=https://raw.githubusercontent.com/LiDeChi/cente
 ### 作品解锁规则（Portfolio Monetization MVP）
 
 - 单作品解锁：仅解锁一个指定项目。
-- 当前全部作品解锁：按购买时的作品清单解锁当下所有项目。
-- 当前作品 + 一年内新作品：购买时清单全部可访问，且购买后一年内新增项目也可访问。
+- 全部作品解锁：解锁当前全部项目，并默认包含后续新作品。
+- 项目展示卡片支持三种公开状态：
+  - `free`：永久免费，游客可直接进入项目页。
+  - `limited_free`：限时免费，卡片会显示倒计时；到期后自动恢复为付费。
+  - `paid`：需要单独解锁或全部解锁。
 - 付费权限校验与 `latti-wordm` 保持一致：读取 `public.entitlements`（`plan/plan_id/expires_at`）。
-  - `single` / `all_current` / `all_current_plus_year` 均需要有效付费权益（`SUBSCRIPTION/basic/pro/lifetime`）。
-- 免费解锁额度（一次性总池）：
-  - 注册 7 天内：总额度 `N=2`
-  - 注册 7~30 天：总额度 `N=1`
-  - 注册超过 30 天：总额度 `N=0`
-- 免费额度在首次使用时固化，后续按已用/剩余额度扣减。
-- 当前实现为 `Supabase 优先 + 本地回退`：
+  - 前端新模型为 `single` / `all_access`。
+  - 为兼容既有 Supabase RPC，前端会把 `all_access` 映射到旧的 `all_current_plus_year` 存储格式。
+- 当前实现为 `Supabase 配置优先 + 本地只读缓存回退`：
+  - 公开/付费状态、单作品价格、全部解锁价格、checkout product id 均由 `site_pricing_configs` 控制。
+  - 根域前台通过 Edge Function `pricing-config` 读取当前生效配置。
+  - 管理员/测试账号可在后台通过 `manage-pricing-config` 保存配置。
   - 优先通过 Supabase RPC 读写解锁状态（服务端约束）。
-  - 当 RPC 不可用时，仅 `free_pick` 回退到本地账本（`localStorage`，按用户 ID 分桶）。
-  - 付费解锁（`single/all_current/all_current_plus_year`）必须走 Supabase 校验，不会本地降级绕过。
+  - 当解锁 RPC 不可用时，前台只会读取本地缓存的既有权限，不会在本地绕过付费校验。
 - 付费交互：
   - 若点击解锁触发 `PAYMENT_REQUIRED`，前端会自动拉起 `creem-checkout`。
   - 支付成功后自动跳转到 `?view=deploy` 部署页（默认“当前机器”）。
@@ -86,6 +91,7 @@ VITE_SELFHOST_INSTALL_SCRIPT_URL=https://raw.githubusercontent.com/LiDeChi/cente
 
 - `public.project_unlock_profiles`
 - `public.project_unlock_grants`
+- `public.site_pricing_configs`
 - `public.wordm_unlock_plan_tier(uuid)` RPC
 - `public.wordm_get_unlock_state()` RPC
 - `public.wordm_apply_unlock_grant(...)` RPC
@@ -96,6 +102,8 @@ VITE_SELFHOST_INSTALL_SCRIPT_URL=https://raw.githubusercontent.com/LiDeChi/cente
 - `supabase/functions/create-share-link`
 - `supabase/functions/resolve-share-link`
 - `supabase/functions/revoke-share-link`
+- `supabase/functions/pricing-config`
+- `supabase/functions/manage-pricing-config`
 - 其中 `resolve-share-link` 需要以 `--no-verify-jwt` 部署，供游客免登录访问
 - 若希望分享链接直接进入部署页，`create-deploy-ticket` 也要以 `--no-verify-jwt` 部署
 
@@ -205,6 +213,8 @@ npm run deploy:pages
   - `../gridnote/.env.local`
 - 若仍缺失会直接中止部署（防止发布出“未配置 Supabase”的线上包）
 - Pages 项目名优先读取 `CF_PAGES_PROJECT`，默认值是 `wordm-personal-home`
+- Pages 分支优先读取 `CF_PAGES_BRANCH`；未设置时默认使用当前 git 分支
+- 当分支为 `main` 时会更新生产域名 `wordm.us`；其他分支会生成对应的 Pages 预览部署
 
 3. 部署子域名 Worker（自动绑定简历子域名 + 项目子域名）：
 

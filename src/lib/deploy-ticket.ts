@@ -3,6 +3,7 @@ import { getSupabaseClient } from './auth'
 import type { DeployTarget } from './share-links'
 
 export type DeployTicketScope = 'center_control_personal'
+export type DeployAccessTier = 'free' | 'paid'
 
 type CreateDeployTicketInput = {
   scope: DeployTicketScope
@@ -16,6 +17,7 @@ type CreateDeployTicketPayload = {
   expiresAt: string
   resolveEndpoint: string
   installScriptUrl: string
+  accessTier: DeployAccessTier
 }
 
 function normalizeIso(value: unknown): string {
@@ -42,9 +44,6 @@ export async function createDeployTicket(
   }
 
   const accessToken = data.session?.access_token ?? null
-  if (!accessToken && !input.shareToken) {
-    throw new Error('UNAUTHENTICATED')
-  }
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -72,6 +71,7 @@ export async function createDeployTicket(
         expiresAt?: unknown
         resolveEndpoint?: unknown
         installScriptUrl?: unknown
+        accessTier?: unknown
         error?: unknown
       }
     | null
@@ -87,6 +87,7 @@ export async function createDeployTicket(
   const ticket = typeof payload?.ticket === 'string' ? payload.ticket.trim() : ''
   const resolveEndpoint = typeof payload?.resolveEndpoint === 'string' ? payload.resolveEndpoint.trim() : ''
   const installScriptUrl = typeof payload?.installScriptUrl === 'string' ? payload.installScriptUrl.trim() : ''
+  const accessTier = payload?.accessTier === 'paid' ? 'paid' : 'free'
 
   if (!ticket) {
     throw new Error('DEPLOY_TICKET_MISSING')
@@ -105,5 +106,6 @@ export async function createDeployTicket(
     expiresAt: normalizeIso(payload?.expiresAt),
     resolveEndpoint,
     installScriptUrl,
+    accessTier,
   }
 }

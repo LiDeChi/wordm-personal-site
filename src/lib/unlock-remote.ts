@@ -4,8 +4,6 @@ import type { UnlockGrant, UnlockGrantKind, UserUnlockState } from './unlock'
 
 type UnlockStatePayload = {
   grants?: unknown
-  freeOfferTotal?: unknown
-  freePickedSlugs?: unknown
 }
 
 type ApplyUnlockGrantInput = {
@@ -43,16 +41,18 @@ function normalizeGrant(value: unknown): UnlockGrant | null {
 
   const row = value as Record<string, unknown>
   const id = toStringOrUndefined(row.id)
-  const kind = toStringOrUndefined(row.kind) as UnlockGrantKind | undefined
+  const rawKind = toStringOrUndefined(row.kind)
   const grantedAt = toIsoOrNull(row.grantedAt ?? row.granted_at)
 
-  if (!id || !kind || !grantedAt) {
+  if (!id || !rawKind || !grantedAt) {
     return null
   }
 
-  if (!['single', 'all_current', 'all_current_plus_year', 'free_pick'].includes(kind)) {
+  if (!['single', 'all_access', 'all_current', 'all_current_plus_year', 'free_pick'].includes(rawKind)) {
     return null
   }
+
+  const kind = (rawKind === 'all_current_plus_year' ? 'all_access' : rawKind) as UnlockGrantKind
 
   const rawCatalogSlugs = row.catalogSlugs ?? row.catalog_slugs
   const catalogSlugs = Array.isArray(rawCatalogSlugs)
@@ -76,20 +76,9 @@ function normalizeStatePayload(payload: unknown): UserUnlockState {
   const grants = Array.isArray(object.grants)
     ? object.grants.map(normalizeGrant).filter((grant): grant is UnlockGrant => Boolean(grant))
     : []
-  const freeOfferTotal =
-    typeof object.freeOfferTotal === 'number' && Number.isFinite(object.freeOfferTotal)
-      ? object.freeOfferTotal
-      : null
-  const freePickedSlugs = Array.isArray(object.freePickedSlugs)
-    ? object.freePickedSlugs
-        .map((slug) => (typeof slug === 'string' ? slug.trim().toLowerCase() : ''))
-        .filter((slug): slug is string => Boolean(slug))
-    : []
 
   return {
     grants,
-    freeOfferTotal,
-    freePickedSlugs: [...new Set(freePickedSlugs)],
   }
 }
 
@@ -118,7 +107,7 @@ export async function applyUnlockGrantFromSupabase(
   ensureRemoteEnabled(config)
   const client = getSupabaseClient(config)
   const { data, error } = await client.rpc('wordm_apply_unlock_grant', {
-    p_kind: input.kind,
+    p_kind: input.kind === 'all_access' ? 'all_current_plus_year' : input.kind,
     p_project_slug: input.projectSlug ?? null,
     p_catalog_slugs: input.catalogSlugs ?? null,
   })

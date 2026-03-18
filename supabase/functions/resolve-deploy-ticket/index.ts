@@ -63,7 +63,7 @@ const handler = async (req: Request): Promise<Response> => {
   const admin = createClient(supabaseUrl, serviceRoleKey);
   const lookupRes = await admin
     .from("deploy_tickets")
-    .select("id, scope, target, status, expires_at")
+    .select("id, scope, target, status, expires_at, metadata")
     .eq("token_hash", tokenHash)
     .limit(1)
     .maybeSingle();
@@ -127,6 +127,7 @@ const handler = async (req: Request): Promise<Response> => {
       ok: true,
       scope: row.scope,
       target: row.target,
+      accessTier: row.metadata?.accessTier === "paid" ? "paid" : "free",
       install: {
         repoUrl: env("CENTER_CONTROL_REPO_URL", "https://github.com/LiDeChi/center-control.git"),
         gitRef: env("CENTER_CONTROL_GIT_REF", "main"),

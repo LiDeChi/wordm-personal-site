@@ -1,6 +1,20 @@
 import type { PortfolioProject } from '../types'
 
 const ROOT_HOSTS = new Set(['wordm.us', 'www.wordm.us', 'localhost', '127.0.0.1'])
+const OWNED_GITHUB_OWNERS = new Set(['lidechi', 'parsonjian', 'jianyongjie'])
+
+function githubOwnerFromUrl(url: string | null): string | null {
+  if (!url) {
+    return null
+  }
+
+  const match = url.match(/github\.com[:/]([^/]+)\//i)
+  if (!match) {
+    return null
+  }
+
+  return match[1]?.trim().toLowerCase() || null
+}
 
 export function parseShowSlugs(raw: string | null): string[] {
   if (!raw) {
@@ -20,6 +34,15 @@ export function chooseProjects(allProjects: PortfolioProject[], slugs: string[])
 
   const map = new Map(allProjects.map((project) => [project.slug, project]))
   return slugs.map((slug) => map.get(slug)).filter((project): project is PortfolioProject => Boolean(project))
+}
+
+export function isProjectDefaultVisible(project: PortfolioProject): boolean {
+  const owner = githubOwnerFromUrl(project.sourceUrl)
+  if (!owner) {
+    return true
+  }
+
+  return OWNED_GITHUB_OWNERS.has(owner)
 }
 
 export function formatMonth(rawDate: string | null): string {

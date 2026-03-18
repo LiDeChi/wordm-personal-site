@@ -15,6 +15,7 @@ export type AuthPanelProps = {
   compact?: boolean
   onLogin: (email: string, password: string) => Promise<void> | void
   onSignup: (email: string, password: string) => Promise<void> | void
+  onGoogleLogin: () => Promise<void> | void
   onLogout: () => Promise<void> | void
 }
 
@@ -29,6 +30,8 @@ const PANEL_COPY: Record<
     logout: string
     passwordPlaceholder: string
     submitAction: string
+    googleAction: string
+    googleHint: string
   }
 > = {
   zh: {
@@ -40,6 +43,8 @@ const PANEL_COPY: Record<
     logout: '退出',
     passwordPlaceholder: '密码',
     submitAction: '登录 / 注册',
+    googleAction: 'Google 登录',
+    googleHint: '也支持直接使用 Google 账号登录',
   },
   en: {
     title: 'Account',
@@ -50,6 +55,8 @@ const PANEL_COPY: Record<
     logout: 'Log out',
     passwordPlaceholder: 'Password',
     submitAction: 'Log in / Sign up',
+    googleAction: 'Continue with Google',
+    googleHint: 'Google sign-in is also supported',
   },
 }
 
@@ -64,6 +71,7 @@ export function AuthPanel({
   className,
   compact = false,
   onLogin,
+  onGoogleLogin,
   onLogout,
 }: AuthPanelProps) {
   const copy = PANEL_COPY[lang]
@@ -110,26 +118,34 @@ export function AuthPanel({
 
       {enabled && !loading && !userEmail ? (
         <form className={`auth-form${compact ? ' compact' : ''}`} onSubmit={handleSubmit}>
-          <input
-            type="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            placeholder="name@example.com"
-            autoComplete="email"
-            required
-          />
-          <input
-            type="password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            placeholder={copy.passwordPlaceholder}
-            autoComplete="current-password"
-            minLength={6}
-            required
-          />
-          <button type="submit" className="auth-primary-btn" disabled={busy}>
-            {busy ? copy.processing : copy.submitAction}
-          </button>
+          <div className="auth-form-fields">
+            <input
+              type="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              placeholder="name@example.com"
+              autoComplete="email"
+              required
+            />
+            <input
+              type="password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              placeholder={copy.passwordPlaceholder}
+              autoComplete="current-password"
+              minLength={6}
+              required
+            />
+          </div>
+          <div className="auth-form-actions">
+            <button type="submit" className="auth-primary-btn" disabled={busy}>
+              {busy ? copy.processing : copy.submitAction}
+            </button>
+            <button type="button" className="auth-primary-btn auth-google-btn" disabled={busy} onClick={() => void onGoogleLogin()}>
+              {busy ? copy.processing : copy.googleAction}
+            </button>
+          </div>
+          {!compact ? <p className="auth-muted auth-google-hint">{copy.googleHint}</p> : null}
         </form>
       ) : null}
 

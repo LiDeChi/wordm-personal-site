@@ -1,7 +1,9 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.4";
 import { handlePreflight, parseAllowedOrigins, withCors } from "../_shared/cors.ts";
+import { isPrivilegedUser } from "../_shared/privileged-user.ts";
 
 type DeployTarget = "local" | "remote";
+type DeployAccessTier = "free" | "paid";
 
 type ShareRow = {
   id: string;
@@ -79,6 +81,25 @@ async function resolveShareAccess(admin: ReturnType<typeof createClient>, token:
   return row;
 }
 
+async function resolveAnonymousTicketOwner(admin: ReturnType<typeof createClient>): Promise<string | null> {
+  const privilegedUsers = await admin.auth.admin.listUsers({
+    page: 1,
+    perPage: 200,
+  });
+
+  if (privilegedUsers.error) {
+    throw new Error("DEPLOY_TICKET_OWNER_LOOKUP_FAILED");
+  }
+
+  for (const user of privilegedUsers.data.users) {
+    if (isPrivilegedUser(user)) {
+      return user.id;
+    }
+  }
+
+  return privilegedUsers.data.users[0]?.id ?? null;
+}
+
 const handler = async (req: Request): Promise<Response> => {
   const allowlist = parseAllowedOrigins(env("CORS_ALLOW_ORIGINS"));
   const preflight = handlePreflight(req, allowlist);
@@ -119,8 +140,12 @@ const handler = async (req: Request): Promise<Response> => {
   const admin = createClient(supabaseUrl, serviceRoleKey);
 
   const authHeader = req.headers.get("Authorization") ?? "";
-  let ticketOwnerUserId = "";
-  let metadata: Record<string, unknown> = { issued_by: "create-deploy-ticket" };
+  let ticketOwnerUserId: string | null = null;
+  let accessTier: DeployAccessTier = "free";
+  let metadata: Record<string, unknown> = {
+    issued_by: "create-deploy-ticket",
+    accessTier: "free",
+  };
 
   if (authHeader.startsWith("Bearer ")) {
     const userClient = createClient(supabaseUrl, anonKey, {
@@ -136,52 +161,75 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     const entitlementRes = await admin.rpc("wordm_unlock_plan_tier", { p_user_id: user.id });
-    if (entitlementRes.error) {
-      return respond(JSON.stringify({ error: "DEPLOY_ENTITLEMENT_CHECK_FAILED" }), {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
-
-    const entitlementTier = Number(entitlementRes.data ?? 0);
-    if (!Number.isFinite(entitlementTier) || entitlementTier < 1) {
-      return respond(JSON.stringify({ error: "DEPLOY_ENTITLEMENT_REQUIRED" }), {
-        status: 403,
-        headers: { "Content-Type": "application/json" },
-      });
+    if (!entitlementRes.error) {
+      const entitlementTier = Number(entitlementRes.data ?? 0);
+      if (Number.isFinite(entitlementTier) && entitlementTier >= 1) {
+        accessTier = "paid";
+      }
+    } else {
+      metadata = {
+        ...metadata,
+        entitlement_check_failed: true,
+      };
     }
 
     ticketOwnerUserId = user.id;
+    metadata = {
+      ...metadata,
+      signed_in: true,
+      accessTier,
+    };
   } else {
     const shareToken = typeof body.shareToken === "string" ? body.shareToken : "";
-    if (!shareToken.trim()) {
-      return respond(JSON.stringify({ error: "UNAUTHENTICATED" }), {
-        status: 401,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
-
-    try {
-      const shareRow = await resolveShareAccess(admin, shareToken);
-      if (!shareRow) {
-        return respond(JSON.stringify({ error: "DEPLOY_SHARE_INVALID" }), {
-          status: 404,
+    if (shareToken.trim()) {
+      try {
+        const shareRow = await resolveShareAccess(admin, shareToken);
+        if (!shareRow) {
+          return respond(JSON.stringify({ error: "DEPLOY_SHARE_INVALID" }), {
+            status: 404,
+            headers: { "Content-Type": "application/json" },
+          });
+        }
+        ticketOwnerUserId = shareRow.user_id;
+        accessTier = "paid";
+        metadata = {
+          ...metadata,
+          share_link_id: shareRow.id,
+          issued_via_share: true,
+          accessTier,
+        };
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "DEPLOY_SHARE_INVALID";
+        const status = message === "DEPLOY_SHARE_EXPIRED" || message === "DEPLOY_SHARE_REVOKED" ? 410 : 403;
+        return respond(JSON.stringify({ error: message }), {
+          status,
           headers: { "Content-Type": "application/json" },
         });
       }
-      ticketOwnerUserId = shareRow.user_id;
+    } else {
+      try {
+        ticketOwnerUserId = await resolveAnonymousTicketOwner(admin);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "DEPLOY_TICKET_OWNER_LOOKUP_FAILED";
+        return respond(JSON.stringify({ error: message }), {
+          status: 500,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+
+      if (!ticketOwnerUserId) {
+        return respond(JSON.stringify({ error: "DEPLOY_TICKET_OWNER_REQUIRED" }), {
+          status: 500,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+
       metadata = {
         ...metadata,
-        share_link_id: shareRow.id,
-        issued_via_share: true,
+        issued_anonymously: true,
+        anonymous_owner_fallback: ticketOwnerUserId,
+        accessTier,
       };
-    } catch (error) {
-      const message = error instanceof Error ? error.message : "DEPLOY_SHARE_INVALID";
-      const status = message === "DEPLOY_SHARE_EXPIRED" || message === "DEPLOY_SHARE_REVOKED" ? 410 : 403;
-      return respond(JSON.stringify({ error: message }), {
-        status,
-        headers: { "Content-Type": "application/json" },
-      });
     }
   }
 
@@ -221,6 +269,7 @@ const handler = async (req: Request): Promise<Response> => {
       expiresAt: insertRes.data.expires_at,
       resolveEndpoint,
       installScriptUrl,
+      accessTier,
       target,
       scope: "center_control_personal",
     }),

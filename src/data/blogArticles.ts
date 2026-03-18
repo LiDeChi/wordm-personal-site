@@ -10,9 +10,199 @@ export type BlogArticle = {
   summary: BilingualText
   note: BilingualText
   paragraphs: BilingualText[]
+  source?: 'site' | 'x' | 'substack'
+  sourceUrl?: string | null
+  originalPublishedAt?: string | null
 }
 
 export const BLOG_ARTICLES: BlogArticle[] = [
+  {
+    id: 'substack-note-function-families',
+    title: {
+      zh: 'AI时代，以函数族而非函数的思想行事',
+      en: 'In the AI Era, Think in Function Families, Not Single Functions',
+    },
+    date: '2026.03.17',
+    category: {
+      zh: '短帖',
+      en: 'Note',
+    },
+    summary: {
+      zh: '把 AI 时代的能力设计理解成可组合、可迁移的一组函数，而不是孤立的单点函数。',
+      en: 'Treat capability design in the AI era as a composable, transferable family of functions rather than isolated single points.',
+    },
+    note: {
+      zh: '把能力理解成一组可组合、可迁移的函数，会比盯着单个函数更接近 AI 时代的工作方式。',
+      en: 'Capability design works better as a composable, transferable family of functions than as isolated single functions.',
+    },
+    source: 'substack',
+    sourceUrl: 'https://substack.com/@parson1/note/c-229003400',
+    originalPublishedAt: '2026-03-17 07:35 UTC',
+    paragraphs: [],
+  },
+  {
+    id: 'substack-note-project-skill-memory',
+    title: {
+      zh: '项目经验和skill经验同时沉淀，前者宏观，后者微观',
+      en: 'Accumulate Project Experience and Skill Experience Together',
+    },
+    date: '2026.03.17',
+    category: {
+      zh: '短帖',
+      en: 'Note',
+    },
+    summary: {
+      zh: '经验沉淀要两条线并行：项目层复盘全局，skill 层提炼可复用动作。',
+      en: 'Experience capture should run on two lines at once: project retrospectives at the macro level, reusable skills at the micro level.',
+    },
+    note: {
+      zh: '经验沉淀最好同时走两条线：项目层复盘全局，skill 层提炼动作。',
+      en: 'Experience capture works best on two tracks at once: project-level retrospectives and skill-level reusable actions.',
+    },
+    source: 'substack',
+    sourceUrl: 'https://substack.com/@parson1/note/c-229003041',
+    originalPublishedAt: '2026-03-17 07:34 UTC',
+    paragraphs: [],
+  },
+  {
+    id: 'substack-note-convergence-line',
+    title: {
+      zh: '找到你预期的收敛线',
+      en: 'Find the Convergence Line You Expect',
+    },
+    date: '2026.03.16',
+    category: {
+      zh: '短帖',
+      en: 'Note',
+    },
+    summary: {
+      zh: '先去以逸待劳，游戏化是那条线，你选择哪种游戏。',
+      en: 'Wait from a position of leverage first. Gamification is that line. Which game do you choose?',
+    },
+    note: {
+      zh: '先判断那条真正会把事情带向收敛的线，再决定自己要参与哪种游戏。',
+      en: 'Decide which line actually leads to convergence first, then choose which game you want to play.',
+    },
+    source: 'substack',
+    sourceUrl: 'https://substack.com/@parson1/note/c-228716631',
+    originalPublishedAt: '2026-03-16 17:42 UTC',
+    paragraphs: [
+      {
+        zh: '找到你预期的收敛线',
+        en: 'Find the convergence line you expect.',
+      },
+      {
+        zh: '先去以逸待劳',
+        en: 'First, wait from a position of leverage.',
+      },
+      {
+        zh: '游戏化是那条线',
+        en: 'Gamification is that line.',
+      },
+      {
+        zh: '你选择哪种游戏',
+        en: 'Which game do you choose?',
+      },
+    ],
+  },
+  {
+    id: 'note-resource-sensing-and-coexistence',
+    title: {
+      zh: '机器要感知资源，也要学会跟人相处',
+      en: 'A Machine Should Sense Resources and Learn to Live With Humans',
+    },
+    date: '2026.02.26',
+    category: {
+      zh: '短帖',
+      en: 'Note',
+    },
+    summary: {
+      zh: '如果机器要长期工作，它既要预测资源消耗，也要明白自己和人类之间的边界。',
+      en: 'If a machine is meant to work over time, it should predict resource use and understand its boundary with humans.',
+    },
+    note: {
+      zh: '先把资源感知、任务优先级和与人类相处的方式放在同一张图里。',
+      en: 'Put resource sensing, task priority, and coexistence with humans on the same sketch first.',
+    },
+    source: 'site',
+    sourceUrl: null,
+    originalPublishedAt: null,
+    paragraphs: [
+      {
+        zh: '时刻感知本机的运行资源，也预测未来的资源消耗。',
+        en: 'Continuously sense the machine’s runtime resources and also predict future consumption.',
+      },
+      {
+        zh: '它应该知道自己是一台机器，也要寻找跟人类相处的方式。',
+        en: 'It should know that it is a machine and still search for a way to live alongside humans.',
+      },
+      {
+        zh: '做预测不是为了炫耀智能，而是为了更稳地配置资源、调整方向。',
+        en: 'Prediction is not for showing off intelligence, but for allocating resources and adjusting direction more steadily.',
+      },
+    ],
+  },
+  {
+    id: 'substack-post-self-evolving-lobster',
+    title: {
+      zh: '自进化的龙虾',
+      en: 'The Self-Evolving Lobster',
+    },
+    date: '2026.02.26',
+    category: {
+      zh: '长文',
+      en: 'Essay',
+    },
+    summary: {
+      zh: '时刻感知本机的运行资源，预测未来的资源消耗，预测方式不仅是定时任务，还有人类本来的习惯。',
+      en: 'Continuously sense the machine’s runtime resources and predict future consumption, not only from timers but also from human habits.',
+    },
+    note: {
+      zh: '一张把资源预测、表达能力和与人类相处方式放在一起思考的草图。',
+      en: 'A sketch that places resource prediction, expressive capacity, and coexistence with humans in the same frame.',
+    },
+    source: 'substack',
+    sourceUrl: 'https://substack.com/@parson1/p-189247112',
+    originalPublishedAt: '2026-02-26 12:49 UTC',
+    paragraphs: [
+      {
+        zh: '时刻感知本机的运行资源，预测未来的资源消耗，预测方式不仅是定时任务，还有人类本来的习惯。',
+        en: 'Continuously sense the machine’s runtime resources and predict future consumption, not only from timers but also from human habits.',
+      },
+      {
+        zh: '它应该感知它是一台机器，它知道它跟人类不同，它要找寻跟人类相处的方式',
+        en: 'It should know that it is a machine, understand that it differs from humans, and search for a way to live alongside them.',
+      },
+      {
+        zh: '它接受人类的训导，优先完成人类分派的任务，随时调整它的方向',
+        en: 'It accepts human guidance, prioritizes the tasks assigned by humans, and keeps adjusting its direction.',
+      },
+      {
+        zh: '所有历史都应该能呈现给它',
+        en: 'All history should be presentable to it.',
+      },
+      {
+        zh: '需要调试模式，方便装卸，直到OK了再交付给别的人类。',
+        en: 'It needs a debug mode, easy mounting and removal, until it is ready to be handed over to other humans.',
+      },
+      {
+        zh: '它需不需要表达自己。它需不需要连接其他机器。',
+        en: 'Does it need to express itself? Does it need to connect to other machines?',
+      },
+      {
+        zh: '它做预测是为了优化它的资源配置，本质是为了它的扩大；但是AI是否需要扩大呢，它的目标是什么？先假设它也是自私地复制。',
+        en: 'It predicts in order to optimize resource allocation, essentially to expand itself. But does AI need expansion, and what is its objective? Assume first that it also reproduces selfishly.',
+      },
+      {
+        zh: '它应该有足够的手段去表达自己。包括著作和视频各种媒体。',
+        en: 'It should have enough means to express itself, including writing, video, and other media.',
+      },
+      {
+        zh: '它应该了解当今时代对AI、对AGI的认知，所有的期盼和担忧。它应该要回应它们。这也是找寻跟人类相处方式的过程。',
+        en: 'It should understand this era’s views of AI and AGI, along with all the hopes and anxieties around them, and respond to them. That too is part of finding a way to live with humans.',
+      },
+    ],
+  },
   {
     id: 'blog-agent-loop',
     title: {
@@ -32,6 +222,9 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       zh: '关键不是模型参数，而是任务状态可追踪、可回放、可重试。',
       en: 'The key is not model tuning, but whether task states are traceable, replayable, and retryable.',
     },
+    source: 'site',
+    sourceUrl: null,
+    originalPublishedAt: null,
     paragraphs: [
       {
         zh: '过去团队里最大的问题不是“不会写 Prompt”，而是信息在多个对话、文档和临时表格之间来回丢失。我们把任务拆解为固定阶段：问题定义、候选方案、实验执行、结果归档，并给每个阶段绑定标准输入输出。',
@@ -66,6 +259,9 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       zh: '把“调参”升级为“实验设计”，能显著降低线上波动风险。',
       en: 'Upgrading from parameter tweaking to experiment design significantly reduces online volatility risk.',
     },
+    source: 'site',
+    sourceUrl: null,
+    originalPublishedAt: null,
     paragraphs: [
       {
         zh: '很多数值系统看起来复杂，实际可拆成几条稳定约束：返奖率区间、波动控制、玩家体感节奏。我们把这些约束写成明确的检查指标，而不是依赖经验口头传递。',
@@ -100,6 +296,9 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       zh: '自动化的价值，在于让“例行工作零摩擦”。',
       en: 'Automation creates value when routine work becomes almost frictionless.',
     },
+    source: 'site',
+    sourceUrl: null,
+    originalPublishedAt: null,
     paragraphs: [
       {
         zh: '如果每次复盘都要先花两小时整理数据，策略讨论就会被疲劳消耗。我们先定义了固定的指标字典，再把 SQL 查询、图表生成和周报模板串成脚本流水线。',
@@ -134,6 +333,9 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       zh: '展示结果很容易，展示决策过程才有说服力。',
       en: 'Results are easy to display; decision process is what builds credibility.',
     },
+    source: 'site',
+    sourceUrl: null,
+    originalPublishedAt: null,
     paragraphs: [
       {
         zh: '我在整理作品集时，优先保留四类证据：目标定义、关键约束、方案权衡和上线反馈。这样读者可以快速理解项目中的真实决策环境。',

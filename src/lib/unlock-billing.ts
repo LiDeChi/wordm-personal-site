@@ -1,36 +1,19 @@
 import type { AuthConfig } from './auth'
 import { getSupabaseClient } from './auth'
 
-export type UnlockCheckoutKind = 'single' | 'all_current' | 'all_current_plus_year'
-
-export type UnlockCheckoutProducts = {
-  single: string
-  allCurrent: string
-  allCurrentPlusYear: string
-}
+export type UnlockCheckoutKind = 'single' | 'all_access'
 
 type CheckoutInput = {
-  kind: UnlockCheckoutKind
-  products: UnlockCheckoutProducts
+  productId: string
   successUrl: string
   cancelUrl: string
-}
-
-function resolveProductId(kind: UnlockCheckoutKind, products: UnlockCheckoutProducts) {
-  if (kind === 'single') {
-    return products.single
-  }
-  if (kind === 'all_current') {
-    return products.allCurrent
-  }
-  return products.allCurrentPlusYear
 }
 
 export async function createUnlockCheckoutUrl(
   config: AuthConfig,
   input: CheckoutInput,
 ): Promise<string> {
-  const productId = resolveProductId(input.kind, input.products).trim()
+  const productId = input.productId.trim()
   if (!productId) {
     throw new Error('CHECKOUT_PRODUCT_MISSING')
   }

@@ -157,18 +157,11 @@ set search_path = public
 as $$
 declare
   v_uid uuid := auth.uid();
-  v_profile public.project_unlock_profiles%rowtype;
   v_grants jsonb;
-  v_free_picked text[];
 begin
   if v_uid is null then
     raise exception 'UNAUTHENTICATED';
   end if;
-
-  select *
-    into v_profile
-    from public.project_unlock_profiles
-   where user_id = v_uid;
 
   select coalesce(
            jsonb_agg(
@@ -188,17 +181,8 @@ begin
     from public.project_unlock_grants g
    where g.user_id = v_uid;
 
-  select coalesce(array_agg(g.project_slug order by g.granted_at asc), '{}')
-    into v_free_picked
-    from public.project_unlock_grants g
-   where g.user_id = v_uid
-     and g.kind = 'free_pick'
-     and g.project_slug is not null;
-
   return jsonb_build_object(
-    'grants', v_grants,
-    'freeOfferTotal', v_profile.free_offer_total,
-    'freePickedSlugs', to_jsonb(v_free_picked)
+    'grants', v_grants
   );
 end;
 $$;
@@ -219,17 +203,14 @@ declare
   v_project_slug text := lower(coalesce(trim(p_project_slug), ''));
   v_catalog_slugs text[];
   v_now timestamptz := now();
-  v_free_total integer;
-  v_free_used integer;
   v_exists boolean;
-  v_account_created_at timestamptz;
   v_plan_tier integer;
 begin
   if v_uid is null then
     raise exception 'UNAUTHENTICATED';
   end if;
 
-  if v_kind not in ('single', 'all_current', 'all_current_plus_year', 'free_pick') then
+  if v_kind not in ('single', 'all_current', 'all_current_plus_year') then
     raise exception 'INVALID_UNLOCK_KIND';
   end if;
 
@@ -242,7 +223,7 @@ begin
     v_catalog_slugs := '{}';
   end if;
 
-  if v_kind in ('single', 'free_pick') and v_project_slug = '' then
+  if v_kind = 'single' and v_project_slug = '' then
     raise exception 'PROJECT_SLUG_REQUIRED';
   end if;
 
@@ -279,7 +260,7 @@ begin
     insert into public.project_unlock_grants (user_id, kind, catalog_slugs, granted_at)
     values (v_uid, 'all_current', v_catalog_slugs, v_now);
 
-  elsif v_kind = 'all_current_plus_year' then
+  else
     v_plan_tier := public.wordm_unlock_plan_tier(v_uid);
     if v_plan_tier < 1 then
       raise exception 'PAYMENT_REQUIRED';
@@ -287,55 +268,67 @@ begin
 
     insert into public.project_unlock_grants (user_id, kind, catalog_slugs, granted_at, new_unlock_until)
     values (v_uid, 'all_current_plus_year', v_catalog_slugs, v_now, v_now + interval '1 year');
-
-  else
-    select exists(
-      select 1
-        from public.project_unlock_grants g
-       where g.user_id = v_uid
-         and g.kind in ('single', 'free_pick')
-         and g.project_slug = v_project_slug
-    )
-    into v_exists;
-
-    if not v_exists then
-      select p.free_offer_total
-        into v_free_total
-        from public.project_unlock_profiles p
-       where p.user_id = v_uid;
-
-      if v_free_total is null then
-        select u.created_at
-          into v_account_created_at
-          from auth.users u
-         where u.id = v_uid;
-
-        v_free_total := public.wordm_account_free_offer_total(v_account_created_at);
-
-        insert into public.project_unlock_profiles (user_id, free_offer_total)
-        values (v_uid, v_free_total)
-        on conflict (user_id)
-        do update set free_offer_total = excluded.free_offer_total;
-      end if;
-
-      select count(*)
-        into v_free_used
-        from public.project_unlock_grants g
-       where g.user_id = v_uid
-         and g.kind = 'free_pick';
-
-      if v_free_used >= coalesce(v_free_total, 0) then
-        raise exception 'FREE_OFFER_EXHAUSTED';
-      end if;
-
-      insert into public.project_unlock_grants (user_id, kind, project_slug, granted_at)
-      values (v_uid, 'free_pick', v_project_slug, v_now);
-    end if;
   end if;
 
   return public.wordm_get_unlock_state();
 end;
 $$;
+
+create table if not exists public.site_pricing_configs (
+  id integer primary key check (id = 1),
+  config jsonb not null,
+  updated_at timestamptz not null default now(),
+  updated_by uuid null references auth.users(id) on delete set null
+);
+
+create or replace function public.wordm_touch_site_pricing_updated_at()
+returns trigger
+language plpgsql
+as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
+drop trigger if exists trg_wordm_site_pricing_updated_at on public.site_pricing_configs;
+create trigger trg_wordm_site_pricing_updated_at
+before update on public.site_pricing_configs
+for each row
+execute function public.wordm_touch_site_pricing_updated_at();
+
+alter table public.site_pricing_configs enable row level security;
+
+insert into public.site_pricing_configs (id, config)
+values (
+  1,
+  '{
+    "version": 1,
+    "updatedAt": null,
+    "singleUnlock": {
+      "enabled": true,
+      "defaultPriceZh": null,
+      "defaultPriceEn": null,
+      "defaultCheckoutProductId": null
+    },
+    "allAccess": {
+      "enabled": true,
+      "priceZh": null,
+      "priceEn": null,
+      "checkoutProductId": null
+    },
+    "projects": {
+      "40-aidoc": { "access": "free" },
+      "page-glance-extension": { "access": "free" },
+      "personalinflationbasket": { "access": "free" },
+      "llm-layer": { "access": "free" },
+      "ai-stroke-writer": { "access": "limited_free", "freeUntil": "2026-03-31T23:59:59+08:00" },
+      "open-deep-research": { "access": "limited_free", "freeUntil": "2026-03-31T23:59:59+08:00" },
+      "dynamic-delegate-2": { "access": "limited_free", "freeUntil": "2026-03-31T23:59:59+08:00" }
+    }
+  }'::jsonb
+)
+on conflict (id) do nothing;
 
 grant execute on function public.wordm_get_unlock_state() to authenticated;
 grant execute on function public.wordm_unlock_plan_tier(uuid) to authenticated;

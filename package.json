@@ -14,9 +14,11 @@
     "deploy:subdomains": "./scripts/deploy-subdomain-worker.sh"
   },
   "dependencies": {
+    "@remotion/player": "^4.0.436",
     "@supabase/supabase-js": "^2.57.4",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react-dom": "^19.2.0",
+    "remotion": "^4.0.436"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
