@@ -2346,7 +2346,7 @@ function App() {
             </div>
 
             <div className="site-topbar-account">
-              <AccountEntryCard {...authPanelProps} loginHref={loginHref} className="topbar-account-entry" />
+              <AccountEntryCard {...authPanelProps} loginHref={loginHref} className="topbar-account-entry" variant="topbar" />
             </div>
           </div>
         </div>

@@ -705,10 +705,10 @@ p {
 
 .site-topbar-secondary {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: flex-end;
   gap: 12px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .site-topbar-tabs {
@@ -737,8 +737,8 @@ p {
 }
 
 .site-topbar-links {
-  min-height: 34px;
-  padding-top: 18px;
+  min-height: 0;
+  padding-top: 0;
 }
 
 .main-collection-shell {
@@ -2205,6 +2205,7 @@ footer {
   .site-topbar-secondary {
     justify-content: flex-start;
     gap: 10px;
+    flex-wrap: wrap;
   }
 
   .site-topbar-lang {
@@ -2221,6 +2222,16 @@ footer {
     min-width: 0;
     max-width: none;
     width: 100%;
+  }
+
+  .account-entry-topbar {
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .topbar-account-meta {
+    text-align: left;
   }
 
   .portfolio-showcase-slide-button {
@@ -2604,41 +2615,64 @@ footer {
 }
 
 .topbar-account-entry {
-  width: 100%;
+  width: auto;
   margin: 0;
-  padding: 8px 10px;
-  border-radius: 14px;
-  background: rgb(252 252 252 / 92%);
-  box-shadow: 0 12px 28px rgb(0 0 0 / 6%);
 }
 
-.topbar-account-entry.account-entry-panel {
+.account-entry-topbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 34px;
+}
+
+.account-entry-topbar-guest {
   justify-content: flex-end;
 }
 
-.topbar-account-entry .auth-panel-head {
-  margin-bottom: 4px;
+.topbar-account-meta {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  text-align: right;
 }
 
-.topbar-account-entry .auth-user-card {
+.topbar-account-email {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #222;
+  font-size: 0.72rem;
+  line-height: 1.2;
+}
+
+.topbar-account-role {
+  color: #6e6963;
+  font-size: 0.6rem;
+  line-height: 1.2;
+}
+
+.topbar-account-actions {
+  display: inline-flex;
+  align-items: center;
   gap: 6px;
 }
 
-.topbar-account-entry .auth-user-email {
-  font-size: 0.7rem;
-}
-
-.topbar-account-entry .auth-role {
-  font-size: 0.62rem;
-}
-
-.topbar-account-entry .account-entry-actions {
-  gap: 5px;
-}
-
-.topbar-account-entry .account-enter-link {
-  width: 100%;
+.topbar-account-btn,
+.topbar-account-enter-link {
+  min-height: 34px;
+  padding: 0 12px;
+  border-radius: 999px;
   background: #fff;
+  white-space: nowrap;
+}
+
+.topbar-account-btn {
+  font-size: 0.64rem;
+}
+
+.topbar-account-enter-link {
+  padding-inline: 14px;
 }
 
 .gallery-cover-button {
@@ -2985,12 +3019,11 @@ footer {
 
 @media (max-width: 768px) {
   .site-topbar {
-    justify-content: flex-end;
     margin-bottom: 14px;
   }
 
   .site-topbar-account {
-    width: min(100%, 320px);
+    width: 100%;
     max-width: none;
   }
 

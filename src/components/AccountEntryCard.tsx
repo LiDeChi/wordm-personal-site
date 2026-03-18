@@ -12,6 +12,7 @@ type AccountEntryCardProps = {
   statusMessage: string
   loginHref: string
   className?: string
+  variant?: 'card' | 'topbar'
   onLogout: () => Promise<void> | void
 }
 
@@ -42,11 +43,50 @@ export function AccountEntryCard({
   statusMessage,
   loginHref,
   className = '',
+  variant = 'card',
   onLogout,
 }: AccountEntryCardProps) {
   const copy = ENTRY_COPY[lang]
   const guestClassName = ['auth-panel', 'account-entry-panel', className].filter(Boolean).join(' ')
   const userClassName = ['auth-panel', className].filter(Boolean).join(' ')
+  const compactGuestClassName = ['account-entry-topbar', 'account-entry-topbar-guest', className].filter(Boolean).join(' ')
+  const compactUserClassName = ['account-entry-topbar', className].filter(Boolean).join(' ')
+
+  if (variant === 'topbar') {
+    if (!userEmail) {
+      return (
+        <section className={compactGuestClassName}>
+          <a className="account-enter-link topbar-account-enter-link" href={loginHref}>
+            {copy.enter}
+          </a>
+        </section>
+      )
+    }
+
+    return (
+      <section className={compactUserClassName}>
+        <div className="topbar-account-meta">
+          <span className="topbar-account-email">{userEmail}</span>
+          <span className="topbar-account-role">
+            {lang === 'zh' ? '身份' : 'Role'}: {roleLabel(userRole, lang)}
+          </span>
+        </div>
+        <div className="topbar-account-actions">
+          <a className="auth-primary-btn topbar-account-btn" href={loginHref}>
+            {copy.manage}
+          </a>
+          <button
+            type="button"
+            className="auth-primary-btn topbar-account-btn"
+            disabled={busy || loading || !enabled}
+            onClick={() => void onLogout()}
+          >
+            {busy ? copy.processing : copy.logout}
+          </button>
+        </div>
+      </section>
+    )
+  }
 
   if (!userEmail) {
     return (
