@@ -1,8 +1,8 @@
 import { Suspense, lazy, useEffect, useMemo, useState } from 'react'
 import { DebugPanel } from './components/DebugPanel'
 import { LoginPage } from './components/LoginPage'
-import { ProjectDetailPage } from './components/ProjectDetailPage'
 import { AdminPage } from './components/AdminPage'
+import { ProjectDetailModal } from './components/ProjectDetailModal'
 import { ProjectEntry } from './components/ProjectEntry'
 import { ResumeAccessDenied } from './components/ResumeAccessDenied'
 import { ShareAccessDenied } from './components/ShareAccessDenied'
@@ -1883,6 +1883,13 @@ function App() {
 
     return projects.find((project) => project.slug === selectedProjectSlug) ?? null
   }, [projects, selectedProjectSlug])
+  const selectedVisibleProjectIndex = useMemo(() => {
+    if (!selectedProject) {
+      return -1
+    }
+
+    return visibleProjects.findIndex((project) => project.slug === selectedProject.slug)
+  }, [selectedProject, visibleProjects])
   const blogArticles = useMemo(() => BLOG_ARTICLES, [])
   const activeBlogArticle = useMemo(
     () =>
@@ -1974,6 +1981,63 @@ function App() {
     onSignup: handleAuthSubmit,
     onGoogleLogin: handleGoogleLogin,
     onLogout: handleLogout,
+  }
+  const projectModalOpen = rootView === 'portfolio' && Boolean(selectedProject)
+
+  useEffect(() => {
+    if (typeof document === 'undefined' || !projectModalOpen) {
+      return
+    }
+
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+
+    return () => {
+      document.body.style.overflow = previousOverflow
+    }
+  }, [projectModalOpen])
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !projectModalOpen) {
+      return
+    }
+
+    function handleProjectModalKeydown(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        setSelectedProjectSlug(null)
+        return
+      }
+
+      if (selectedVisibleProjectIndex < 0 || visibleProjects.length < 2) {
+        return
+      }
+
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault()
+        const nextIndex = (selectedVisibleProjectIndex - 1 + visibleProjects.length) % visibleProjects.length
+        setSelectedProjectSlug(visibleProjects[nextIndex]?.slug ?? null)
+      }
+
+      if (event.key === 'ArrowRight') {
+        event.preventDefault()
+        const nextIndex = (selectedVisibleProjectIndex + 1) % visibleProjects.length
+        setSelectedProjectSlug(visibleProjects[nextIndex]?.slug ?? null)
+      }
+    }
+
+    window.addEventListener('keydown', handleProjectModalKeydown)
+    return () => {
+      window.removeEventListener('keydown', handleProjectModalKeydown)
+    }
+  }, [projectModalOpen, selectedVisibleProjectIndex, visibleProjects])
+
+  function selectAdjacentVisibleProject(step: number) {
+    if (selectedVisibleProjectIndex < 0 || !visibleProjects.length) {
+      return
+    }
+
+    const nextIndex = (selectedVisibleProjectIndex + step + visibleProjects.length) % visibleProjects.length
+    setSelectedProjectSlug(visibleProjects[nextIndex]?.slug ?? null)
   }
 
   function scrollToBlogArticle(articleId: string, behavior: ScrollBehavior = 'smooth') {
@@ -2397,32 +2461,18 @@ function App() {
 	                ))}
 	              </div>
             </div>
-          ) : selectedProject ? (
-            projectDetailShareDeniedStatus ? (
-              <ShareAccessDenied lang={lang} status={projectDetailShareDeniedStatus} authPanel={authPanelProps} fallbackSharedUrl={shareEntryUrl} />
-            ) : (
-              <ProjectDetailPage
-                lang={lang}
-                project={selectedProject}
-                lastUpdated={lastUpdated}
-                unlocked={isProjectUnlocked(selectedProject.slug)}
-                offerState={getOfferStateBySlug(selectedProject.slug)}
-                unlockOptions={getUnlockOptionsBySlug(selectedProject.slug)}
-                unlockBusy={unlockActionDisabled}
-                statusMessage={unlockStatusMessage}
-                onBack={() => setSelectedProjectSlug(null)}
-                onUnlockSingle={(slug) => void handleUnlockSingle(slug)}
-                onUnlockAllAccess={() => void handleUnlockAllAccess()}
-              />
-            )
-	          ) : (
-	            <>
+          ) : (
+            <>
 	              <Suspense fallback={<div className="portfolio-showcase-loading" aria-hidden="true" />}>
-	                <PortfolioShowcase lang={lang} projects={visibleProjects} />
+	                <PortfolioShowcase
+                    lang={lang}
+                    projects={visibleProjects}
+                    onSelectProject={(slug) => setSelectedProjectSlug(slug)}
+                  />
 	              </Suspense>
 	              <div className="portfolio-gallery">
-	                {visibleProjects.map((project) => (
-                  <ProjectEntry
+		                {visibleProjects.map((project) => (
+	                  <ProjectEntry
                     key={project.id}
                     lang={lang}
                     project={project}
@@ -2431,8 +2481,56 @@ function App() {
                     focused={unlockTargetSlug === project.slug}
                     onSelectProject={(slug) => setSelectedProjectSlug(slug)}
                   />
-                ))}
-              </div>
+	                ))}
+	              </div>
+                {selectedProject
+                  ? projectDetailShareDeniedStatus
+                    ? (
+                        <div
+                          className="project-detail-modal"
+                          role="dialog"
+                          aria-modal="true"
+                          aria-label={lang === 'zh' ? '项目访问受限' : 'Project access denied'}
+                          onClick={() => setSelectedProjectSlug(null)}
+                        >
+                          <div className="project-detail-modal-shell" onClick={(event) => event.stopPropagation()}>
+                            <div className="project-detail-modal-sheet project-detail-modal-sheet-share">
+                              <ShareAccessDenied
+                                lang={lang}
+                                status={projectDetailShareDeniedStatus}
+                                authPanel={authPanelProps}
+                                fallbackSharedUrl={shareEntryUrl}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    : (
+                        <ProjectDetailModal
+                          lang={lang}
+                          project={selectedProject}
+                          lastUpdated={lastUpdated}
+                          unlocked={isProjectUnlocked(selectedProject.slug)}
+                          offerState={getOfferStateBySlug(selectedProject.slug)}
+                          unlockOptions={getUnlockOptionsBySlug(selectedProject.slug)}
+                          unlockBusy={unlockActionDisabled}
+                          statusMessage={unlockStatusMessage}
+                          shareToken={shareToken}
+                          indexLabel={
+                            selectedVisibleProjectIndex >= 0
+                              ? `${String(selectedVisibleProjectIndex + 1).padStart(2, '0')}/${String(visibleProjects.length).padStart(2, '0')}`
+                              : null
+                          }
+                          hasPrevious={selectedVisibleProjectIndex >= 0 && visibleProjects.length > 1}
+                          hasNext={selectedVisibleProjectIndex >= 0 && visibleProjects.length > 1}
+                          onClose={() => setSelectedProjectSlug(null)}
+                          onPrevious={() => selectAdjacentVisibleProject(-1)}
+                          onNext={() => selectAdjacentVisibleProject(1)}
+                          onUnlockSingle={(slug) => void handleUnlockSingle(slug)}
+                          onUnlockAllAccess={() => void handleUnlockAllAccess()}
+                        />
+                      )
+                  : null}
             </>
           )}
         </section>

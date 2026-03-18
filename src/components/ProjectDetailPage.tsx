@@ -21,6 +21,7 @@ type ProjectDetailPageProps = {
   unlockBusy: boolean
   statusMessage: string
   shareToken?: string | null
+  backLabel?: string
   onBack: () => void
   onUnlockSingle: (slug: string) => void
   onUnlockAllAccess: () => void
@@ -226,6 +227,7 @@ export function ProjectDetailPage({
   unlockBusy,
   statusMessage,
   shareToken = null,
+  backLabel,
   onBack,
   onUnlockSingle,
   onUnlockAllAccess,
@@ -379,7 +381,7 @@ export function ProjectDetailPage({
     <section id="project-detail" className="project-detail-page">
       <div className="project-detail-head">
         <button type="button" className="unlock-plan-btn project-detail-back" onClick={onBack}>
-          {copy.back}
+          {backLabel ?? copy.back}
         </button>
         <p className="mono project-detail-updated">
           {copy.updated}: {lastProjectUpdated !== 'N/A' ? lastProjectUpdated : lastUpdated}
