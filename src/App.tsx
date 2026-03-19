@@ -92,6 +92,28 @@ const PortfolioShowcase = lazy(() =>
 const GOOGLE_OAUTH_PENDING_KEY = 'wordm-google-oauth-pending-v1'
 const GOOGLE_OAUTH_PENDING_GRACE_MS = 1500
 
+function SubstackIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path
+        fill="currentColor"
+        d="M4 4.5h16v1.8H4zm0 4.1h16v1.8H4zm0 4.1h16V20H4z"
+      />
+    </svg>
+  )
+}
+
+function XIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path
+        fill="currentColor"
+        d="M18.47 3h2.94l-6.42 7.34L22.55 21h-5.91l-4.63-6.07L6.7 21H3.75l6.87-7.85L1.36 3h6.06l4.18 5.52zm-1.04 16h1.63L6.54 4.9H4.8z"
+      />
+    </svg>
+  )
+}
+
 function readGoogleOAuthPendingAt() {
   if (typeof window === 'undefined') {
     return null
@@ -2337,11 +2359,25 @@ function App() {
             </label>
 
             <div className="collection-corner-links site-topbar-links">
-              <a href="https://substack.com/@parson1" target="_blank" rel="noreferrer">
-                {copy.cornerSubstack}
+              <a
+                className="topbar-social-link"
+                href="https://substack.com/@parson1"
+                target="_blank"
+                rel="noreferrer"
+                aria-label={copy.cornerSubstack}
+                title={copy.cornerSubstack}
+              >
+                <SubstackIcon />
               </a>
-              <a href="https://x.com/parsonjian" target="_blank" rel="noreferrer">
-                {copy.cornerX}
+              <a
+                className="topbar-social-link"
+                href="https://x.com/parsonjian"
+                target="_blank"
+                rel="noreferrer"
+                aria-label={copy.cornerX}
+                title={copy.cornerX}
+              >
+                <XIcon />
               </a>
             </div>
 

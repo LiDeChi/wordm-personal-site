@@ -18,6 +18,7 @@ type ProjectPresentationOverride = {
   clipSteps?: ProjectClipStepOverride[]
   thumbnailUrl?: string
   reelImageUrl?: string
+  detailPreviewUrls?: string[]
   accent: string
 }
 
@@ -37,6 +38,7 @@ export type ProjectPresentation = {
   clipSteps: ProjectPresentationClipStep[]
   thumbnailUrl: string | null
   reelImageUrl: string | null
+  detailPreviewUrls: string[]
   accent: string
 }
 
@@ -96,8 +98,9 @@ const PROJECT_PRESENTATION_OVERRIDES: Record<string, ProjectPresentationOverride
         y: 74,
       },
     ],
-    thumbnailUrl: '/orchestration-gallery/book-ingest.png',
-    reelImageUrl: '/orchestration-gallery/book-ingest.png',
+    thumbnailUrl: '/showcase/book-ingest-reader-shot.png',
+    reelImageUrl: '/showcase/book-ingest-reader-shot.png',
+    detailPreviewUrls: ['/showcase/book-ingest-reader-shot.png', '/orchestration-gallery/book-ingest.png'],
     accent: '#0d6a61',
   },
   'auto-test-1': {
@@ -249,8 +252,9 @@ const PROJECT_PRESENTATION_OVERRIDES: Record<string, ProjectPresentationOverride
         y: 76,
       },
     ],
-    thumbnailUrl: '/orchestration-gallery/focusor.png',
-    reelImageUrl: '/orchestration-gallery/focusor.png',
+    thumbnailUrl: '/showcase/focusor-overlay-shot.png',
+    reelImageUrl: '/showcase/focusor-overlay-shot.png',
+    detailPreviewUrls: ['/showcase/focusor-overlay-shot.png', '/showcase/focusor-options-shot.png'],
     accent: '#846248',
   },
   gridnote: {
@@ -300,8 +304,9 @@ const PROJECT_PRESENTATION_OVERRIDES: Record<string, ProjectPresentationOverride
         y: 24,
       },
     ],
-    thumbnailUrl: '/orchestration-gallery/gridnote.png',
-    reelImageUrl: '/orchestration-gallery/gridnote.png',
+    thumbnailUrl: '/showcase/gridnote-workspace-shot.png',
+    reelImageUrl: '/showcase/gridnote-workspace-shot.png',
+    detailPreviewUrls: ['/showcase/gridnote-workspace-shot.png', '/showcase/gridnote-fileyard-shot.png'],
     accent: '#5f7c4d',
   },
   'ai-stroke-writer': {
@@ -351,8 +356,9 @@ const PROJECT_PRESENTATION_OVERRIDES: Record<string, ProjectPresentationOverride
         y: 72,
       },
     ],
-    thumbnailUrl: '/orchestration-gallery/ai-stroke-writer.png',
-    reelImageUrl: '/orchestration-gallery/ai-stroke-writer.png',
+    thumbnailUrl: '/showcase/ai-stroke-prism-shot.png',
+    reelImageUrl: '/showcase/ai-stroke-prism-shot.png',
+    detailPreviewUrls: ['/showcase/ai-stroke-prism-shot.png', '/showcase/ai-stroke-runtime-shot.png'],
     accent: '#5b7092',
   },
   'apple-notes-webclipper': {
@@ -404,6 +410,7 @@ const PROJECT_PRESENTATION_OVERRIDES: Record<string, ProjectPresentationOverride
     ],
     thumbnailUrl: '/showcase/apple-notes-webclipper-shot.png',
     reelImageUrl: '/showcase/apple-notes-webclipper-shot.png',
+    detailPreviewUrls: ['/showcase/apple-notes-webclipper-shot.png'],
     accent: '#73737e',
   },
 }
@@ -450,6 +457,7 @@ export function getProjectPresentation(project: PortfolioProject, lang: Lang): P
     clipSteps,
     thumbnailUrl: override?.thumbnailUrl ?? project.thumbnailUrl,
     reelImageUrl: override?.reelImageUrl ?? override?.thumbnailUrl ?? project.thumbnailUrl,
+    detailPreviewUrls: override?.detailPreviewUrls ?? [override?.thumbnailUrl ?? project.thumbnailUrl].filter((item): item is string => Boolean(item)),
     accent: override?.accent ?? '#4d4d4d',
   }
 }

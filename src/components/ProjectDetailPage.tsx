@@ -34,6 +34,7 @@ const COPY = {
     worthSeeing: '为什么值得看',
     signals: '关键信号',
     preview: '项目预览',
+    previewDetails: '更多界面细节',
     previewMissing: '暂无预览图',
     openProject: '打开项目页',
     openProjectFree: '打开免费版',
@@ -85,6 +86,7 @@ const COPY = {
     worthSeeing: 'Why this is worth seeing',
     signals: 'Useful signals',
     preview: 'Preview',
+    previewDetails: 'More interface detail',
     previewMissing: 'No preview image',
     openProject: 'Open project page',
     openProjectFree: 'Open free edition',
@@ -242,6 +244,7 @@ export function ProjectDetailPage({
   const lastProjectUpdated = formatDate(project.lastCommitAt)
   const headline = hasValue(presentation.tagline) ? presentation.tagline.trim() : hasValue(presentation.summary) ? presentation.summary.trim() : ''
   const summary = hasValue(presentation.summary) && presentation.summary.trim() !== headline ? presentation.summary.trim() : null
+  const secondaryPreviewUrls = presentation.detailPreviewUrls.slice(1)
   const techFocus = project.techStack.length
     ? project.techStack.slice(0, 4).join(' / ')
     : uniq([formattedType, formattedLanguage]).join(' / ') || null
@@ -451,6 +454,18 @@ export function ProjectDetailPage({
               </div>
             )}
           </div>
+          {secondaryPreviewUrls.length ? (
+            <div className="project-detail-preview-strip">
+              <span className="project-detail-preview-strip-label mono">{copy.previewDetails}</span>
+              <div className="project-detail-preview-grid">
+                {secondaryPreviewUrls.slice(0, 2).map((imageUrl, index) => (
+                  <div key={imageUrl} className="project-detail-preview-thumb">
+                    <img src={imageUrl} alt={`${presentation.name} preview ${index + 2}`} loading="lazy" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null}
         </div>
       </section>
 
