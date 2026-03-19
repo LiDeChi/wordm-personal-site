@@ -135,7 +135,6 @@ export function PortfolioShowcase({ lang, projects, onSelectProject }: Portfolio
 
                       <div className="portfolio-showcase-slide-copy">
                         <div className="portfolio-showcase-slide-copy-body">
-                          <p className="portfolio-showcase-slide-label">{copy.projectCountLabel}</p>
                           <h3 className="portfolio-showcase-slide-title">{item.name}</h3>
                           <p className="portfolio-showcase-slide-tagline">{item.tagline || item.summary || item.reelLine}</p>
                           {steps.length ? (

@@ -1196,88 +1196,85 @@ p {
 .portfolio-showcase-slide-copy {
   position: absolute;
   left: 18px;
-  right: 18px;
   bottom: 18px;
+  right: auto;
   display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 14px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  width: min(420px, calc(100% - 104px));
 }
 
 .portfolio-showcase-slide-copy-body {
-  width: min(500px, 100%);
+  width: 100%;
   display: grid;
-  gap: 10px;
-  padding: 14px 14px 12px;
+  gap: 8px;
+  padding: 12px 12px 10px;
   border: 1px solid rgb(17 17 17 / 8%);
-  border-radius: 24px;
-  background: rgb(252 249 244 / 86%);
-  box-shadow: 0 22px 56px rgb(0 0 0 / 10%);
-  backdrop-filter: blur(16px);
-}
-
-.portfolio-showcase-slide-label {
-  margin: 0;
-  color: #7b736a;
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  border-radius: 20px;
+  background: rgb(252 249 244 / 92%);
+  box-shadow: 0 16px 40px rgb(0 0 0 / 8%);
+  backdrop-filter: blur(12px);
 }
 
 .portfolio-showcase-slide-title {
   margin: 0;
-  font-size: clamp(1.6rem, 2.8vw, 2.45rem);
-  line-height: 1.02;
+  font-size: clamp(1.34rem, 2.1vw, 1.95rem);
+  line-height: 1;
 }
 
 .portfolio-showcase-slide-tagline {
   margin: 0;
-  max-width: 44ch;
+  max-width: 34ch;
   color: #3c3732;
-  font-size: 0.88rem;
-  line-height: 1.5;
+  font-size: 0.8rem;
+  line-height: 1.42;
   text-align: left;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .portfolio-showcase-step-list {
-  display: grid;
+  display: flex;
+  flex-wrap: wrap;
   gap: 6px;
 }
 
 .portfolio-showcase-step-item {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: 8px;
+  display: inline-flex;
   align-items: center;
-  padding: 8px 10px;
+  gap: 6px;
+  max-width: 100%;
+  padding: 6px 9px;
   border: 1px solid rgb(17 17 17 / 8%);
-  border-radius: 16px;
-  background: rgb(255 255 255 / 62%);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 74%);
 }
 
 .portfolio-showcase-step-index {
   color: #7a746d;
-  font-size: 0.68rem;
+  font-size: 0.62rem;
 }
 
 .portfolio-showcase-step-label {
   color: #2b2825;
-  font-size: 0.78rem;
-  line-height: 1.35;
+  font-size: 0.72rem;
+  line-height: 1.2;
   text-align: left;
 }
 
 .portfolio-showcase-open-hint {
   display: inline-flex;
   align-items: center;
-  min-height: 36px;
-  padding: 0 14px;
+  min-height: 32px;
+  padding: 0 12px;
   border: 1px solid rgb(255 255 255 / 32%);
   border-radius: 999px;
-  background: rgb(17 17 17 / 56%);
+  background: rgb(17 17 17 / 62%);
   color: #fff;
-  font-size: 0.62rem;
+  font-size: 0.58rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   white-space: nowrap;
@@ -2277,6 +2274,7 @@ footer {
     left: 16px;
     right: 16px;
     bottom: 16px;
+    width: auto;
     flex-direction: column;
     align-items: stretch;
   }
