@@ -65,16 +65,13 @@ export function AccountEntryCard({
 
     return (
       <section className={compactUserClassName}>
-        <div className="topbar-account-overview">
+        <a className="topbar-account-overview topbar-account-overview-link" href={loginHref}>
           <span className="topbar-account-email" title={userEmail}>
             {userEmail}
           </span>
           <span className="topbar-account-role">{roleLabel(userRole, lang)}</span>
-        </div>
+        </a>
         <div className="topbar-account-actions">
-          <a className="auth-primary-btn topbar-account-btn" href={loginHref}>
-            {copy.manage}
-          </a>
           <button
             type="button"
             className="auth-primary-btn topbar-account-btn"

@@ -1,9 +1,5 @@
 import type { Lang } from '../i18n/lang'
-import {
-  formatProjectOfferCountdown,
-  formatProjectOfferLabel,
-  type ProjectOfferState,
-} from '../lib/project-offers'
+import { type ProjectOfferState } from '../lib/project-offers'
 import { getProjectPresentation } from '../data/projectPresentation'
 import type { PortfolioProject } from '../types'
 
@@ -41,9 +37,6 @@ export function ProjectEntry({
       : offerState.baseKind === 'limited_free' && offerState.effectiveKind === 'free'
         ? 'gallery-card-limited-free'
         : 'gallery-card-paid'
-  const offerLabel = formatProjectOfferLabel(offerState, lang)
-  const countdown = formatProjectOfferCountdown(offerState, lang)
-  const countdownLabel = countdown ? (lang === 'zh' ? `剩余 ${countdown}` : `Ends in ${countdown}`) : null
   const showLock = offerState.effectiveKind === 'paid' && !accessible
   const cardClassNames = [
     'gallery-card',
@@ -57,12 +50,10 @@ export function ProjectEntry({
   return (
     <article className={cardClassNames} id={`project-${project.slug}`}>
       <button type="button" className="gallery-cover gallery-cover-button" onClick={() => onSelectProject(project.slug)}>
-        <div className="gallery-cover-topline">
-          <span className="gallery-offer-badge mono">{offerLabel}</span>
-          {countdownLabel ? <span className="gallery-offer-countdown mono">{countdownLabel}</span> : null}
-        </div>
         {presentation.thumbnailUrl ? (
-          <img className="gallery-cover-image" src={presentation.thumbnailUrl} alt={presentation.name} loading="lazy" />
+          <div className="gallery-cover-image-shell">
+            <img className="gallery-cover-image" src={presentation.thumbnailUrl} alt={presentation.name} loading="lazy" />
+          </div>
         ) : (
           <div className="gallery-cover-placeholder">{initials(presentation.name) || 'PJ'}</div>
         )}

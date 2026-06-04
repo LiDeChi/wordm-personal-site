@@ -1,14 +1,18 @@
+import { useState } from 'react'
 import type { Lang } from '../i18n/lang'
 import type { PortfolioProject } from '../types'
 import { formatDate } from '../lib/projects'
 import { withSiteParams } from '../lib/lang-url'
 import { getProjectPresentation } from '../data/projectPresentation'
 import {
-  formatUnlockActionLabel,
+  getProjectDeployCommand,
+  getProjectDeployDownloadSpec,
+  getProjectDeployManifestUrl,
+  triggerProjectDeployDownload,
+} from '../lib/project-deploy'
+import {
   formatProjectOfferCountdown,
-  formatProjectOfferLabel,
   type ProjectOfferState,
-  type ProjectUnlockOptions,
 } from '../lib/project-offers'
 
 type ProjectDetailPageProps = {
@@ -17,14 +21,9 @@ type ProjectDetailPageProps = {
   lastUpdated: string
   unlocked: boolean
   offerState: ProjectOfferState
-  unlockOptions: ProjectUnlockOptions
-  unlockBusy: boolean
-  statusMessage: string
   shareToken?: string | null
   backLabel?: string
   onBack: () => void
-  onUnlockSingle: (slug: string) => void
-  onUnlockAllAccess: () => void
 }
 
 const COPY = {
@@ -37,9 +36,11 @@ const COPY = {
     previewDetails: '更多界面细节',
     previewMissing: '暂无预览图',
     openProject: '打开项目页',
-    openProjectFree: '打开免费版',
-    openProjectFull: '打开完整版',
+    openProjectFree: '打开公开版',
+    openProjectFull: '打开完整体验',
     openLive: '打开线上版本',
+    installNow: '一键安装',
+    deployRemoteQuick: '远程部署',
     experienceTitle: '先从哪里看',
     progressTitle: '现在做到哪一步',
     angleTitle: '适合怎么理解',
@@ -65,20 +66,32 @@ const COPY = {
     deliveryBuild: '可构建',
     deliveryTest: '可测试',
     signalReady: '可展示',
-    signalLocked: '当前免费版',
-    signalUnlocked: '已升级完整版',
+    signalLocked: '公开版本',
+    signalUnlocked: '完整体验',
     signalLive: '线上可访问',
     signalRunnable: '可本地运行',
     signalVerified: '带校验链路',
-    signalOfferPrefix: '升级方式',
+    signalDeployFree: '免费部署',
     availabilityProject: '项目页',
     availabilityLive: '线上',
     availabilityLocal: '本地运行',
-    unlockSingle: '解锁此作品',
-    unlockAllAccess: '全部解锁，后续作品免费',
+    availabilityDeploy: '部署',
     offerCountdownPrefix: '限免剩余',
-    lockedHint: '现在打开的是免费版。登录并升级后，可切到完整版并使用付费部分。',
-    lockedHintUnavailable: '当前先开放免费版；完整版升级入口会后续补上。',
+    deployTitle: '一键部署',
+    deployIntro: '这里提供的是当前公开 deploy kit。现在可以直接下载当前系统安装器或远程部署脚本；下面保留原始命令作为备用。',
+    deployNote: '当前公开自部署入口先发公共包。站内作品权限与自部署包版本还没有完全拆开。',
+    deployMissing: '当前项目还没有公开 deploy kit。',
+    deployLocalTitle: '当前机器',
+    deployLocalBody: '点击就会下载当前系统安装器，下载后直接运行，不用自己抄命令。',
+    deployRemoteTitle: '远程服务器',
+    deployRemoteBody: '点击就会下载远程部署脚本。脚本运行时再填写服务器地址，然后通过 SSH 执行部署。',
+    deployCommand: '备用命令',
+    deployManifest: 'Manifest',
+    deployDownloadLabel: (label: string) => `下载 ${label}`,
+    deployDownloadLocalSuccess: (label: string) => `已开始下载 ${label}，下载后直接运行即可。`,
+    deployDownloadRemoteSuccess: (label: string) => `已开始下载 ${label}，运行后填写服务器地址即可部署。`,
+    deployDownloadFailed: '下载失败，请改用下面的备用命令。',
+    deployRunHint: '安装后参考运行命令',
   },
   en: {
     back: 'Back to portfolio',
@@ -89,9 +102,11 @@ const COPY = {
     previewDetails: 'More interface detail',
     previewMissing: 'No preview image',
     openProject: 'Open project page',
-    openProjectFree: 'Open free edition',
-    openProjectFull: 'Open full edition',
+    openProjectFree: 'Open public edition',
+    openProjectFull: 'Open full experience',
     openLive: 'Open live version',
+    installNow: 'Install now',
+    deployRemoteQuick: 'Remote deploy',
     experienceTitle: 'Start here',
     progressTitle: 'How far it goes',
     angleTitle: 'Best lens',
@@ -117,20 +132,32 @@ const COPY = {
     deliveryBuild: 'Build path',
     deliveryTest: 'Tests available',
     signalReady: 'Ready',
-    signalLocked: 'Free edition',
-    signalUnlocked: 'Full edition unlocked',
+    signalLocked: 'Public edition',
+    signalUnlocked: 'Full experience',
     signalLive: 'Live access',
     signalRunnable: 'Runs locally',
     signalVerified: 'Verification path',
-    signalOfferPrefix: 'Upgrade path',
+    signalDeployFree: 'Free deploy',
     availabilityProject: 'Project page',
     availabilityLive: 'Live',
     availabilityLocal: 'Local run',
-    unlockSingle: 'Unlock this project',
-    unlockAllAccess: 'Unlock all projects, future projects included',
+    availabilityDeploy: 'Deploy',
     offerCountdownPrefix: 'Free for',
-    lockedHint: 'The project page opens in free edition by default. Sign in and upgrade to switch to the full edition and paid modules.',
-    lockedHintUnavailable: 'The free edition stays open for now. Full-edition upgrade controls will be added later.',
+    deployTitle: 'One-click deploy',
+    deployIntro: 'This section exposes the current public deploy kit. You can download a local installer or a remote deploy script directly, with raw commands kept only as fallback.',
+    deployNote: 'The public self-host package is shipped first. Site entitlement and self-host package tier are not fully split yet.',
+    deployMissing: 'This project does not have a public deploy kit yet.',
+    deployLocalTitle: 'Current machine',
+    deployLocalBody: 'Click once to download an installer for this machine, then run it directly.',
+    deployRemoteTitle: 'Remote server',
+    deployRemoteBody: 'Click once to download a remote deploy script. The script will ask for user@host when it runs.',
+    deployCommand: 'Fallback command',
+    deployManifest: 'Manifest',
+    deployDownloadLabel: (label: string) => `Download ${label}`,
+    deployDownloadLocalSuccess: (label: string) => `${label} download started. Run it after the file arrives.`,
+    deployDownloadRemoteSuccess: (label: string) => `${label} download started. Run it and enter the server address when prompted.`,
+    deployDownloadFailed: 'Download failed. Use the fallback command below.',
+    deployRunHint: 'Run hint after install',
   },
 } as const
 
@@ -225,18 +252,14 @@ export function ProjectDetailPage({
   lastUpdated,
   unlocked,
   offerState,
-  unlockOptions,
-  unlockBusy,
-  statusMessage,
   shareToken = null,
   backLabel,
   onBack,
-  onUnlockSingle,
-  onUnlockAllAccess,
 }: ProjectDetailPageProps) {
   const copy = COPY[lang]
   const detail = project.detail
   const presentation = getProjectPresentation(project, lang)
+  const [deployStatus, setDeployStatus] = useState('')
   const subdomainUrl = withSiteParams(project.subdomainUrl, { lang, shareToken })
   const formattedStatus = formatMappedValue(detail?.status, lang, STATUS_LABELS)
   const formattedType = formatMappedValue(detail?.type, lang, TYPE_LABELS)
@@ -256,18 +279,19 @@ export function ProjectDetailPage({
       .filter((item) => item.label !== 'trust_once')
       .map((item) => formatInstaller(item.label, lang)),
   )
-  const offerLabel = formatProjectOfferLabel(offerState, lang)
+  const deployOrigin = typeof window !== 'undefined' ? window.location.origin : 'https://wordm.us'
+  const deployAvailable = Boolean(detail?.artifactName)
+  const deployManifestUrl = deployAvailable ? getProjectDeployManifestUrl(project, deployOrigin) : null
+  const localDeployCommand = deployAvailable ? getProjectDeployCommand(project, deployOrigin) : ''
+  const remoteDeployCommand = deployAvailable
+    ? getProjectDeployCommand(project, deployOrigin, { remoteHost: '<user@host>' })
+    : ''
+  const localDeployDownload = deployAvailable ? getProjectDeployDownloadSpec(project, deployOrigin, { target: 'local' }) : null
+  const remoteDeployDownload = deployAvailable ? getProjectDeployDownloadSpec(project, deployOrigin, { target: 'remote' }) : null
   const offerCountdown = formatProjectOfferCountdown(offerState, lang)
-  const offerSignal = `${copy.signalOfferPrefix}: ${offerLabel}`
-  const singleUnlockLabel = unlockOptions.singleEnabled
-    ? formatUnlockActionLabel(copy.unlockSingle, unlockOptions.singlePriceLabel)
-    : null
-  const allAccessUnlockLabel = unlockOptions.allAccessEnabled
-    ? formatUnlockActionLabel(copy.unlockAllAccess, unlockOptions.allAccessPriceLabel)
-    : null
 
   const heroSignals = uniq([
-    offerSignal,
+    deployAvailable ? copy.signalDeployFree : null,
     offerCountdown ? `${copy.offerCountdownPrefix} ${offerCountdown}` : null,
     formattedStatus ?? (detail?.status === 'ready' ? copy.signalReady : null),
     formattedType,
@@ -352,6 +376,13 @@ export function ProjectDetailPage({
     })
   }
 
+  if (deployAvailable) {
+    factCards.push({
+      label: copy.deployTitle,
+      value: `${copy.deployLocalTitle} · ${copy.deployRemoteTitle}`,
+    })
+  }
+
   if (installerLabels.length) {
     factCards.push({
       label: copy.installers,
@@ -378,6 +409,22 @@ export function ProjectDetailPage({
       label: copy.focus,
       value: techFocus,
     })
+  }
+
+  function downloadDeployAsset(target: 'local' | 'remote') {
+    const spec = target === 'local' ? localDeployDownload : remoteDeployDownload
+    if (!spec) {
+      return
+    }
+
+    try {
+      triggerProjectDeployDownload(spec)
+      setDeployStatus(
+        target === 'local' ? copy.deployDownloadLocalSuccess(spec.label) : copy.deployDownloadRemoteSuccess(spec.label),
+      )
+    } catch {
+      setDeployStatus(copy.deployDownloadFailed)
+    }
   }
 
   return (
@@ -407,8 +454,18 @@ export function ProjectDetailPage({
           {headline ? <p className="project-detail-deck">{headline}</p> : null}
           {summary ? <p className="project-detail-summary">{summary}</p> : null}
 
-          {actionLinks.length ? (
+          {actionLinks.length || deployAvailable ? (
             <div className="project-detail-action-list">
+              {deployAvailable ? (
+                <>
+                  <button type="button" className="project-detail-action-link is-primary" onClick={() => downloadDeployAsset('local')}>
+                    {copy.installNow}
+                  </button>
+                  <button type="button" className="project-detail-action-link" onClick={() => downloadDeployAsset('remote')}>
+                    {copy.deployRemoteQuick}
+                  </button>
+                </>
+              ) : null}
               {actionLinks.map((item) => (
                 <a
                   key={`${item.label}-${item.href}`}
@@ -422,25 +479,7 @@ export function ProjectDetailPage({
               ))}
             </div>
           ) : null}
-
-          {!unlocked ? (
-            <section className="unlock-control-panel project-detail-unlock-panel">
-              <p className="unlock-control-intro">{singleUnlockLabel || allAccessUnlockLabel ? copy.lockedHint : copy.lockedHintUnavailable}</p>
-              <div className="unlock-plan-actions">
-                {singleUnlockLabel ? (
-                  <button type="button" className="unlock-plan-btn" disabled={unlockBusy} onClick={() => onUnlockSingle(project.slug)}>
-                    {singleUnlockLabel}
-                  </button>
-                ) : null}
-                {allAccessUnlockLabel ? (
-                  <button type="button" className="unlock-plan-btn" disabled={unlockBusy} onClick={onUnlockAllAccess}>
-                    {allAccessUnlockLabel}
-                  </button>
-                ) : null}
-              </div>
-              {statusMessage ? <p className="unlock-status-message">{statusMessage}</p> : null}
-            </section>
-          ) : null}
+          {deployStatus ? <p className="project-detail-action-status">{deployStatus}</p> : null}
         </div>
 
         <div className="project-detail-visual">
@@ -494,6 +533,55 @@ export function ProjectDetailPage({
           </div>
         </section>
       ) : null}
+
+      <section id="project-detail-deploy" className="project-detail-section project-detail-deploy-section">
+        <div className="project-detail-section-head">
+          <h3>{copy.deployTitle}</h3>
+          {deployManifestUrl ? (
+            <a className="deploy-link-btn mono" href={deployManifestUrl} target="_blank" rel="noreferrer">
+              {copy.deployManifest}
+            </a>
+          ) : null}
+        </div>
+
+        {deployAvailable ? (
+          <>
+            <p className="project-detail-deploy-intro">{copy.deployIntro}</p>
+            <div className="deploy-form-grid project-detail-deploy-grid">
+              <article className="project-detail-story-card project-detail-deploy-card">
+                <span className="mono project-detail-story-label">{copy.deployLocalTitle}</span>
+                <p>{copy.deployLocalBody}</p>
+                <span className="mono project-detail-deploy-label">{copy.deployCommand}</span>
+                <div className="deploy-command-block">{localDeployCommand}</div>
+                <div className="unlock-plan-actions">
+                  <button type="button" className="unlock-plan-btn" onClick={() => downloadDeployAsset('local')}>
+                    {copy.deployDownloadLabel(localDeployDownload?.label ?? copy.installNow)}
+                  </button>
+                </div>
+              </article>
+
+              <article className="project-detail-story-card project-detail-deploy-card">
+                <span className="mono project-detail-story-label">{copy.deployRemoteTitle}</span>
+                <p>{copy.deployRemoteBody}</p>
+                <span className="mono project-detail-deploy-label">{copy.deployCommand}</span>
+                <div className="deploy-command-block">{remoteDeployCommand}</div>
+                <div className="unlock-plan-actions">
+                  <button type="button" className="unlock-plan-btn" onClick={() => downloadDeployAsset('remote')}>
+                    {copy.deployDownloadLabel(remoteDeployDownload?.label ?? copy.deployRemoteQuick)}
+                  </button>
+                </div>
+              </article>
+            </div>
+
+            <p className="unlock-status-message">
+              {copy.deployNote}
+              {hasRun ? ` · ${copy.deployRunHint}: ${detail?.commands.run}` : ''}
+            </p>
+          </>
+        ) : (
+          <p className="project-detail-deploy-intro">{copy.deployMissing}</p>
+        )}
+      </section>
     </section>
   )
 }

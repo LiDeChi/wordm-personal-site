@@ -2,30 +2,15 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-SNAPSHOT_FILE="$ROOT_DIR/src/data/projects.snapshot.json"
+WORKER_NAME="${CF_WORKER_NAME:-wordm-project-subdomains}"
+ACCOUNT_ID="${CLOUDFLARE_ACCOUNT_ID:-794b63fe0f5c7cccb9968718bb16ed39}"
 
-if [[ ! -f "$SNAPSHOT_FILE" ]]; then
-  echo "Missing snapshot file: $SNAPSHOT_FILE" >&2
-  exit 1
-fi
+cd "$ROOT_DIR"
 
-domain_output="$(node - "$SNAPSHOT_FILE" <<'NODE'
-const fs = require('fs')
-const snapshotFile = process.argv[2]
-const payload = JSON.parse(fs.readFileSync(snapshotFile, 'utf8'))
-const set = new Set(['resume.wordm.us', 'cv.wordm.us', 'admin.wordm.us'])
-
-for (const project of payload.projects || []) {
-  const subdomain = typeof project.subdomain === 'string' ? project.subdomain.trim() : ''
-  if (subdomain) {
-    set.add(`${subdomain}.wordm.us`)
-  }
-}
-
-for (const domain of [...set].sort((a, b) => a.localeCompare(b))) {
-  console.log(domain)
-}
-NODE
+domain_output="$(
+  WORKER_NAME="$WORKER_NAME" \
+    CLOUDFLARE_ACCOUNT_ID="$ACCOUNT_ID" \
+    node scripts/resolve-subdomain-worker-domains.mjs
 )"
 
 args=()
@@ -35,6 +20,7 @@ while IFS= read -r domain; do
 done <<< "$domain_output"
 
 npx wrangler deploy workers/subdomain-proxy.ts \
-  --name wordm-project-subdomains \
+  --name "$WORKER_NAME" \
   --compatibility-date 2026-02-24 \
+  --keep-vars \
   "${args[@]}"

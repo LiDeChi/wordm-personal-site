@@ -1,5 +1,7 @@
 /login /?view=login 301
 /login/ /?view=login 301
+/oneagent /oneagent/ 301
+/oneagent/* /index.html 200
 /zh /?lang=zh 301
 /en /?lang=en 301
 /api/* https://gridnote.wordm.us/api/:splat 308

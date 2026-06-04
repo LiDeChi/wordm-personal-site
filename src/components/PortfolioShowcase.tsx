@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import type { CSSProperties } from 'react'
 import { getProjectPresentation } from '../data/projectPresentation'
 import type { Lang } from '../i18n/lang'
 import type { PortfolioProject } from '../types'
@@ -12,6 +13,7 @@ type PortfolioShowcaseProps = {
 
 type ShowcaseItem = PortfolioShowreelItem & {
   summary: string
+  flowPreviewUrls: string[]
 }
 
 const COPY = {
@@ -67,6 +69,7 @@ export function PortfolioShowcase({ lang, projects, onSelectProject }: Portfolio
           reelLine: presentation.reelLine,
           clipSteps: presentation.clipSteps,
           reelImageUrl: imageUrl,
+          flowPreviewUrls: presentation.flowPreviewUrls,
           accent: presentation.accent,
         }
       })
@@ -80,6 +83,7 @@ export function PortfolioShowcase({ lang, projects, onSelectProject }: Portfolio
   }
 
   const activeItem = items[safeActiveIndex] ?? items[0]
+  const activeSteps = activeItem.clipSteps.slice(0, 3)
 
   function jumpTo(index: number) {
     setActiveIndex(wrapIndex(index, items.length))
@@ -107,8 +111,27 @@ export function PortfolioShowcase({ lang, projects, onSelectProject }: Portfolio
 
             <div className="portfolio-showcase-track" style={{ transform: `translateX(-${safeActiveIndex * 100}%)` }}>
               {items.map((item, index) => {
-                const steps = item.clipSteps.slice(0, 3)
                 const itemCountLabel = `${String(index + 1).padStart(2, '0')}/${String(items.length).padStart(2, '0')}`
+                const primaryPreviewUrl = item.flowPreviewUrls[0] || item.reelImageUrl
+                const fallbackSteps = [
+                  { label: item.reelLine, x: 28, y: 26 },
+                  { label: item.reelLine, x: 56, y: 42 },
+                  { label: item.reelLine, x: 76, y: 70 },
+                ]
+                const stageCount = Math.max(2, Math.min(3, item.clipSteps.length || item.flowPreviewUrls.length || 1))
+                const flowStages = Array.from({ length: stageCount }, (_, stageIndex) => {
+                  const step = item.clipSteps[stageIndex] ?? item.clipSteps[item.clipSteps.length - 1] ?? fallbackSteps[stageIndex]
+                  const previewUrl = item.flowPreviewUrls[Math.min(stageIndex, item.flowPreviewUrls.length - 1)] || primaryPreviewUrl
+
+                  return {
+                    key: `${item.slug}-${stageIndex + 1}`,
+                    index: stageIndex + 1,
+                    label: step.label,
+                    previewUrl,
+                    focusX: step.x,
+                    focusY: step.y,
+                  }
+                })
 
                 return (
                   <article key={item.slug} className="portfolio-showcase-slide" aria-hidden={index !== safeActiveIndex}>
@@ -120,33 +143,50 @@ export function PortfolioShowcase({ lang, projects, onSelectProject }: Portfolio
                       aria-label={`${item.name} · ${copy.openHint}`}
                     >
                       <img
-                        className="portfolio-showcase-slide-image"
-                        src={item.reelImageUrl}
-                        alt={item.name}
+                        className="portfolio-showcase-slide-backdrop"
+                        src={primaryPreviewUrl}
+                        alt=""
+                        aria-hidden="true"
                         loading={index === activeIndex ? 'eager' : 'lazy'}
                       />
 
                       <div className="portfolio-showcase-slide-scrim" aria-hidden="true" />
 
-                      <div className="portfolio-showcase-slide-topline">
-                        <span className="mono portfolio-showcase-counter">{itemCountLabel}</span>
-                        <span className="mono portfolio-showcase-kicker">{item.reelKicker}</span>
-                      </div>
+                      <div className="portfolio-showcase-slide-frame">
+                        <div className="portfolio-showcase-slide-topline">
+                          <span className="mono portfolio-showcase-counter">{itemCountLabel}</span>
+                          <span className="mono portfolio-showcase-kicker">{item.reelKicker}</span>
+                        </div>
 
-                      <div className="portfolio-showcase-slide-copy">
-                        <div className="portfolio-showcase-slide-copy-body">
-                          <h3 className="portfolio-showcase-slide-title">{item.name}</h3>
-                          <p className="portfolio-showcase-slide-tagline">{item.tagline || item.summary || item.reelLine}</p>
-                          {steps.length ? (
-                            <div className="portfolio-showcase-step-list">
-                              {steps.map((step, stepIndex) => (
-                                <div key={`${item.slug}-${step.label}`} className="portfolio-showcase-step-item">
-                                  <span className="mono portfolio-showcase-step-index">{String(stepIndex + 1).padStart(2, '0')}</span>
-                                  <span className="portfolio-showcase-step-label">{step.label}</span>
-                                </div>
-                              ))}
+                        <div className={`portfolio-showcase-flow-board flow-count-${flowStages.length}`}>
+                          {flowStages.length > 1 ? <span className="portfolio-showcase-flow-connector connector-1" aria-hidden="true" /> : null}
+                          {flowStages.length > 2 ? <span className="portfolio-showcase-flow-connector connector-2" aria-hidden="true" /> : null}
+
+                          {flowStages.map((stage) => (
+                            <div
+                              key={stage.key}
+                              className={`portfolio-showcase-flow-card stage-${stage.index}`}
+                              style={
+                                {
+                                  '--flow-focus-x': `${stage.focusX}%`,
+                                  '--flow-focus-y': `${stage.focusY}%`,
+                                } as CSSProperties
+                              }
+                            >
+                              <div className="portfolio-showcase-flow-card-head">
+                                <span className="mono portfolio-showcase-flow-stage-index">{String(stage.index).padStart(2, '0')}</span>
+                                <span className="portfolio-showcase-flow-stage-label">{stage.label}</span>
+                              </div>
+                              <div className="portfolio-showcase-flow-image-shell">
+                                <img
+                                  className="portfolio-showcase-flow-image"
+                                  src={stage.previewUrl}
+                                  alt=""
+                                  loading={index === activeIndex ? 'eager' : 'lazy'}
+                                />
+                              </div>
                             </div>
-                          ) : null}
+                          ))}
                         </div>
 
                         <span className="mono portfolio-showcase-open-hint">{copy.openHint}</span>
@@ -192,7 +232,9 @@ export function PortfolioShowcase({ lang, projects, onSelectProject }: Portfolio
 
         <div className="portfolio-showcase-caption">
           <strong>{activeItem.name}</strong>
-          <span>{activeItem.reelLine}</span>
+          <span>{activeItem.tagline || activeItem.reelLine}</span>
+          <p>{activeItem.summary || activeItem.reelLine}</p>
+          {activeSteps.length ? <div className="portfolio-showcase-caption-line">{activeSteps.map((step) => step.label).join('  ·  ')}</div> : null}
         </div>
       </div>
     </section>

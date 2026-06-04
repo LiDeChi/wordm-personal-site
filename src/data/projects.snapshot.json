@@ -245,7 +245,7 @@
       "commitCount30d": 0,
       "relationCount": 0,
       "lastCommitAt": null,
-      "productionUrl": null,
+      "productionUrl": "https://p-ai-stroke-writer.wordm.us/stroke-writer/",
       "sourceUrl": "https://github.com/LiDeChi/ai-stroke-writer",
       "subdomain": "p-ai-stroke-writer",
       "subdomainUrl": "https://p-ai-stroke-writer.wordm.us",
@@ -3710,7 +3710,7 @@
       "commitCount30d": 0,
       "relationCount": 0,
       "lastCommitAt": null,
-      "productionUrl": null,
+      "productionUrl": "https://inote.wordm.us",
       "sourceUrl": "https://github.com/LiDeChi/apple-notes-webclipper",
       "subdomain": "p-apple-notes-webclipper",
       "subdomainUrl": "https://p-apple-notes-webclipper.wordm.us",
@@ -9879,6 +9879,110 @@
         "artifactName": "wordm-personal-home.tar.gz",
         "artifactPath": "../../releases/wordm-personal-home.tar.gz",
         "artifactSha256Snapshot": "7e0d419151f56982488b40138a4ad990f1410fd697cf2fa416b78d2d94c24304",
+        "executionEntrypoint": "deploy.sh",
+        "clickInstallers": [
+          {
+            "label": "mac",
+            "command": "install.command"
+          },
+          {
+            "label": "linux",
+            "command": "install.sh"
+          },
+          {
+            "label": "windows_powershell",
+            "command": "install.ps1"
+          },
+          {
+            "label": "windows_cmd",
+            "command": "install.bat"
+          },
+          {
+            "label": "cross_platform",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.command"
+          }
+        ],
+        "recommendedActions": [
+          {
+            "label": "default",
+            "command": "install.py"
+          },
+          {
+            "label": "trust_once",
+            "command": "trust_once.py"
+          },
+          {
+            "label": "verify",
+            "command": "deploy.sh verify"
+          },
+          {
+            "label": "bundle",
+            "command": "deploy.sh bundle"
+          },
+          {
+            "label": "run",
+            "command": "deploy.sh run"
+          }
+        ]
+      }
+    },
+    {
+      "id": "eye-translation",
+      "name": "eye-translation",
+      "slug": "eye-translation",
+      "summary": "Manage English articles, open them directly in the gaze-based translation reader, or switch to uploaded PDFs.",
+      "tagline": "Article management and gaze-based inline translation in one reading surface.",
+      "thumbnailUrl": "/showcase/eye-translation-card.svg",
+      "techStack": [
+        "React",
+        "TypeScript",
+        "Vite",
+        "PDF.js"
+      ],
+      "tags": [
+        "app",
+        "ts",
+        "ready"
+      ],
+      "activityScore": 72,
+      "commitCount30d": 0,
+      "relationCount": 0,
+      "lastCommitAt": null,
+      "productionUrl": "https://wordm.us/eye-translation/",
+      "sourceUrl": "https://github.com/LiDeChi/eye-translation",
+      "subdomain": "p-eye-translation",
+      "subdomainUrl": "https://wordm.us/eye-translation/",
+      "detail": {
+        "source": "orchestration-manifest",
+        "slug": "eye-translation",
+        "projectPath": "eye-translation",
+        "status": "ready",
+        "type": "app",
+        "language": "ts",
+        "entry": "eye-translation/README.md",
+        "apiOrPackage": "eye-translation",
+        "publisherId": "openclaw-official",
+        "trustMode": "publisher_signature_once",
+        "commands": {
+          "run": "cd eye-translation && npm run dev",
+          "test": "N/A",
+          "lint": "N/A",
+          "build": "cd eye-translation && npm run build",
+          "docs": "N/A"
+        },
+        "distributionMode": "single",
+        "verifyBeforeDeploy": true,
+        "defaultActions": [
+          "verify",
+          "bundle"
+        ],
+        "artifactName": "eye-translation.tar.gz",
+        "artifactPath": "../../releases/eye-translation.tar.gz",
+        "artifactSha256Snapshot": null,
         "executionEntrypoint": "deploy.sh",
         "clickInstallers": [
           {

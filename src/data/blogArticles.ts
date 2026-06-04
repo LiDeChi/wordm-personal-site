@@ -1,4 +1,5 @@
 import type { Lang } from '../i18n/lang'
+import { FROME_TWEET_ARTICLES } from './fromeTweets'
 
 export type BilingualText = Record<Lang, string>
 
@@ -15,7 +16,7 @@ export type BlogArticle = {
   originalPublishedAt?: string | null
 }
 
-export const BLOG_ARTICLES: BlogArticle[] = [
+const SITE_BLOG_ARTICLES: BlogArticle[] = [
   {
     id: 'substack-note-function-families',
     title: {
@@ -351,4 +352,9 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       },
     ],
   },
+]
+
+export const BLOG_ARTICLES: BlogArticle[] = [
+  ...FROME_TWEET_ARTICLES,
+  ...SITE_BLOG_ARTICLES,
 ]

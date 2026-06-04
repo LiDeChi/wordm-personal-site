@@ -1,0 +1,76 @@
+{
+  "schema_version": "1.0",
+  "name": "Auto-test-1",
+  "slug": "auto-test-1",
+  "path": "Auto-test-1",
+  "status": "ready",
+  "type": "tool",
+  "lang": "other",
+  "entry": "Auto-test-1/README.md",
+  "api_or_package": "N/A",
+  "publisher": {
+    "publisher_id": "openclaw-official",
+    "trust_mode": "publisher_signature_once",
+    "signature_scheme": "sigstore_cosign",
+    "certificate_identity": "deploy@openclaw.dev",
+    "certificate_oidc_issuer": "https://accounts.google.com"
+  },
+  "commands": {
+    "run": "N/A",
+    "test": "make gate-fast",
+    "lint": "make format",
+    "build": "N/A",
+    "docs": "make help"
+  },
+  "distribution": {
+    "mode": "single",
+    "default_actions": [
+      "verify",
+      "bundle"
+    ],
+    "allow_unsigned_local": true,
+    "verify_before_deploy": true,
+    "exclude": [
+      ".git",
+      "node_modules",
+      ".venv",
+      "venv",
+      "__pycache__",
+      ".pytest_cache",
+      ".mypy_cache",
+      ".ruff_cache",
+      ".next",
+      "dist",
+      "build",
+      "target",
+      "DerivedData"
+    ],
+    "artifacts": [
+      {
+        "name": "auto-test-1.tar.gz",
+        "url": "https://github.com/LiDeChi/wordm-personal-site/releases/download/wordm-deploy-kits-current/auto-test-1.tar.gz",
+        "sha256": "N/A",
+        "sha256_snapshot": "68357a6ddfe4a5379327acfaeac689fa8bd31d1fc7868a0d02b447f4f30d1bc8"
+      }
+    ]
+  },
+  "execution": {
+    "entrypoint": "deploy.sh",
+    "non_interactive_default": true
+  },
+  "recommended_actions": {
+    "default": "install.py",
+    "trust_once": "trust_once.py",
+    "verify": "deploy.sh verify",
+    "bundle": "deploy.sh bundle",
+    "run": "deploy.sh run"
+  },
+  "click_installers": {
+    "mac": "install.command",
+    "linux": "install.sh",
+    "windows_powershell": "install.ps1",
+    "windows_cmd": "install.bat",
+    "cross_platform": "install.py",
+    "trust_once": "trust_once.command"
+  }
+}

@@ -62,7 +62,8 @@ function isAdminAuthorized(request: Request) {
   return parsed.username === ADMIN_USERNAME && parsed.password === ADMIN_PASSWORD
 }
 
-const STATIC_SUBDOMAINS = new Set(['resume', 'cv', 'admin'])
+const STATIC_SUBDOMAINS = new Set(['resume', 'cv', 'admin', 'eye-translation', 'oneagent'])
+const DIRECT_APP_SUBDOMAINS = new Set(['eye-translation', 'p-eye-translation'])
 
 function isAllowedSubdomain(subdomain: string): boolean {
   return STATIC_SUBDOMAINS.has(subdomain) || subdomain.startsWith('p-')
@@ -102,7 +103,13 @@ export default {
       return proxyAdminApi(request)
     }
 
-    const targetUrl = new URL(`${incomingUrl.pathname}${incomingUrl.search}`, ROOT_ORIGIN)
+    const targetPath =
+      subdomain === 'oneagent' && (incomingUrl.pathname === '/' || incomingUrl.pathname === '/oneagent')
+        ? '/oneagent/'
+        : DIRECT_APP_SUBDOMAINS.has(subdomain)
+          ? `/eye-translation${incomingUrl.pathname === '/' ? '/' : incomingUrl.pathname}`
+          : incomingUrl.pathname
+    const targetUrl = new URL(`${targetPath}${incomingUrl.search}`, ROOT_ORIGIN)
     if (incomingUrl.pathname === '/') {
       if (subdomain === 'resume' || subdomain === 'cv') {
         targetUrl.searchParams.set('page', 'resume')

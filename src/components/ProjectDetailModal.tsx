@@ -1,5 +1,5 @@
 import type { Lang } from '../i18n/lang'
-import type { ProjectOfferState, ProjectUnlockOptions } from '../lib/project-offers'
+import type { ProjectOfferState } from '../lib/project-offers'
 import type { PortfolioProject } from '../types'
 import { ProjectDetailPage } from './ProjectDetailPage'
 
@@ -9,9 +9,6 @@ type ProjectDetailModalProps = {
   lastUpdated: string
   unlocked: boolean
   offerState: ProjectOfferState
-  unlockOptions: ProjectUnlockOptions
-  unlockBusy: boolean
-  statusMessage: string
   shareToken?: string | null
   indexLabel?: string | null
   hasPrevious: boolean
@@ -19,8 +16,6 @@ type ProjectDetailModalProps = {
   onClose: () => void
   onPrevious: () => void
   onNext: () => void
-  onUnlockSingle: (slug: string) => void
-  onUnlockAllAccess: () => void
 }
 
 const COPY = {
@@ -44,9 +39,6 @@ export function ProjectDetailModal({
   lastUpdated,
   unlocked,
   offerState,
-  unlockOptions,
-  unlockBusy,
-  statusMessage,
   shareToken = null,
   indexLabel = null,
   hasPrevious,
@@ -54,8 +46,6 @@ export function ProjectDetailModal({
   onClose,
   onPrevious,
   onNext,
-  onUnlockSingle,
-  onUnlockAllAccess,
 }: ProjectDetailModalProps) {
   const copy = COPY[lang]
 
@@ -68,44 +58,49 @@ export function ProjectDetailModal({
       onClick={onClose}
     >
       <div className="project-detail-modal-shell" onClick={(event) => event.stopPropagation()}>
-        {hasPrevious ? (
-          <button
-            type="button"
-            className="project-detail-modal-nav project-detail-modal-nav-prev"
-            onClick={onPrevious}
-            aria-label={copy.previous}
-          >
-            {copy.previous}
-          </button>
-        ) : null}
+        {hasPrevious || hasNext || indexLabel ? (
+          <div className="project-detail-modal-toolbar">
+            <div className="project-detail-modal-toolbar-side">
+              {hasPrevious ? (
+                <button
+                  type="button"
+                  className="project-detail-modal-nav"
+                  onClick={onPrevious}
+                  aria-label={copy.previous}
+                >
+                  {copy.previous}
+                </button>
+              ) : null}
+            </div>
 
-        {hasNext ? (
-          <button
-            type="button"
-            className="project-detail-modal-nav project-detail-modal-nav-next"
-            onClick={onNext}
-            aria-label={copy.next}
-          >
-            {copy.next}
-          </button>
+            {indexLabel ? <p className="mono project-detail-modal-index">{indexLabel}</p> : null}
+
+            <div className="project-detail-modal-toolbar-side project-detail-modal-toolbar-side-end">
+              {hasNext ? (
+                <button
+                  type="button"
+                  className="project-detail-modal-nav"
+                  onClick={onNext}
+                  aria-label={copy.next}
+                >
+                  {copy.next}
+                </button>
+              ) : null}
+            </div>
+          </div>
         ) : null}
 
         <div className="project-detail-modal-sheet">
-          {indexLabel ? <p className="mono project-detail-modal-index">{indexLabel}</p> : null}
           <ProjectDetailPage
+            key={project.slug}
             lang={lang}
             project={project}
             lastUpdated={lastUpdated}
             unlocked={unlocked}
             offerState={offerState}
-            unlockOptions={unlockOptions}
-            unlockBusy={unlockBusy}
-            statusMessage={statusMessage}
             shareToken={shareToken}
             backLabel={copy.close}
             onBack={onClose}
-            onUnlockSingle={onUnlockSingle}
-            onUnlockAllAccess={onUnlockAllAccess}
           />
         </div>
       </div>

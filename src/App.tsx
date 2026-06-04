@@ -1,8 +1,8 @@
-import { Suspense, lazy, useEffect, useMemo, useState } from 'react'
+import { Suspense, lazy, useEffect, useMemo, useRef, useState } from 'react'
 import { AccountEntryCard } from './components/AccountEntryCard'
-import { DebugPanel } from './components/DebugPanel'
 import { LoginPage } from './components/LoginPage'
 import { AdminPage } from './components/AdminPage'
+import { OneAgentProductPage } from './components/OneAgentProductPage'
 import { ProjectDetailModal } from './components/ProjectDetailModal'
 import { ProjectEntry } from './components/ProjectEntry'
 import { ResumeAccessDenied } from './components/ResumeAccessDenied'
@@ -72,7 +72,6 @@ import {
 } from './lib/auth'
 import {
   chooseProjects,
-  fetchProjectsFromApi,
   formatDate,
   isProjectDefaultVisible,
   parseShowSlugs,
@@ -80,8 +79,10 @@ import {
 } from './lib/projects'
 import type { PortfolioProject, ProjectsSnapshot } from './types'
 
-type RootView = 'blog' | 'portfolio' | 'login'
+type RootView = 'blog' | 'portfolio' | 'login' | 'about'
 type UnlockStorageMode = 'remote' | 'local' | 'loading' | 'idle'
+const BLOG_INITIAL_RENDER_COUNT = 18
+const BLOG_RENDER_BATCH_SIZE = 18
 
 const snapshot = projectsSnapshotRaw as ProjectsSnapshot
 const PortfolioShowcase = lazy(() =>
@@ -180,6 +181,10 @@ const APP_COPY = {
     tocBlog: '文章',
     tocDeploy: '部署',
     tocContact: '联系',
+    aboutTitle: '关于我',
+    aboutIntro: '这里暂时保留旧项目展示与归档，项目页顶部先留成黑色，等待下一步具体指示。',
+    aboutArchiveTitle: '项目归档',
+    aboutEntryText: '关于我',
     portfolioTitle: '作品集',
     blogTitle: '文章',
     blogIntro: '把短帖和长文放在同一条时间线上，方便从一个地方连续读完。',
@@ -190,6 +195,7 @@ const APP_COPY = {
     blogReadSource: '查看原文',
     blogNextLabel: '下一篇',
     blogEndOfList: '已经到最后一篇。',
+    blogLoadMore: '继续加载文章',
     contactTitle: '联系',
     copyright: '© 2026 Jian Yongjie. All rights reserved.',
     portfolioMode: 'wordm.us 作品集模式',
@@ -304,6 +310,10 @@ const APP_COPY = {
     tocBlog: 'Articles',
     tocDeploy: 'Deploy',
     tocContact: 'Contact',
+    aboutTitle: 'About',
+    aboutIntro: 'The previous project gallery is kept here as an archive while the Projects tab starts as a black field for the next direction.',
+    aboutArchiveTitle: 'Project archive',
+    aboutEntryText: 'About',
     portfolioTitle: 'Portfolio Gallery',
     blogTitle: 'Articles',
     blogIntro: 'Short notes and long-form pieces live on one timeline so the reading flow stays continuous.',
@@ -314,6 +324,7 @@ const APP_COPY = {
     blogReadSource: 'Open source',
     blogNextLabel: 'Next',
     blogEndOfList: 'You are at the last article.',
+    blogLoadMore: 'Load more articles',
     contactTitle: 'Contact',
     copyright: '© 2026 Jian Yongjie. All rights reserved.',
     portfolioMode: 'Portfolio mode on wordm.us',
@@ -440,6 +451,9 @@ function toRootView(raw: string | null, pathname: string): RootView {
   if (raw === 'login') {
     return 'login'
   }
+  if (raw === 'about') {
+    return 'about'
+  }
   if (raw === 'portfolio') {
     return 'portfolio'
   }
@@ -488,6 +502,8 @@ function relativeRootHref(view: RootView, lang: Lang) {
     url.searchParams.set('view', 'login')
   } else if (view === 'blog') {
     url.searchParams.set('view', 'blog')
+  } else if (view === 'about') {
+    url.searchParams.set('view', 'about')
   }
 
   if (lang === 'en') {
@@ -599,10 +615,8 @@ function App() {
   const params = new URLSearchParams(window.location.search)
   const hostname = window.location.hostname.toLowerCase()
   const isAdminHost = hostname === 'admin.wordm.us' || params.get('page') === 'admin'
-  const debugMode = params.get('debug') === '1' || import.meta.env.DEV
   const forcedSubdomain = params.get('subdomain')
   const forcedPage = params.get('page')
-  const initialApi = params.get('centerApi') || import.meta.env.VITE_CENTER_CONTROL_API || ''
   const initialShowSlugs = parseShowSlugs(params.get('show'))
   const initialRootView = toRootView(params.get('view'), window.location.pathname)
   const initialBlogArticleId = normalizeBlogArticleId(params.get('article')) ?? BLOG_ARTICLES[0]?.id ?? null
@@ -614,6 +628,7 @@ function App() {
   const initialPurchaseSuccess = params.get('purchase_success') === '1'
   const initialPurchaseCanceled = params.get('purchase_cancel') === '1'
   const initialLang = resolveInitialLang(window.location)
+  const blogLoadMoreRef = useRef<HTMLDivElement | null>(null)
 
   const [lang, setLang] = useState<Lang>(initialLang)
   const [offerNow, setOfferNow] = useState(() => Date.now())
@@ -651,11 +666,7 @@ function App() {
   const authEnabled = isAuthConfigured(authConfig)
 
   const [rootView, setRootView] = useState<RootView>(initialRootView)
-  const [projects, setProjects] = useState<PortfolioProject[]>(snapshot.projects)
-  const [centerApi, setCenterApi] = useState(initialApi)
-  const [sourceType, setSourceType] = useState<'snapshot' | 'live'>('snapshot')
-  const [loadState, setLoadState] = useState<'idle' | 'loading' | 'error'>('idle')
-  const [errorMessage, setErrorMessage] = useState('')
+  const [projects] = useState<PortfolioProject[]>(snapshot.projects)
   const [authUser, setAuthUser] = useState<AuthUserSummary | null>(null)
   const [authLoading, setAuthLoading] = useState(authEnabled)
   const [authBusy, setAuthBusy] = useState(false)
@@ -670,6 +681,7 @@ function App() {
   const [pricingBusy, setPricingBusy] = useState(false)
   const [adminPricingConfig, setAdminPricingConfig] = useState<SitePricingConfig>(envPricingFallback)
   const [activeBlogArticleId, setActiveBlogArticleId] = useState<string | null>(initialBlogArticleId)
+  const [visibleBlogCount, setVisibleBlogCount] = useState(BLOG_INITIAL_RENDER_COUNT)
   const [selectedProjectSlug, setSelectedProjectSlug] = useState<string | null>(initialProjectSlug)
   const [showScrollTop, setShowScrollTop] = useState(false)
   const [unlockTargetSlug, setUnlockTargetSlug] = useState<string | null>(initialUnlockSlug)
@@ -691,8 +703,30 @@ function App() {
 
     return defaultSelection(snapshot.projects, FEATURED_PROJECT_SLUGS)
   })
+  const blogArticles = useMemo(() => BLOG_ARTICLES, [])
+  const renderedBlogArticles = useMemo(
+    () => blogArticles.slice(0, Math.min(visibleBlogCount, blogArticles.length)),
+    [blogArticles, visibleBlogCount],
+  )
+  const hasMoreBlogArticles = renderedBlogArticles.length < blogArticles.length
+  const activeBlogArticle = useMemo(
+    () =>
+      blogArticles.find((article) => article.id === activeBlogArticleId) ??
+      blogArticles[0] ??
+      null,
+    [activeBlogArticleId, blogArticles],
+  )
+  const activeBlogIndex = useMemo(
+    () => (activeBlogArticle ? blogArticles.findIndex((article) => article.id === activeBlogArticle.id) : -1),
+    [activeBlogArticle, blogArticles],
+  )
+  const nextBlogArticle =
+    activeBlogIndex >= 0 && activeBlogIndex + 1 < blogArticles.length ? blogArticles[activeBlogIndex + 1] : null
+  const isOneAgentProductPage =
+    window.location.hostname === 'oneagent.wordm.us' ||
+    window.location.pathname === '/oneagent' ||
+    window.location.pathname === '/oneagent/'
 
-  const sourceLabel = sourceType === 'live' && centerApi ? `${copy.sourceLivePrefix}: ${centerApi}` : copy.sourceSnapshot
   const contactEmail = 'parsonjian@gmail.com'
   const defaultHomeHref = new URL(relativeRootHref('portfolio', lang), 'https://wordm.us').toString()
   const authReturnHref = initialAuthReturnTo ?? defaultHomeHref
@@ -711,6 +745,10 @@ function App() {
   const lastUpdated = formatDate(primaryUpdatedAt)
 
   useEffect(() => {
+    if (isOneAgentProductPage) {
+      return
+    }
+
     const next = new URL(window.location.href)
     next.pathname = '/'
 
@@ -718,6 +756,8 @@ function App() {
       next.searchParams.set('view', 'login')
     } else if (rootView === 'blog') {
       next.searchParams.set('view', 'blog')
+    } else if (rootView === 'about') {
+      next.searchParams.set('view', 'about')
     } else {
       next.searchParams.delete('view')
     }
@@ -728,7 +768,7 @@ function App() {
       next.searchParams.delete('lang')
     }
 
-    if (selectedProjectSlug && rootView === 'portfolio') {
+    if (selectedProjectSlug && (rootView === 'portfolio' || rootView === 'about')) {
       next.searchParams.set('project', selectedProjectSlug)
     } else {
       next.searchParams.delete('project')
@@ -759,7 +799,7 @@ function App() {
     }
 
     window.history.replaceState({}, '', next)
-  }, [rootView, lang, selectedProjectSlug, activeBlogArticleId, unlockTargetSlug, shareToken, initialAuthReturnTo])
+  }, [rootView, lang, selectedProjectSlug, activeBlogArticleId, unlockTargetSlug, shareToken, initialAuthReturnTo, isOneAgentProductPage])
 
   useEffect(() => {
     if (!initialPurchaseSuccess && !initialPurchaseCanceled) {
@@ -886,6 +926,11 @@ function App() {
       return
     }
 
+    const articleIndex = BLOG_ARTICLES.findIndex((article) => article.id === initialBlogArticleId)
+    if (articleIndex >= BLOG_INITIAL_RENDER_COUNT) {
+      setVisibleBlogCount(Math.min(BLOG_ARTICLES.length, articleIndex + BLOG_RENDER_BATCH_SIZE))
+    }
+
     const frame = window.requestAnimationFrame(() => {
       const target = document.getElementById(`blog-article-${initialBlogArticleId}`)
       if (target) {
@@ -897,6 +942,10 @@ function App() {
   }, [initialBlogArticleId, rootView])
 
   useEffect(() => {
+    if (rootView !== 'blog') {
+      return
+    }
+
     if (!BLOG_ARTICLES.length) {
       setActiveBlogArticleId(null)
       return
@@ -905,14 +954,20 @@ function App() {
     setActiveBlogArticleId((current) =>
       current && BLOG_ARTICLES.some((article) => article.id === current) ? current : BLOG_ARTICLES[0].id,
     )
-  }, [])
+  }, [rootView])
 
   useEffect(() => {
-    if (rootView !== 'blog' || !BLOG_ARTICLES.length) {
+    if (rootView === 'blog') {
+      setVisibleBlogCount((current) => Math.max(current, BLOG_INITIAL_RENDER_COUNT))
+    }
+  }, [rootView])
+
+  useEffect(() => {
+    if (rootView !== 'blog' || !renderedBlogArticles.length) {
       return
     }
 
-    const articleIds = BLOG_ARTICLES.map((article) => article.id)
+    const articleIds = renderedBlogArticles.map((article) => article.id)
     const articleNodes = articleIds
       .map((articleId) => document.getElementById(`blog-article-${articleId}`))
       .filter((node): node is HTMLElement => Boolean(node))
@@ -921,20 +976,28 @@ function App() {
       return
     }
 
+    let frameId = 0
     const updateActiveArticle = () => {
-      let nextArticleId = articleIds[0]
-      const threshold = window.innerHeight * 0.28
-
-      for (const node of articleNodes) {
-        const top = node.getBoundingClientRect().top
-        if (top <= threshold) {
-          nextArticleId = node.dataset.articleId || nextArticleId
-          continue
-        }
-        break
+      if (frameId) {
+        return
       }
 
-      setActiveBlogArticleId((current) => (current === nextArticleId ? current : nextArticleId))
+      frameId = window.requestAnimationFrame(() => {
+        frameId = 0
+        let nextArticleId = articleIds[0]
+        const threshold = window.innerHeight * 0.28
+
+        for (const node of articleNodes) {
+          const top = node.getBoundingClientRect().top
+          if (top <= threshold) {
+            nextArticleId = node.dataset.articleId || nextArticleId
+            continue
+          }
+          break
+        }
+
+        setActiveBlogArticleId((current) => (current === nextArticleId ? current : nextArticleId))
+      })
     }
 
     updateActiveArticle()
@@ -942,10 +1005,33 @@ function App() {
     window.addEventListener('resize', updateActiveArticle)
 
     return () => {
+      if (frameId) {
+        window.cancelAnimationFrame(frameId)
+      }
       window.removeEventListener('scroll', updateActiveArticle)
       window.removeEventListener('resize', updateActiveArticle)
     }
-  }, [rootView])
+  }, [renderedBlogArticles, rootView])
+
+  useEffect(() => {
+    if (rootView !== 'blog' || !hasMoreBlogArticles || !blogLoadMoreRef.current) {
+      return
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) {
+          return
+        }
+
+        setVisibleBlogCount((current) => Math.min(blogArticles.length, current + BLOG_RENDER_BATCH_SIZE))
+      },
+      { rootMargin: '720px 0px' },
+    )
+
+    observer.observe(blogLoadMoreRef.current)
+    return () => observer.disconnect()
+  }, [blogArticles.length, hasMoreBlogArticles, rootView])
 
   useEffect(() => {
     function syncScrollTopVisibility() {
@@ -958,29 +1044,6 @@ function App() {
   }, [])
 
 
-
-  useEffect(() => {
-    if (!debugMode || rootView !== 'portfolio') {
-      return
-    }
-
-    const next = new URL(window.location.href)
-
-    if (selectedSlugs.length) {
-      next.searchParams.set('show', selectedSlugs.join(','))
-    } else {
-      next.searchParams.delete('show')
-    }
-
-    if (centerApi) {
-      next.searchParams.set('centerApi', centerApi)
-    } else {
-      next.searchParams.delete('centerApi')
-    }
-
-    next.searchParams.set('debug', '1')
-    window.history.replaceState({}, '', next)
-  }, [debugMode, rootView, selectedSlugs, centerApi])
 
   useEffect(() => {
     let active = true
@@ -1216,36 +1279,6 @@ function App() {
       return [...prev, unlockTargetSlug]
     })
   }, [projects, unlockTargetSlug])
-
-  async function loadLiveProjects() {
-    if (!centerApi) {
-      setLoadState('error')
-      setErrorMessage(copy.apiRequired)
-      return
-    }
-
-    setLoadState('loading')
-    setErrorMessage('')
-
-    try {
-      const liveProjects = await fetchProjectsFromApi(centerApi)
-      setProjects(liveProjects)
-      setSelectedSlugs((prev) => {
-        const available = new Set(liveProjects.map((project) => project.slug))
-        const filtered = prev.filter((slug) => available.has(slug))
-        if (filtered.length) {
-          return filtered
-        }
-
-        return defaultSelection(liveProjects, FEATURED_PROJECT_SLUGS)
-      })
-      setSourceType('live')
-      setLoadState('idle')
-    } catch (error) {
-      setLoadState('error')
-      setErrorMessage(error instanceof Error && error.message ? error.message : copy.sourceLoadFailed)
-    }
-  }
 
   function unlockErrorCode(error: unknown): string {
     const detail = normalizeAuthError(error, '')
@@ -1901,25 +1934,17 @@ function App() {
 
     return visibleProjects.findIndex((project) => project.slug === selectedProject.slug)
   }, [selectedProject, visibleProjects])
-  const blogArticles = useMemo(() => BLOG_ARTICLES, [])
-  const activeBlogArticle = useMemo(
-    () =>
-      blogArticles.find((article) => article.id === activeBlogArticleId) ??
-      blogArticles[0] ??
-      null,
-    [activeBlogArticleId, blogArticles],
-  )
-  const activeBlogIndex = useMemo(
-    () => (activeBlogArticle ? blogArticles.findIndex((article) => article.id === activeBlogArticle.id) : -1),
-    [activeBlogArticle, blogArticles],
-  )
-  const nextBlogArticle =
-    activeBlogIndex >= 0 && activeBlogIndex + 1 < blogArticles.length ? blogArticles[activeBlogIndex + 1] : null
-
   const subdomainProject = useMemo(
     () => resolveSubdomainView(projects, window.location.hostname, forcedSubdomain),
     [projects, forcedSubdomain],
   )
+  const subdomainExperienceUrl = useMemo(() => {
+    if (!subdomainProject?.productionUrl) {
+      return null
+    }
+
+    return withSiteParams(subdomainProject.productionUrl, { lang, shareToken })
+  }, [lang, shareToken, subdomainProject])
   const isResumeView = forcedPage === 'resume' || hostname === 'resume.wordm.us' || hostname === 'cv.wordm.us'
   const isAdminView = forcedPage === 'admin' || hostname === 'admin.wordm.us'
 
@@ -1985,7 +2010,7 @@ function App() {
     onGoogleLogin: handleGoogleLogin,
     onLogout: handleLogout,
   }
-  const projectModalOpen = rootView === 'portfolio' && Boolean(selectedProject)
+  const projectModalOpen = rootView === 'about' && Boolean(selectedProject)
 
   useEffect(() => {
     if (typeof document === 'undefined' || !projectModalOpen) {
@@ -2043,14 +2068,32 @@ function App() {
     setSelectedProjectSlug(visibleProjects[nextIndex]?.slug ?? null)
   }
 
+  function openAboutPage() {
+    setRootView('about')
+    window.requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    })
+  }
+
   function scrollToBlogArticle(articleId: string, behavior: ScrollBehavior = 'smooth') {
-    const target = document.getElementById(`blog-article-${articleId}`)
-    if (!target) {
+    const articleIndex = blogArticles.findIndex((article) => article.id === articleId)
+    if (articleIndex < 0) {
       return
     }
 
     setActiveBlogArticleId(articleId)
-    target.scrollIntoView({ behavior, block: 'start' })
+    if (articleIndex >= visibleBlogCount) {
+      setVisibleBlogCount(Math.min(blogArticles.length, articleIndex + BLOG_RENDER_BATCH_SIZE))
+    }
+
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        const target = document.getElementById(`blog-article-${articleId}`)
+        if (target) {
+          target.scrollIntoView({ behavior, block: 'start' })
+        }
+      })
+    })
   }
 
   function getProjectNameBySlug(slug: string) {
@@ -2208,6 +2251,22 @@ function App() {
     target.scrollIntoView({ behavior: 'smooth', block: 'center' })
   }, [rootView, unlockTargetSlug])
 
+  useEffect(() => {
+    if (!subdomainExperienceUrl) {
+      return
+    }
+
+    window.location.replace(subdomainExperienceUrl)
+  }, [subdomainExperienceUrl])
+
+  if (subdomainExperienceUrl) {
+    return null
+  }
+
+  if (isOneAgentProductPage) {
+    return <OneAgentProductPage lang={lang} />
+  }
+
 
   if (subdomainProject) {
     if (subdomainShareDeniedStatus) {
@@ -2322,13 +2381,13 @@ function App() {
     return <ShareAccessDenied lang={lang} status={blogShareDeniedStatus} authPanel={authPanelProps} fallbackSharedUrl={shareEntryUrl} />
   }
 
-  if (rootView === 'portfolio' && portfolioShareDeniedStatus) {
+  if ((rootView === 'portfolio' || rootView === 'about') && portfolioShareDeniedStatus) {
     return <ShareAccessDenied lang={lang} status={portfolioShareDeniedStatus} authPanel={authPanelProps} fallbackSharedUrl={shareEntryUrl} />
   }
 
   return (
     <div className="page-container">
-      <main className={`main-content portfolio-main-content${rootView === 'blog' ? ' blog-main' : ''}`}>
+      <main className={`main-content portfolio-main-content${rootView === 'blog' ? ' blog-main' : ''}${rootView === 'about' ? ' about-main' : ''}`}>
         <div className="site-topbar">
           <div className="site-topbar-primary">
             <nav className="collection-switch-tabs site-topbar-tabs" aria-label={lang === 'zh' ? '内容切换' : 'Content switch'}>
@@ -2351,8 +2410,11 @@ function App() {
 
           <div className="site-topbar-secondary">
             <label className="site-topbar-lang">
-              <span className="mono">{lang === 'zh' ? '语言' : 'Language'}</span>
-              <select value={lang} onChange={(event) => setLang(event.target.value as Lang)}>
+              <select
+                value={lang}
+                onChange={(event) => setLang(event.target.value as Lang)}
+                aria-label={lang === 'zh' ? '语言' : 'Language'}
+              >
                 <option value="zh">中文</option>
                 <option value="en">EN</option>
               </select>
@@ -2386,160 +2448,177 @@ function App() {
             </div>
           </div>
         </div>
-		        <section id="collection" className="main-collection-shell">
-              {rootView === 'blog' ? <p className="visual-intro collection-switch-intro">{copy.blogIntro}</p> : null}
 
-	          {debugMode && rootView === 'portfolio' ? (
-            <DebugPanel
-              lang={lang}
-              allProjects={projects}
-              selectedSlugs={selectedSlugs}
-              centerApi={centerApi}
-              sourceLabel={sourceLabel}
-              loadState={loadState}
-              errorMessage={errorMessage}
-              onCenterApiChange={setCenterApi}
-              onLoadLive={loadLiveProjects}
-              onToggleProject={(slug) => {
-                setSelectedSlugs((prev) => {
-                  if (prev.includes(slug)) {
-                    return prev.filter((item) => item !== slug)
-                  }
-
-                  return [...prev, slug]
-                })
-              }}
-              onSelectFeatured={() => setSelectedSlugs(defaultSelection(projects, FEATURED_PROJECT_SLUGS))}
-              onSelectAll={() => setSelectedSlugs(projects.map((project) => project.slug))}
-            />
-          ) : null}
+        <section id="collection" className="main-collection-shell">
+          {rootView === 'blog' ? <p className="visual-intro collection-switch-intro">{copy.blogIntro}</p> : null}
 
           {rootView === 'blog' ? (
-            <div className="blog-page">
-              <aside className="blog-sidebar">
-                <ul className="nav-list">
-                  {blogArticles.map((article) => (
-                    <li key={article.id} className="nav-item">
+            <>
+              <div className="blog-page">
+                <aside className="blog-sidebar">
+                  <ul className="nav-list">
+                    {renderedBlogArticles.map((article) => (
+                      <li key={article.id} className="nav-item">
+                        <button
+                          type="button"
+                          className={`nav-link sidebar-nav-button${activeBlogArticle?.id === article.id ? ' active' : ''}`}
+                          onClick={() => scrollToBlogArticle(article.id)}
+                        >
+                          {article.title[lang]}
+                          <span className="toc-meta">
+                            {article.date} · {article.category[lang]}
+                          </span>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </aside>
+
+                <div className="blog-article-list">
+                  {renderedBlogArticles.map((article) => (
+                    <article
+                      key={article.id}
+                      id={`blog-article-${article.id}`}
+                      data-article-id={article.id}
+                      className={`blog-article${activeBlogArticle?.id === article.id ? ' blog-article-active' : ''}`}
+                    >
+                      <div className="paper-meta">
+                        <span>{article.date}</span>
+                      </div>
+                      <h3 className="blog-article-title">{article.title[lang]}</h3>
+                      {article.summary[lang].trim() ? <p className="blog-article-summary">{article.summary[lang]}</p> : null}
+                      {article.note[lang].trim() ? <p className="blog-article-note">{article.note[lang]}</p> : null}
+                      {article.paragraphs.map((paragraph, index) => (
+                        <p key={`${article.id}-${index}`}>{paragraph[lang]}</p>
+                      ))}
+                    </article>
+                  ))}
+                  {hasMoreBlogArticles ? (
+                    <div ref={blogLoadMoreRef} className="blog-load-sentinel">
                       <button
                         type="button"
-                        className={`nav-link sidebar-nav-button${activeBlogArticle?.id === article.id ? ' active' : ''}`}
-                        onClick={() => scrollToBlogArticle(article.id)}
+                        className="blog-load-more"
+                        onClick={() => {
+                          setVisibleBlogCount((current) =>
+                            Math.min(blogArticles.length, current + BLOG_RENDER_BATCH_SIZE),
+                          )
+                        }}
                       >
-                        {article.title[lang]}
-                        <span className="toc-meta">
-                          {article.date} · {article.category[lang]}
-                        </span>
+                        {copy.blogLoadMore}
                       </button>
-                    </li>
-                  ))}
-                </ul>
-              </aside>
-
-              <div className="blog-article-list">
-                {blogArticles.map((article) => (
-                  <article
-                    key={article.id}
-                    id={`blog-article-${article.id}`}
-                    data-article-id={article.id}
-                    className={`blog-article${activeBlogArticle?.id === article.id ? ' blog-article-active' : ''}`}
-                  >
-                    <div className="paper-meta">
-                      <span>{article.date}</span>
-                      <span>{article.category[lang]}</span>
-                      {article.originalPublishedAt ? <span>{copy.blogOriginalPrefix}: {article.originalPublishedAt}</span> : null}
                     </div>
-                    <h3 className="blog-article-title">{article.title[lang]}</h3>
-	                    <p className="blog-article-summary">{article.summary[lang]}</p>
-	                    {article.note[lang].trim() ? <p className="blog-article-note">{article.note[lang]}</p> : null}
-	                    {article.paragraphs.map((paragraph, index) => (
-	                      <p key={`${article.id}-${index}`}>{paragraph[lang]}</p>
-	                    ))}
-	                  </article>
-	                ))}
-	              </div>
-            </div>
-          ) : (
-            <>
-	              <Suspense fallback={<div className="portfolio-showcase-loading" aria-hidden="true" />}>
-	                <PortfolioShowcase
+                  ) : null}
+                </div>
+              </div>
+            </>
+          ) : null}
+
+          {rootView === 'portfolio' ? (
+            <figure className="portfolio-black-field">
+              <img src="/home/hero.png" alt="" className="portfolio-home-image" />
+            </figure>
+          ) : null}
+
+          {rootView === 'about' ? (
+            <section id="about" className="about-archive-section about-page">
+              <div className="about-archive-copy">
+                <p className="paper-meta">{copy.aboutTitle}</p>
+                <h2>{copy.aboutTitle}</h2>
+                <p>{copy.aboutIntro}</p>
+              </div>
+
+              <div className="about-project-archive">
+                <h2>{copy.aboutArchiveTitle}</h2>
+                <Suspense fallback={<div className="portfolio-showcase-loading" aria-hidden="true" />}>
+                  <PortfolioShowcase
                     lang={lang}
                     projects={visibleProjects}
                     onSelectProject={(slug) => setSelectedProjectSlug(slug)}
                   />
-	              </Suspense>
-	              <div className="portfolio-gallery">
-		                {visibleProjects.map((project) => (
-	                  <ProjectEntry
-                    key={project.id}
-                    lang={lang}
-                    project={project}
-                    accessible={isProjectUnlocked(project.slug)}
-                    offerState={getOfferStateBySlug(project.slug)}
-                    focused={unlockTargetSlug === project.slug}
-                    onSelectProject={(slug) => setSelectedProjectSlug(slug)}
-                  />
-	                ))}
-	              </div>
-                {selectedProject
-                  ? projectDetailShareDeniedStatus
-                    ? (
-                        <div
-                          className="project-detail-modal"
-                          role="dialog"
-                          aria-modal="true"
-                          aria-label={lang === 'zh' ? '项目访问受限' : 'Project access denied'}
-                          onClick={() => setSelectedProjectSlug(null)}
-                        >
-                          <div className="project-detail-modal-shell" onClick={(event) => event.stopPropagation()}>
-                            <div className="project-detail-modal-sheet project-detail-modal-sheet-share">
-                              <ShareAccessDenied
-                                lang={lang}
-                                status={projectDetailShareDeniedStatus}
-                                authPanel={authPanelProps}
-                                fallbackSharedUrl={shareEntryUrl}
-                              />
-                            </div>
+                </Suspense>
+                <div className="portfolio-gallery">
+                  {visibleProjects.map((project) => (
+                    <ProjectEntry
+                      key={project.id}
+                      lang={lang}
+                      project={project}
+                      accessible={isProjectUnlocked(project.slug)}
+                      offerState={getOfferStateBySlug(project.slug)}
+                      focused={unlockTargetSlug === project.slug}
+                      onSelectProject={(slug) => setSelectedProjectSlug(slug)}
+                    />
+                  ))}
+                </div>
+              </div>
+              {selectedProject
+                ? projectDetailShareDeniedStatus
+                  ? (
+                      <div
+                        className="project-detail-modal"
+                        role="dialog"
+                        aria-modal="true"
+                        aria-label={lang === 'zh' ? '项目访问受限' : 'Project access denied'}
+                        onClick={() => setSelectedProjectSlug(null)}
+                      >
+                        <div className="project-detail-modal-shell" onClick={(event) => event.stopPropagation()}>
+                          <div className="project-detail-modal-sheet project-detail-modal-sheet-share">
+                            <ShareAccessDenied
+                              lang={lang}
+                              status={projectDetailShareDeniedStatus}
+                              authPanel={authPanelProps}
+                              fallbackSharedUrl={shareEntryUrl}
+                            />
                           </div>
                         </div>
-                      )
-                    : (
-                        <ProjectDetailModal
-                          lang={lang}
-                          project={selectedProject}
-                          lastUpdated={lastUpdated}
-                          unlocked={isProjectUnlocked(selectedProject.slug)}
-                          offerState={getOfferStateBySlug(selectedProject.slug)}
-                          unlockOptions={getUnlockOptionsBySlug(selectedProject.slug)}
-                          unlockBusy={unlockActionDisabled}
-                          statusMessage={unlockStatusMessage}
-                          shareToken={shareToken}
-                          indexLabel={
-                            selectedVisibleProjectIndex >= 0
-                              ? `${String(selectedVisibleProjectIndex + 1).padStart(2, '0')}/${String(visibleProjects.length).padStart(2, '0')}`
-                              : null
-                          }
-                          hasPrevious={selectedVisibleProjectIndex >= 0 && visibleProjects.length > 1}
-                          hasNext={selectedVisibleProjectIndex >= 0 && visibleProjects.length > 1}
-                          onClose={() => setSelectedProjectSlug(null)}
-                          onPrevious={() => selectAdjacentVisibleProject(-1)}
-                          onNext={() => selectAdjacentVisibleProject(1)}
-                          onUnlockSingle={(slug) => void handleUnlockSingle(slug)}
-                          onUnlockAllAccess={() => void handleUnlockAllAccess()}
-                        />
-                      )
-                  : null}
-            </>
-          )}
+                      </div>
+                    )
+                  : (
+                      <ProjectDetailModal
+                        lang={lang}
+                        project={selectedProject}
+                        lastUpdated={lastUpdated}
+                        unlocked={isProjectUnlocked(selectedProject.slug)}
+                        offerState={getOfferStateBySlug(selectedProject.slug)}
+                        shareToken={shareToken}
+                        indexLabel={
+                          selectedVisibleProjectIndex >= 0
+                            ? `${String(selectedVisibleProjectIndex + 1).padStart(2, '0')}/${String(visibleProjects.length).padStart(2, '0')}`
+                            : null
+                        }
+                        hasPrevious={selectedVisibleProjectIndex >= 0 && visibleProjects.length > 1}
+                        hasNext={selectedVisibleProjectIndex >= 0 && visibleProjects.length > 1}
+                        onClose={() => setSelectedProjectSlug(null)}
+                        onPrevious={() => selectAdjacentVisibleProject(-1)}
+                        onNext={() => selectAdjacentVisibleProject(1)}
+                      />
+                    )
+                : null}
+            </section>
+          ) : null}
         </section>
 
         <footer id="contact">
-          <div className="footer-contact-inline">
-            {copy.contactTitle}: 简永杰 / Jian Yongjie · {copy.profileLine1} ·{' '}
-            <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
-          </div>
-          <div className="footer-meta-row">
-            <div>{copy.copyright}</div>
-            <div>{copy.portfolioMode}</div>
+          <div className="footer-row">
+            <div className="footer-contact-inline">
+              {copy.contactTitle}: 简永杰 / Jian Yongjie · {copy.profileLine1} ·{' '}
+              <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
+            </div>
+            {rootView !== 'about' ? (
+              <a
+                href={relativeRootHref('about', lang)}
+                className="footer-about-link"
+                onClick={(event) => {
+                  event.preventDefault()
+                  openAboutPage()
+                }}
+              >
+                {copy.aboutEntryText}
+              </a>
+            ) : (
+              <span className="footer-about-placeholder" aria-hidden="true" />
+            )}
+            <div className="footer-copyright">{copy.copyright}</div>
+            <div className="footer-mode">{copy.portfolioMode}</div>
           </div>
         </footer>
       </main>

@@ -1,0 +1,76 @@
+{
+  "schema_version": "1.0",
+  "name": "10_KlicStudio",
+  "slug": "10_klicstudio",
+  "path": "10_KlicStudio",
+  "status": "docs_only",
+  "type": "docs",
+  "lang": "other",
+  "entry": "10_KlicStudio/README.md",
+  "api_or_package": "N/A",
+  "publisher": {
+    "publisher_id": "openclaw-official",
+    "trust_mode": "publisher_signature_once",
+    "signature_scheme": "sigstore_cosign",
+    "certificate_identity": "deploy@openclaw.dev",
+    "certificate_oidc_issuer": "https://accounts.google.com"
+  },
+  "commands": {
+    "run": "N/A",
+    "test": "N/A",
+    "lint": "N/A",
+    "build": "N/A",
+    "docs": "N/A"
+  },
+  "distribution": {
+    "mode": "single",
+    "default_actions": [
+      "verify",
+      "bundle"
+    ],
+    "allow_unsigned_local": true,
+    "verify_before_deploy": true,
+    "exclude": [
+      ".git",
+      "node_modules",
+      ".venv",
+      "venv",
+      "__pycache__",
+      ".pytest_cache",
+      ".mypy_cache",
+      ".ruff_cache",
+      ".next",
+      "dist",
+      "build",
+      "target",
+      "DerivedData"
+    ],
+    "artifacts": [
+      {
+        "name": "10_klicstudio.tar.gz",
+        "url": "https://github.com/LiDeChi/wordm-personal-site/releases/download/wordm-deploy-kits-current/10_klicstudio.tar.gz",
+        "sha256": "N/A",
+        "sha256_snapshot": "c9152b907759b8a04284412591aa0110b1dcf5a72cc60180591f8d78e553a5bd"
+      }
+    ]
+  },
+  "execution": {
+    "entrypoint": "deploy.sh",
+    "non_interactive_default": true
+  },
+  "recommended_actions": {
+    "default": "install.py",
+    "trust_once": "trust_once.py",
+    "verify": "deploy.sh verify",
+    "bundle": "deploy.sh bundle",
+    "run": "deploy.sh run"
+  },
+  "click_installers": {
+    "mac": "install.command",
+    "linux": "install.sh",
+    "windows_powershell": "install.ps1",
+    "windows_cmd": "install.bat",
+    "cross_platform": "install.py",
+    "trust_once": "trust_once.command"
+  }
+}

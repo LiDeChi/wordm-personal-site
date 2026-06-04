@@ -1,0 +1,1395 @@
+{
+  "generatedAt": "2026-05-24T09:26:51.236Z",
+  "releaseRepo": "LiDeChi/wordm-personal-site",
+  "releaseTag": "wordm-deploy-kits-current",
+  "releaseBaseUrl": "https://github.com/LiDeChi/wordm-personal-site/releases/download/wordm-deploy-kits-current",
+  "count": 98,
+  "projects": [
+    {
+      "slug": "40-aidoc",
+      "manifestPath": "/deploy/projects/40-aidoc.json",
+      "artifactNames": [
+        "40_aidoc.tar.gz"
+      ]
+    },
+    {
+      "slug": "ai-progress-compare",
+      "manifestPath": "/deploy/projects/ai-progress-compare.json",
+      "artifactNames": [
+        "ai-progress-compare.tar.gz"
+      ]
+    },
+    {
+      "slug": "ai-stroke-writer",
+      "manifestPath": "/deploy/projects/ai-stroke-writer.json",
+      "artifactNames": [
+        "ai-stroke-writer.tar.gz"
+      ]
+    },
+    {
+      "slug": "baby-go",
+      "manifestPath": "/deploy/projects/baby-go.json",
+      "artifactNames": [
+        "baby-go.tar.gz"
+      ]
+    },
+    {
+      "slug": "book-ingest",
+      "manifestPath": "/deploy/projects/book-ingest.json",
+      "artifactNames": [
+        "book_ingest.tar.gz"
+      ]
+    },
+    {
+      "slug": "center-control",
+      "manifestPath": "/deploy/projects/center-control.json",
+      "artifactNames": [
+        "center-control.tar.gz"
+      ]
+    },
+    {
+      "slug": "code-agent-demo",
+      "manifestPath": "/deploy/projects/code-agent-demo.json",
+      "artifactNames": [
+        "code-agent-demo.tar.gz"
+      ]
+    },
+    {
+      "slug": "dmxapi-model-registry",
+      "manifestPath": "/deploy/projects/dmxapi-model-registry.json",
+      "artifactNames": [
+        "dmxapi-model-registry.tar.gz"
+      ]
+    },
+    {
+      "slug": "film-map",
+      "manifestPath": "/deploy/projects/film-map.json",
+      "artifactNames": [
+        "film-map.tar.gz"
+      ]
+    },
+    {
+      "slug": "focusor",
+      "manifestPath": "/deploy/projects/focusor.json",
+      "artifactNames": [
+        "focusor.tar.gz"
+      ]
+    },
+    {
+      "slug": "gridgraph",
+      "manifestPath": "/deploy/projects/gridgraph.json",
+      "artifactNames": [
+        "gridgraph.tar.gz"
+      ]
+    },
+    {
+      "slug": "gridgraph-product",
+      "manifestPath": "/deploy/projects/gridgraph-product.json",
+      "artifactNames": [
+        "gridgraph-product.tar.gz"
+      ]
+    },
+    {
+      "slug": "gridnote",
+      "manifestPath": "/deploy/projects/gridnote.json",
+      "artifactNames": [
+        "gridnote.tar.gz"
+      ]
+    },
+    {
+      "slug": "json-render",
+      "manifestPath": "/deploy/projects/json-render.json",
+      "artifactNames": [
+        "json-render.tar.gz"
+      ]
+    },
+    {
+      "slug": "my-blog",
+      "manifestPath": "/deploy/projects/my-blog.json",
+      "artifactNames": [
+        "my-blog.tar.gz"
+      ]
+    },
+    {
+      "slug": "openclaw-dashboard",
+      "manifestPath": "/deploy/projects/openclaw-dashboard.json",
+      "artifactNames": [
+        "openclaw-dashboard.tar.gz"
+      ]
+    },
+    {
+      "slug": "openclaw-learn",
+      "manifestPath": "/deploy/projects/openclaw-learn.json",
+      "artifactNames": [
+        "openclaw-learn.tar.gz"
+      ]
+    },
+    {
+      "slug": "openclaw-system",
+      "manifestPath": "/deploy/projects/openclaw-system.json",
+      "artifactNames": [
+        "openclaw-system.tar.gz"
+      ]
+    },
+    {
+      "slug": "self-museum-cc",
+      "manifestPath": "/deploy/projects/self-museum-cc.json",
+      "artifactNames": [
+        "self-museum-cc.tar.gz"
+      ]
+    },
+    {
+      "slug": "wordm",
+      "manifestPath": "/deploy/projects/wordm.json",
+      "artifactNames": [
+        "wordm.tar.gz"
+      ]
+    },
+    {
+      "slug": "01-joyplay",
+      "manifestPath": "/deploy/projects/01-joyplay.json",
+      "artifactNames": [
+        "01_joyplay.tar.gz"
+      ]
+    },
+    {
+      "slug": "10-klicstudio",
+      "manifestPath": "/deploy/projects/10-klicstudio.json",
+      "artifactNames": [
+        "10_klicstudio.tar.gz"
+      ]
+    },
+    {
+      "slug": "17-autowriting",
+      "manifestPath": "/deploy/projects/17-autowriting.json",
+      "artifactNames": [
+        "17_autowriting.tar.gz"
+      ]
+    },
+    {
+      "slug": "34-search-excel",
+      "manifestPath": "/deploy/projects/34-search-excel.json",
+      "artifactNames": [
+        "34_search_excel.tar.gz"
+      ]
+    },
+    {
+      "slug": "35-douban-notion",
+      "manifestPath": "/deploy/projects/35-douban-notion.json",
+      "artifactNames": [
+        "35_douban_notion.tar.gz"
+      ]
+    },
+    {
+      "slug": "36-x-notion",
+      "manifestPath": "/deploy/projects/36-x-notion.json",
+      "artifactNames": [
+        "36_x_notion.tar.gz"
+      ]
+    },
+    {
+      "slug": "37-resource-ob-1",
+      "manifestPath": "/deploy/projects/37-resource-ob-1.json",
+      "artifactNames": [
+        "37_resource_ob_1.tar.gz"
+      ]
+    },
+    {
+      "slug": "37-resource-ob2",
+      "manifestPath": "/deploy/projects/37-resource-ob2.json",
+      "artifactNames": [
+        "37_resource_ob2.tar.gz"
+      ]
+    },
+    {
+      "slug": "38-film-ref",
+      "manifestPath": "/deploy/projects/38-film-ref.json",
+      "artifactNames": [
+        "38_film_ref.tar.gz"
+      ]
+    },
+    {
+      "slug": "39-cc-api",
+      "manifestPath": "/deploy/projects/39-cc-api.json",
+      "artifactNames": [
+        "39_cc_api.tar.gz"
+      ]
+    },
+    {
+      "slug": "41-chattts",
+      "manifestPath": "/deploy/projects/41-chattts.json",
+      "artifactNames": [
+        "41_chattts.tar.gz"
+      ]
+    },
+    {
+      "slug": "agent-notes",
+      "manifestPath": "/deploy/projects/agent-notes.json",
+      "artifactNames": [
+        "agent-notes.tar.gz"
+      ]
+    },
+    {
+      "slug": "ai-jobs-gz-sz-2026-02-24",
+      "manifestPath": "/deploy/projects/ai-jobs-gz-sz-2026-02-24.json",
+      "artifactNames": [
+        "ai-jobs-gz-sz-2026-02-24.tar.gz"
+      ]
+    },
+    {
+      "slug": "aliyun-model-studio-docs-scraper",
+      "manifestPath": "/deploy/projects/aliyun-model-studio-docs-scraper.json",
+      "artifactNames": [
+        "aliyun-model-studio-docs-scraper.tar.gz"
+      ]
+    },
+    {
+      "slug": "apple-notes-merge",
+      "manifestPath": "/deploy/projects/apple-notes-merge.json",
+      "artifactNames": [
+        "apple-notes-merge.tar.gz"
+      ]
+    },
+    {
+      "slug": "apple-notes-webclipper",
+      "manifestPath": "/deploy/projects/apple-notes-webclipper.json",
+      "artifactNames": [
+        "apple-notes-webclipper.tar.gz"
+      ]
+    },
+    {
+      "slug": "auto-agent",
+      "manifestPath": "/deploy/projects/auto-agent.json",
+      "artifactNames": [
+        "auto-agent.tar.gz"
+      ]
+    },
+    {
+      "slug": "auto-test-1",
+      "manifestPath": "/deploy/projects/auto-test-1.json",
+      "artifactNames": [
+        "auto-test-1.tar.gz"
+      ]
+    },
+    {
+      "slug": "auto-test-2",
+      "manifestPath": "/deploy/projects/auto-test-2.json",
+      "artifactNames": [
+        "auto-test-2.tar.gz"
+      ]
+    },
+    {
+      "slug": "auto-test-3",
+      "manifestPath": "/deploy/projects/auto-test-3.json",
+      "artifactNames": [
+        "auto-test-3.tar.gz"
+      ]
+    },
+    {
+      "slug": "auto-test-codex2",
+      "manifestPath": "/deploy/projects/auto-test-codex2.json",
+      "artifactNames": [
+        "auto-test-codex2.tar.gz"
+      ]
+    },
+    {
+      "slug": "auto-test-ds",
+      "manifestPath": "/deploy/projects/auto-test-ds.json",
+      "artifactNames": [
+        "auto-test-ds.tar.gz"
+      ]
+    },
+    {
+      "slug": "auto-test-k2-5",
+      "manifestPath": "/deploy/projects/auto-test-k2-5.json",
+      "artifactNames": [
+        "auto-test-k2.5.tar.gz"
+      ]
+    },
+    {
+      "slug": "baby-name",
+      "manifestPath": "/deploy/projects/baby-name.json",
+      "artifactNames": [
+        "baby-name.tar.gz"
+      ]
+    },
+    {
+      "slug": "borris-cherny",
+      "manifestPath": "/deploy/projects/borris-cherny.json",
+      "artifactNames": [
+        "borris-cherny.tar.gz"
+      ]
+    },
+    {
+      "slug": "cleanmarkdownexporter-safariapp",
+      "manifestPath": "/deploy/projects/cleanmarkdownexporter-safariapp.json",
+      "artifactNames": [
+        "cleanmarkdownexporter-safariapp.tar.gz"
+      ]
+    },
+    {
+      "slug": "cleanmarkdownexporter-safariapp-2",
+      "manifestPath": "/deploy/projects/cleanmarkdownexporter-safariapp-2.json",
+      "artifactNames": [
+        "cleanmarkdownexporter-safariapp-2.tar.gz"
+      ]
+    },
+    {
+      "slug": "data",
+      "manifestPath": "/deploy/projects/data.json",
+      "artifactNames": [
+        "data.tar.gz"
+      ]
+    },
+    {
+      "slug": "demo-validation",
+      "manifestPath": "/deploy/projects/demo-validation.json",
+      "artifactNames": [
+        "demo-validation.tar.gz"
+      ]
+    },
+    {
+      "slug": "dynamic-delegate",
+      "manifestPath": "/deploy/projects/dynamic-delegate.json",
+      "artifactNames": [
+        "dynamic-delegate.tar.gz"
+      ]
+    },
+    {
+      "slug": "dynamic-delegate-2",
+      "manifestPath": "/deploy/projects/dynamic-delegate-2.json",
+      "artifactNames": [
+        "dynamic-delegate-2.tar.gz"
+      ]
+    },
+    {
+      "slug": "film-agent",
+      "manifestPath": "/deploy/projects/film-agent.json",
+      "artifactNames": [
+        "film_agent.tar.gz"
+      ]
+    },
+    {
+      "slug": "film-talk",
+      "manifestPath": "/deploy/projects/film-talk.json",
+      "artifactNames": [
+        "film-talk.tar.gz"
+      ]
+    },
+    {
+      "slug": "google-cloud-sdk",
+      "manifestPath": "/deploy/projects/google-cloud-sdk.json",
+      "artifactNames": [
+        "google-cloud-sdk.tar.gz"
+      ]
+    },
+    {
+      "slug": "liang-sicheng-font",
+      "manifestPath": "/deploy/projects/liang-sicheng-font.json",
+      "artifactNames": [
+        "liang-sicheng-font.tar.gz"
+      ]
+    },
+    {
+      "slug": "libs",
+      "manifestPath": "/deploy/projects/libs.json",
+      "artifactNames": [
+        "libs.tar.gz"
+      ]
+    },
+    {
+      "slug": "live-on-memory",
+      "manifestPath": "/deploy/projects/live-on-memory.json",
+      "artifactNames": [
+        "live-on-memory.tar.gz"
+      ]
+    },
+    {
+      "slug": "llm-layer",
+      "manifestPath": "/deploy/projects/llm-layer.json",
+      "artifactNames": [
+        "llm-layer.tar.gz"
+      ]
+    },
+    {
+      "slug": "manim",
+      "manifestPath": "/deploy/projects/manim.json",
+      "artifactNames": [
+        "manim.tar.gz"
+      ]
+    },
+    {
+      "slug": "manim-create-1",
+      "manifestPath": "/deploy/projects/manim-create-1.json",
+      "artifactNames": [
+        "manim-create-1.tar.gz"
+      ]
+    },
+    {
+      "slug": "manim-docs",
+      "manifestPath": "/deploy/projects/manim-docs.json",
+      "artifactNames": [
+        "manim-docs.tar.gz"
+      ]
+    },
+    {
+      "slug": "manim-generator",
+      "manifestPath": "/deploy/projects/manim-generator.json",
+      "artifactNames": [
+        "manim-generator.tar.gz"
+      ]
+    },
+    {
+      "slug": "manim-video",
+      "manifestPath": "/deploy/projects/manim-video.json",
+      "artifactNames": [
+        "manim-video.tar.gz"
+      ]
+    },
+    {
+      "slug": "maternity-poster-prompts",
+      "manifestPath": "/deploy/projects/maternity-poster-prompts.json",
+      "artifactNames": [
+        "maternity-poster-prompts.tar.gz"
+      ]
+    },
+    {
+      "slug": "math-video",
+      "manifestPath": "/deploy/projects/math-video.json",
+      "artifactNames": [
+        "math-video.tar.gz"
+      ]
+    },
+    {
+      "slug": "myblog",
+      "manifestPath": "/deploy/projects/myblog.json",
+      "artifactNames": [
+        "myblog.tar.gz"
+      ]
+    },
+    {
+      "slug": "nanoclaw",
+      "manifestPath": "/deploy/projects/nanoclaw.json",
+      "artifactNames": [
+        "nanoclaw.tar.gz"
+      ]
+    },
+    {
+      "slug": "nlm-api",
+      "manifestPath": "/deploy/projects/nlm-api.json",
+      "artifactNames": [
+        "nlm-api.tar.gz"
+      ]
+    },
+    {
+      "slug": "notionskills",
+      "manifestPath": "/deploy/projects/notionskills.json",
+      "artifactNames": [
+        "notionskills.tar.gz"
+      ]
+    },
+    {
+      "slug": "occupation",
+      "manifestPath": "/deploy/projects/occupation.json",
+      "artifactNames": [
+        "occupation.tar.gz"
+      ]
+    },
+    {
+      "slug": "open-deep-research",
+      "manifestPath": "/deploy/projects/open-deep-research.json",
+      "artifactNames": [
+        "open_deep_research.tar.gz"
+      ]
+    },
+    {
+      "slug": "openbee",
+      "manifestPath": "/deploy/projects/openbee.json",
+      "artifactNames": [
+        "openbee.tar.gz"
+      ]
+    },
+    {
+      "slug": "openclaw-self-evol",
+      "manifestPath": "/deploy/projects/openclaw-self-evol.json",
+      "artifactNames": [
+        "openclaw_self_evol.tar.gz"
+      ]
+    },
+    {
+      "slug": "openclaw-ops",
+      "manifestPath": "/deploy/projects/openclaw-ops.json",
+      "artifactNames": [
+        "openclaw-ops.tar.gz"
+      ]
+    },
+    {
+      "slug": "output",
+      "manifestPath": "/deploy/projects/output.json",
+      "artifactNames": [
+        "output.tar.gz"
+      ]
+    },
+    {
+      "slug": "oversea-news",
+      "manifestPath": "/deploy/projects/oversea-news.json",
+      "artifactNames": [
+        "oversea_news.tar.gz"
+      ]
+    },
+    {
+      "slug": "page-glance-extension",
+      "manifestPath": "/deploy/projects/page-glance-extension.json",
+      "artifactNames": [
+        "page-glance-extension.tar.gz"
+      ]
+    },
+    {
+      "slug": "pdfmathtranslate",
+      "manifestPath": "/deploy/projects/pdfmathtranslate.json",
+      "artifactNames": [
+        "pdfmathtranslate.tar.gz"
+      ]
+    },
+    {
+      "slug": "personalinflationbasket",
+      "manifestPath": "/deploy/projects/personalinflationbasket.json",
+      "artifactNames": [
+        "personalinflationbasket.tar.gz"
+      ]
+    },
+    {
+      "slug": "proactive-assistant",
+      "manifestPath": "/deploy/projects/proactive-assistant.json",
+      "artifactNames": [
+        "proactive-assistant.tar.gz"
+      ]
+    },
+    {
+      "slug": "reddit-bot",
+      "manifestPath": "/deploy/projects/reddit-bot.json",
+      "artifactNames": [
+        "reddit-bot.tar.gz"
+      ]
+    },
+    {
+      "slug": "references",
+      "manifestPath": "/deploy/projects/references.json",
+      "artifactNames": [
+        "references.tar.gz"
+      ]
+    },
+    {
+      "slug": "release",
+      "manifestPath": "/deploy/projects/release.json",
+      "artifactNames": [
+        "release.tar.gz"
+      ]
+    },
+    {
+      "slug": "reloo",
+      "manifestPath": "/deploy/projects/reloo.json",
+      "artifactNames": [
+        "reloo.tar.gz"
+      ]
+    },
+    {
+      "slug": "safari-clean-markdown-exporter",
+      "manifestPath": "/deploy/projects/safari-clean-markdown-exporter.json",
+      "artifactNames": [
+        "safari-clean-markdown-exporter.tar.gz"
+      ]
+    },
+    {
+      "slug": "self-museum",
+      "manifestPath": "/deploy/projects/self-museum.json",
+      "artifactNames": [
+        "self-museum.tar.gz"
+      ]
+    },
+    {
+      "slug": "skills",
+      "manifestPath": "/deploy/projects/skills.json",
+      "artifactNames": [
+        "skills.tar.gz"
+      ]
+    },
+    {
+      "slug": "social-robot",
+      "manifestPath": "/deploy/projects/social-robot.json",
+      "artifactNames": [
+        "social_robot.tar.gz"
+      ]
+    },
+    {
+      "slug": "stacks",
+      "manifestPath": "/deploy/projects/stacks.json",
+      "artifactNames": [
+        "stacks.tar.gz"
+      ]
+    },
+    {
+      "slug": "supportdualpart",
+      "manifestPath": "/deploy/projects/supportdualpart.json",
+      "artifactNames": [
+        "supportdualpart.tar.gz"
+      ]
+    },
+    {
+      "slug": "tgbooks",
+      "manifestPath": "/deploy/projects/tgbooks.json",
+      "artifactNames": [
+        "tgbooks.tar.gz"
+      ]
+    },
+    {
+      "slug": "tmp",
+      "manifestPath": "/deploy/projects/tmp.json",
+      "artifactNames": [
+        "tmp.tar.gz"
+      ]
+    },
+    {
+      "slug": "vercel-ui",
+      "manifestPath": "/deploy/projects/vercel-ui.json",
+      "artifactNames": [
+        "vercel-ui.tar.gz"
+      ]
+    },
+    {
+      "slug": "video-api-doc",
+      "manifestPath": "/deploy/projects/video-api-doc.json",
+      "artifactNames": [
+        "video_api_doc.tar.gz"
+      ]
+    },
+    {
+      "slug": "vs",
+      "manifestPath": "/deploy/projects/vs.json",
+      "artifactNames": [
+        "vs.tar.gz"
+      ]
+    },
+    {
+      "slug": "vs2ios",
+      "manifestPath": "/deploy/projects/vs2ios.json",
+      "artifactNames": [
+        "vs2ios.tar.gz"
+      ]
+    },
+    {
+      "slug": "web-monitor",
+      "manifestPath": "/deploy/projects/web-monitor.json",
+      "artifactNames": [
+        "web-monitor.tar.gz"
+      ]
+    },
+    {
+      "slug": "wordm-personal-home",
+      "manifestPath": "/deploy/projects/wordm-personal-home.json",
+      "artifactNames": [
+        "wordm-personal-home.tar.gz"
+      ]
+    }
+  ],
+  "missing": [
+    {
+      "slug": "40-aidoc",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "40_aidoc.tar.gz"
+      ]
+    },
+    {
+      "slug": "ai-progress-compare",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "ai-progress-compare.tar.gz"
+      ]
+    },
+    {
+      "slug": "ai-stroke-writer",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "ai-stroke-writer.tar.gz"
+      ]
+    },
+    {
+      "slug": "baby-go",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "baby-go.tar.gz"
+      ]
+    },
+    {
+      "slug": "book-ingest",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "book_ingest.tar.gz"
+      ]
+    },
+    {
+      "slug": "center-control",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "center-control.tar.gz"
+      ]
+    },
+    {
+      "slug": "claude-agent-test",
+      "reason": "manifest_missing"
+    },
+    {
+      "slug": "code-agent-demo",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "code-agent-demo.tar.gz"
+      ]
+    },
+    {
+      "slug": "dmxapi-model-registry",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "dmxapi-model-registry.tar.gz"
+      ]
+    },
+    {
+      "slug": "film-map",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "film-map.tar.gz"
+      ]
+    },
+    {
+      "slug": "focusor",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "focusor.tar.gz"
+      ]
+    },
+    {
+      "slug": "gridgraph",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "gridgraph.tar.gz"
+      ]
+    },
+    {
+      "slug": "gridgraph-product",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "gridgraph-product.tar.gz"
+      ]
+    },
+    {
+      "slug": "gridnote",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "gridnote.tar.gz"
+      ]
+    },
+    {
+      "slug": "json-render",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "json-render.tar.gz"
+      ]
+    },
+    {
+      "slug": "my-blog",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "my-blog.tar.gz"
+      ]
+    },
+    {
+      "slug": "openclaw-dashboard",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "openclaw-dashboard.tar.gz"
+      ]
+    },
+    {
+      "slug": "openclaw-learn",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "openclaw-learn.tar.gz"
+      ]
+    },
+    {
+      "slug": "openclaw-system",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "openclaw-system.tar.gz"
+      ]
+    },
+    {
+      "slug": "self-museum-cc",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "self-museum-cc.tar.gz"
+      ]
+    },
+    {
+      "slug": "wordm",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "wordm.tar.gz"
+      ]
+    },
+    {
+      "slug": "01-joyplay",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "01_joyplay.tar.gz"
+      ]
+    },
+    {
+      "slug": "10-klicstudio",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "10_klicstudio.tar.gz"
+      ]
+    },
+    {
+      "slug": "17-autowriting",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "17_autowriting.tar.gz"
+      ]
+    },
+    {
+      "slug": "34-search-excel",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "34_search_excel.tar.gz"
+      ]
+    },
+    {
+      "slug": "35-douban-notion",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "35_douban_notion.tar.gz"
+      ]
+    },
+    {
+      "slug": "36-x-notion",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "36_x_notion.tar.gz"
+      ]
+    },
+    {
+      "slug": "37-resource-ob-1",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "37_resource_ob_1.tar.gz"
+      ]
+    },
+    {
+      "slug": "37-resource-ob2",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "37_resource_ob2.tar.gz"
+      ]
+    },
+    {
+      "slug": "38-film-ref",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "38_film_ref.tar.gz"
+      ]
+    },
+    {
+      "slug": "39-cc-api",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "39_cc_api.tar.gz"
+      ]
+    },
+    {
+      "slug": "41-chattts",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "41_chattts.tar.gz"
+      ]
+    },
+    {
+      "slug": "agent-notes",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "agent-notes.tar.gz"
+      ]
+    },
+    {
+      "slug": "ai-jobs-gz-sz-2026-02-24",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "ai-jobs-gz-sz-2026-02-24.tar.gz"
+      ]
+    },
+    {
+      "slug": "ainote",
+      "reason": "manifest_missing"
+    },
+    {
+      "slug": "aliyun-model-studio-docs-scraper",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "aliyun-model-studio-docs-scraper.tar.gz"
+      ]
+    },
+    {
+      "slug": "apple-notes-merge",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "apple-notes-merge.tar.gz"
+      ]
+    },
+    {
+      "slug": "apple-notes-webclipper",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "apple-notes-webclipper.tar.gz"
+      ]
+    },
+    {
+      "slug": "auto-agent",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "auto-agent.tar.gz"
+      ]
+    },
+    {
+      "slug": "auto-test-1",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "auto-test-1.tar.gz"
+      ]
+    },
+    {
+      "slug": "auto-test-2",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "auto-test-2.tar.gz"
+      ]
+    },
+    {
+      "slug": "auto-test-3",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "auto-test-3.tar.gz"
+      ]
+    },
+    {
+      "slug": "auto-test-codex2",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "auto-test-codex2.tar.gz"
+      ]
+    },
+    {
+      "slug": "auto-test-ds",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "auto-test-ds.tar.gz"
+      ]
+    },
+    {
+      "slug": "auto-test-k2-5",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "auto-test-k2.5.tar.gz"
+      ]
+    },
+    {
+      "slug": "baby-name",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "baby-name.tar.gz"
+      ]
+    },
+    {
+      "slug": "borris-cherny",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "borris-cherny.tar.gz"
+      ]
+    },
+    {
+      "slug": "cleanmarkdownexporter-safariapp",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "cleanmarkdownexporter-safariapp.tar.gz"
+      ]
+    },
+    {
+      "slug": "cleanmarkdownexporter-safariapp-2",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "cleanmarkdownexporter-safariapp-2.tar.gz"
+      ]
+    },
+    {
+      "slug": "data",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "data.tar.gz"
+      ]
+    },
+    {
+      "slug": "demo-validation",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "demo-validation.tar.gz"
+      ]
+    },
+    {
+      "slug": "dynamic-delegate",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "dynamic-delegate.tar.gz"
+      ]
+    },
+    {
+      "slug": "dynamic-delegate-2",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "dynamic-delegate-2.tar.gz"
+      ]
+    },
+    {
+      "slug": "film-agent",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "film_agent.tar.gz"
+      ]
+    },
+    {
+      "slug": "film-talk",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "film-talk.tar.gz"
+      ]
+    },
+    {
+      "slug": "google-cloud-sdk",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "google-cloud-sdk.tar.gz"
+      ]
+    },
+    {
+      "slug": "liang-sicheng-font",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "liang-sicheng-font.tar.gz"
+      ]
+    },
+    {
+      "slug": "libs",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "libs.tar.gz"
+      ]
+    },
+    {
+      "slug": "live-on-memory",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "live-on-memory.tar.gz"
+      ]
+    },
+    {
+      "slug": "llm-layer",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "llm-layer.tar.gz"
+      ]
+    },
+    {
+      "slug": "manim",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "manim.tar.gz"
+      ]
+    },
+    {
+      "slug": "manim-create-1",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "manim-create-1.tar.gz"
+      ]
+    },
+    {
+      "slug": "manim-docs",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "manim-docs.tar.gz"
+      ]
+    },
+    {
+      "slug": "manim-generator",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "manim-generator.tar.gz"
+      ]
+    },
+    {
+      "slug": "manim-video",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "manim-video.tar.gz"
+      ]
+    },
+    {
+      "slug": "maternity-poster-prompts",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "maternity-poster-prompts.tar.gz"
+      ]
+    },
+    {
+      "slug": "math-video",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "math-video.tar.gz"
+      ]
+    },
+    {
+      "slug": "myblog",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "myblog.tar.gz"
+      ]
+    },
+    {
+      "slug": "nanoclaw",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "nanoclaw.tar.gz"
+      ]
+    },
+    {
+      "slug": "nlm-api",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "nlm-api.tar.gz"
+      ]
+    },
+    {
+      "slug": "notionskills",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "notionskills.tar.gz"
+      ]
+    },
+    {
+      "slug": "occupation",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "occupation.tar.gz"
+      ]
+    },
+    {
+      "slug": "open-deep-research",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "open_deep_research.tar.gz"
+      ]
+    },
+    {
+      "slug": "openbee",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "openbee.tar.gz"
+      ]
+    },
+    {
+      "slug": "openclaw-self-evol",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "openclaw_self_evol.tar.gz"
+      ]
+    },
+    {
+      "slug": "openclaw-ops",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "openclaw-ops.tar.gz"
+      ]
+    },
+    {
+      "slug": "output",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "output.tar.gz"
+      ]
+    },
+    {
+      "slug": "oversea-news",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "oversea_news.tar.gz"
+      ]
+    },
+    {
+      "slug": "page-glance-extension",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "page-glance-extension.tar.gz"
+      ]
+    },
+    {
+      "slug": "pdfmathtranslate",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "pdfmathtranslate.tar.gz"
+      ]
+    },
+    {
+      "slug": "personalinflationbasket",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "personalinflationbasket.tar.gz"
+      ]
+    },
+    {
+      "slug": "proactive-assistant",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "proactive-assistant.tar.gz"
+      ]
+    },
+    {
+      "slug": "reddit-bot",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "reddit-bot.tar.gz"
+      ]
+    },
+    {
+      "slug": "references",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "references.tar.gz"
+      ]
+    },
+    {
+      "slug": "release",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "release.tar.gz"
+      ]
+    },
+    {
+      "slug": "reloo",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "reloo.tar.gz"
+      ]
+    },
+    {
+      "slug": "safari-clean-markdown-exporter",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "safari-clean-markdown-exporter.tar.gz"
+      ]
+    },
+    {
+      "slug": "self-museum",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "self-museum.tar.gz"
+      ]
+    },
+    {
+      "slug": "skills",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "skills.tar.gz"
+      ]
+    },
+    {
+      "slug": "social-robot",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "social_robot.tar.gz"
+      ]
+    },
+    {
+      "slug": "stacks",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "stacks.tar.gz"
+      ]
+    },
+    {
+      "slug": "supportdualpart",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "supportdualpart.tar.gz"
+      ]
+    },
+    {
+      "slug": "tgbooks",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "tgbooks.tar.gz"
+      ]
+    },
+    {
+      "slug": "tmp",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "tmp.tar.gz"
+      ]
+    },
+    {
+      "slug": "vercel-ui",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "vercel-ui.tar.gz"
+      ]
+    },
+    {
+      "slug": "video-api-doc",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "video_api_doc.tar.gz"
+      ]
+    },
+    {
+      "slug": "vs",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "vs.tar.gz"
+      ]
+    },
+    {
+      "slug": "vs2ios",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "vs2ios.tar.gz"
+      ]
+    },
+    {
+      "slug": "web-monitor",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "web-monitor.tar.gz"
+      ]
+    },
+    {
+      "slug": "wordm-personal-home",
+      "reason": "artifact_missing_locally",
+      "artifactNames": [
+        "wordm-personal-home.tar.gz"
+      ]
+    },
+    {
+      "slug": "eye-translation",
+      "reason": "manifest_missing"
+    }
+  ]
+}

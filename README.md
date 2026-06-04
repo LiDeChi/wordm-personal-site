@@ -216,7 +216,7 @@ npm run deploy:pages
 - Pages 分支优先读取 `CF_PAGES_BRANCH`；未设置时默认使用当前 git 分支
 - 当分支为 `main` 时会更新生产域名 `wordm.us`；其他分支会生成对应的 Pages 预览部署
 
-3. 部署子域名 Worker（自动绑定简历子域名 + 项目子域名）：
+3. 部署子域名 Worker（保留当前已绑定子域名，可按需追加新子域名）：
 
 ```bash
 npm run deploy:subdomains
@@ -225,13 +225,90 @@ npm run deploy:subdomains
 脚本：`scripts/deploy-subdomain-worker.sh` + `workers/subdomain-proxy.ts`
 
 - Worker 名称：`wordm-project-subdomains`
-- 自动从 `src/data/projects.snapshot.json` 读取全部 `p-*` 子域并绑定，同时包含：
-  - `resume.wordm.us`
-  - `cv.wordm.us`
-  - `admin.wordm.us`
+- 默认从 Cloudflare 读取当前已绑定的 Workers custom domains，并原样保留这些域名。
+- 新增域名时使用 `DEPLOY_SUBDOMAIN_EXTRA_DOMAINS`，例如：
+
+```bash
+DEPLOY_SUBDOMAIN_EXTRA_DOMAINS=p-new-project.wordm.us npm run deploy:subdomains
+```
+
+- 如需零新增费用地逐步缩减现有 custom domains，可使用保留模式：
+
+```bash
+DEPLOY_SUBDOMAIN_RETENTION_MODE=direct npm run deploy:subdomains
+DEPLOY_SUBDOMAIN_RETENTION_MODE=priority npm run deploy:subdomains
+```
+
+- `direct`: 只保留固定入口 + 当前已有 `productionUrl` 的直达体验子域
+- `priority`: 只保留固定入口 + `activityScore >= 75` 或带 `ready` 标签的高优先级项目子域
+- 默认值仍是 `current`，表示沿用 Cloudflare 当前已绑定集合，不会主动缩减
+- 在真正部署前，可先运行：
+
+```bash
+npm run list:subdomain-retention
+```
+
+- 它会输出两套建议保留名单，方便你先看删减规模。
+
+- 不要默认从 `src/data/projects.snapshot.json` 全量绑定域名；该快照是前端项目目录数据源，不是 Cloudflare custom-domain 清单。
+- 如确实需要重建全部快照子域，可显式设置 `DEPLOY_SUBDOMAIN_FROM_SNAPSHOT=1`，但这可能超过 Cloudflare 每个 zone 100 个 Workers custom domains 的限制。
 - Worker 访问规则：
-  - 固定允许 `resume` / `cv`
+  - 固定允许 `resume` / `cv` / `admin`
   - 所有 `p-` 前缀子域按统一代理规则转发到根域并保留语言参数
+
+4. 审计当前自定义域名占用：
+
+```bash
+npm run audit:subdomains
+```
+
+- 直接读取 Cloudflare 当前 `wordm-project-subdomains` 已绑定的 Workers custom domains。
+- 输出会按以下几组拆开：
+  - `fixedInfraDomains`: 固定入口，例如 `admin` / `resume` / `cv`
+  - `liveWithDirectExperience`: 当前已绑定且项目本身已有 `productionUrl` 的子域
+  - `livePortfolioShellOnly`: 当前已绑定，但只是作品集入口壳的子域
+  - `snapshotOnlyDomains`: 快照里存在、但当前并未实际绑定的候选域名
+- 还会额外输出 `tlsAudit`：
+  - `sampledSnapshotOnlyDomains`: 本次抽样检查的未绑定候选子域
+  - `customDomainsCanShrinkNow`: 只有当这些未绑定候选子域也都能完成 TLS 握手时，才说明可以开始删除现有 custom domains
+  - `blocker`: 若这里提示 TLS 在 Worker 执行前就失败，说明 wildcard route 虽然存在，但还不能替代当前 custom domains
+- 这一步适合先看清现网占用，再决定是否删减旧绑定。
+
+附：检查某个子域是否已经具备 HTTPS 握手与证书覆盖：
+
+```bash
+npm run check:subdomain:tls -- p-gridnote.wordm.us p-10-klicstudio.wordm.us
+```
+
+- 若返回 `ok: true` 且 SAN 中覆盖该 hostname，说明这个子域在 TLS 层已经可用。
+- 若在这里就失败，说明请求还到不了 Worker，不能只靠 wildcard route 替代现有 custom domain 绑定。
+
+5. 用 wildcard route 部署子域名 Worker（节省 custom-domain 名额）：
+
+```bash
+npm run deploy:subdomains:routes
+```
+
+- 脚本：`scripts/deploy-subdomain-worker-routes.sh`
+- 默认 route pattern：`*.wordm.us/*`
+- 可通过 `DEPLOY_SUBDOMAIN_ROUTE_PATTERN` 覆盖，例如：
+
+```bash
+DEPLOY_SUBDOMAIN_ROUTE_PATTERN='*.wordm.us/*' npm run deploy:subdomains:routes
+```
+
+- 这条路径的目标是让绝大多数 `p-*` 子域走一条 wildcard route，而不是一条子域占一个 Workers custom domain。
+- 前提条件：
+  - `wordm.us` 这个 zone 已经有可覆盖子域的 DNS 配置（通常是 wildcard record 或等价接入方式）
+  - `*.wordm.us` 还需要具备可正常握手的证书覆盖；如果某个子域在 TLS 握手前就失败，Worker route 不会有机会接管请求
+  - 你确认不会拦截掉不该交给这个 Worker 的其他独立子域
+  - 对 `wordm.us` 这种 full setup zone，Cloudflare `Universal SSL` 只自动覆盖根域和一级子域；若要让任意新增子域自动拿到证书，需要购买 `Advanced Certificate Manager`，再启用 `Total TLS`
+- 迁移建议：
+  - 先跑 `npm run audit:subdomains`
+  - 再部署 wildcard route
+  - 先挑一个“当前未绑定 custom domain、但已被 wildcard DNS 解析”的子域做实测
+  - 只有在该子域也能完整通过 HTTPS 握手并返回 Worker 内容后，才适合逐步删除旧的 project-level custom domains
+  - 若 TLS 在 Worker 执行前失败，就说明还不能仅靠 route 替代现有 project-level custom domains
 
 ## SEO 与兼容跳转
 

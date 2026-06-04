@@ -1,0 +1,76 @@
+{
+  "schema_version": "1.0",
+  "name": "aliyun-model-studio-docs-scraper",
+  "slug": "aliyun-model-studio-docs-scraper",
+  "path": "aliyun-model-studio-docs-scraper",
+  "status": "partial",
+  "type": "app",
+  "lang": "python",
+  "entry": "aliyun-model-studio-docs-scraper/README.md",
+  "api_or_package": "N/A",
+  "publisher": {
+    "publisher_id": "openclaw-official",
+    "trust_mode": "publisher_signature_once",
+    "signature_scheme": "sigstore_cosign",
+    "certificate_identity": "deploy@openclaw.dev",
+    "certificate_oidc_issuer": "https://accounts.google.com"
+  },
+  "commands": {
+    "run": "N/A",
+    "test": "N/A",
+    "lint": "N/A",
+    "build": "N/A",
+    "docs": "N/A"
+  },
+  "distribution": {
+    "mode": "single",
+    "default_actions": [
+      "verify",
+      "bundle"
+    ],
+    "allow_unsigned_local": true,
+    "verify_before_deploy": true,
+    "exclude": [
+      ".git",
+      "node_modules",
+      ".venv",
+      "venv",
+      "__pycache__",
+      ".pytest_cache",
+      ".mypy_cache",
+      ".ruff_cache",
+      ".next",
+      "dist",
+      "build",
+      "target",
+      "DerivedData"
+    ],
+    "artifacts": [
+      {
+        "name": "aliyun-model-studio-docs-scraper.tar.gz",
+        "url": "https://github.com/LiDeChi/wordm-personal-site/releases/download/wordm-deploy-kits-current/aliyun-model-studio-docs-scraper.tar.gz",
+        "sha256": "N/A",
+        "sha256_snapshot": "2c9fcf7364328fc96b9ef6cd788eaa57855c3cb41116942fc51d62b1a78cbbf5"
+      }
+    ]
+  },
+  "execution": {
+    "entrypoint": "deploy.sh",
+    "non_interactive_default": true
+  },
+  "recommended_actions": {
+    "default": "install.py",
+    "trust_once": "trust_once.py",
+    "verify": "deploy.sh verify",
+    "bundle": "deploy.sh bundle",
+    "run": "deploy.sh run"
+  },
+  "click_installers": {
+    "mac": "install.command",
+    "linux": "install.sh",
+    "windows_powershell": "install.ps1",
+    "windows_cmd": "install.bat",
+    "cross_platform": "install.py",
+    "trust_once": "trust_once.command"
+  }
+}

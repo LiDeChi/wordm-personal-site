@@ -1,0 +1,76 @@
+{
+  "schema_version": "1.0",
+  "name": "self-museum-cc",
+  "slug": "self-museum-cc",
+  "path": "self-museum-cc",
+  "status": "ready",
+  "type": "app",
+  "lang": "js",
+  "entry": "3d-museum/README.md",
+  "api_or_package": "3d-museum",
+  "publisher": {
+    "publisher_id": "openclaw-official",
+    "trust_mode": "publisher_signature_once",
+    "signature_scheme": "sigstore_cosign",
+    "certificate_identity": "deploy@openclaw.dev",
+    "certificate_oidc_issuer": "https://accounts.google.com"
+  },
+  "commands": {
+    "run": "cd 3d-museum && npm run dev",
+    "test": "N/A",
+    "lint": "N/A",
+    "build": "cd 3d-museum && npm run build",
+    "docs": "N/A"
+  },
+  "distribution": {
+    "mode": "single",
+    "default_actions": [
+      "verify",
+      "bundle"
+    ],
+    "allow_unsigned_local": true,
+    "verify_before_deploy": true,
+    "exclude": [
+      ".git",
+      "node_modules",
+      ".venv",
+      "venv",
+      "__pycache__",
+      ".pytest_cache",
+      ".mypy_cache",
+      ".ruff_cache",
+      ".next",
+      "dist",
+      "build",
+      "target",
+      "DerivedData"
+    ],
+    "artifacts": [
+      {
+        "name": "self-museum-cc.tar.gz",
+        "url": "https://github.com/LiDeChi/wordm-personal-site/releases/download/wordm-deploy-kits-current/self-museum-cc.tar.gz",
+        "sha256": "N/A",
+        "sha256_snapshot": "12df5b16cc31a3418b820a9eadc13e67409fc7179402c921e6be806056361641"
+      }
+    ]
+  },
+  "execution": {
+    "entrypoint": "deploy.sh",
+    "non_interactive_default": true
+  },
+  "recommended_actions": {
+    "default": "install.py",
+    "trust_once": "trust_once.py",
+    "verify": "deploy.sh verify",
+    "bundle": "deploy.sh bundle",
+    "run": "deploy.sh run"
+  },
+  "click_installers": {
+    "mac": "install.command",
+    "linux": "install.sh",
+    "windows_powershell": "install.ps1",
+    "windows_cmd": "install.bat",
+    "cross_platform": "install.py",
+    "trust_once": "trust_once.command"
+  }
+}

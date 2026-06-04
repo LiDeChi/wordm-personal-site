@@ -1,0 +1,76 @@
+{
+  "schema_version": "1.0",
+  "name": "auto-agent",
+  "slug": "auto-agent",
+  "path": "auto-agent",
+  "status": "partial",
+  "type": "app",
+  "lang": "other",
+  "entry": "continuous-project-agent/README.md",
+  "api_or_package": "continuous-project-agent",
+  "publisher": {
+    "publisher_id": "openclaw-official",
+    "trust_mode": "publisher_signature_once",
+    "signature_scheme": "sigstore_cosign",
+    "certificate_identity": "deploy@openclaw.dev",
+    "certificate_oidc_issuer": "https://accounts.google.com"
+  },
+  "commands": {
+    "run": "N/A",
+    "test": "cd continuous-project-agent && make test",
+    "lint": "cd continuous-project-agent && make lint",
+    "build": "N/A",
+    "docs": "cd continuous-project-agent && make help"
+  },
+  "distribution": {
+    "mode": "single",
+    "default_actions": [
+      "verify",
+      "bundle"
+    ],
+    "allow_unsigned_local": true,
+    "verify_before_deploy": true,
+    "exclude": [
+      ".git",
+      "node_modules",
+      ".venv",
+      "venv",
+      "__pycache__",
+      ".pytest_cache",
+      ".mypy_cache",
+      ".ruff_cache",
+      ".next",
+      "dist",
+      "build",
+      "target",
+      "DerivedData"
+    ],
+    "artifacts": [
+      {
+        "name": "auto-agent.tar.gz",
+        "url": "https://github.com/LiDeChi/wordm-personal-site/releases/download/wordm-deploy-kits-current/auto-agent.tar.gz",
+        "sha256": "N/A",
+        "sha256_snapshot": "b4a5e47ff433bc624cf1ec07f47cc911289e157f3ea976dbc6e07fe24492e726"
+      }
+    ]
+  },
+  "execution": {
+    "entrypoint": "deploy.sh",
+    "non_interactive_default": true
+  },
+  "recommended_actions": {
+    "default": "install.py",
+    "trust_once": "trust_once.py",
+    "verify": "deploy.sh verify",
+    "bundle": "deploy.sh bundle",
+    "run": "deploy.sh run"
+  },
+  "click_installers": {
+    "mac": "install.command",
+    "linux": "install.sh",
+    "windows_powershell": "install.ps1",
+    "windows_cmd": "install.bat",
+    "cross_platform": "install.py",
+    "trust_once": "trust_once.command"
+  }
+}

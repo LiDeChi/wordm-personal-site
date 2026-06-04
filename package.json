@@ -5,13 +5,20 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "node scripts/export-deploy-kits.mjs",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
+    "import:frome": "node scripts/import-frome-tweets.mjs",
     "sync:projects": "node scripts/sync-center-control.mjs",
+    "sync:deploy-kits": "node scripts/export-deploy-kits.mjs",
+    "list:subdomain-retention": "node scripts/resolve-domain-retention-set.mjs",
     "roles": "node scripts/manage-auth-roles.mjs",
+    "check:subdomain:tls": "node scripts/check-subdomain-tls.mjs",
     "deploy:pages": "./scripts/deploy-pages.sh",
-    "deploy:subdomains": "./scripts/deploy-subdomain-worker.sh"
+    "deploy:subdomains": "./scripts/deploy-subdomain-worker.sh",
+    "deploy:subdomains:routes": "./scripts/deploy-subdomain-worker-routes.sh",
+    "audit:subdomains": "node scripts/audit-subdomain-worker-domains.mjs"
   },
   "dependencies": {
     "@remotion/player": "^4.0.436",

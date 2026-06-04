@@ -19,6 +19,7 @@ type ProjectPresentationOverride = {
   thumbnailUrl?: string
   reelImageUrl?: string
   detailPreviewUrls?: string[]
+  flowPreviewUrls?: string[]
   accent: string
 }
 
@@ -39,6 +40,7 @@ export type ProjectPresentation = {
   thumbnailUrl: string | null
   reelImageUrl: string | null
   detailPreviewUrls: string[]
+  flowPreviewUrls: string[]
   accent: string
 }
 
@@ -46,6 +48,7 @@ export const FEATURED_PROJECT_SLUGS = [
   'book-ingest',
   'focusor',
   'gridnote',
+  'eye-translation',
   'ai-stroke-writer',
   'apple-notes-webclipper',
 ] as const
@@ -205,6 +208,59 @@ const PROJECT_PRESENTATION_OVERRIDES: Record<string, ProjectPresentationOverride
     reelImageUrl: '/orchestration-gallery/center-control.png',
     accent: '#3b6e79',
   },
+  'eye-translation': {
+    name: {
+      zh: 'Eye Translation',
+      en: 'Eye Translation',
+    },
+    tagline: {
+      zh: '文章管理与眼动行内翻译放在同一块阅读界面里。',
+      en: 'Article management and gaze-based inline translation share one reading surface.',
+    },
+    summary: {
+      zh: '先管理英文文章，再直接切进阅读器里做逐词翻译和视线辅助，不用在上传、整理、阅读之间来回跳。',
+      en: 'Manage source articles first, then open them directly in a gaze-assisted reader for inline translation without bouncing between separate upload and reading tools.',
+    },
+    reelKicker: {
+      zh: '阅读界面',
+      en: 'Reading surface',
+    },
+    reelLine: {
+      zh: '建文章、进阅读、看行内翻译',
+      en: 'Create article, enter reader, inspect inline translation',
+    },
+    clipSteps: [
+      {
+        label: {
+          zh: '管理文章',
+          en: 'Manage articles',
+        },
+        x: 22,
+        y: 28,
+      },
+      {
+        label: {
+          zh: '进入阅读器',
+          en: 'Enter reader',
+        },
+        x: 52,
+        y: 44,
+      },
+      {
+        label: {
+          zh: '逐词理解',
+          en: 'Read word by word',
+        },
+        x: 80,
+        y: 68,
+      },
+    ],
+    thumbnailUrl: '/showcase/eye-translation-card.svg',
+    reelImageUrl: '/showcase/eye-translation-card.svg',
+    detailPreviewUrls: ['/showcase/eye-translation-card.svg'],
+    flowPreviewUrls: ['/showcase/eye-translation-card.svg'],
+    accent: '#2d6cdf',
+  },
   focusor: {
     name: {
       zh: 'Focusor',
@@ -336,35 +392,40 @@ const PROJECT_PRESENTATION_OVERRIDES: Record<string, ProjectPresentationOverride
           zh: '输入文本 / LaTeX',
           en: 'Input text / LaTeX',
         },
-        x: 18,
-        y: 20,
+        x: 22,
+        y: 18,
       },
       {
         label: {
           zh: '生成笔画',
           en: 'Generate strokes',
         },
-        x: 58,
-        y: 36,
+        x: 44,
+        y: 24,
       },
       {
         label: {
           zh: '预览书写',
           en: 'Preview writing',
         },
-        x: 78,
-        y: 72,
+        x: 28,
+        y: 18,
       },
     ],
     thumbnailUrl: '/showcase/ai-stroke-prism-shot.png',
     reelImageUrl: '/showcase/ai-stroke-prism-shot.png',
     detailPreviewUrls: ['/showcase/ai-stroke-prism-shot.png', '/showcase/ai-stroke-runtime-shot.png'],
+    flowPreviewUrls: [
+      '/showcase/ai-stroke-runtime-shot.png',
+      '/showcase/ai-stroke-runtime-shot.png',
+      '/showcase/ai-stroke-prism-shot.png',
+    ],
     accent: '#5b7092',
   },
   'apple-notes-webclipper': {
     name: {
-      zh: 'iNotes',
-      en: 'iNotes',
+      zh: 'iNote',
+      en: 'iNote',
     },
     tagline: {
       zh: '把备忘录提升为项目管理器',
@@ -458,6 +519,11 @@ export function getProjectPresentation(project: PortfolioProject, lang: Lang): P
     thumbnailUrl: override?.thumbnailUrl ?? project.thumbnailUrl,
     reelImageUrl: override?.reelImageUrl ?? override?.thumbnailUrl ?? project.thumbnailUrl,
     detailPreviewUrls: override?.detailPreviewUrls ?? [override?.thumbnailUrl ?? project.thumbnailUrl].filter((item): item is string => Boolean(item)),
+    flowPreviewUrls:
+      override?.flowPreviewUrls?.filter((item): item is string => Boolean(item)) ??
+      [override?.reelImageUrl ?? override?.thumbnailUrl ?? project.thumbnailUrl, ...(override?.detailPreviewUrls ?? [])].filter(
+        (item, index, collection): item is string => Boolean(item) && collection.indexOf(item) === index,
+      ),
     accent: override?.accent ?? '#4d4d4d',
   }
 }

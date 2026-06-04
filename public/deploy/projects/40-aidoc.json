@@ -1,0 +1,76 @@
+{
+  "schema_version": "1.0",
+  "name": "40_aidoc",
+  "slug": "40_aidoc",
+  "path": "40_aidoc",
+  "status": "ready",
+  "type": "app",
+  "lang": "js",
+  "entry": "aidoc/README.md",
+  "api_or_package": "aidoc",
+  "publisher": {
+    "publisher_id": "openclaw-official",
+    "trust_mode": "publisher_signature_once",
+    "signature_scheme": "sigstore_cosign",
+    "certificate_identity": "deploy@openclaw.dev",
+    "certificate_oidc_issuer": "https://accounts.google.com"
+  },
+  "commands": {
+    "run": "cd aidoc && npm run dev",
+    "test": "N/A",
+    "lint": "cd aidoc && npm run lint",
+    "build": "cd aidoc && npm run build",
+    "docs": "N/A"
+  },
+  "distribution": {
+    "mode": "single",
+    "default_actions": [
+      "verify",
+      "bundle"
+    ],
+    "allow_unsigned_local": true,
+    "verify_before_deploy": true,
+    "exclude": [
+      ".git",
+      "node_modules",
+      ".venv",
+      "venv",
+      "__pycache__",
+      ".pytest_cache",
+      ".mypy_cache",
+      ".ruff_cache",
+      ".next",
+      "dist",
+      "build",
+      "target",
+      "DerivedData"
+    ],
+    "artifacts": [
+      {
+        "name": "40_aidoc.tar.gz",
+        "url": "https://github.com/LiDeChi/wordm-personal-site/releases/download/wordm-deploy-kits-current/40_aidoc.tar.gz",
+        "sha256": "N/A",
+        "sha256_snapshot": "8fbac8f3e0781870829f74b2aad3e89716d5171994c6b26b0479e0d362fce33e"
+      }
+    ]
+  },
+  "execution": {
+    "entrypoint": "deploy.sh",
+    "non_interactive_default": true
+  },
+  "recommended_actions": {
+    "default": "install.py",
+    "trust_once": "trust_once.py",
+    "verify": "deploy.sh verify",
+    "bundle": "deploy.sh bundle",
+    "run": "deploy.sh run"
+  },
+  "click_installers": {
+    "mac": "install.command",
+    "linux": "install.sh",
+    "windows_powershell": "install.ps1",
+    "windows_cmd": "install.bat",
+    "cross_platform": "install.py",
+    "trust_once": "trust_once.command"
+  }
+}
