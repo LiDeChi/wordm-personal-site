@@ -1,0 +1,96 @@
+[
+  {
+    "slug": "book-ingest",
+    "name": "Book Ingest",
+    "tagline": "用场景化改造中",
+    "summary": "把 PDF 上传、解析和按章推进放在同一条阅读动线上，而不是只做一个被动的导入队列。",
+    "reelKicker": "阅读场景",
+    "reelLine": "上传、解析、按章阅读",
+    "thumbnailUrl": "/showcase/book-ingest-reader-shot.png",
+    "detailPreviewUrls": [
+      "/showcase/book-ingest-reader-shot.png",
+      "/orchestration-gallery/book-ingest.png"
+    ],
+    "accent": "#0d6a61",
+    "clipSteps": [
+      "上传 PDF",
+      "解析章节",
+      "进入阅读流"
+    ]
+  },
+  {
+    "slug": "focusor",
+    "name": "Focusor",
+    "tagline": "快速阅览网页并给出交互指示",
+    "summary": "先把网页内容压缩成可快速扫读的概览，再明确告诉用户下一步应该点哪里、怎么继续。",
+    "reelKicker": "网页指引",
+    "reelLine": "概览、提示、下一步",
+    "thumbnailUrl": "/showcase/focusor-overlay-shot.png",
+    "detailPreviewUrls": [
+      "/showcase/focusor-overlay-shot.png",
+      "/showcase/focusor-options-shot.png"
+    ],
+    "accent": "#846248",
+    "clipSteps": [
+      "压缩页面",
+      "给出提示",
+      "执行下一步"
+    ]
+  },
+  {
+    "slug": "gridnote",
+    "name": "Gridnote",
+    "tagline": "格子笔记，一字一格，学习中文的好工具",
+    "summary": "把书写、拆字和记忆重新放回格子里，适合中文学习、临摹和慢速输入训练。",
+    "reelKicker": "格子笔记",
+    "reelLine": "一字一格、书写、学中文",
+    "thumbnailUrl": "/showcase/gridnote-workspace-shot.png",
+    "detailPreviewUrls": [
+      "/showcase/gridnote-workspace-shot.png",
+      "/showcase/gridnote-live-shot.png"
+    ],
+    "accent": "#5f7c4d",
+    "clipSteps": [
+      "选字",
+      "进入格子练写",
+      "查看结果"
+    ]
+  },
+  {
+    "slug": "ai-stroke-writer",
+    "name": "AI Stroke Writer",
+    "tagline": "把文本和 LaTeX 变成一笔一划的书写计划",
+    "summary": "从纯文本到笔画路径，给手写生成、讲解和排版一个统一接口，不只是单次导出工具。",
+    "reelKicker": "书写生成",
+    "reelLine": "文本、LaTeX、笔画路径",
+    "thumbnailUrl": "/showcase/ai-stroke-prism-shot.png",
+    "detailPreviewUrls": [
+      "/showcase/ai-stroke-prism-shot.png",
+      "/showcase/ai-stroke-runtime-shot.png"
+    ],
+    "accent": "#5b7092",
+    "clipSteps": [
+      "输入文本 / LaTeX",
+      "生成笔画",
+      "预览书写"
+    ]
+  },
+  {
+    "slug": "apple-notes-webclipper",
+    "name": "iNote",
+    "tagline": "把备忘录提升为项目管理器",
+    "summary": "把网页内容以 Markdown 结构送进 Apple Notes，让备忘录从收藏夹变成可继续整理和推进的项目入口。",
+    "reelKicker": "备忘录升级",
+    "reelLine": "抓取、Markdown、项目推进",
+    "thumbnailUrl": "/showcase/apple-notes-webclipper-shot.png",
+    "detailPreviewUrls": [
+      "/showcase/apple-notes-webclipper-shot.png"
+    ],
+    "accent": "#73737e",
+    "clipSteps": [
+      "抓取页面",
+      "清理 Markdown",
+      "送入 Notes"
+    ]
+  }
+]

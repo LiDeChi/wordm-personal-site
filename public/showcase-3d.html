@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>项目群岛 | Jian Yongjie</title>
+    <meta
+      name="description"
+      content="简永杰作品集的 3D 交互地图：每个项目都是一座岛屿建筑。"
+    />
+    <link rel="canonical" href="https://wordm.us/showcase-3d.html" />
+    <link rel="stylesheet" href="/assets/showcase-3d.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="sky"></div>
+    <canvas id="map-canvas"></canvas>
+
+    <header class="site-header">
+      <a class="back-link" href="/" aria-label="返回首页">← 返回首页</a>
+      <h1 class="page-title">项目群岛</h1>
+      <p class="page-subtitle">每个项目都是地图上的一座建筑，点击探索</p>
+    </header>
+
+    <div class="map-controls">
+      <button id="reset-view" type="button" aria-label="重置视角">重置视角</button>
+      <button id="toggle-rotation" type="button" aria-label="暂停/继续自动旋转">暂停旋转</button>
+    </div>
+
+    <div id="tooltip" class="tooltip" aria-hidden="true"></div>
+
+    <aside id="project-panel" class="project-panel" aria-hidden="true">
+      <button id="close-panel" class="close-panel" type="button" aria-label="关闭详情">×</button>
+      <div class="panel-media">
+        <img id="panel-image" src="" alt="" loading="lazy" />
+      </div>
+      <div class="panel-content">
+        <span id="panel-kicker" class="panel-kicker"></span>
+        <h2 id="panel-title" class="panel-title"></h2>
+        <p id="panel-tagline" class="panel-tagline"></p>
+        <p id="panel-summary" class="panel-summary"></p>
+        <ul id="panel-steps" class="panel-steps"></ul>
+        <a id="panel-link" class="panel-link" href="/" target="_blank" rel="noopener">查看项目详情 →</a>
+      </div>
+    </aside>
+
+    <div id="loading" class="loading">
+      <div class="loading-text">正在绘制群岛…</div>
+      <div class="loading-bar"><span></span></div>
+    </div>
+
+    <script type="module" src="/assets/showcase-3d.js"></script>
+  </body>
+</html>

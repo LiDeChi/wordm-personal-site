@@ -1,0 +1,17 @@
+.project-detail-modal .project-detail-updated,
+.project-detail-modal .project-detail-signal-strip,
+.project-detail-modal .project-detail-preview-strip,
+.project-detail-modal .project-detail-section,
+.project-detail-modal .project-detail-unlock-panel {
+  display: none !important;
+}
+
+.project-detail-modal .project-detail-action-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.project-detail-modal .project-detail-action-list .project-detail-action-link {
+  min-width: 0;
+}

@@ -1,0 +1,128 @@
+:root {
+  --bg: #0b1220;
+  --text: #e6edf7;
+  --muted: #b4c2d8;
+  --accent: #60a5fa;
+  --accent-2: #22d3ee;
+  --card: rgba(16, 24, 40, 0.6);
+  --border: rgba(148, 163, 184, 0.25);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "SF Pro Text", "Segoe UI", "PingFang SC", "Noto Sans SC", sans-serif;
+  color: var(--text);
+  background: radial-gradient(circle at 20% 15%, #1d4ed8 0, transparent 40%),
+    radial-gradient(circle at 85% 5%, #0e7490 0, transparent 35%),
+    var(--bg);
+}
+
+.background-glow {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(34, 211, 238, 0.08));
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  width: min(760px, calc(100% - 40px));
+  margin: 96px auto;
+}
+
+.eyebrow {
+  margin: 0;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.title {
+  margin: 10px 0 0;
+  font-size: clamp(2.2rem, 5vw, 3.6rem);
+  line-height: 1.05;
+}
+
+.subtitle {
+  margin: 20px 0 0;
+  max-width: 62ch;
+  color: var(--muted);
+  font-size: 1.08rem;
+  line-height: 1.75;
+}
+
+.cta-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 28px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.72rem 1.2rem;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn-primary {
+  color: #071425;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  box-shadow: 0 10px 26px rgba(34, 211, 238, 0.25);
+}
+
+.btn-ghost {
+  color: var(--text);
+  border: 1px solid var(--border);
+  background: rgba(15, 23, 42, 0.35);
+}
+
+.card {
+  margin-top: 36px;
+  padding: 24px;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  backdrop-filter: blur(10px);
+}
+
+.card h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.card p {
+  margin: 14px 0 0;
+  color: var(--muted);
+  line-height: 1.75;
+}
+
+@media (max-width: 680px) {
+  .container {
+    margin: 64px auto;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+  }
+
+  .card {
+    padding: 20px;
+  }
+}
