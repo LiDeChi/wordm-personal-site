@@ -1,5 +1,15 @@
-/login / 301
-/login/ / 301
-/zh /?lang=zh 301
-/en /?lang=en 301
-/api/* https://gridnote.wordm.us/api/:splat 308
+# wordm.us 根域名由 my-blog 项目统一管理（原 wordm-personal-home 职责已合并）
+# 产品相关路径全部重定向到对应子域名
+
+/login /?view=login 301
+/login/ /?view=login 301
+/oneagent /oneagent/ 301
+/oneagent/* /index.html 200
+
+# 产品路径 → 子域名
+/zh*          https://inote.wordm.us/:splat     301
+/en*          https://inote.wordm.us/:splat     301
+/api/*        https://inote.wordm.us/api/:splat  308
+
+# 兜底 → 个人主页
+/*            /index.html                       200

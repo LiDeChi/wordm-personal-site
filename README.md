@@ -1,5 +1,7 @@
 # wordm.us Personal Site (Vite + React)
 
+> **根域名管理说明**：本仓库已接管 `wordm.us` 根域名管理职责（原 `wordm-personal-home` 的 `_redirects` 和根域名配置已合并至此）。
+
 基于你提供的学术极简版式实现的个人网站，包含：
 
 - 根域 `wordm.us`：个人博客 + 作品集
@@ -213,6 +215,7 @@ npm run deploy:pages
   - `../gridnote/.env.local`
 - 若仍缺失会直接中止部署（防止发布出“未配置 Supabase”的线上包）
 - Pages 项目名优先读取 `CF_PAGES_PROJECT`，默认值是 `wordm-personal-home`
+  - 因为 Cloudflare 中 `wordm` 项目已被产品主页（`inote.wordm.us`）占用，个人站点不要默认部署到该项目
 - Pages 分支优先读取 `CF_PAGES_BRANCH`；未设置时默认使用当前 git 分支
 - 当分支为 `main` 时会更新生产域名 `wordm.us`；其他分支会生成对应的 Pages 预览部署
 

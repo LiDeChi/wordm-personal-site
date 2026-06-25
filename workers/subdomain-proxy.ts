@@ -64,6 +64,8 @@ function isAdminAuthorized(request: Request) {
 
 const STATIC_SUBDOMAINS = new Set(['resume', 'cv', 'admin', 'eye-translation', 'oneagent'])
 const DIRECT_APP_SUBDOMAINS = new Set(['eye-translation', 'p-eye-translation'])
+// These subdomains are served by their own Cloudflare Pages projects and should not be intercepted.
+const PAGES_SUBDOMAINS = new Set(['agent', 'inote', 'gridnote', 'latti'])
 
 function isAllowedSubdomain(subdomain: string): boolean {
   return STATIC_SUBDOMAINS.has(subdomain) || subdomain.startsWith('p-')
@@ -89,6 +91,10 @@ export default {
     const subdomain = extractSubdomain(incomingUrl.hostname)
 
     if (!subdomain || !isAllowedSubdomain(subdomain)) {
+      // Subdomains managed by standalone Cloudflare Pages projects should pass through untouched.
+      if (subdomain && PAGES_SUBDOMAINS.has(subdomain)) {
+        return fetch(request)
+      }
       return new Response('Subdomain is not configured.', {
         status: 404,
         headers: { 'content-type': 'text/plain; charset=utf-8' },
