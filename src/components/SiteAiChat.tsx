@@ -265,10 +265,14 @@ export function SiteAiChat({ lang, projects, lastUpdated }: SiteAiChatProps) {
         type="button"
         className="site-ai-fab"
         aria-expanded={open}
+        aria-haspopup="dialog"
         aria-label={copy.title}
-        onClick={() => setOpen((current) => !current)}
+        onFocus={() => setOpen(true)}
+        onMouseEnter={() => setOpen(true)}
+        onClick={() => setOpen(true)}
       >
-        {copy.open}
+        <span className="site-ai-fab-mark">{copy.open}</span>
+        <span className="site-ai-fab-text">{copy.placeholder}</span>
       </button>
     </div>
   );
