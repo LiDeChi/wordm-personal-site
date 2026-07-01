@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+  <title id="title">Agent Core runtime monitor</title>
+  <desc id="desc">An abstract monitor interface showing agent loops, event streams, memory records, and lifecycle status.</desc>
+  <rect width="1280" height="720" fill="#f5efe4"/>
+  <path d="M0 0h1280v720H0z" fill="#f7f1e8"/>
+  <g stroke="#d8c9b8" stroke-width="1">
+    <path d="M110 0v720M220 0v720M330 0v720M440 0v720M550 0v720M660 0v720M770 0v720M880 0v720M990 0v720M1100 0v720M1210 0v720"/>
+    <path d="M0 90h1280M0 180h1280M0 270h1280M0 360h1280M0 450h1280M0 540h1280M0 630h1280"/>
+  </g>
+  <rect x="94" y="74" width="1092" height="572" rx="28" fill="#fffaf1" stroke="#3b3027" stroke-opacity=".16" stroke-width="3"/>
+  <rect x="128" y="112" width="1024" height="70" rx="16" fill="#283c40"/>
+  <text x="164" y="156" fill="#fff8eb" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="24" letter-spacing="2">WORDM AGENT CORE</text>
+  <circle cx="1056" cy="147" r="12" fill="#b7d3c6"/>
+  <circle cx="1094" cy="147" r="12" fill="#e2c071"/>
+  <rect x="128" y="218" width="278" height="356" rx="18" fill="#e6dbc9"/>
+  <rect x="448" y="218" width="318" height="356" rx="18" fill="#fff6e8" stroke="#3b3027" stroke-opacity=".12" stroke-width="2"/>
+  <rect x="808" y="218" width="344" height="356" rx="18" fill="#e8f0e4" stroke="#3b3027" stroke-opacity=".12" stroke-width="2"/>
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="22" fill="#352b22">
+    <text x="160" y="267">agents</text>
+    <text x="482" y="267">monitor stream</text>
+    <text x="842" y="267">memory / lifecycle</text>
+  </g>
+  <g fill="none" stroke="#3b3027" stroke-width="3" stroke-linecap="round">
+    <circle cx="267" cy="395" r="88"/>
+    <path d="M267 307a88 88 0 0 1 77 45"/>
+    <path d="m344 352 2-32 27 17"/>
+    <path d="M267 483a88 88 0 0 1-77-45"/>
+    <path d="m190 438-2 32-27-17"/>
+  </g>
+  <g fill="#fffaf1" stroke="#3b3027" stroke-width="2">
+    <circle cx="267" cy="395" r="34"/>
+    <circle cx="198" cy="338" r="20"/>
+    <circle cx="346" cy="445" r="20"/>
+  </g>
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="17" fill="#4c4034">
+    <text x="168" y="538">spawn · tick · retire</text>
+    <text x="482" y="324">reproduction.intent</text>
+    <text x="482" y="374">agent.spawned</text>
+    <text x="482" y="424">monitor.append</text>
+    <text x="482" y="474">memory.recorded</text>
+    <text x="842" y="326">budget: 42 ticks</text>
+    <text x="842" y="378">feedback: active</text>
+    <text x="842" y="430">children: 03</text>
+    <text x="842" y="482">retirement: watched</text>
+  </g>
+  <g stroke="#8aa092" stroke-width="10" stroke-linecap="round">
+    <path d="M842 529h84"/>
+    <path d="M842 552h196"/>
+  </g>
+  <g stroke="#c8a866" stroke-width="10" stroke-linecap="round">
+    <path d="M482 529h148"/>
+    <path d="M482 552h88"/>
+  </g>
+</svg>

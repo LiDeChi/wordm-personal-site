@@ -474,6 +474,112 @@ const PROJECT_PRESENTATION_OVERRIDES: Record<string, ProjectPresentationOverride
     detailPreviewUrls: ['/showcase/apple-notes-webclipper-shot.png'],
     accent: '#73737e',
   },
+  'agent-core': {
+    name: {
+      zh: 'Agent Core',
+      en: 'Agent Core',
+    },
+    tagline: {
+      zh: 'wordm.us 主页里的最小可观察 agent 运行时',
+      en: 'A minimal observable agent runtime on the wordm.us home tab',
+    },
+    summary: {
+      zh: '把 agent loop、消息、子 agent 生成、监控事件、记忆和退休机制压成一个 TypeScript core，入口现在回到 wordm.us 主页。',
+      en: 'Compresses agent loops, messages, child-agent spawning, monitor events, memory, and retirement into a small TypeScript core that now opens from the wordm.us home tab.',
+    },
+    reelKicker: {
+      zh: 'Agent 运行时',
+      en: 'Agent runtime',
+    },
+    reelLine: {
+      zh: 'loop、监控、记忆、退休',
+      en: 'Loops, monitor, memory, retirement',
+    },
+    clipSteps: [
+      {
+        label: {
+          zh: '注册 agent',
+          en: 'Register agent',
+        },
+        x: 22,
+        y: 34,
+      },
+      {
+        label: {
+          zh: '记录事件',
+          en: 'Record events',
+        },
+        x: 53,
+        y: 44,
+      },
+      {
+        label: {
+          zh: '收束生命周期',
+          en: 'Close lifecycle',
+        },
+        x: 78,
+        y: 62,
+      },
+    ],
+    thumbnailUrl: '/home/agent-core-console.svg',
+    reelImageUrl: '/home/agent-core-console.svg',
+    detailPreviewUrls: ['/home/agent-core-console.svg'],
+    flowPreviewUrls: ['/home/agent-core-console.svg'],
+    accent: '#3c5f68',
+  },
+  town: {
+    name: {
+      zh: 'Town Agents',
+      en: 'Town Agents',
+    },
+    tagline: {
+      zh: '给程序化城镇与居民 agent 模拟预留的位置',
+      en: 'Reserved for the procedural town and resident-agent simulation',
+    },
+    summary: {
+      zh: '这个入口先留给 /Users/lidechi/Documents/Github/town：Godot 城镇、居民需求、社交承诺、跨建筑任务和 debug HUD 后续都从这里接上。',
+      en: 'This slot is reserved for /Users/lidechi/Documents/Github/town: a Godot town, resident needs, social promises, cross-building tasks, and the debug HUD.',
+    },
+    reelKicker: {
+      zh: '城镇模拟',
+      en: 'Town simulation',
+    },
+    reelLine: {
+      zh: '居民、任务、关系、HUD',
+      en: 'Residents, tasks, relations, HUD',
+    },
+    clipSteps: [
+      {
+        label: {
+          zh: '生成城镇',
+          en: 'Generate town',
+        },
+        x: 24,
+        y: 64,
+      },
+      {
+        label: {
+          zh: '居民行动',
+          en: 'Resident action',
+        },
+        x: 54,
+        y: 42,
+      },
+      {
+        label: {
+          zh: '检查状态',
+          en: 'Inspect state',
+        },
+        x: 78,
+        y: 25,
+      },
+    ],
+    thumbnailUrl: '/home/town-agents.svg',
+    reelImageUrl: '/home/town-agents.svg',
+    detailPreviewUrls: ['/home/town-agents.svg'],
+    flowPreviewUrls: ['/home/town-agents.svg'],
+    accent: '#586947',
+  },
 }
 
 function fallbackKicker(project: PortfolioProject, lang: Lang) {

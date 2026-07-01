@@ -16,8 +16,10 @@
     "roles": "node scripts/manage-auth-roles.mjs",
     "check:subdomain:tls": "node scripts/check-subdomain-tls.mjs",
     "deploy:pages": "./scripts/deploy-pages.sh",
+    "deploy:auth": "./scripts/deploy-auth-worker.sh",
     "deploy:subdomains": "./scripts/deploy-subdomain-worker.sh",
     "deploy:subdomains:routes": "./scripts/deploy-subdomain-worker-routes.sh",
+    "audit:domains": "node scripts/audit-domain-ownership.mjs",
     "audit:subdomains": "node scripts/audit-subdomain-worker-domains.mjs"
   },
   "dependencies": {

@@ -19,14 +19,14 @@ type AccountEntryCardProps = {
 const ENTRY_COPY = {
   zh: {
     currentRole: '当前身份',
-    enter: 'Enter',
+    enter: 'Join',
     manage: '账户',
     logout: '退出',
     processing: '处理中...',
   },
   en: {
     currentRole: 'Current role',
-    enter: 'Enter',
+    enter: 'Join',
     manage: 'Account',
     logout: 'Log out',
     processing: 'Processing...',

@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+  <title id="title">Town Agents procedural town</title>
+  <desc id="desc">A stylized isometric town with roads, buildings, resident agents, task badges, and a debug HUD.</desc>
+  <rect width="1280" height="720" fill="#eff0df"/>
+  <path d="M0 506 386 278l274 154 244-142 376 212v218H0z" fill="#dbe4ce"/>
+  <path d="M0 566 426 320l238 136 240-139 376 211v192H0z" fill="#cad8ba"/>
+  <g stroke="#efe8d8" stroke-width="40" stroke-linecap="round">
+    <path d="M92 620 488 388 950 650"/>
+    <path d="M356 262 892 568"/>
+    <path d="M846 300 502 506"/>
+  </g>
+  <g stroke="#9c8b76" stroke-width="6" stroke-linecap="round" opacity=".42">
+    <path d="M92 620 488 388 950 650"/>
+    <path d="M356 262 892 568"/>
+    <path d="M846 300 502 506"/>
+  </g>
+  <g>
+    <path d="M190 394 298 332l100 58-108 62z" fill="#e8c88e"/>
+    <path d="M190 394v82l100 58v-82z" fill="#cda66d"/>
+    <path d="M290 452v82l108-62v-82z" fill="#b58d5e"/>
+    <path d="M190 394 298 332l100 58-108 62z" fill="none" stroke="#6a5947" stroke-width="4"/>
+  </g>
+  <g>
+    <path d="M720 224 838 156l126 72-119 69z" fill="#d9a86c"/>
+    <path d="M720 224v94l125 72v-93z" fill="#b98559"/>
+    <path d="M845 297v93l119-68v-94z" fill="#9d704f"/>
+    <path d="M720 224 838 156l126 72-119 69z" fill="none" stroke="#6a5947" stroke-width="4"/>
+  </g>
+  <g>
+    <path d="M460 206 574 140l118 68-114 66z" fill="#b7cfb0"/>
+    <path d="M460 206v88l118 68v-88z" fill="#91ad89"/>
+    <path d="M578 274v88l114-66v-88z" fill="#7d9a77"/>
+    <path d="M460 206 574 140l118 68-114 66z" fill="none" stroke="#516147" stroke-width="4"/>
+  </g>
+  <g>
+    <path d="M914 430 1032 362l130 74-119 69z" fill="#d8d0ba"/>
+    <path d="M914 430v86l129 74v-85z" fill="#b9ad94"/>
+    <path d="M1043 505v85l119-69v-85z" fill="#9d927d"/>
+    <path d="M914 430 1032 362l130 74-119 69z" fill="none" stroke="#6a5947" stroke-width="4"/>
+  </g>
+  <g fill="#3e5040" stroke="#263426" stroke-width="4">
+    <circle cx="512" cy="420" r="20"/>
+    <path d="M512 440v58"/>
+    <circle cx="670" cy="522" r="20"/>
+    <path d="M670 542v58"/>
+    <circle cx="812" cy="392" r="20"/>
+    <path d="M812 412v58"/>
+  </g>
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="18" fill="#2d3a2e">
+    <rect x="538" y="358" width="124" height="42" rx="12" fill="#fff8e8" stroke="#6a5947" stroke-width="3"/>
+    <text x="559" y="385">PROMISE</text>
+    <rect x="814" y="322" width="104" height="42" rx="12" fill="#fff8e8" stroke="#6a5947" stroke-width="3"/>
+    <text x="837" y="349">TASK</text>
+  </g>
+  <rect x="74" y="74" width="326" height="174" rx="20" fill="#fffaf1" stroke="#5b4b3d" stroke-opacity=".22" stroke-width="3"/>
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" fill="#342d25">
+    <text x="106" y="122" font-size="24">DEBUG HUD</text>
+    <text x="106" y="166" font-size="18">needs: social + purpose</text>
+    <text x="106" y="202" font-size="18">memory: 18 records</text>
+    <text x="106" y="232" font-size="18">provider: mock_ready</text>
+  </g>
+</svg>

@@ -1,12 +1,14 @@
 # wordm.us Personal Site (Vite + React)
 
 > **根域名管理说明**：本仓库已接管 `wordm.us` 根域名管理职责（原 `wordm-personal-home` 的 `_redirects` 和根域名配置已合并至此）。
+> 当前域名归属与迁移原则见 [`docs/domain-ownership.md`](docs/domain-ownership.md)，机器可审计清单见 [`config/domain-ownership.json`](config/domain-ownership.json)。
 
 基于你提供的学术极简版式实现的个人网站，包含：
 
 - 根域 `wordm.us`：个人博客 + 作品集
 - 子域 `resume.wordm.us`：独立简历页（含 PDF 下载，仅管理员/测试账号可访问）
 - 子域 `admin.wordm.us`：后台系统入口（HTTP Basic Auth 保护）
+- 子域 `support.wordm.us`：所有产品/App Store 上架共用的支持入口
 - 账号系统：Supabase 邮箱密码 + Google 登录/注册/退出（`wordm.us` 与全部子域共用一套会话）
 - `center-control` 项目展示（来源：`/Users/lidechi/Documents/Github/center-control/data/exports/projects.json`）
 - `debug` 模式控制展示项目
@@ -53,6 +55,26 @@ VITE_SELFHOST_INSTALL_SCRIPT_URL=https://raw.githubusercontent.com/LiDeChi/cente
 - 角色判定顺序：Supabase 用户 metadata 的 `role` 字段 > `public/auth-role-rules.json` 邮箱名单（与环境变量合并）> 默认 `user`。
 - 简历页权限：仅 `admin` / `tester` 可访问，`user` / `guest` 会显示受限提示页。
 - 项目解锁权限：`admin` / `tester` 自动拥有全部作品访问权限；`user` 需按解锁规则获取访问；`guest` 需先登录。
+
+### AI 聊天框 / Kimi 接入
+
+站点右下角提供 AI 聊天框，用 Cloudflare Pages Function `/api/chat` 作为服务端代理接入 Kimi。前端会把公开站点上下文发送给该接口，包括：
+
+- 网站结构与主要页面
+- 主页信息与产品落地页摘要
+- 项目快照与项目展示信息
+- 文章摘要、正文摘录与图片说明
+- `docs/domain-ownership.md`、`docs/idea.md` 的摘要
+
+生产环境需要在 Cloudflare Pages 项目变量中配置：
+
+```bash
+KIMI_API_KEY=...
+KIMI_MODEL=kimi-k2.7-code
+KIMI_API_BASE_URL=https://api.moonshot.ai/v1
+```
+
+`KIMI_API_KEY` 不要加 `VITE_` 前缀，避免进入浏览器 bundle。若你的 Kimi Coding Plan 使用不同的兼容入口，可只覆盖 `KIMI_API_BASE_URL`。
 
 ### 作品解锁规则（Portfolio Monetization MVP）
 
@@ -200,7 +222,7 @@ npm run sync:projects
 npx wrangler whoami
 ```
 
-2. 构建并发布到 Pages 项目 `wordm-personal-home`：
+2. 构建并发布到 Pages 项目 `my-blog`：
 
 ```bash
 npm run deploy:pages
@@ -214,12 +236,24 @@ npm run deploy:pages
   - `my-blog/.env`
   - `../gridnote/.env.local`
 - 若仍缺失会直接中止部署（防止发布出“未配置 Supabase”的线上包）
-- Pages 项目名优先读取 `CF_PAGES_PROJECT`，默认值是 `wordm-personal-home`
-  - 因为 Cloudflare 中 `wordm` 项目已被产品主页（`inote.wordm.us`）占用，个人站点不要默认部署到该项目
+- Pages 项目名优先读取 `CF_PAGES_PROJECT`，默认值是 `my-blog`
+  - 已统一使用 `my-blog` 作为根域名（wordm.us）管理项目，避免与产品主页（`inote.wordm.us` 对应的 `wordm` 项目）冲突
 - Pages 分支优先读取 `CF_PAGES_BRANCH`；未设置时默认使用当前 git 分支
 - 当分支为 `main` 时会更新生产域名 `wordm.us`；其他分支会生成对应的 Pages 预览部署
 
-3. 部署子域名 Worker（保留当前已绑定子域名，可按需追加新子域名）：
+3. 部署共享登录 Worker：
+
+```bash
+npm run deploy:auth
+```
+
+脚本：`scripts/deploy-auth-worker.sh` + `workers/wordm-auth.ts`
+
+- Worker 名称：`wordm-auth`
+- 默认绑定 `auth.wordm.us` 和 route `auth.wordm.us/*`
+- 使用 `--keep-vars` 保留 Cloudflare 上现有环境变量，不在仓库里保存 Supabase 配置值
+
+4. 部署子域名 Worker（保留当前已绑定子域名，可按需追加新子域名）：
 
 ```bash
 npm run deploy:subdomains
@@ -259,7 +293,16 @@ npm run list:subdomain-retention
   - 固定允许 `resume` / `cv` / `admin`
   - 所有 `p-` 前缀子域按统一代理规则转发到根域并保留语言参数
 
-4. 审计当前自定义域名占用：
+5. 审计当前域名归属和自定义域名占用：
+
+```bash
+npm run audit:domains
+```
+
+- 对照 `config/domain-ownership.json` 检查 Cloudflare Pages custom domains、Workers custom domains、Workers routes，以及 wildcard Worker 的 pass-through 名单。
+- 默认只报告偏差；如需在 CI 中失败，可设置 `AUDIT_DOMAIN_OWNERSHIP_STRICT=1`。
+
+继续审计 `wordm-project-subdomains` 的 custom-domain/TLS 细节：
 
 ```bash
 npm run audit:subdomains

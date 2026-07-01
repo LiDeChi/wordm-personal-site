@@ -55,7 +55,16 @@ type ResolvedProjectPricing = {
   checkoutProductId: string | null
 }
 
-const DEFAULT_PROJECTS: Record<string, ProjectPricingOverride> = {}
+const DEFAULT_PROJECTS: Record<string, ProjectPricingOverride> = {
+  'agent-core': {
+    access: 'free',
+    singleUnlockEnabled: false,
+  },
+  town: {
+    access: 'free',
+    singleUnlockEnabled: false,
+  },
+}
 
 export const DEFAULT_SITE_PRICING_CONFIG: SitePricingConfig = {
   version: 1,

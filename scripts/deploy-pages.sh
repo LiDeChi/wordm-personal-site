@@ -74,7 +74,7 @@ fi
 
 cd "$ROOT_DIR"
 npm run build
-PAGES_PROJECT="${CF_PAGES_PROJECT:-wordm-personal-home}"
+PAGES_PROJECT="${CF_PAGES_PROJECT:-my-blog}"
 PAGES_BRANCH="${CF_PAGES_BRANCH:-$(git -C "$ROOT_DIR" rev-parse --abbrev-ref HEAD 2>/dev/null || printf 'main')}"
 
 if [[ -z "$PAGES_BRANCH" || "$PAGES_BRANCH" == "HEAD" ]]; then

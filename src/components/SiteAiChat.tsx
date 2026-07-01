@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { buildSiteAiContext } from "../lib/site-ai-context";
 import type { Lang } from "../i18n/lang";
 import type { PortfolioProject } from "../types";
@@ -80,6 +80,7 @@ export function SiteAiChat({ lang, projects, lastUpdated }: SiteAiChatProps) {
     [lang, lastUpdated, projects],
   );
   const [open, setOpen] = useState(false);
+  const [closing, setClosing] = useState(false);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
   const [model, setModel] = useState("");
@@ -90,8 +91,33 @@ export function SiteAiChat({ lang, projects, lastUpdated }: SiteAiChatProps) {
       content: copy.intro,
     },
   ]);
+  const closeTimerRef = useRef<number | null>(null);
+  const panelRef = useRef<HTMLElement | null>(null);
   const messagesRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
+
+  const openChat = useCallback(() => {
+    if (closeTimerRef.current) {
+      window.clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+
+    setClosing(false);
+    setOpen(true);
+  }, []);
+
+  const closeChat = useCallback(() => {
+    if (!open || closing) {
+      return;
+    }
+
+    setClosing(true);
+    closeTimerRef.current = window.setTimeout(() => {
+      setOpen(false);
+      setClosing(false);
+      closeTimerRef.current = null;
+    }, 260);
+  }, [closing, open]);
 
   useEffect(() => {
     setMessages((current) => {
@@ -104,7 +130,7 @@ export function SiteAiChat({ lang, projects, lastUpdated }: SiteAiChatProps) {
   }, [copy.intro]);
 
   useEffect(() => {
-    if (!open) {
+    if (!open || closing) {
       return;
     }
 
@@ -117,7 +143,49 @@ export function SiteAiChat({ lang, projects, lastUpdated }: SiteAiChatProps) {
     });
 
     return () => window.cancelAnimationFrame(frame);
-  }, [messages, open]);
+  }, [closing, messages, open]);
+
+  useEffect(() => {
+    return () => {
+      if (closeTimerRef.current) {
+        window.clearTimeout(closeTimerRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+
+    function handlePointerDown(event: PointerEvent) {
+      const target = event.target;
+
+      if (!(target instanceof Node)) {
+        return;
+      }
+
+      if (panelRef.current?.contains(target)) {
+        return;
+      }
+
+      closeChat();
+    }
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        closeChat();
+      }
+    }
+
+    window.addEventListener("pointerdown", handlePointerDown);
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("pointerdown", handlePointerDown);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [closeChat, open]);
 
   async function submitChat(nextInput = input) {
     const question = nextInput.trim();
@@ -182,9 +250,10 @@ export function SiteAiChat({ lang, projects, lastUpdated }: SiteAiChatProps) {
   }
 
   return (
-    <div className={`site-ai-chat${open ? " is-open" : ""}`}>
+    <div className={`site-ai-chat${open ? " is-open" : ""}${closing ? " is-closing" : ""}`}>
       {open ? (
         <section
+          ref={panelRef}
           className="site-ai-panel"
           aria-label={copy.title}
           aria-live="polite"
@@ -198,7 +267,7 @@ export function SiteAiChat({ lang, projects, lastUpdated }: SiteAiChatProps) {
               type="button"
               className="site-ai-close"
               aria-label={copy.close}
-              onClick={() => setOpen(false)}
+              onClick={closeChat}
             >
               ×
             </button>
@@ -267,9 +336,9 @@ export function SiteAiChat({ lang, projects, lastUpdated }: SiteAiChatProps) {
         aria-expanded={open}
         aria-haspopup="dialog"
         aria-label={copy.title}
-        onFocus={() => setOpen(true)}
-        onMouseEnter={() => setOpen(true)}
-        onClick={() => setOpen(true)}
+        onFocus={openChat}
+        onMouseEnter={openChat}
+        onClick={openChat}
       >
         <span className="site-ai-fab-mark">{copy.open}</span>
         <span className="site-ai-fab-text">{copy.placeholder}</span>

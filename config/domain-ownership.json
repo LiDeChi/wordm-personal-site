@@ -1,0 +1,134 @@
+{
+  "domain": "wordm.us",
+  "accountId": "794b63fe0f5c7cccb9968718bb16ed39",
+  "pagesBindings": [
+    {
+      "domain": "wordm.us",
+      "project": "my-blog",
+      "owner": "central"
+    },
+    {
+      "domain": "gridnote.wordm.us",
+      "project": "gridnote",
+      "owner": "product"
+    },
+    {
+      "domain": "latti.wordm.us",
+      "project": "latti",
+      "owner": "product"
+    },
+    {
+      "domain": "inote.wordm.us",
+      "project": "inote",
+      "owner": "product"
+    },
+    {
+      "domain": "agent.wordm.us",
+      "project": "orchard-agent",
+      "owner": "product"
+    },
+    {
+      "domain": "wifenglish.wordm.us",
+      "project": "wifenglish",
+      "owner": "product"
+    },
+    {
+      "domain": "supportdualpart.wordm.us",
+      "project": "supportdualpart",
+      "owner": "product"
+    }
+  ],
+  "workerCustomDomains": [
+    {
+      "domain": "admin.wordm.us",
+      "worker": "wordm-project-subdomains",
+      "owner": "central"
+    },
+    {
+      "domain": "resume.wordm.us",
+      "worker": "wordm-project-subdomains",
+      "owner": "central"
+    },
+    {
+      "domain": "cv.wordm.us",
+      "worker": "wordm-project-subdomains",
+      "owner": "central"
+    },
+    {
+      "domain": "p-ai-stroke-writer.wordm.us",
+      "worker": "wordm-project-subdomains",
+      "owner": "portfolio-alias"
+    },
+    {
+      "domain": "p-apple-notes-webclipper.wordm.us",
+      "worker": "wordm-project-subdomains",
+      "owner": "portfolio-alias"
+    },
+    {
+      "domain": "p-eye-translation.wordm.us",
+      "worker": "wordm-project-subdomains",
+      "owner": "portfolio-alias"
+    },
+    {
+      "domain": "auth.wordm.us",
+      "worker": "wordm-auth",
+      "owner": "central"
+    },
+    {
+      "domain": "arc3.wordm.us",
+      "worker": "arc3-platform-agent",
+      "owner": "product"
+    }
+  ],
+  "workerRoutes": [
+    {
+      "pattern": "*.wordm.us/*",
+      "worker": "wordm-project-subdomains",
+      "owner": "central"
+    },
+    {
+      "pattern": "auth.wordm.us/*",
+      "worker": "wordm-auth",
+      "owner": "central"
+    },
+    {
+      "pattern": "arc3.wordm.us/*",
+      "worker": "arc3-platform-agent",
+      "owner": "product"
+    },
+    {
+      "pattern": "flipook.wordm.us/updates/*",
+      "worker": "flipook-updates",
+      "owner": "product"
+    },
+    {
+      "pattern": "flipook-updates.wordm.us/*",
+      "worker": "flipook-updates",
+      "owner": "legacy"
+    },
+    {
+      "pattern": "wifenglish.wordm.us/*",
+      "worker": null,
+      "owner": "product-pages"
+    }
+  ],
+  "wildcardPassThroughSubdomains": [
+    "agent",
+    "arc3",
+    "auth",
+    "flipook",
+    "flipook-updates",
+    "gridnote",
+    "inote",
+    "latti",
+    "supportdualpart",
+    "wifenglish"
+  ],
+  "wildcardHandledSubdomains": [
+    {
+      "subdomain": "support",
+      "worker": "wordm-project-subdomains",
+      "owner": "central"
+    }
+  ]
+}

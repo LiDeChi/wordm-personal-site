@@ -1,0 +1,23 @@
+{
+  "name": "WordmCoreHost",
+  "product": "wordm-core-host",
+  "version": "0.1.0",
+  "channel": "local",
+  "platform": "macos-arm64",
+  "generatedAt": "2026-07-01T01:50:11.756Z",
+  "fileName": "WordmCoreHost-0.1.0-macos-arm64-local.zip",
+  "currentFileName": "WordmCoreHost-current.zip",
+  "url": "https://github.com/LiDeChi/wordm-personal-site/releases/download/wordm-core-host-current/WordmCoreHost-0.1.0-macos-arm64-local.zip",
+  "currentUrl": "https://github.com/LiDeChi/wordm-personal-site/releases/download/wordm-core-host-current/WordmCoreHost-current.zip",
+  "sizeBytes": 62482704,
+  "sizeMB": 59.6,
+  "sha256": "cf40121e6b213d469f5f92746ba111346df2e430f68600e6169ee60de469d46d",
+  "signed": false,
+  "notarized": false,
+  "signing": "ad-hoc/local-test",
+  "notes": "Local test build. Not Developer ID signed or notarized; Gatekeeper may reject it outside development contexts.",
+  "requirements": {
+    "macOS": "14.0+",
+    "architecture": "Apple Silicon"
+  }
+}

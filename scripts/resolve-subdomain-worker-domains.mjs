@@ -25,7 +25,7 @@ function refreshWranglerOAuthToken() {
 
 function readSnapshotDomains() {
   const payload = JSON.parse(fs.readFileSync(snapshotPath, 'utf8'))
-  const domains = new Set(['resume.wordm.us', 'cv.wordm.us', 'admin.wordm.us', 'oneagent.wordm.us'])
+  const domains = new Set(['resume.wordm.us', 'cv.wordm.us', 'admin.wordm.us'])
 
   for (const project of payload.projects || []) {
     const subdomain = typeof project.subdomain === 'string' ? project.subdomain.trim() : ''
@@ -49,7 +49,7 @@ function normalizeProductionUrl(rawUrl) {
 
 function readRetentionDomains(mode) {
   const payload = JSON.parse(fs.readFileSync(snapshotPath, 'utf8'))
-  const domains = new Set(['resume.wordm.us', 'cv.wordm.us', 'admin.wordm.us', 'oneagent.wordm.us'])
+  const domains = new Set(['resume.wordm.us', 'cv.wordm.us', 'admin.wordm.us'])
   const projects = Array.isArray(payload.projects) ? payload.projects : []
 
   for (const project of projects) {
@@ -94,7 +94,9 @@ async function readCurrentCloudflareDomains() {
   }
 
   const records = Array.isArray(payload.result) ? payload.result : []
-  return new Set(records.map((record) => record.hostname).filter(Boolean))
+  const domains = new Set(records.map((record) => record.hostname).filter(Boolean))
+  domains.delete('oneagent.wordm.us')
+  return domains
 }
 
 function addExtraDomains(domains) {
