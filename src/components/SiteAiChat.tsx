@@ -30,17 +30,17 @@ const CHAT_COPY = {
     title: "问 wordm.us",
     subtitle: "Kimi · 基于站点内容",
     intro:
-      "你可以问我这个网站的结构、主页、项目、落地页、文章和文档。我会优先依据当前站点内容回答。",
-    placeholder: "问问这个网站、项目或文章...",
+      "你可以问我这个网站的结构、主页、项目、落地页、博客和文档。我会优先依据当前站点内容回答。",
+    placeholder: "问问这个网站、项目或博客...",
     send: "发送",
     sending: "思考中",
     context: "上下文",
-    contextItems: "结构 / 主页 / 项目 / 落地页 / 文章 / 文档",
+    contextItems: "结构 / 主页 / 项目 / 落地页 / 博客 / 文档",
     modelFallback: "Kimi",
     missingConfig:
       "聊天接口还没配置 Kimi API key。请在 Cloudflare Pages 环境变量里设置 KIMI_API_KEY。",
     failed: "请求失败，请稍后再试。",
-    examples: ["这个网站有哪些产品？", "Agent Core 是什么？", "最近的文章在讲什么？"],
+    examples: ["这个网站有哪些产品？", "Agent Core 是什么？", "最近的博客在讲什么？"],
   },
   en: {
     open: "AI",
@@ -48,17 +48,17 @@ const CHAT_COPY = {
     title: "Ask wordm.us",
     subtitle: "Kimi · grounded in the site",
     intro:
-      "Ask about the site structure, home page, projects, landing pages, articles, and docs. Answers are grounded in the current site context.",
-    placeholder: "Ask about this site, a project, or an article...",
+      "Ask about the site structure, home page, projects, landing pages, blog posts, and docs. Answers are grounded in the current site context.",
+    placeholder: "Ask about this site, a project, or a blog post...",
     send: "Send",
     sending: "Thinking",
     context: "Context",
-    contextItems: "structure / home / projects / landing pages / articles / docs",
+    contextItems: "structure / home / projects / landing pages / blog posts / docs",
     modelFallback: "Kimi",
     missingConfig:
       "The chat endpoint is missing a Kimi API key. Set KIMI_API_KEY in Cloudflare Pages environment variables.",
     failed: "Request failed. Please try again later.",
-    examples: ["What products are on this site?", "What is Agent Core?", "What are the recent articles about?"],
+    examples: ["What products are on this site?", "What is Agent Core?", "What are the recent blog posts about?"],
   },
 } as const;
 

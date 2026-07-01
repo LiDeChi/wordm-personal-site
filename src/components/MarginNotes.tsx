@@ -3,7 +3,7 @@ export function MarginNotes() {
     <aside className="margin-notes">
       <div className="note">
         <span className="note-ref">1</span>
-        博客与作品集共享同一视觉语言，内容按“文章叙事 + 项目证据”组织。
+        博客与作品集共享同一视觉语言，内容按“博客叙事 + 项目证据”组织。
       </div>
       <div className="note">
         <span className="note-ref">2</span>

@@ -221,7 +221,7 @@ export function buildSiteAiContext({
       body: projectLines,
     },
     {
-      title: lang === "zh" ? "文章" : "Articles",
+      title: lang === "zh" ? "博客" : "Blog",
       body: articleLines,
     },
   ];

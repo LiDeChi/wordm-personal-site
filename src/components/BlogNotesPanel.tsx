@@ -12,12 +12,12 @@ export function BlogNotesPanel({ lang, activeArticle, nextArticle, onJumpNext }:
   const currentLabel = lang === 'zh' ? '当前' : 'Now'
   const nextLabel = lang === 'zh' ? '下一篇' : 'Next'
   const flowLabel = lang === 'zh' ? '结构' : 'Flow'
-  const jumpText = lang === 'zh' ? '跳转到下一篇' : 'Jump to next article'
-  const noNextText = lang === 'zh' ? '已经是最后一篇。' : 'This is the last article.'
+  const jumpText = lang === 'zh' ? '跳转到下一篇博客' : 'Jump to next post'
+  const noNextText = lang === 'zh' ? '已经是最后一篇博客。' : 'This is the last blog post.'
   const flowText =
     lang === 'zh'
-      ? '文章按时间和主题串联展示，右侧按钮用于快速推进阅读节奏。'
-      : 'Articles are connected by time and topic, with a quick-action button for faster reading flow.'
+      ? '博客按时间和主题串联展示，右侧按钮用于快速推进阅读节奏。'
+      : 'Blog posts are connected by time and topic, with a quick-action button for faster reading flow.'
 
   return (
     <aside className="margin-notes blog-notes">

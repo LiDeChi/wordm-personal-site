@@ -36,7 +36,7 @@ const blogPosts: BlogPost[] = [
 export function BlogSection() {
   return (
     <section id="blog">
-      <h2>博客文章 / Blog</h2>
+      <h2>博客 / Blog</h2>
       {blogPosts.map((post) => (
         <article key={post.id} className="blog-entry">
           <div className="paper-meta">
