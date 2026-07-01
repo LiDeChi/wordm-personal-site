@@ -195,10 +195,6 @@ export function buildShareEntryUrl(
     return withSiteParams('https://wordm.us?view=deploy', { lang, shareToken })
   }
 
-  if (shareAccess.allowResume) {
-    return withSiteParams('https://resume.wordm.us', { lang, shareToken })
-  }
-
   const project = shareAccess.allowAllProjects
     ? projects[0] ?? null
     : projects.find((item) => shareAccess.allowedProjectSlugs.includes(item.slug)) ?? null

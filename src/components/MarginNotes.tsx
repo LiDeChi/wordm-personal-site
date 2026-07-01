@@ -7,7 +7,7 @@ export function MarginNotes() {
       </div>
       <div className="note">
         <span className="note-ref">2</span>
-        简历已独立到子域名 resume.wordm.us，根域保持为个人博客主站。
+        公开主站只保留产品、博客和系统入口，私人材料不进入导航。
       </div>
       <div className="note">
         <span className="note-ref">3</span>

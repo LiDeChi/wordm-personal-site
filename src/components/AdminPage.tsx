@@ -7,7 +7,7 @@ import { formatDate } from '../lib/projects'
 import { withSiteParams } from '../lib/lang-url'
 import type { ProjectOfferKind, ProjectPricingOverride, SitePricingConfig } from '../lib/project-offers'
 
-type ShareFlagKey = 'allowPortfolio' | 'allowBlog' | 'allowDeploy' | 'allowResume' | 'allowAllProjects'
+type ShareFlagKey = 'allowPortfolio' | 'allowBlog' | 'allowDeploy' | 'allowAllProjects'
 
 type AdminPageProps = {
   lang: Lang
@@ -58,7 +58,6 @@ const COPY = {
     protectedValue: 'HTTP Basic Auth',
     quickLinks: '快捷入口',
     rootPortfolio: '根域作品集',
-    resume: '简历子域',
     debug: '根域 Debug',
     projects: '项目管理',
     pricingTitle: '定价与解锁规则',
@@ -117,7 +116,6 @@ const COPY = {
     shareRevoke: '撤销',
     shareScopePortfolio: '作品集',
     shareScopeDeploy: '部署页',
-    shareScopeResume: '简历页',
     shareScopeAllProjects: '全部项目子域',
     shareScopeSelectedProjects: '当前勾选项目',
     shareCreatedAt: '创建',
@@ -138,7 +136,6 @@ const COPY = {
     protectedValue: 'HTTP Basic Auth',
     quickLinks: 'Quick links',
     rootPortfolio: 'Root portfolio',
-    resume: 'Resume subdomain',
     debug: 'Root debug',
     projects: 'Project management',
     pricingTitle: 'Pricing & Unlock Rules',
@@ -197,7 +194,6 @@ const COPY = {
     shareRevoke: 'Revoke',
     shareScopePortfolio: 'Portfolio',
     shareScopeDeploy: 'Deploy',
-    shareScopeResume: 'Resume',
     shareScopeAllProjects: 'All project subdomains',
     shareScopeSelectedProjects: 'Current selected projects',
     shareCreatedAt: 'Created',
@@ -236,9 +232,6 @@ function summarizeScope(copy: (typeof COPY)[Lang], scope: ShareScope, selectedCo
   }
   if (scope.allowDeploy) {
     parts.push(copy.shareScopeDeploy)
-  }
-  if (scope.allowResume) {
-    parts.push(copy.shareScopeResume)
   }
   if (scope.allowAllProjects) {
     parts.push(copy.shareScopeAllProjects)
@@ -353,7 +346,6 @@ export function AdminPage({
   const detailedCount = projects.filter((project) => project.detail).length
   const rootPortfolioUrl = withSiteParams('https://wordm.us', { lang })
   const debugUrl = withSiteParams('https://wordm.us?debug=1', { lang })
-  const resumeUrl = withSiteParams('https://resume.wordm.us', { lang })
   const normalizedShareSearch = shareSearch.trim().toLowerCase()
   const normalizedProjectSearch = projectSearch.trim().toLowerCase()
   const filteredShareLinks = useMemo(() => {
@@ -461,10 +453,6 @@ export function AdminPage({
               <label className={`debug-share-toggle${shareScope.allowDeploy ? ' checked' : ''}`}>
                 <input type="checkbox" checked={shareScope.allowDeploy} onChange={() => onToggleShareFlag('allowDeploy')} />
                 <span>{copy.shareScopeDeploy}</span>
-              </label>
-              <label className={`debug-share-toggle${shareScope.allowResume ? ' checked' : ''}`}>
-                <input type="checkbox" checked={shareScope.allowResume} onChange={() => onToggleShareFlag('allowResume')} />
-                <span>{copy.shareScopeResume}</span>
               </label>
               <label className={`debug-share-toggle${shareScope.allowAllProjects ? ' checked' : ''}`}>
                 <input type="checkbox" checked={shareScope.allowAllProjects} onChange={() => onToggleShareFlag('allowAllProjects')} />
@@ -593,7 +581,6 @@ export function AdminPage({
                   <h2>{copy.quickLinks}</h2>
                   <div className="paper-links admin-quick-links">
                     <a href={rootPortfolioUrl} target="_blank" rel="noreferrer">{copy.rootPortfolio}</a>
-                    <a href={resumeUrl} target="_blank" rel="noreferrer">{copy.resume}</a>
                     <a href={debugUrl} target="_blank" rel="noreferrer">{copy.debug}</a>
                   </div>
                 </div>

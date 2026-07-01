@@ -3,6 +3,11 @@
 
 /login /?view=login 301
 /login/ /?view=login 301
+/jian-yongjie-resume.pdf / 302
+/resume / 302
+/resume/* / 302
+/cv / 302
+/cv/* / 302
 /oneagent /oneagent/ 301
 /oneagent/* /index.html 200
 

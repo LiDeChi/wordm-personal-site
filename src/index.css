@@ -2658,45 +2658,6 @@ p {
     background: rgb(255 255 255 / 86%);
 }
 
-.resume-section .abstract-block {
-    margin-bottom: 2rem;
-}
-
-.resume-block {
-    margin-bottom: 2rem;
-}
-
-.resume-block h3 {
-    font-size: 1rem;
-    margin-bottom: 0.6rem;
-    letter-spacing: 0;
-}
-
-.resume-block ul {
-    margin: 0;
-    padding-left: 1.25rem;
-}
-
-.resume-block li {
-    margin-bottom: 0.55rem;
-    text-align: left;
-}
-
-.resume-item {
-    border-left: 1px dashed var(--c-ink-faint);
-    padding-left: 14px;
-    margin-bottom: 1rem;
-}
-
-.resume-item-head {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-bottom: 0.2rem;
-}
-
 .visual-intro {
     font-size: 0.9rem;
     margin-bottom: 1rem;
