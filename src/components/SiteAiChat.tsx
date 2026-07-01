@@ -1,0 +1,275 @@
+import { useEffect, useMemo, useRef, useState } from "react";
+import { buildSiteAiContext } from "../lib/site-ai-context";
+import type { Lang } from "../i18n/lang";
+import type { PortfolioProject } from "../types";
+
+type SiteAiChatProps = {
+  lang: Lang;
+  projects: PortfolioProject[];
+  lastUpdated: string;
+};
+
+type ChatRole = "assistant" | "user";
+
+type ChatMessage = {
+  id: string;
+  role: ChatRole;
+  content: string;
+};
+
+type ChatResponse = {
+  answer?: string;
+  error?: string;
+  model?: string;
+};
+
+const CHAT_COPY = {
+  zh: {
+    open: "AI",
+    close: "关闭",
+    title: "问 wordm.us",
+    subtitle: "Kimi · 基于站点内容",
+    intro:
+      "你可以问我这个网站的结构、主页、项目、落地页、文章和文档。我会优先依据当前站点内容回答。",
+    placeholder: "问问这个网站、项目或文章...",
+    send: "发送",
+    sending: "思考中",
+    context: "上下文",
+    contextItems: "结构 / 主页 / 项目 / 落地页 / 文章 / 文档",
+    modelFallback: "Kimi",
+    missingConfig:
+      "聊天接口还没配置 Kimi API key。请在 Cloudflare Pages 环境变量里设置 KIMI_API_KEY。",
+    failed: "请求失败，请稍后再试。",
+    examples: ["这个网站有哪些产品？", "Agent Core 是什么？", "最近的文章在讲什么？"],
+  },
+  en: {
+    open: "AI",
+    close: "Close",
+    title: "Ask wordm.us",
+    subtitle: "Kimi · grounded in the site",
+    intro:
+      "Ask about the site structure, home page, projects, landing pages, articles, and docs. Answers are grounded in the current site context.",
+    placeholder: "Ask about this site, a project, or an article...",
+    send: "Send",
+    sending: "Thinking",
+    context: "Context",
+    contextItems: "structure / home / projects / landing pages / articles / docs",
+    modelFallback: "Kimi",
+    missingConfig:
+      "The chat endpoint is missing a Kimi API key. Set KIMI_API_KEY in Cloudflare Pages environment variables.",
+    failed: "Request failed. Please try again later.",
+    examples: ["What products are on this site?", "What is Agent Core?", "What are the recent articles about?"],
+  },
+} as const;
+
+function createMessageId(role: ChatRole) {
+  return `${role}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
+function toApiMessages(messages: ChatMessage[]) {
+  return messages
+    .filter((message) => message.content.trim())
+    .slice(-8)
+    .map(({ role, content }) => ({ role, content }));
+}
+
+export function SiteAiChat({ lang, projects, lastUpdated }: SiteAiChatProps) {
+  const copy = CHAT_COPY[lang];
+  const siteContext = useMemo(
+    () => buildSiteAiContext({ lang, projects, lastUpdated }),
+    [lang, lastUpdated, projects],
+  );
+  const [open, setOpen] = useState(false);
+  const [input, setInput] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [model, setModel] = useState("");
+  const [messages, setMessages] = useState<ChatMessage[]>(() => [
+    {
+      id: createMessageId("assistant"),
+      role: "assistant",
+      content: copy.intro,
+    },
+  ]);
+  const messagesRef = useRef<HTMLDivElement | null>(null);
+  const inputRef = useRef<HTMLTextAreaElement | null>(null);
+
+  useEffect(() => {
+    setMessages((current) => {
+      if (current.length !== 1 || current[0]?.role !== "assistant") {
+        return current;
+      }
+
+      return [{ ...current[0], content: copy.intro }];
+    });
+  }, [copy.intro]);
+
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+
+    const frame = window.requestAnimationFrame(() => {
+      inputRef.current?.focus();
+      messagesRef.current?.scrollTo({
+        top: messagesRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [messages, open]);
+
+  async function submitChat(nextInput = input) {
+    const question = nextInput.trim();
+    if (!question || busy) {
+      return;
+    }
+
+    const userMessage: ChatMessage = {
+      id: createMessageId("user"),
+      role: "user",
+      content: question,
+    };
+    const nextMessages = [...messages, userMessage];
+
+    setMessages(nextMessages);
+    setInput("");
+    setBusy(true);
+
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          lang,
+          context: siteContext.text,
+          messages: toApiMessages(nextMessages),
+        }),
+      });
+      const payload = (await response.json().catch(() => ({}))) as ChatResponse;
+
+      if (!response.ok) {
+        throw new Error(payload.error || `HTTP ${response.status}`);
+      }
+
+      setModel(payload.model || "");
+      setMessages((current) => [
+        ...current,
+        {
+          id: createMessageId("assistant"),
+          role: "assistant",
+          content: payload.answer?.trim() || copy.failed,
+        },
+      ]);
+    } catch (error) {
+      const detail = error instanceof Error ? error.message : "";
+      const content =
+        detail === "KIMI_API_KEY_MISSING" ? copy.missingConfig : copy.failed;
+
+      setMessages((current) => [
+        ...current,
+        {
+          id: createMessageId("assistant"),
+          role: "assistant",
+          content,
+        },
+      ]);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <div className={`site-ai-chat${open ? " is-open" : ""}`}>
+      {open ? (
+        <section
+          className="site-ai-panel"
+          aria-label={copy.title}
+          aria-live="polite"
+        >
+          <header className="site-ai-header">
+            <div>
+              <strong>{copy.title}</strong>
+              <span>{model || copy.subtitle}</span>
+            </div>
+            <button
+              type="button"
+              className="site-ai-close"
+              aria-label={copy.close}
+              onClick={() => setOpen(false)}
+            >
+              ×
+            </button>
+          </header>
+
+          <div className="site-ai-context-line">
+            <span>{copy.context}</span>
+            <p>{copy.contextItems}</p>
+          </div>
+
+          <div ref={messagesRef} className="site-ai-messages">
+            {messages.map((message) => (
+              <div
+                key={message.id}
+                className={`site-ai-message site-ai-message-${message.role}`}
+              >
+                {message.content}
+              </div>
+            ))}
+          </div>
+
+          {messages.length === 1 ? (
+            <div className="site-ai-examples">
+              {copy.examples.map((example) => (
+                <button
+                  type="button"
+                  key={example}
+                  onClick={() => void submitChat(example)}
+                >
+                  {example}
+                </button>
+              ))}
+            </div>
+          ) : null}
+
+          <form
+            className="site-ai-form"
+            onSubmit={(event) => {
+              event.preventDefault();
+              void submitChat();
+            }}
+          >
+            <textarea
+              ref={inputRef}
+              value={input}
+              placeholder={copy.placeholder}
+              rows={2}
+              onChange={(event) => setInput(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" && !event.shiftKey) {
+                  event.preventDefault();
+                  void submitChat();
+                }
+              }}
+            />
+            <button type="submit" disabled={busy || !input.trim()}>
+              {busy ? copy.sending : copy.send}
+            </button>
+          </form>
+        </section>
+      ) : null}
+
+      <button
+        type="button"
+        className="site-ai-fab"
+        aria-expanded={open}
+        aria-label={copy.title}
+        onClick={() => setOpen((current) => !current)}
+      >
+        {copy.open}
+      </button>
+    </div>
+  );
+}
