@@ -9,6 +9,10 @@ export type BlogContentBlock =
       text: BilingualText
     }
   | {
+      type: 'callout'
+      text: BilingualText
+    }
+  | {
       type: 'paragraph'
       text: BilingualText
     }
@@ -40,8 +44,8 @@ export type BlogArticle = {
 const AGENT_SYSTEM_ARTICLE: BlogArticle = {
   id: 'large-world-agent-system',
   title: {
-    zh: '大世界：Agent System 整理',
-    en: 'Large World: Notes on Agent Systems',
+    zh: '大世界中的 Agent System',
+    en: 'Agent Systems in a Large World',
   },
   date: '2026.06.29',
   category: {
@@ -76,17 +80,18 @@ const AGENT_SYSTEM_ARTICLE: BlogArticle = {
       },
     },
     {
-      type: 'list',
-      items: [
-        {
-          zh: '真正关键的不是“生成子代理”，而是资源分配、通信协作、历史、注意力、tick 与感知、agent 的存在与消亡。',
-          en: 'The core is not simply “creating subagents,” but resource allocation, communication, history, attention, ticks and perception, and the birth and disappearance of agents.',
-        },
-        {
-          zh: '系统应该接收模糊需求，而不只接收结构化需求。它要能推测“你可能会喜欢这样”，并据此创造合适的 agent。',
-          en: 'The system should accept vague needs, not only structured requirements. It should infer “you might like this” and create suitable agents from that imagination.',
-        },
-      ],
+      type: 'callout',
+      text: {
+        zh: '真正关键的不是“生成子代理”，而是资源分配、通信协作、历史、注意力、tick 与感知、agent 的存在与消亡。',
+        en: 'The core is not simply “creating subagents,” but resource allocation, communication, history, attention, ticks and perception, and the birth and disappearance of agents.',
+      },
+    },
+    {
+      type: 'callout',
+      text: {
+        zh: '系统应该接收模糊需求，而不只接收结构化需求。它要能推测“你可能会喜欢这样”，并据此创造合适的 agent。',
+        en: 'The system should accept vague needs, not only structured requirements. It should infer “you might like this” and create suitable agents from that imagination.',
+      },
     },
     {
       type: 'figure',

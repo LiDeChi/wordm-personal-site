@@ -41,3 +41,8 @@
 
 - 需求: Using the supplied git context below, generate a single-line git commit message. Write the result into the structured response field message. message must contain plain commit-message text only, not JSON, field labels, markdown, or code fences. If custom instructions mention formatting, apply them to the commit message text only. Make 0 tool calls. Rules: - Use an imperative verb first. - Keep the message under 72 characters. - Do not add a scope prefix unless the context already clearly uses one. - Do not include markdown, quotes, or trailing punctuation.  Diff context: Changes: Diff too large to include inline. Summary: 13 changed files, +9446/-4087 lines.  Untracked changes are not included.  Testing note: If you mention tests, include unit tests or UI testing frameworks only. Skip lint/tsc since CI runs those. 
 - 状态: 已完成
+
+## 2026-07-01 18:03 +0800
+
+- 需求: 在本仓库 /Users/lidechi/Documents/Github/my-blog 中，检查博客文章页的标题、小标题、强调/重点块样式链路。回答三个问题：1) 当前哪些文件实际控制 blog article 的标题和 block 层级展示；2) 是否存在重复或后定义的 CSS 会覆盖前面的 blog 规则；3) 要把标题改得更正式、并把“正式小标题”和“强调段落/重点句”明显区分开，最小改动建议是什么。不要改代码，只给结论，引用具体文件路径和类名。 
+- 状态: 已完成
