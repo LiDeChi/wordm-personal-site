@@ -6531,6 +6531,34 @@ body::before {
         margin-top: 18px;
         font-size: 0.94rem;
     }
+
+    .system-entry-hero {
+        gap: 18px;
+    }
+
+    .system-entry-copy {
+        width: 100%;
+        max-width: none;
+        padding: 24px;
+    }
+
+    .system-entry-copy h1 {
+        max-width: 5.9em;
+        font-size: clamp(2.35rem, 10vw, 3rem);
+        line-height: 1.12;
+        overflow-wrap: anywhere;
+    }
+
+    .system-entry-copy > p:not(.paper-meta) {
+        max-width: 100%;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    .system-entry-map {
+        width: 100%;
+        max-width: none;
+    }
 }
 
 .site-topbar-lang {
