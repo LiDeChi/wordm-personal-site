@@ -12,149 +12,157 @@ type ConceptItem = {
   name: string;
   title: LocalizedText;
   body: LocalizedText;
+  meta?: LocalizedText;
 };
 
-type FieldExample = {
-  name: string;
-  description: LocalizedText;
-  tags: string[];
-  agents: string;
-  memory: LocalizedText;
+type ListBlock = {
+  title: LocalizedText;
+  body: LocalizedText;
+  items: LocalizedText[];
 };
 
-type FoundryField = {
-  name: string;
-  fit: LocalizedText;
-  price: string;
-  budget: string;
-  permissions: string;
-  status: string;
-  traits: string[];
+type StepItem = {
+  label: string;
+  title: LocalizedText;
+  body: LocalizedText;
 };
 
-type PricingPlan = {
+type LayerItem = {
+  label: string;
+  title: LocalizedText;
+  body: LocalizedText;
+  items: LocalizedText[];
+};
+
+type PermissionItem = {
   name: string;
-  audience: LocalizedText;
-  price: string;
-  features: LocalizedText[];
+  title: LocalizedText;
+  body: LocalizedText;
+  level: string;
 };
 
 const SYSTEM_DOCS_URL = "https://system.wordm.us";
 
 const COPY = {
   zh: {
-    documentTitle: "Fount | Personal Agent World System",
-    navFields: "Fields",
-    navForge: "Forge",
-    navFoundry: "Foundry",
-    navSdk: "SDK",
-    navPricing: "Pricing",
-    navDocs: "文档",
+    documentTitle: "Fount | 开放的个人 Agent 大脑",
+    navConcepts: "概念",
+    navArchitecture: "架构",
+    navPermissions: "权限",
+    navFlow: "循环",
+    navOpen: "开放",
+    navRoadmap: "路线",
+    navDocs: "系统文档",
     download: "Download",
-    heroTitle:
-      "Fount is your personal agent brain for discovering, entering, creating, and evolving Fields.",
+    heroTitle: "Fount 是开放的个人 agent 大脑。",
     heroDeck:
-      "Fount is not just an assistant. It is a personal agent brain that remembers your experiences, enters Fields with you, controls Field agents, discovers new Fields, and helps you reshape them through Forge.",
-    heroZh:
-      "下载 Fount，进入 Field，和你的个人 agent 一起发现、体验、创造和改造新的世界。",
+      "Field 是可携带的经验环境。Forge 和 Foundry 是默认内置的系统级 Field。SDK 让普通产品变成 Field，经验在 Field 与 Fount 之间流动。",
+    heroSub:
+      "它不是普通 AI 助手，也不是开发者工具，而是一个能随你进入不同环境、理解体验、积累记忆并帮助改造世界的连续性系统。",
     primaryCta: "Download Fount for Mac",
-    secondaryCta: "Explore Fields",
-    heroFootnote:
-      "Personal agent brain. Open Fields. Shared experience. Built for everyone.",
-    dashboardTitle: "Fount Home",
-    dashboardStatus: "3 Fields active · 12 memories ready to sync",
-    introTitle: "One personal brain. Many Fields.",
-    introLead:
-      "Fount 面向所有人。它是个人 agent 大脑：进入不同 Field，与 Field agent 互动，控制部分行动，积累经验，再把一个 Field 的记忆带到另一个 Field。",
-    fieldTitle: "Fields are not just apps. They are places your agent can experience.",
-    fieldLead:
-      "A Field can be a tool, a game, a learning space, a creative studio, a simulation, a shop, a reading room, or a small world. What makes it a Field is not its category, but that Fount can enter it, understand it, act through it, remember from it, and evolve with it.",
-    forgeTitle: "Forge is where Fields are made, remixed, and reshaped.",
+    secondaryCta: "阅读概念",
+    dashboardTitle: "Experience Continuity",
+    dashboardStatus: "5 layers online · 7 experience events · memory sync ready",
+    dashboardFeed: "Live experience flow",
+    definitionTitle: "一个大脑，许多可进入的 Field。",
+    definitionLead:
+      "Fount 负责人的连续性。Field 负责可体验的环境。Forge 负责创造和改造。Foundry 负责发现、安装、购买和发布。",
+    visionTitle: "你和 Fount 一起进入世界，而不是只在聊天框里描述世界。",
+    visionLead:
+      "当 Fount 理解一个 Field，Field 会变得更有用；当 Fount 经历更多 Field，Fount 会变得更像你的个人大脑。",
+    visionLabel: "The thesis",
+    architectureTitle: "系统分为五层。",
+    architectureLead:
+      "从本地个人大脑到 Field runtime，再到系统级 Field、用户 Field 和官方服务，Fount 把体验、记忆、权限和商业化放在同一个协议框架里。",
+    packageTitle: "初始下载包",
+    packageLead:
+      "用户下载 Fount.app 后，默认获得 Core、Field Runtime、系统 Field 和 Starter Fields。没有账号也应能进入本地优先的基础体验。",
+    permissionsTitle: "权限默认拒绝，体验默认可控。",
+    permissionsLead:
+      "Field 可以请求能力，但 Fount 不应默认开放记忆、本地文件、网络、资源预算、源码访问或跨 Field 回忆。所有修改都从权限边界开始。",
+    permissionsRule:
+      "Fount 只有在 Field 明确授予权限时，才能通过 Forge 修改配置、行为或源码。",
+    flowTitle: "体验循环让系统越用越像你。",
+    flowLead:
+      "Enter, Experience, Remember, Recall, Discover, Modify, Return。每一次进入 Field 都可能生成可同步、可回忆、可改造的经验事件。",
+    forgeTitle: "Forge 与 Foundry 是内置系统 Field。",
     forgeLead:
-      "Forge 不是单纯的开发者 IDE。它是人和 Fount 一起创造可体验世界的工坊：普通用户改造体验，开发者连接源码、SDK、测试与发布。",
-    everyone: "For everyone",
-    builders: "For builders",
-    permissionRule:
-      "Fount can use Forge to modify a Field only when the Field grants the right permissions, such as source access or editable configuration.",
-    foundryTitle: "Foundry is where people and Fount discover Fields.",
-    foundryLead:
-      "Foundry 不是普通商店。人可以发现 Field，Fount 也可以基于记忆、兴趣、目标、资源和权限边界，主动去 Foundry 寻找适合你的新 Field。",
-    foundryLine:
-      "Fields are discovered by people, recommended by Fount, built in Forge, and experienced together.",
-    sdkTitle: "The SDK turns an app into a Field.",
+      "Forge 面向普通用户和开发者；Foundry 面向发现与分发。两者不是外部工具，而是 Fount 生态中的高权限 Field。",
+    sdkTitle: "SDK 把普通产品变成 Field。",
     sdkLead:
-      "Fount SDK 让普通 app 获得与 Fount 互通经验、记忆、权限、控制和 agent 行动的能力，而不只是接上一个接口。",
-    sdkOpen:
-      "Fount core and SDK can be open. Official Forge workflows, Foundry distribution, certification, testing, cloud sync, licensing, payments, recommendations, and developer analytics can be commercial services.",
-    loopTitle: "Experience flows both ways.",
-    loopLead:
-      "A Field becomes more useful when Fount understands it. Fount becomes more personal when it experiences more Fields.",
-    pricingTitle: "Start with Fount. Expand through Fields.",
-    pricingLead:
-      "从安装 Fount 开始，随着你的 Field、记忆、改造和发布需求增长，再扩展到 Plus、Forge 和 Foundry。",
+      "Fount SDK 不是简单接入一个 AI 接口。它让产品声明 manifest、权限、agent、experience events、memory sync、control channel 与 Forge editability。",
+    openTitle: "开放核心，商业服务围绕创造与分发。",
+    openLead:
+      "Fount Core、Field Runtime、协议、权限模型、manifest schema 和 SDK 可以开放；Forge Pro、Foundry Network、认证、同步、分发和商业化可以成为官方服务。",
+    roadmapTitle: "从本地个人大脑到 Field 生态。",
+    roadmapLead:
+      "路线图先把 Fount Core 和几个 starter Field 跑通，再进入 Forge Lite、Foundry alpha、SDK 生态和商业网络。",
     finalTitle: "Download Fount and enter your first Field.",
     finalBody:
-      "For everyone who wants a personal agent that remembers, discovers, plays, creates, and evolves through Fields.",
+      "Fount 是开放的个人 agent 大脑。Field 是可携带的经验环境。经验在 Field 和 Fount 之间流动。",
     finalSecondary: "Explore Foundry",
   },
   en: {
-    documentTitle: "Fount | Personal Agent World System",
-    navFields: "Fields",
-    navForge: "Forge",
-    navFoundry: "Foundry",
-    navSdk: "SDK",
-    navPricing: "Pricing",
-    navDocs: "文档",
+    documentTitle: "Fount | Open Personal Agent Brain",
+    navConcepts: "Concepts",
+    navArchitecture: "Architecture",
+    navPermissions: "Permissions",
+    navFlow: "Loop",
+    navOpen: "Open",
+    navRoadmap: "Roadmap",
+    navDocs: "System Docs",
     download: "Download",
-    heroTitle:
-      "Fount is your personal agent brain for discovering, entering, creating, and evolving Fields.",
+    heroTitle: "Fount is an open personal agent brain.",
     heroDeck:
-      "Fount is not just an assistant. It is a personal agent brain that remembers your experiences, enters Fields with you, controls Field agents, discovers new Fields, and helps you reshape them through Forge.",
-    heroZh:
-      "Download Fount, enter Fields, and discover, experience, create, and reshape new worlds with your personal agent.",
+      "Fields are portable experience environments. Forge and Foundry are built-in system Fields. The SDK turns products into Fields, and experience flows between Fields and Fount.",
+    heroSub:
+      "It is not a normal AI assistant or a developer tool. It is a continuity system that enters environments with you, understands experience, accumulates memory, and helps reshape worlds.",
     primaryCta: "Download Fount for Mac",
-    secondaryCta: "Explore Fields",
-    heroFootnote:
-      "Personal agent brain. Open Fields. Shared experience. Built for everyone.",
-    dashboardTitle: "Fount Home",
-    dashboardStatus: "3 Fields active · 12 memories ready to sync",
-    introTitle: "One personal brain. Many Fields.",
-    introLead:
-      "Fount is for everyone, not only developers. It enters Fields, interacts with Field agents, guides permitted actions, accumulates experience, and carries useful memory from one Field into another.",
-    fieldTitle: "Fields are not just apps. They are places your agent can experience.",
-    fieldLead:
-      "A Field can be a tool, a game, a learning space, a creative studio, a simulation, a shop, a reading room, or a small world. What makes it a Field is not its category, but that Fount can enter it, understand it, act through it, remember from it, and evolve with it.",
-    forgeTitle: "Forge is where Fields are made, remixed, and reshaped.",
-    forgeLead:
-      "Forge is not just an IDE. It is a workshop where people and Fount create experiences together: non-developers reshape behavior and scenes, while builders connect source, SDK, testing, packaging, and publishing.",
-    everyone: "For everyone",
-    builders: "For builders",
-    permissionRule:
-      "Fount can use Forge to modify a Field only when the Field grants the right permissions, such as source access or editable configuration.",
-    foundryTitle: "Foundry is where people and Fount discover Fields.",
-    foundryLead:
-      "Foundry is not a normal store. People can browse it, and Fount can also visit it autonomously to find Fields that match your memories, interests, goals, resources, and permission boundaries.",
-    foundryLine:
-      "Fields are discovered by people, recommended by Fount, built in Forge, and experienced together.",
-    sdkTitle: "The SDK turns an app into a Field.",
-    sdkLead:
-      "The Fount SDK lets an ordinary app exchange experience, memory, permissions, control, and agent actions with Fount. It is more than a connector.",
-    sdkOpen:
-      "Fount core and SDK can be open. Official Forge workflows, Foundry distribution, certification, testing, cloud sync, licensing, payments, recommendations, and developer analytics can be commercial services.",
-    loopTitle: "Experience flows both ways.",
-    loopLead:
+    secondaryCta: "Read Concepts",
+    dashboardTitle: "Experience Continuity",
+    dashboardStatus: "5 layers online · 7 experience events · memory sync ready",
+    dashboardFeed: "Live experience flow",
+    definitionTitle: "One brain. Many enterable Fields.",
+    definitionLead:
+      "Fount carries personal continuity. Fields provide experience environments. Forge creates and reshapes them. Foundry discovers, installs, sells, and publishes them.",
+    visionTitle: "You and Fount enter worlds together, instead of only describing them in chat.",
+    visionLead:
       "A Field becomes more useful when Fount understands it. Fount becomes more personal when it experiences more Fields.",
-    pricingTitle: "Start with Fount. Expand through Fields.",
-    pricingLead:
-      "Install Fount first, then expand as your Fields, memories, remixes, and publishing needs grow.",
+    visionLabel: "The thesis",
+    architectureTitle: "The system has five layers.",
+    architectureLead:
+      "From the local personal brain to Field runtime, system Fields, user Fields, and official services, Fount puts experience, memory, permissions, and commercialization in one protocol frame.",
+    packageTitle: "Initial download package",
+    packageLead:
+      "When a user downloads Fount.app, it includes Core, Field Runtime, system Fields, and starter Fields. The base experience should work local-first, even without an account.",
+    permissionsTitle: "Permissions are denied by default. Experience stays controlled.",
+    permissionsLead:
+      "Fields may request capability, but Fount should not default to memory, local files, network, resource budgets, source access, or cross-field recall. Every modification begins with the permission boundary.",
+    permissionsRule:
+      "Fount can modify configuration, behavior, or source through Forge only when the Field explicitly grants permission.",
+    flowTitle: "The experience loop makes the system more personal over time.",
+    flowLead:
+      "Enter, Experience, Remember, Recall, Discover, Modify, Return. Every Field session can create experience events that sync, recall, and reshape future behavior.",
+    forgeTitle: "Forge and Foundry are built-in system Fields.",
+    forgeLead:
+      "Forge serves both ordinary users and developers. Foundry handles discovery and distribution. They are not external utilities, but higher-privilege Fields inside the Fount ecosystem.",
+    sdkTitle: "The SDK turns ordinary products into Fields.",
+    sdkLead:
+      "The Fount SDK is not just an AI integration. It lets products declare manifests, permissions, agents, experience events, memory sync, control channels, and Forge editability.",
+    openTitle: "Open core. Commercial creation and distribution services.",
+    openLead:
+      "Fount Core, Field Runtime, protocols, permission model, manifest schema, and SDK can be open. Forge Pro, Foundry Network, certification, sync, distribution, and commercialization can become official services.",
+    roadmapTitle: "From local personal brain to Field ecosystem.",
+    roadmapLead:
+      "The roadmap starts with Fount Core and starter Fields, then moves into Forge Lite, Foundry alpha, SDK adoption, and commercial network services.",
     finalTitle: "Download Fount and enter your first Field.",
     finalBody:
-      "For everyone who wants a personal agent that remembers, discovers, plays, creates, and evolves through Fields.",
+      "Fount is an open personal agent brain. Fields are portable experience environments. Experience flows between Fields and Fount.",
     finalSecondary: "Explore Foundry",
   },
 } as const;
 
-const CONCEPTS: ConceptItem[] = [
+const CORE_CONCEPTS: ConceptItem[] = [
   {
     name: "Fount",
     title: {
@@ -169,781 +177,1032 @@ const CONCEPTS: ConceptItem[] = [
   {
     name: "Field",
     title: {
-      zh: "可进入的产品环境",
-      en: "Enterable product environment",
+      zh: "可携带的经验环境",
+      en: "Portable experience environment",
     },
     body: {
-      zh: "人可以使用，Fount 可以进入，Field agent 可以在规则内行动，并产生可回流的经验。",
-      en: "A place people can use, Fount can enter, and Field agents can act inside defined rules while producing experience events.",
+      zh: "人可以进入和使用，Fount 可以理解和行动，Field agent 可以在规则内完成任务。",
+      en: "A place people can enter and use, Fount can understand and act within, and Field agents can operate under defined rules.",
     },
   },
   {
     name: "Forge",
     title: {
-      zh: "创造和改造 Field 的工坊",
-      en: "Workshop for shaping Fields",
+      zh: "创造和改造 Field 的系统 Field",
+      en: "System Field for making and reshaping Fields",
     },
     body: {
-      zh: "普通用户改造界面、规则、角色和流程；开发者在获得权限后编辑源码、连接 SDK、测试和发布。",
-      en: "For reshaping UI, rules, roles, and workflows, plus source editing, SDK wiring, testing, and publishing when permission is granted.",
+      zh: "普通用户改造体验，开发者连接源码、SDK、测试、打包和发布。",
+      en: "Ordinary users reshape experiences, while developers connect source, SDK, testing, packaging, and publishing.",
     },
   },
   {
     name: "Foundry",
     title: {
-      zh: "发现、安装、购买、发布 Field 的生态",
-      en: "Field discovery and distribution",
+      zh: "发现、安装、购买和发布 Field",
+      en: "Discover, install, buy, and publish Fields",
     },
     body: {
-      zh: "不是普通 app store。用户可以发现 Field，Fount 也能主动寻找适合你的 Field。",
-      en: "Not a normal app store. People discover Fields, and Fount can autonomously recommend Fields for you.",
+      zh: "人可以浏览，Fount 也可以基于记忆、兴趣、目标、资源和权限边界主动发现。",
+      en: "People can browse it, and Fount can discover Fields based on memory, interests, goals, resources, and permission boundaries.",
     },
   },
 ];
 
-const INTRO_CARDS: ConceptItem[] = [
+const SYSTEM_CONCEPTS: ConceptItem[] = [
   {
-    name: "01",
-    title: { zh: "Personal Agent Brain", en: "Personal Agent Brain" },
+    name: "Fount SDK",
+    title: {
+      zh: "把产品声明为 Field",
+      en: "Declare a product as a Field",
+    },
     body: {
-      zh: "Fount remembers your preferences, goals, history, creations, reactions, and decisions. It is the continuity layer across all Fields.",
-      en: "Fount remembers your preferences, goals, history, creations, reactions, and decisions. It is the continuity layer across all Fields.",
+      zh: "提供 manifest、权限、事件、agent、memory sync、control channel 和 Forge editability。",
+      en: "Provides manifests, permissions, events, agents, memory sync, control channels, and Forge editability.",
     },
   },
   {
-    name: "02",
-    title: { zh: "Cross-Field Memory", en: "Cross-Field Memory" },
+    name: "Field Agent",
+    title: {
+      zh: "在 Field 内行动的 agent",
+      en: "Agent acting inside a Field",
+    },
     body: {
-      zh: "Reading Room 的阅读习惯可以影响 Learning Lab；UI Playground 的视觉偏好可以影响 Forge。",
-      en: "A reading habit from Reading Room can influence Learning Lab. A UI preference from UI Playground can influence Forge.",
+      zh: "遵守 Field 规则，接收 Fount 提供的上下文、指令或控制，产生经验事件。",
+      en: "Follows Field rules, receives context, instruction, or control from Fount, and produces experience events.",
     },
   },
   {
-    name: "03",
-    title: { zh: "Field Control", en: "Field Control" },
+    name: "Experience Event",
+    title: {
+      zh: "可回流的经验单位",
+      en: "The unit of returning experience",
+    },
     body: {
-      zh: "Field agent 在 Field 规则与框架中行动，同时可以接收来自 Fount 的控制、引导、权限或上下文。",
-      en: "Field agents act within their Field rules, while receiving control, guidance, permission, or context from Fount.",
+      zh: "描述用户在 Field 中看到、做了、选择、失败、喜欢、修改或完成了什么。",
+      en: "Describes what the user saw, did, chose, failed at, liked, modified, or completed inside a Field.",
     },
   },
   {
-    name: "04",
-    title: { zh: "Autonomous Discovery", en: "Autonomous Discovery" },
+    name: "Memory Sync",
+    title: {
+      zh: "跨 Field 的记忆同步",
+      en: "Cross-field memory sync",
+    },
     body: {
-      zh: "Fount 可以访问 Foundry，根据你的目标、好奇心、项目、情绪或日常节律推荐新 Field。",
-      en: "Fount can visit Foundry and recommend Fields that match your goals, curiosity, projects, emotions, or routines.",
+      zh: "把可授权的经验带回 Fount，并在未来进入其他 Field 时被安全回忆。",
+      en: "Returns permitted experience to Fount so it can be safely recalled in future Fields.",
+    },
+  },
+  {
+    name: "Control Channel",
+    title: {
+      zh: "Fount 对 Field agent 的控制通道",
+      en: "Fount control channel for Field agents",
+    },
+    body: {
+      zh: "用于传递上下文、指令、权限、限制和终止条件，避免 agent 脱离体验边界。",
+      en: "Passes context, instructions, permissions, limits, and stopping conditions so agents stay inside the experience boundary.",
+    },
+  },
+  {
+    name: "Experience Continuity",
+    title: {
+      zh: "区别于 app store、插件和助手的核心",
+      en: "The difference from app stores, plugins, and assistants",
+    },
+    body: {
+      zh: "不是下载更多应用，而是在不同环境之间保留同一个人的经验连续性。",
+      en: "Not downloading more apps, but preserving one person's experience continuity across different environments.",
     },
   },
 ];
 
-const HERO_FIELDS = [
+const VISION_EXAMPLES: ConceptItem[] = [
   {
-    name: "Reading Room",
-    status: "Open",
-    agents: "Reader · Tutor",
-    experience: "Preferred quiet summaries",
-    traits: ["Modifiable", "Memory sync"],
+    name: "UI Playground -> Forge",
+    title: {
+      zh: "视觉偏好进入创造工具",
+      en: "Visual preferences enter creation tools",
+    },
+    body: {
+      zh: "你在 UI Playground 中偏爱安静、密集、线条感的界面；Fount 可在 Forge 中把这种偏好带入新 Field 的改造。",
+      en: "You prefer quiet, dense, line-forward interfaces in UI Playground. Fount can carry that preference into Forge when reshaping a new Field.",
+    },
   },
   {
-    name: "UI Playground",
-    status: "Editing",
-    agents: "Critic · Layout agent",
-    experience: "Likes dense calm layouts",
-    traits: ["Source access", "Forge-ready"],
+    name: "Learning Lab -> Reading Room",
+    title: {
+      zh: "学习困惑变成阅读上下文",
+      en: "Learning confusion becomes reading context",
+    },
+    body: {
+      zh: "Learning Lab 记录你卡在某个概念；进入 Reading Room 后，Fount 可优先解释相关段落。",
+      en: "Learning Lab records that a concept confused you. In Reading Room, Fount can explain related passages first.",
+    },
   },
   {
-    name: "Finance Garden",
-    status: "Permission needed",
-    agents: "Budget guide",
-    experience: "Risk boundary: conservative",
-    traits: ["Private", "Ledger"],
-  },
-  {
-    name: "Memory Theater",
-    status: "Remembering",
-    agents: "Archivist · Director",
-    experience: "Project stories as scenes",
-    traits: ["Fount-aware", "Recall"],
+    name: "Agent Game -> Foundry",
+    title: {
+      zh: "兴趣变成主动发现",
+      en: "Interest becomes autonomous discovery",
+    },
+    body: {
+      zh: "你在 Agent Game 中喜欢协作型 agent；Fount 可去 Foundry 寻找同类 Field。",
+      en: "You enjoy cooperative agents in Agent Game. Fount can visit Foundry to find related Fields.",
+    },
   },
 ];
 
-const RIGHT_FEED = [
-  "Fount recalled your layout preference from UI Playground.",
-  "Foundry found a Field that matches your interest in agent games.",
-  "Forge can modify this Field because source access is granted.",
-  "Field agent requested permission to use Fount memory.",
-];
-
-const FIELD_LAYERS = [
-  "Field interface",
-  "Field rules",
-  "Field agents",
-  "Experience events",
-  "Permissions",
-  "Memory sync",
-  "Source access",
-  "Fount control channel",
-];
-
-const FIELD_EXAMPLES: FieldExample[] = [
+const ARCHITECTURE_LAYERS: LayerItem[] = [
   {
-    name: "Reading Room",
-    description: {
-      zh: "阅读和学习 Field。Fount 记住你读到哪里、困惑什么、喜欢什么解释方式。",
-      en: "A reading and learning Field. Fount remembers where you stopped, what confused you, and which explanations help.",
+    label: "01",
+    title: { zh: "Fount Core", en: "Fount Core" },
+    body: {
+      zh: "个人 agent 大脑、本地记忆、身份、偏好、目标和经验索引。",
+      en: "The personal agent brain, local memory, identity, preferences, goals, and experience index.",
     },
-    tags: ["Fount-aware", "Memory sync", "Permission required"],
-    agents: "Reader · Tutor",
-    memory: { zh: "reading pace, confusion, taste", en: "reading pace, confusion, taste" },
+    items: [
+      { zh: "agent runtime", en: "agent runtime" },
+      { zh: "memory store", en: "memory store" },
+      { zh: "user profile", en: "user profile" },
+    ],
   },
   {
-    name: "UI Playground",
-    description: {
-      zh: "界面创造 Field。Fount 记住视觉偏好，并能带到其他设计 Field。",
-      en: "A UI creation Field. Fount remembers visual preferences and carries them into other design Fields.",
+    label: "02",
+    title: { zh: "Field Runtime", en: "Field Runtime" },
+    body: {
+      zh: "加载 Field、读取 manifest、执行权限检查、记录 experience events。",
+      en: "Loads Fields, reads manifests, checks permissions, and records experience events.",
     },
-    tags: ["Modifiable", "Source available", "Has Field agents"],
-    agents: "Layout · Critic",
-    memory: { zh: "layout preference", en: "layout preference" },
+    items: [
+      { zh: "manifest loader", en: "manifest loader" },
+      { zh: "permission gate", en: "permission gate" },
+      { zh: "event bus", en: "event bus" },
+    ],
   },
   {
-    name: "Memory Theater",
-    description: {
-      zh: "回顾人生、项目和经验的 Field。Fount 把过去事件重组为场景。",
-      en: "A Field for revisiting life, projects, and experience by turning past events into scenes.",
+    label: "03",
+    title: { zh: "System Fields", en: "System Fields" },
+    body: {
+      zh: "Forge、Foundry、Memory、Permissions、Ledger 等内置高权限 Field。",
+      en: "Built-in higher-privilege Fields such as Forge, Foundry, Memory, Permissions, and Ledger.",
     },
-    tags: ["Playable", "Memory sync", "Fount-aware"],
-    agents: "Archivist · Scene maker",
-    memory: { zh: "events as scenes", en: "events as scenes" },
+    items: [
+      { zh: "Forge", en: "Forge" },
+      { zh: "Foundry", en: "Foundry" },
+      { zh: "Permissions", en: "Permissions" },
+    ],
   },
   {
-    name: "Agent Game Field",
-    description: {
-      zh: "包含多个角色 agent 的游戏 Field。Fount 可以观察、干预或控制部分 agent。",
-      en: "A game Field with character agents. Fount can observe, intervene, or control permitted agents.",
+    label: "04",
+    title: { zh: "User Fields", en: "User Fields" },
+    body: {
+      zh: "Reading Room、UI Playground、Agent Game、Learning Lab、Finance Garden 等具体体验环境。",
+      en: "Concrete environments such as Reading Room, UI Playground, Agent Game, Learning Lab, and Finance Garden.",
     },
-    tags: ["Playable", "Has Field agents", "Permission required"],
-    agents: "NPCs · Referee",
-    memory: { zh: "play style", en: "play style" },
+    items: [
+      { zh: "starter fields", en: "starter fields" },
+      { zh: "private fields", en: "private fields" },
+      { zh: "published fields", en: "published fields" },
+    ],
   },
   {
-    name: "Learning Lab",
-    description: {
-      zh: "学习 Field。Fount 根据你在其他 Field 的经验调整教学方式。",
-      en: "A learning Field where Fount adapts teaching based on experience from other Fields.",
+    label: "05",
+    title: { zh: "Official Services", en: "Official Services" },
+    body: {
+      zh: "Foundry Network、Forge Cloud、认证、同步、授权、分发和商业化。",
+      en: "Foundry Network, Forge Cloud, certification, sync, licensing, distribution, and commercialization.",
     },
-    tags: ["Fount-aware", "Memory sync", "Modifiable"],
-    agents: "Tutor · Quiz maker",
-    memory: { zh: "learning habits", en: "learning habits" },
-  },
-  {
-    name: "Finance Garden",
-    description: {
-      zh: "个人财务 Field。Fount 记住预算偏好、消费模式和风险边界。",
-      en: "A personal finance Field. Fount remembers budget preferences, spending patterns, and risk boundaries.",
-    },
-    tags: ["Permission required", "Private", "Resource ledger"],
-    agents: "Budget guide",
-    memory: { zh: "budget rhythm", en: "budget rhythm" },
+    items: [
+      { zh: "certification", en: "certification" },
+      { zh: "sync", en: "sync" },
+      { zh: "licensing", en: "licensing" },
+    ],
   },
 ];
 
-const EVERYONE_ITEMS = [
-  "Customize a Field",
-  "Change the mood, layout, rules, and agents",
-  "Remix templates",
-  "Ask Fount to reshape an experience",
-  "Create personal spaces without writing code",
-];
-
-const BUILDER_ITEMS = [
-  "Edit source when permission is granted",
-  "Connect Fount SDK",
-  "Expose permissions and memory channels",
-  "Test with virtual users",
-  "Package as a Field",
-  "Publish to Foundry",
-];
-
-const FORGE_STEPS = [
-  "Imagine",
-  "Enter a Field",
-  "Notice what should change",
-  "Ask Fount to reshape it",
-  "Check permissions",
-  "Modify in Forge",
-  "Test with Field agents and virtual users",
-  "Publish or keep private",
-];
-
-const FOUNDRY_FIELDS: FoundryField[] = [
+const FIELD_TYPES: ConceptItem[] = [
   {
-    name: "Quiet Study Room",
-    fit: {
-      zh: "适合独处学习，Fount 可以记住用户的阅读节奏。",
-      en: "For quiet study. Fount remembers your reading rhythm.",
+    name: "Ordinary",
+    title: { zh: "普通 Field", en: "Ordinary Field" },
+    body: {
+      zh: "可进入、可使用、可产生基础事件，但不一定接入记忆。",
+      en: "Enterable and usable, with basic events, but not necessarily memory-aware.",
     },
-    price: "Free",
-    budget: "Low CPU · Local memory",
-    permissions: "Reading state",
-    status: "Certified",
-    traits: ["Fount-aware", "Memory sync", "No source access"],
   },
   {
-    name: "Tiny Product Studio",
-    fit: {
-      zh: "适合把想法变成小产品，支持 Forge 改造。",
-      en: "For turning ideas into small products, with Forge remix support.",
+    name: "Memory-aware",
+    title: { zh: "记忆感知 Field", en: "Memory-aware Field" },
+    body: {
+      zh: "可读取授权记忆，写回经验事件，并在未来被回忆。",
+      en: "Can read permitted memory, write experience events, and be recalled later.",
     },
-    price: "Coming soon",
-    budget: "Medium compute",
-    permissions: "Source access",
-    status: "Verified builder",
-    traits: ["Forge-ready", "Field agents", "Source available"],
   },
   {
-    name: "Character Town",
-    fit: {
-      zh: "角色 agent 小镇，Fount 可以进入、观察、控制部分 agent。",
-      en: "A character-agent town where Fount can enter, observe, and control permitted agents.",
+    name: "Agent",
+    title: { zh: "Agent Field", en: "Agent Field" },
+    body: {
+      zh: "内含 Field agent，可由 Fount 通过控制通道引导或限制。",
+      en: "Contains Field agents that Fount can guide or constrain through control channels.",
     },
-    price: "Coming soon",
-    budget: "Medium GPU",
-    permissions: "Agent control",
-    status: "Playtest",
-    traits: ["Playable", "Field agents", "Permission required"],
   },
   {
-    name: "Personal Ritual Garden",
-    fit: {
-      zh: "帮助用户建立生活仪式，Fount 会记住习惯与情绪变化。",
-      en: "Build personal rituals while Fount remembers habit and mood changes.",
+    name: "Creator",
+    title: { zh: "Creator Field", en: "Creator Field" },
+    body: {
+      zh: "用于生成、编辑、模拟、测试或发布其他 Field。",
+      en: "Used to generate, edit, simulate, test, or publish other Fields.",
     },
-    price: "Free",
-    budget: "Low compute",
-    permissions: "Habit memory",
-    status: "Certified",
-    traits: ["Fount-aware", "Memory sync", "Forge config"],
+  },
+  {
+    name: "System",
+    title: { zh: "系统级 Field", en: "System Field" },
+    body: {
+      zh: "拥有更高权限，服务于整个 Fount 生态的核心流程。",
+      en: "Has higher privileges and serves core workflows across the Fount ecosystem.",
+    },
+  },
+  {
+    name: "Private / Published",
+    title: { zh: "私有或发布 Field", en: "Private or Published Field" },
+    body: {
+      zh: "可以只存在本地，也可以通过 Foundry 分发、购买、安装和更新。",
+      en: "Can live locally or be distributed, purchased, installed, and updated through Foundry.",
+    },
   },
 ];
 
-const SDK_CAPABILITIES = [
-  "Fount identity",
-  "Memory sync",
-  "Experience events",
-  "Permission layer",
-  "Field agent control",
-  "Resource ledger",
-  "Foundry metadata",
+const PERMISSIONS: PermissionItem[] = [
+  {
+    name: "Memory",
+    title: { zh: "Memory Read / Write", en: "Memory Read / Write" },
+    body: {
+      zh: "读取授权记忆，写回新的 experience events。",
+      en: "Read permitted memory and write new experience events.",
+    },
+    level: "L1-L2",
+  },
+  {
+    name: "Recall",
+    title: { zh: "Cross-field Recall", en: "Cross-field Recall" },
+    body: {
+      zh: "把一个 Field 的经验安全带入另一个 Field。",
+      en: "Safely bring experience from one Field into another.",
+    },
+    level: "L2",
+  },
+  {
+    name: "Agent",
+    title: { zh: "Agent Control", en: "Agent Control" },
+    body: {
+      zh: "允许 Fount 引导、限制或终止 Field agent 的行动。",
+      en: "Let Fount guide, constrain, or stop Field agent actions.",
+    },
+    level: "L2-L3",
+  },
+  {
+    name: "Resources",
+    title: { zh: "Network / File / Budget", en: "Network / File / Budget" },
+    body: {
+      zh: "网络、本地文件、资源预算和敏感能力必须逐项授权。",
+      en: "Network, local files, resource budget, and sensitive capabilities must be granted explicitly.",
+    },
+    level: "L3",
+  },
+  {
+    name: "Forge",
+    title: { zh: "Forge Editable / Source Access", en: "Forge Editable / Source Access" },
+    body: {
+      zh: "允许 Forge 修改配置、体验、行为，或在更高等级下访问源码。",
+      en: "Allow Forge to modify configuration, experience, behavior, or source at higher levels.",
+    },
+    level: "L3-L4",
+  },
+  {
+    name: "Commercial",
+    title: { zh: "Publish / Commercial / Update", en: "Publish / Commercial / Update" },
+    body: {
+      zh: "发布、收费、分发、更新和认证需要明确商业权限。",
+      en: "Publishing, charging, distribution, updates, and certification require explicit commercial rights.",
+    },
+    level: "L4-L5",
+  },
+];
+
+const PERMISSION_LEVELS: StepItem[] = [
+  {
+    label: "L0",
+    title: { zh: "Enter only", en: "Enter only" },
+    body: {
+      zh: "只进入和使用，不读写记忆。",
+      en: "Enter and use, with no memory read or write.",
+    },
+  },
+  {
+    label: "L1",
+    title: { zh: "Session memory", en: "Session memory" },
+    body: {
+      zh: "只在当前体验内保留上下文。",
+      en: "Keep context inside the current session only.",
+    },
+  },
+  {
+    label: "L2",
+    title: { zh: "Personal memory", en: "Personal memory" },
+    body: {
+      zh: "写回可授权的个人经验。",
+      en: "Write permitted personal experience back to Fount.",
+    },
+  },
+  {
+    label: "L3",
+    title: { zh: "Agent action", en: "Agent action" },
+    body: {
+      zh: "允许 agent 在边界内行动。",
+      en: "Allow agents to act inside defined limits.",
+    },
+  },
+  {
+    label: "L4",
+    title: { zh: "Forge edit", en: "Forge edit" },
+    body: {
+      zh: "允许改造配置、流程或源码。",
+      en: "Allow configuration, workflow, or source changes.",
+    },
+  },
+  {
+    label: "L5",
+    title: { zh: "Publish", en: "Publish" },
+    body: {
+      zh: "允许发布、收费、更新和分发。",
+      en: "Allow publishing, charging, updates, and distribution.",
+    },
+  },
+];
+
+const EXPERIENCE_LOOP: StepItem[] = [
+  {
+    label: "01",
+    title: { zh: "Enter", en: "Enter" },
+    body: {
+      zh: "人和 Fount 进入 Field。",
+      en: "The person and Fount enter a Field.",
+    },
+  },
+  {
+    label: "02",
+    title: { zh: "Experience", en: "Experience" },
+    body: {
+      zh: "使用、玩、学、创造或协作。",
+      en: "Use, play, learn, create, or collaborate.",
+    },
+  },
+  {
+    label: "03",
+    title: { zh: "Remember", en: "Remember" },
+    body: {
+      zh: "形成 experience events。",
+      en: "Create experience events.",
+    },
+  },
+  {
+    label: "04",
+    title: { zh: "Recall", en: "Recall" },
+    body: {
+      zh: "在其他 Field 中回忆。",
+      en: "Recall them in other Fields.",
+    },
+  },
+  {
+    label: "05",
+    title: { zh: "Discover", en: "Discover" },
+    body: {
+      zh: "Fount 去 Foundry 找新 Field。",
+      en: "Fount visits Foundry to find new Fields.",
+    },
+  },
+  {
+    label: "06",
+    title: { zh: "Modify", en: "Modify" },
+    body: {
+      zh: "在 Forge 中改造体验。",
+      en: "Reshape the experience in Forge.",
+    },
+  },
+  {
+    label: "07",
+    title: { zh: "Return", en: "Return" },
+    body: {
+      zh: "带着新的理解再次进入。",
+      en: "Return with new understanding.",
+    },
+  },
+];
+
+const FORGE_FOUNDRY_BLOCKS: ListBlock[] = [
+  {
+    title: { zh: "Forge workflow", en: "Forge workflow" },
+    body: {
+      zh: "从想象一个 Field，到进入、观察、修改、检查权限、配置、源码、测试、保存和发布。",
+      en: "From imagining a Field to entering, observing, changing, checking permissions, configuring, editing source, testing, saving, and publishing.",
+    },
+    items: [
+      { zh: "普通用户改造界面、规则、角色和流程", en: "Ordinary users reshape interfaces, rules, roles, and workflows" },
+      { zh: "开发者连接源码、SDK、测试和发布链路", en: "Developers connect source, SDK, testing, and publishing pipelines" },
+      { zh: "权限不足时只允许可配置级别的修改", en: "When permissions are limited, only configurable changes are allowed" },
+    ],
+  },
+  {
+    title: { zh: "Foundry listing", en: "Foundry listing" },
+    body: {
+      zh: "Foundry 的信息不只是价格和截图，而是 Field 是否 Fount-aware、是否有 agent、记忆同步、权限、预算和认证。",
+      en: "A Foundry listing is not just price and screenshots. It describes whether a Field is Fount-aware, agentic, memory-syncable, permissioned, budgeted, and certified.",
+    },
+    items: [
+      { zh: "支持人主动浏览，也支持 Fount 基于目标主动发现", en: "Supports human browsing and Fount-initiated discovery" },
+      { zh: "展示 permissions、budget、source、certification、local-first", en: "Shows permissions, budget, source, certification, and local-first status" },
+      { zh: "安装、购买、更新、发布与商业授权都在同一系统中完成", en: "Installation, purchase, updates, publishing, and licensing happen in one system" },
+    ],
+  },
+];
+
+const SDK_CAPABILITIES: string[] = [
+  "manifest",
+  "permissions",
+  "agents",
+  "experience events",
+  "memory sync",
+  "control channel",
   "Forge editability",
-  "Licensing",
-  "Updates",
+  "resource budget",
+  "certification",
+  "local-first",
 ];
 
-const LOOP_STEPS = [
-  "Enter",
-  "Experience",
-  "Remember",
-  "Recall",
-  "Discover",
-  "Modify",
-  "Return",
-];
-
-const PRICING_PLANS: PricingPlan[] = [
+const OPEN_BLOCKS: ListBlock[] = [
   {
-    name: "Fount Free",
-    audience: {
-      zh: "适合所有人。安装 Fount，进入 Fields，管理记忆、权限、基础资源账本，使用官方基础 Field。",
-      en: "For everyone. Install Fount, enter Fields, manage memory, permissions, a basic resource ledger, and official starter Fields.",
+    title: { zh: "Open source foundation", en: "Open source foundation" },
+    body: {
+      zh: "开放的部分需要形成信任、互操作和开发者采用。",
+      en: "The open parts create trust, interoperability, and developer adoption.",
     },
-    price: "Free",
-    features: [
-      { zh: "Personal agent brain", en: "Personal agent brain" },
-      { zh: "Basic Fields", en: "Basic Fields" },
-      { zh: "Memory and permission control", en: "Memory and permission control" },
+    items: [
+      { zh: "Fount Core, Field Runtime, Permission Model", en: "Fount Core, Field Runtime, Permission Model" },
+      { zh: "protocols, Manifest Schema, SDK", en: "protocols, Manifest Schema, SDK" },
+      { zh: "Lite system Fields and starter Fields", en: "Lite system Fields and starter Fields" },
     ],
   },
   {
-    name: "Fount Plus",
-    audience: {
-      zh: "适合深度个人使用。更多记忆能力、跨 Field 自动化、Foundry 推荐、本地和云端同步。",
-      en: "For deeper personal use: stronger memory, cross-Field automation, Foundry recommendations, and local/cloud sync.",
+    title: { zh: "Official services", en: "Official services" },
+    body: {
+      zh: "商业化围绕创造、发现、认证、分发、同步和团队协作。",
+      en: "Commercialization sits around creation, discovery, certification, distribution, sync, and team workflows.",
     },
-    price: "Coming soon",
-    features: [
-      { zh: "More memory capacity", en: "More memory capacity" },
-      { zh: "Cross-Field automation", en: "Cross-Field automation" },
-      { zh: "Personal recommendations", en: "Personal recommendations" },
-    ],
-  },
-  {
-    name: "Forge Pro",
-    audience: {
-      zh: "适合创造者和开发者。高级 Field 改造、源码编辑、SDK 工具、虚拟用户测试、打包和发布。",
-      en: "For creators and developers: advanced remixes, source editing, SDK tools, virtual-user testing, packaging, and publishing.",
-    },
-    price: "Coming soon",
-    features: [
-      { zh: "Advanced Forge workflows", en: "Advanced Forge workflows" },
-      { zh: "Source and SDK tooling", en: "Source and SDK tooling" },
-      { zh: "Packaging and testing", en: "Packaging and testing" },
-    ],
-  },
-  {
-    name: "Foundry Developer",
-    audience: {
-      zh: "适合发布 Field 的创作者。Field listing、认证流程、授权、更新、分析和商业化工具。",
-      en: "For Field publishers: listings, certification, licensing, updates, analytics, and monetization tools.",
-    },
-    price: "Coming soon",
-    features: [
-      { zh: "Field listing", en: "Field listing" },
-      { zh: "Certification and licensing", en: "Certification and licensing" },
-      { zh: "Developer analytics", en: "Developer analytics" },
+    items: [
+      { zh: "Forge Pro, Forge Cloud, virtual user testing", en: "Forge Pro, Forge Cloud, virtual user testing" },
+      { zh: "Foundry Network, payments, licensing, updates", en: "Foundry Network, payments, licensing, updates" },
+      { zh: "recommendations, certification, analytics, teams", en: "recommendations, certification, analytics, teams" },
     ],
   },
 ];
 
-function useDocumentMetadata(lang: Lang) {
+const BUSINESS_MODELS: ConceptItem[] = [
+  {
+    name: "Free",
+    title: { zh: "Fount Core", en: "Fount Core" },
+    body: {
+      zh: "免费开放，提供本地个人大脑、基础 Field runtime 和 starter Fields。",
+      en: "Free and open, with the local personal brain, base Field runtime, and starter Fields.",
+    },
+  },
+  {
+    name: "Plus",
+    title: { zh: "Fount Plus", en: "Fount Plus" },
+    body: {
+      zh: "云同步、更大记忆、更多 Field、跨设备和更强模型能力。",
+      en: "Cloud sync, larger memory, more Fields, cross-device use, and stronger model capacity.",
+    },
+  },
+  {
+    name: "Forge",
+    title: { zh: "Forge Pro", en: "Forge Pro" },
+    body: {
+      zh: "高级 Field 创作、测试、模拟、源码协作、团队工作流。",
+      en: "Advanced Field creation, testing, simulation, source collaboration, and team workflows.",
+    },
+  },
+  {
+    name: "Network",
+    title: { zh: "Foundry Network", en: "Foundry Network" },
+    body: {
+      zh: "Field 分发、交易抽成、认证、更新、推荐和开发者分析。",
+      en: "Field distribution, take rate, certification, updates, recommendations, and developer analytics.",
+    },
+  },
+];
+
+const ROADMAP: StepItem[] = [
+  {
+    label: "Phase 1",
+    title: { zh: "Fount Core + starter Fields", en: "Fount Core + starter Fields" },
+    body: {
+      zh: "跑通本地个人大脑、记忆、Field Runtime 和几个可体验 Field。",
+      en: "Ship the local personal brain, memory, Field Runtime, and several usable starter Fields.",
+    },
+  },
+  {
+    label: "Phase 2",
+    title: { zh: "Forge Lite", en: "Forge Lite" },
+    body: {
+      zh: "让普通用户能改配置、体验、角色和规则。",
+      en: "Let ordinary users edit configuration, experience, roles, and rules.",
+    },
+  },
+  {
+    label: "Phase 3",
+    title: { zh: "Foundry Alpha", en: "Foundry Alpha" },
+    body: {
+      zh: "开始发现、安装、发布和认证 Field。",
+      en: "Start discovery, installation, publishing, and certification for Fields.",
+    },
+  },
+  {
+    label: "Phase 4",
+    title: { zh: "SDK ecosystem", en: "SDK ecosystem" },
+    body: {
+      zh: "让外部产品通过 SDK 变成 Fount-aware Field。",
+      en: "Let external products become Fount-aware Fields through the SDK.",
+    },
+  },
+  {
+    label: "Phase 5",
+    title: { zh: "Commercial network", en: "Commercial network" },
+    body: {
+      zh: "完善同步、付费、授权、推荐、团队和开发者服务。",
+      en: "Complete sync, payments, licensing, recommendations, teams, and developer services.",
+    },
+  },
+];
+
+const DASHBOARD_FIELDS: ConceptItem[] = [
+  {
+    name: "Reading Room",
+    title: { zh: "quiet summary preference", en: "quiet summary preference" },
+    body: {
+      zh: "experience event written",
+      en: "experience event written",
+    },
+    meta: { zh: "Memory-aware", en: "Memory-aware" },
+  },
+  {
+    name: "UI Playground",
+    title: { zh: "warm minimal line style", en: "warm minimal line style" },
+    body: {
+      zh: "ready for Forge recall",
+      en: "ready for Forge recall",
+    },
+    meta: { zh: "Forge editable", en: "Forge editable" },
+  },
+  {
+    name: "Finance Garden",
+    title: { zh: "conservative risk boundary", en: "conservative risk boundary" },
+    body: {
+      zh: "permission request pending",
+      en: "permission request pending",
+    },
+    meta: { zh: "Private", en: "Private" },
+  },
+  {
+    name: "Agent Game",
+    title: { zh: "cooperative agent interest", en: "cooperative agent interest" },
+    body: {
+      zh: "Foundry discovery signal",
+      en: "Foundry discovery signal",
+    },
+    meta: { zh: "Agent Field", en: "Agent Field" },
+  },
+];
+
+const DASHBOARD_FEED: LocalizedText[] = [
+  {
+    zh: "UI Playground 的视觉偏好已写回 Fount。",
+    en: "UI Playground visual preference was written back to Fount.",
+  },
+  {
+    zh: "Forge 请求读取界面偏好，级别 L2。",
+    en: "Forge requested interface preference recall at level L2.",
+  },
+  {
+    zh: "Foundry 推荐 3 个协作型 Agent Field。",
+    en: "Foundry recommended 3 cooperative Agent Fields.",
+  },
+];
+
+const MANIFEST_SNIPPET = `{
+  "id": "reading-room",
+  "type": "field",
+  "fountAware": true,
+  "permissions": ["memory:write", "agent:control"],
+  "events": ["entered", "highlighted", "confused"],
+  "forge": { "editable": ["ui", "rules", "agents"] }
+}`;
+
+export function FountHomePage({ lang, onLangChange }: FountHomePageProps) {
   const copy = COPY[lang];
+  const text = (value: LocalizedText) => value[lang];
 
   useEffect(() => {
     document.title = copy.documentTitle;
-
-    let metaDescription = document.querySelector<HTMLMetaElement>(
-      'meta[name="description"]',
-    );
-    if (!metaDescription) {
-      metaDescription = document.createElement("meta");
-      metaDescription.name = "description";
-      document.head.appendChild(metaDescription);
-    }
-    metaDescription.content =
-      lang === "zh"
-        ? "Fount 是面向所有人的 personal agent world system：个人 agent 大脑、Field、Forge、Foundry 与 Fount SDK 的完整生态。"
-        : "Fount is a personal agent world system for everyone: a personal agent brain, Fields, Forge, Foundry, and the Fount SDK.";
-  }, [copy.documentTitle, lang]);
-}
-
-function Header({ lang, onLangChange }: FountHomePageProps) {
-  const copy = COPY[lang];
+  }, [copy.documentTitle]);
 
   return (
-    <header className="fount-header">
-      <a className="fount-logo" href="/" aria-label="Fount home">
-        <span className="fount-logo-mark" aria-hidden="true">
-          <span />
-        </span>
-        <span>Fount</span>
-      </a>
-
-      <nav className="fount-nav" aria-label="Fount navigation">
-        <a href="#fields">{copy.navFields}</a>
-        <a href="#forge">{copy.navForge}</a>
-        <a href="#foundry">{copy.navFoundry}</a>
-        <a href="#sdk">{copy.navSdk}</a>
-        <a href="#pricing">{copy.navPricing}</a>
-        <a href={SYSTEM_DOCS_URL} target="_blank" rel="noreferrer">
-          {copy.navDocs}
+    <main className="fount-page" data-lang={lang}>
+      <header className="fount-header">
+        <a className="fount-logo" href="#top" aria-label="Fount home">
+          <span className="fount-logo-mark" aria-hidden="true">
+            <span />
+          </span>
+          Fount
         </a>
-      </nav>
 
-      <div className="fount-header-actions">
-        <div className="fount-lang-switch" aria-label="Language">
-          <button
-            type="button"
-            className={lang === "zh" ? "active" : ""}
-            aria-pressed={lang === "zh"}
-            onClick={() => onLangChange("zh")}
-          >
-            中文
-          </button>
-          <button
-            type="button"
-            className={lang === "en" ? "active" : ""}
-            aria-pressed={lang === "en"}
-            onClick={() => onLangChange("en")}
-          >
-            EN
-          </button>
-        </div>
-        <a className="fount-download-small" href="/download">
-          {copy.download}
-        </a>
-      </div>
-    </header>
-  );
-}
-
-function Hero({ lang }: { lang: Lang }) {
-  const copy = COPY[lang];
-
-  return (
-    <section className="fount-hero">
-      <div className="fount-hero-copy">
-        <h1>{copy.heroTitle}</h1>
-        <p className="fount-hero-deck">{copy.heroDeck}</p>
-
-        <div className="fount-actions">
-          <a className="fount-primary-action" href="/download">
-            {copy.primaryCta}
+        <nav className="fount-nav" aria-label="Fount sections">
+          <a href="#concepts">{copy.navConcepts}</a>
+          <a href="#architecture">{copy.navArchitecture}</a>
+          <a href="#permissions">{copy.navPermissions}</a>
+          <a href="#flow">{copy.navFlow}</a>
+          <a href="#open">{copy.navOpen}</a>
+          <a href="#roadmap">{copy.navRoadmap}</a>
+          <a href={SYSTEM_DOCS_URL} target="_blank" rel="noreferrer">
+            {copy.navDocs}
           </a>
-          <a className="fount-secondary-action" href="#fields">
-            {copy.secondaryCta}
+        </nav>
+
+        <div className="fount-header-actions">
+          <div className="fount-lang-switch" aria-label="Language switcher">
+            <button
+              type="button"
+              className={lang === "zh" ? "active" : ""}
+              onClick={() => onLangChange("zh")}
+            >
+              中文
+            </button>
+            <button
+              type="button"
+              className={lang === "en" ? "active" : ""}
+              onClick={() => onLangChange("en")}
+            >
+              EN
+            </button>
+          </div>
+          <a className="fount-download-small" href="/Fount.dmg">
+            {copy.download}
           </a>
         </div>
-        <p className="fount-hero-footnote">{copy.heroFootnote}</p>
-        <p className="fount-hero-zh">{copy.heroZh}</p>
+      </header>
 
-        <div className="fount-concept-strip" aria-label="Fount concepts">
-          {CONCEPTS.map((concept) => (
-            <article key={concept.name}>
-              <strong>{concept.name}</strong>
-              <span>{concept.title[lang]}</span>
+      <section className="fount-hero" id="top">
+        <div className="fount-hero-copy">
+          <h1>{copy.heroTitle}</h1>
+          <p className="fount-hero-deck">{copy.heroDeck}</p>
+          <p className="fount-hero-zh">{copy.heroSub}</p>
+
+          <div className="fount-actions">
+            <a className="fount-primary-action" href="/Fount.dmg">
+              {copy.primaryCta}
+            </a>
+            <a className="fount-secondary-action" href="#concepts">
+              {copy.secondaryCta}
+            </a>
+          </div>
+
+          <div className="fount-concept-strip" aria-label="Core concepts">
+            {CORE_CONCEPTS.map((concept) => (
+              <article key={concept.name}>
+                <strong>{concept.name}</strong>
+                <span>{text(concept.title)}</span>
+              </article>
+            ))}
+          </div>
+        </div>
+
+        <FountDashboard lang={lang} />
+      </section>
+
+      <section className="fount-section" id="concepts">
+        <div className="fount-section-head fount-section-head-wide">
+          <h2>{copy.definitionTitle}</h2>
+          <p>{copy.definitionLead}</p>
+        </div>
+
+        <div className="fount-intro-grid">
+          {CORE_CONCEPTS.map((concept) => (
+            <article className="fount-thick-card" key={concept.name}>
+              <span>{concept.name}</span>
+              <div>
+                <h3>{text(concept.title)}</h3>
+                <p>{text(concept.body)}</p>
+              </div>
             </article>
           ))}
         </div>
-      </div>
 
-      <FountDashboard lang={lang} />
-    </section>
+        <div className="fount-field-grid fount-system-concepts">
+          {SYSTEM_CONCEPTS.map((concept) => (
+            <article className="fount-field-card" key={concept.name}>
+              <div className="fount-field-card-top">
+                <small>{concept.name}</small>
+                <h3>{text(concept.title)}</h3>
+              </div>
+              <p>{text(concept.body)}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="fount-section">
+        <div className="fount-field-anatomy">
+          <div className="fount-field-world">
+            <span className="fount-world-label">{copy.visionLabel}</span>
+            <strong>{copy.visionTitle}</strong>
+            <p>{copy.visionLead}</p>
+          </div>
+          <div className="fount-layer-grid">
+            {VISION_EXAMPLES.map((example) => (
+              <span className="fount-layer-note" key={example.name}>
+                <b>{example.name}</b>
+                <strong>{text(example.title)}</strong>
+                <small>{text(example.body)}</small>
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="fount-section" id="architecture">
+        <div className="fount-section-head">
+          <h2>{copy.architectureTitle}</h2>
+          <p>{copy.architectureLead}</p>
+        </div>
+
+        <div className="fount-field-grid">
+          {ARCHITECTURE_LAYERS.map((layer) => (
+            <article className="fount-field-card fount-layer-card" key={layer.label}>
+              <div className="fount-field-card-top">
+                <small>{layer.label}</small>
+                <h3>{text(layer.title)}</h3>
+              </div>
+              <p>{text(layer.body)}</p>
+              <div className="fount-pill-row">
+                {layer.items.map((item) => (
+                  <span key={text(item)}>{text(item)}</span>
+                ))}
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <div className="fount-sdk-panel">
+          <div className="fount-sdk-diagram">
+            <div>{copy.packageTitle}</div>
+            <div>Fount Core</div>
+            <span>+</span>
+            <div>Field Runtime</div>
+            <span>+</span>
+            <div>System Fields + Starter Fields</div>
+          </div>
+          <div className="fount-sdk-capabilities fount-package-copy">
+            <h3>{copy.packageTitle}</h3>
+            <p>{copy.packageLead}</p>
+            <span>Fount.app</span>
+            <span>local-first</span>
+            <span>starter Fields</span>
+            <span>system Fields</span>
+          </div>
+        </div>
+      </section>
+
+      <section className="fount-section" id="permissions">
+        <div className="fount-section-head fount-section-head-wide">
+          <h2>{copy.permissionsTitle}</h2>
+          <p>{copy.permissionsLead}</p>
+        </div>
+
+        <p className="fount-permission-rule">{copy.permissionsRule}</p>
+
+        <div className="fount-foundry-grid">
+          {PERMISSIONS.map((permission) => (
+            <article className="fount-foundry-card" key={permission.name}>
+              <div>
+                <h3>{text(permission.title)}</h3>
+                <span>{permission.level}</span>
+              </div>
+              <p>{text(permission.body)}</p>
+            </article>
+          ))}
+        </div>
+
+        <div className="fount-forge-flow fount-permission-levels">
+          {PERMISSION_LEVELS.map((level) => (
+            <article className="fount-flow-step" key={level.label}>
+              <span>{level.label}</span>
+              <strong>{text(level.title)}</strong>
+              <p>{text(level.body)}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="fount-section" id="flow">
+        <div className="fount-section-head fount-section-head-wide">
+          <h2>{copy.flowTitle}</h2>
+          <p>{copy.flowLead}</p>
+        </div>
+
+        <div className="fount-loop-chain">
+          {EXPERIENCE_LOOP.map((step) => (
+            <article className="fount-loop-node" key={step.label}>
+              <span>{step.label}</span>
+              <strong>{text(step.title)}</strong>
+              <p>{text(step.body)}</p>
+            </article>
+          ))}
+        </div>
+
+        <div className="fount-section-head fount-section-head-wide fount-subsection-head">
+          <h2>{copy.forgeTitle}</h2>
+          <p>{copy.forgeLead}</p>
+        </div>
+
+        <div className="fount-forge-columns">
+          {FORGE_FOUNDRY_BLOCKS.map((block) => (
+            <article key={text(block.title)}>
+              <h3>{text(block.title)}</h3>
+              <p>{text(block.body)}</p>
+              <ul>
+                {block.items.map((item) => (
+                  <li key={text(item)}>{text(item)}</li>
+                ))}
+              </ul>
+            </article>
+          ))}
+        </div>
+
+        <div className="fount-field-grid">
+          {FIELD_TYPES.map((field) => (
+            <article className="fount-field-card" key={field.name}>
+              <div className="fount-field-card-top">
+                <small>{field.name}</small>
+                <h3>{text(field.title)}</h3>
+              </div>
+              <p>{text(field.body)}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="fount-section" id="open">
+        <div className="fount-section-head">
+          <h2>{copy.sdkTitle}</h2>
+          <p>{copy.sdkLead}</p>
+        </div>
+
+        <div className="fount-sdk-panel">
+          <div className="fount-sdk-diagram fount-manifest-card">
+            <div>field.manifest.json</div>
+            <pre>{MANIFEST_SNIPPET}</pre>
+          </div>
+          <div className="fount-sdk-capabilities">
+            {SDK_CAPABILITIES.map((capability) => (
+              <span key={capability}>{capability}</span>
+            ))}
+          </div>
+        </div>
+
+        <div className="fount-section-head fount-section-head-wide fount-subsection-head">
+          <h2>{copy.openTitle}</h2>
+          <p>{copy.openLead}</p>
+        </div>
+
+        <div className="fount-forge-columns">
+          {OPEN_BLOCKS.map((block) => (
+            <article key={text(block.title)}>
+              <h3>{text(block.title)}</h3>
+              <p>{text(block.body)}</p>
+              <ul>
+                {block.items.map((item) => (
+                  <li key={text(item)}>{text(item)}</li>
+                ))}
+              </ul>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="fount-section" id="roadmap">
+        <div className="fount-section-head">
+          <h2>{copy.roadmapTitle}</h2>
+          <p>{copy.roadmapLead}</p>
+        </div>
+
+        <div className="fount-pricing-grid">
+          {BUSINESS_MODELS.map((model) => (
+            <article className="fount-pricing-card" key={model.name}>
+              <strong>{model.name}</strong>
+              <h3>{text(model.title)}</h3>
+              <p>{text(model.body)}</p>
+            </article>
+          ))}
+        </div>
+
+        <div className="fount-forge-flow fount-roadmap-flow">
+          {ROADMAP.map((step) => (
+            <article className="fount-flow-step" key={step.label}>
+              <span>{step.label}</span>
+              <strong>{text(step.title)}</strong>
+              <p>{text(step.body)}</p>
+            </article>
+          ))}
+        </div>
+
+        <p className="fount-foundry-line">
+          {lang === "zh"
+            ? "Fount 是开放的个人 agent 大脑。Field 是可携带的经验环境。Forge 和 Foundry 是默认内置的系统级 Field。SDK 让普通产品变成 Field。官方服务提供创造、发现、认证、同步、分发和商业化能力。"
+            : "Fount is an open personal agent brain. Fields are portable experience environments. Forge and Foundry are built-in system Fields. The SDK turns products into Fields. Official services provide creation, discovery, certification, sync, distribution, and commercialization."}
+        </p>
+      </section>
+
+      <section className="fount-final-cta">
+        <div>
+          <h2>{copy.finalTitle}</h2>
+          <p>{copy.finalBody}</p>
+        </div>
+        <div className="fount-actions">
+          <a className="fount-primary-action" href="/Fount.dmg">
+            {copy.primaryCta}
+          </a>
+          <a className="fount-secondary-action" href="#flow">
+            {copy.finalSecondary}
+          </a>
+        </div>
+      </section>
+    </main>
   );
 }
 
 function FountDashboard({ lang }: { lang: Lang }) {
   const copy = COPY[lang];
+  const text = (value: LocalizedText) => value[lang];
 
   return (
-    <div className="fount-dashboard" aria-label="Fount app dashboard mockup">
-      <div className="fount-window-bar">
-        <span />
-        <span />
-        <span />
+    <section className="fount-dashboard" aria-label="Fount system preview">
+      <div className="fount-dashboard-top">
+        <div>
+          <span>Fount</span>
+          <strong>{copy.dashboardTitle}</strong>
+        </div>
+        <p>{copy.dashboardStatus}</p>
       </div>
+
       <div className="fount-dashboard-body">
         <aside className="fount-dashboard-sidebar">
-          {["Home", "Fields", "Forge", "Foundry", "Memory", "Agents", "Permissions"].map(
-            (item) => (
-              <span className={item === "Fields" ? "active" : ""} key={item}>
-                {item}
-              </span>
-            ),
-          )}
+          {ARCHITECTURE_LAYERS.map((layer, index) => (
+            <span className={index === 0 ? "active" : ""} key={layer.label}>
+              {text(layer.title)}
+            </span>
+          ))}
         </aside>
 
-        <main className="fount-dashboard-main">
+        <div className="fount-dashboard-main">
           <div className="fount-dashboard-heading">
             <div>
-              <strong>{copy.dashboardTitle}</strong>
-              <span>{copy.dashboardStatus}</span>
+              <strong>Field Runtime</strong>
+              <span>manifest + permissions + events</span>
             </div>
-            <button type="button">Enter Field</button>
+            <button type="button">sync</button>
           </div>
 
           <div className="fount-field-mini-grid">
-            {HERO_FIELDS.map((field) => (
-              <article key={field.name} className="fount-field-mini-card">
+            {DASHBOARD_FIELDS.map((field) => (
+              <article className="fount-field-mini-card" key={field.name}>
                 <div>
                   <strong>{field.name}</strong>
-                  <span>{field.status}</span>
+                  <span>{field.meta ? text(field.meta) : "Field"}</span>
                 </div>
-                <p>{field.agents}</p>
-                <small>{field.experience}</small>
-                <div>
-                  {field.traits.map((trait) => (
-                    <span key={trait}>{trait}</span>
-                  ))}
-                </div>
+                <p>{text(field.title)}</p>
+                <small>{text(field.body)}</small>
               </article>
             ))}
           </div>
-        </main>
+        </div>
 
         <aside className="fount-dashboard-feed">
-          <strong>Memory stream</strong>
-          {RIGHT_FEED.map((item) => (
-            <p key={item}>{item}</p>
+          <strong>{copy.dashboardFeed}</strong>
+          {DASHBOARD_FEED.map((item) => (
+            <p key={text(item)}>{text(item)}</p>
           ))}
         </aside>
       </div>
-    </div>
-  );
-}
-
-function FountIntro({ lang }: { lang: Lang }) {
-  const copy = COPY[lang];
-
-  return (
-    <section className="fount-section fount-intro" id="brain">
-      <div className="fount-section-head">
-        <h2>{copy.introTitle}</h2>
-        <p>{copy.introLead}</p>
-      </div>
-      <div className="fount-intro-grid">
-        {INTRO_CARDS.map((card) => (
-          <article key={card.name} className="fount-thick-card">
-            <span>{card.name}</span>
-            <h3>{card.title[lang]}</h3>
-            <p>{card.body[lang]}</p>
-          </article>
-        ))}
-      </div>
     </section>
-  );
-}
-
-function FieldSection({ lang }: { lang: Lang }) {
-  const copy = COPY[lang];
-
-  return (
-    <section className="fount-section" id="fields">
-      <div className="fount-section-head">
-        <h2>{copy.fieldTitle}</h2>
-        <p>{copy.fieldLead}</p>
-      </div>
-
-      <div className="fount-field-anatomy">
-        <div className="fount-field-world">
-          <span className="fount-world-label">Example Field</span>
-          <strong>Learning Lab</strong>
-          <p>Fount enters, learns the rules, guides agents, and syncs useful experience back to memory.</p>
-        </div>
-        <div className="fount-layer-grid">
-          {FIELD_LAYERS.map((layer) => (
-            <span key={layer}>{layer}</span>
-          ))}
-        </div>
-      </div>
-
-      <div className="fount-field-grid">
-        {FIELD_EXAMPLES.map((field) => (
-          <article className="fount-field-card" key={field.name}>
-            <div className="fount-field-card-top">
-              <h3>{field.name}</h3>
-              <span>{field.agents}</span>
-            </div>
-            <p>{field.description[lang]}</p>
-            <small>Experience: {field.memory[lang]}</small>
-            <div className="fount-tag-row">
-              {field.tags.map((tag) => (
-                <span key={tag}>{tag}</span>
-              ))}
-            </div>
-          </article>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function ForgeSection({ lang }: { lang: Lang }) {
-  const copy = COPY[lang];
-
-  return (
-    <section className="fount-section" id="forge">
-      <div className="fount-section-head fount-section-head-wide">
-        <h2>{copy.forgeTitle}</h2>
-        <p>{copy.forgeLead}</p>
-      </div>
-
-      <div className="fount-forge-columns">
-        <article>
-          <h3>{copy.everyone}</h3>
-          <ul>
-            {EVERYONE_ITEMS.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-        </article>
-        <article>
-          <h3>{copy.builders}</h3>
-          <ul>
-            {BUILDER_ITEMS.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-        </article>
-      </div>
-
-      <p className="fount-permission-rule">{copy.permissionRule}</p>
-
-      <div className="fount-forge-flow" aria-label="Forge workflow">
-        {FORGE_STEPS.map((step, index) => (
-          <div className="fount-flow-step" key={step}>
-            <span>{String(index + 1).padStart(2, "0")}</span>
-            <strong>{step}</strong>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function FoundrySection({ lang }: { lang: Lang }) {
-  const copy = COPY[lang];
-
-  return (
-    <section className="fount-section" id="foundry">
-      <div className="fount-section-head">
-        <h2>{copy.foundryTitle}</h2>
-        <p>{copy.foundryLead}</p>
-      </div>
-
-      <div className="fount-foundry-grid">
-        {FOUNDRY_FIELDS.map((field) => (
-          <article className="fount-foundry-card" key={field.name}>
-            <div>
-              <h3>{field.name}</h3>
-              <span>{field.price}</span>
-            </div>
-            <p>{field.fit[lang]}</p>
-            <dl>
-              <div>
-                <dt>Fount-aware</dt>
-                <dd>Yes</dd>
-              </div>
-              <div>
-                <dt>Resource budget</dt>
-                <dd>{field.budget}</dd>
-              </div>
-              <div>
-                <dt>Permissions</dt>
-                <dd>{field.permissions}</dd>
-              </div>
-              <div>
-                <dt>Certification</dt>
-                <dd>{field.status}</dd>
-              </div>
-            </dl>
-            <div className="fount-tag-row">
-              {field.traits.map((trait) => (
-                <span key={trait}>{trait}</span>
-              ))}
-            </div>
-          </article>
-        ))}
-      </div>
-
-      <p className="fount-foundry-line">{copy.foundryLine}</p>
-    </section>
-  );
-}
-
-function SDKSection({ lang }: { lang: Lang }) {
-  const copy = COPY[lang];
-
-  return (
-    <section className="fount-section fount-sdk" id="sdk">
-      <div className="fount-section-head">
-        <h2>{copy.sdkTitle}</h2>
-        <p>{copy.sdkLead}</p>
-      </div>
-
-      <div className="fount-sdk-panel">
-        <div className="fount-sdk-diagram" aria-label="App to Field diagram">
-          <div>Ordinary App / Product</div>
-          <span aria-hidden="true">↓</span>
-          <div>Fount SDK</div>
-          <span aria-hidden="true">↓</span>
-          <div>Field</div>
-        </div>
-        <div className="fount-sdk-capabilities">
-          {SDK_CAPABILITIES.map((capability) => (
-            <span key={capability}>{capability}</span>
-          ))}
-        </div>
-      </div>
-
-      <p className="fount-sdk-open">{copy.sdkOpen}</p>
-    </section>
-  );
-}
-
-function ExperienceLoop({ lang }: { lang: Lang }) {
-  const copy = COPY[lang];
-
-  return (
-    <section className="fount-section fount-loop">
-      <div className="fount-section-head">
-        <h2>{copy.loopTitle}</h2>
-        <p>{copy.loopLead}</p>
-      </div>
-
-      <div className="fount-loop-chain" aria-label="Experience loop">
-        {LOOP_STEPS.map((step, index) => (
-          <div className="fount-loop-node" key={step}>
-            <span>{String(index + 1).padStart(2, "0")}</span>
-            <strong>{step}</strong>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function PricingSection({ lang }: { lang: Lang }) {
-  const copy = COPY[lang];
-
-  return (
-    <section className="fount-section" id="pricing">
-      <div className="fount-section-head">
-        <h2>{copy.pricingTitle}</h2>
-        <p>{copy.pricingLead}</p>
-      </div>
-
-      <div className="fount-pricing-grid">
-        {PRICING_PLANS.map((plan) => (
-          <article className="fount-pricing-card" key={plan.name}>
-            <h3>{plan.name}</h3>
-            <strong>{plan.price}</strong>
-            <p>{plan.audience[lang]}</p>
-            <ul>
-              {plan.features.map((feature) => (
-                <li key={feature.en}>{feature[lang]}</li>
-              ))}
-            </ul>
-          </article>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function FinalCTA({ lang }: { lang: Lang }) {
-  const copy = COPY[lang];
-
-  return (
-    <section className="fount-final-cta">
-      <h2>{copy.finalTitle}</h2>
-      <p>{copy.finalBody}</p>
-      <div className="fount-actions">
-        <a className="fount-primary-action" href="/download">
-          {copy.primaryCta}
-        </a>
-        <a className="fount-secondary-action" href="#foundry">
-          {copy.finalSecondary}
-        </a>
-      </div>
-    </section>
-  );
-}
-
-export function FountHomePage({ lang, onLangChange }: FountHomePageProps) {
-  useDocumentMetadata(lang);
-
-  return (
-    <main className="fount-page">
-      <Header lang={lang} onLangChange={onLangChange} />
-      <Hero lang={lang} />
-      <FountIntro lang={lang} />
-      <FieldSection lang={lang} />
-      <ForgeSection lang={lang} />
-      <FoundrySection lang={lang} />
-      <SDKSection lang={lang} />
-      <ExperienceLoop lang={lang} />
-      <PricingSection lang={lang} />
-      <FinalCTA lang={lang} />
-    </main>
   );
 }

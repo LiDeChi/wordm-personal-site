@@ -10268,3 +10268,252 @@ body::before {
         border-radius: 8px;
     }
 }
+
+/* Fount structure content typography and dense-system sections */
+.fount-page {
+    --fount-serif: "Noto Serif SC", "Noto Serif", Georgia, serif;
+    --fount-ui: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-family: var(--fount-serif);
+}
+
+.fount-logo,
+.fount-nav a,
+.fount-lang-switch button,
+.fount-download-small,
+.fount-primary-action,
+.fount-secondary-action,
+.fount-concept-strip strong,
+.fount-thick-card > span,
+.fount-field-card small,
+.fount-flow-step span,
+.fount-loop-node span,
+.fount-foundry-card > div:first-child span,
+.fount-pill-row span,
+.fount-world-label,
+.fount-dashboard,
+.fount-manifest-card pre {
+    font-family: var(--fount-ui);
+    letter-spacing: 0;
+}
+
+.fount-page h1,
+.fount-page h2,
+.fount-page h3,
+.fount-field-world strong {
+    font-family: var(--fount-serif);
+    font-weight: 600;
+    letter-spacing: 0;
+}
+
+.fount-hero h1 {
+    max-width: 11ch;
+    font-size: clamp(4.6rem, 9vw, 8.6rem);
+    line-height: 0.98;
+}
+
+.fount-hero-copy {
+    max-width: 700px;
+}
+
+.fount-hero-deck {
+    max-width: 660px;
+    color: rgb(55 43 34 / 84%);
+    font-size: clamp(1.18rem, 1.6vw, 1.48rem);
+}
+
+.fount-hero-zh {
+    max-width: 680px;
+}
+
+.fount-concept-strip article {
+    min-height: 104px;
+}
+
+.fount-concept-strip span {
+    font-family: var(--fount-serif);
+    color: var(--warm-ink);
+    font-size: 0.92rem;
+    line-height: 1.35;
+}
+
+.fount-thick-card {
+    min-height: 250px;
+}
+
+.fount-thick-card p,
+.fount-field-card p,
+.fount-foundry-card p,
+.fount-pricing-card p,
+.fount-flow-step p,
+.fount-loop-node p,
+.fount-package-copy p,
+.fount-forge-columns p {
+    color: var(--warm-muted);
+    font-size: 0.95rem;
+    line-height: 1.7;
+}
+
+.fount-system-concepts {
+    margin-top: 8px;
+}
+
+.fount-layer-note {
+    align-items: stretch;
+    display: grid !important;
+    gap: 10px;
+    min-height: 148px !important;
+}
+
+.fount-layer-note b,
+.fount-layer-note strong,
+.fount-layer-note small {
+    display: block;
+}
+
+.fount-layer-note b {
+    color: var(--warm-accent);
+    font-family: var(--fount-ui);
+    font-size: 0.76rem;
+    font-weight: 700;
+}
+
+.fount-layer-note strong {
+    color: var(--warm-ink);
+    font-size: 1.05rem;
+    line-height: 1.28;
+}
+
+.fount-layer-note small {
+    color: var(--warm-muted);
+    font-size: 0.86rem;
+    line-height: 1.55;
+}
+
+.fount-layer-card {
+    min-height: 280px;
+}
+
+.fount-pill-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.fount-pill-row span,
+.fount-sdk-capabilities span {
+    border: 1px solid rgb(32 30 26 / 11%);
+    border-radius: 999px;
+    background: rgb(255 251 244 / 72%);
+    color: var(--warm-soft);
+    font-size: 0.72rem;
+    font-weight: 650;
+    padding: 7px 10px;
+}
+
+.fount-package-copy {
+    display: flex;
+    align-content: center;
+}
+
+.fount-package-copy h3,
+.fount-package-copy p {
+    flex-basis: 100%;
+    margin: 0;
+}
+
+.fount-package-copy h3 {
+    color: var(--warm-ink);
+    font-size: 1.6rem;
+}
+
+.fount-manifest-card {
+    align-content: start;
+}
+
+.fount-manifest-card pre {
+    overflow: auto;
+    margin: 0;
+    border: 1px solid rgb(32 30 26 / 11%);
+    border-radius: 8px;
+    background:
+        linear-gradient(180deg, rgb(255 252 247 / 88%), rgb(244 235 222 / 78%)),
+        #fffaf1;
+    color: rgb(54 42 34 / 88%);
+    font-size: clamp(0.68rem, 1vw, 0.82rem);
+    line-height: 1.65;
+    padding: 16px;
+    white-space: pre-wrap;
+}
+
+.fount-permission-levels {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.fount-roadmap-flow {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.fount-subsection-head {
+    border-top: 1px solid rgb(32 30 26 / 10%);
+    margin-top: 22px;
+    padding-top: 42px;
+}
+
+.fount-foundry-line {
+    border-left: 2px solid var(--warm-accent);
+    padding-left: 18px;
+}
+
+:root[data-theme="night"] .fount-hero-deck,
+:root[data-theme="night"] .fount-concept-strip span,
+:root[data-theme="night"] .fount-layer-note strong,
+:root[data-theme="night"] .fount-package-copy h3 {
+    color: var(--warm-night-ink);
+}
+
+:root[data-theme="night"] .fount-thick-card p,
+:root[data-theme="night"] .fount-field-card p,
+:root[data-theme="night"] .fount-foundry-card p,
+:root[data-theme="night"] .fount-pricing-card p,
+:root[data-theme="night"] .fount-flow-step p,
+:root[data-theme="night"] .fount-loop-node p,
+:root[data-theme="night"] .fount-package-copy p,
+:root[data-theme="night"] .fount-forge-columns p,
+:root[data-theme="night"] .fount-layer-note small {
+    color: rgb(255 241 217 / 68%);
+}
+
+:root[data-theme="night"] .fount-pill-row span,
+:root[data-theme="night"] .fount-sdk-capabilities span,
+:root[data-theme="night"] .fount-manifest-card pre {
+    border-color: rgb(255 241 217 / 12%);
+    background: rgb(255 241 217 / 6%);
+    color: rgb(255 241 217 / 72%);
+}
+
+@media (max-width: 1120px) {
+    .fount-permission-levels,
+    .fount-roadmap-flow {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 760px) {
+    .fount-hero h1 {
+        max-width: 9.5ch;
+        font-size: clamp(3.35rem, 16vw, 5.6rem);
+    }
+
+    .fount-layer-note {
+        min-height: 132px !important;
+    }
+
+    .fount-permission-levels,
+    .fount-roadmap-flow {
+        grid-template-columns: 1fr;
+    }
+
+    .fount-manifest-card pre {
+        font-size: 0.68rem;
+    }
+}
