@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import type { Lang } from "../i18n/lang";
 import { BLOG_ARTICLES } from "../data/blogArticles";
 
@@ -42,7 +42,15 @@ type PermissionItem = {
   level: string;
 };
 
+type OutlineId = "vision" | "ecosystem" | "product";
+
 const SYSTEM_DOCS_URL = "https://system.wordm.us";
+
+const OUTLINE_ITEMS: Array<{ id: OutlineId; label: LocalizedText }> = [
+  { id: "vision", label: { zh: "愿景", en: "Vision" } },
+  { id: "ecosystem", label: { zh: "生态", en: "Ecosystem" } },
+  { id: "product", label: { zh: "产品", en: "Product" } },
+];
 
 const COPY = {
   zh: {
@@ -55,6 +63,7 @@ const COPY = {
     navRoadmap: "路线",
     navBlog: "博客",
     navDocs: "文档",
+    navAccount: "账号",
     download: "Download",
     heroTitle: "Fount 是开放的个人 agent 大脑",
     heroDeck:
@@ -104,16 +113,20 @@ const COPY = {
     finalBody:
       "Fount 是开放的个人 agent 大脑。Field 是可携带的经验环境。经验在 Field 和 Fount 之间流动。",
     finalSecondary: "Explore Foundry",
-    visualTitle: "少一点说明书，多一点可进入的世界。",
+    visualTitle: "从一个个人大脑进入多个 Field。",
     visualLead:
-      "Fount 的关键不是把功能罗列出来，而是让人看见：大脑、环境、记忆、权限、创造和发现如何连成一个活的系统。",
-    storyTitle: "三个场景，把概念变成画面。",
+      "Fount 记录你的偏好、目标和经验；Field 提供可进入的环境；Forge 与 Foundry 让这些环境被创造、发现、安装和改造。",
+    storyTitle: "生态由创造、发现和信任组成。",
     storyLead:
-      "用架构图看系统层次，用案例图看跨 Field 记忆，用评论图看生态的真实感。",
+      "Forge 负责创造与改造，Foundry 负责发现与分发，权限和认证负责把体验边界说清楚。",
     blogTitle: "博客没有漏掉。",
     blogLead:
       "这里接入的是站内真实博客数据。首页只展示一组入口，完整文章列表仍在博客页。",
     blogCta: "查看全部博客",
+    accountTitle: "账号系统是 Fount 的身份与权限层。",
+    accountLead:
+      "登录、角色、权限、同步和购买状态都应该在同一个账户系统里被管理。Fount 不是无状态访问入口，而是有身份边界的个人 agent 大脑。",
+    accountCta: "进入账号",
   },
   en: {
     documentTitle: "Fount | Open Personal Agent Brain",
@@ -125,6 +138,7 @@ const COPY = {
     navRoadmap: "Roadmap",
     navBlog: "Blog",
     navDocs: "Docs",
+    navAccount: "Account",
     download: "Download",
     heroTitle: "Fount is an open personal agent brain.",
     heroDeck:
@@ -174,16 +188,20 @@ const COPY = {
     finalBody:
       "Fount is an open personal agent brain. Fields are portable experience environments. Experience flows between Fields and Fount.",
     finalSecondary: "Explore Foundry",
-    visualTitle: "Less manual. More enterable world.",
+    visualTitle: "From one personal brain into many Fields.",
     visualLead:
-      "Fount should not read like a feature inventory. The page needs to show how brain, environment, memory, permission, creation, and discovery become one living system.",
-    storyTitle: "Three scenes turn the concept into a picture.",
+      "Fount keeps your preferences, goals, and experience. Fields provide enterable environments. Forge and Foundry let those environments be created, discovered, installed, and reshaped.",
+    storyTitle: "The ecosystem is creation, discovery, and trust.",
     storyLead:
-      "Use an architecture image for layers, a case image for cross-field memory, and a comment wall for ecosystem feeling.",
+      "Forge creates and reshapes. Foundry discovers and distributes. Permissions and certification make the experience boundary explicit.",
     blogTitle: "The blog is here too.",
     blogLead:
       "This section uses the real site blog data. The homepage shows a curated entry point, while the full writing archive remains on the blog page.",
     blogCta: "View all writing",
+    accountTitle: "Account is the identity and permission layer for Fount.",
+    accountLead:
+      "Login, roles, permissions, sync, and purchase state should be managed through one account system. Fount is not a stateless entry point; it is a personal agent brain with identity boundaries.",
+    accountCta: "Open Account",
   },
 } as const;
 
@@ -860,20 +878,72 @@ const TESTIMONIALS: ConceptItem[] = [
   },
 ];
 
+const ACCOUNT_FEATURES: ConceptItem[] = [
+  {
+    name: "Identity",
+    title: { zh: "统一登录与角色", en: "Unified login and roles" },
+    body: {
+      zh: "账号承接游客、普通用户、测试账号和管理员角色，决定哪些 Field、文档和资源可见。",
+      en: "The account layer handles guest, user, tester, and admin roles, deciding which Fields, docs, and resources are visible.",
+    },
+  },
+  {
+    name: "Permission",
+    title: { zh: "权限和购买状态", en: "Permissions and purchase state" },
+    body: {
+      zh: "Field 访问、作品解锁、商业授权和分享链接都应落在可审计的账户状态里。",
+      en: "Field access, project unlocks, commercial rights, and share links belong in auditable account state.",
+    },
+  },
+  {
+    name: "Sync",
+    title: { zh: "同步与设备边界", en: "Sync and device boundary" },
+    body: {
+      zh: "本地优先不等于没有身份。跨设备同步、记忆恢复和云服务都从账号边界开始。",
+      en: "Local-first does not mean identity-free. Cross-device sync, memory restore, and cloud services begin at the account boundary.",
+    },
+  },
+];
+
 const FEATURED_BLOG_ARTICLES = BLOG_ARTICLES.slice(0, 6);
 
 export function FountHomePage({ lang, onLangChange }: FountHomePageProps) {
   const copy = COPY[lang];
   const text = (value: LocalizedText) => value[lang];
+  const [activeOutline, setActiveOutline] = useState<OutlineId>("vision");
 
   useEffect(() => {
     document.title = copy.documentTitle;
   }, [copy.documentTitle]);
 
+  useEffect(() => {
+    const sectionIds: OutlineId[] = ["vision", "ecosystem", "product"];
+    const updateActiveOutline = () => {
+      const marker = window.scrollY + window.innerHeight * 0.34;
+      let current: OutlineId = "vision";
+      sectionIds.forEach((id) => {
+        const section = document.getElementById(id);
+        if (section && section.offsetTop <= marker) {
+          current = id;
+        }
+      });
+      setActiveOutline(current);
+    };
+
+    updateActiveOutline();
+    window.addEventListener("scroll", updateActiveOutline, { passive: true });
+    window.addEventListener("resize", updateActiveOutline);
+
+    return () => {
+      window.removeEventListener("scroll", updateActiveOutline);
+      window.removeEventListener("resize", updateActiveOutline);
+    };
+  }, []);
+
   return (
     <main className="fount-page" data-lang={lang}>
       <header className="fount-header">
-        <a className="fount-logo" href="#top" aria-label="Fount home">
+        <a className="fount-logo" href="#vision" aria-label="Fount home">
           <span className="fount-logo-mark" aria-hidden="true">
             <span />
           </span>
@@ -881,12 +951,16 @@ export function FountHomePage({ lang, onLangChange }: FountHomePageProps) {
         </a>
 
         <nav className="fount-nav fount-outline-nav" aria-label="Fount page outline">
-          <a href="#concepts">{copy.navConcepts}</a>
-          <a href="#architecture">{copy.navArchitecture}</a>
-          <a href="#permissions">{copy.navPermissions}</a>
-          <a href="#flow">{copy.navFlow}</a>
-          <a href="#open">{copy.navOpen}</a>
-          <a href="#roadmap">{copy.navRoadmap}</a>
+          {OUTLINE_ITEMS.map((item) => (
+            <a
+              className={activeOutline === item.id ? "active" : ""}
+              href={`#${item.id}`}
+              aria-current={activeOutline === item.id ? "location" : undefined}
+              key={item.id}
+            >
+              {text(item.label)}
+            </a>
+          ))}
         </nav>
 
         <div className="fount-header-actions">
@@ -895,6 +969,7 @@ export function FountHomePage({ lang, onLangChange }: FountHomePageProps) {
             <a href={SYSTEM_DOCS_URL} target="_blank" rel="noreferrer">
               {copy.navDocs}
             </a>
+            <a href="/?view=login">{copy.navAccount}</a>
           </nav>
           <div className="fount-lang-switch" aria-label="Language switcher">
             <button
@@ -918,7 +993,7 @@ export function FountHomePage({ lang, onLangChange }: FountHomePageProps) {
         </div>
       </header>
 
-      <section className="fount-hero" id="top">
+      <section className="fount-hero" id="vision">
         <div className="fount-hero-copy">
           <h1>{copy.heroTitle}</h1>
           <p className="fount-hero-deck">{copy.heroDeck}</p>
@@ -944,7 +1019,7 @@ export function FountHomePage({ lang, onLangChange }: FountHomePageProps) {
         </div>
 
         <div className="fount-hero-visual" aria-label={copy.visualAlt}>
-          <img src="/fount/hero-agent-fields.svg" alt={copy.visualAlt} />
+          <img src="/fount/ai-hero-agent-fields.png" alt={copy.visualAlt} />
           <div className="fount-hero-visual-caption">
             <strong>Fount</strong>
             <span>brain / Fields / memory / Forge / Foundry</span>
@@ -991,10 +1066,10 @@ export function FountHomePage({ lang, onLangChange }: FountHomePageProps) {
         </div>
 
         <div className="fount-image-rail" aria-label={lang === "zh" ? "Fount 概念插图组" : "Fount concept illustration set"}>
-          <img src="/fount/hero-agent-fields.svg" alt="" aria-hidden="true" />
-          <img src="/fount/architecture-stack.svg" alt="" aria-hidden="true" />
-          <img src="/fount/case-field-room.svg" alt="" aria-hidden="true" />
-          <img src="/fount/community-comments.svg" alt="" aria-hidden="true" />
+          <img src="/fount/ai-hero-agent-fields.png" alt="" aria-hidden="true" />
+          <img src="/fount/ai-architecture-stack.png" alt="" aria-hidden="true" />
+          <img src="/fount/ai-account-system.png" alt="" aria-hidden="true" />
+          <img src="/fount/ai-forge-foundry-ecosystem.png" alt="" aria-hidden="true" />
         </div>
       </section>
 
@@ -1017,7 +1092,7 @@ export function FountHomePage({ lang, onLangChange }: FountHomePageProps) {
         </div>
       </section>
 
-      <section className="fount-section fount-story-section">
+      <section className="fount-section fount-story-section" id="ecosystem">
         <div className="fount-section-head">
           <h2>{copy.storyTitle}</h2>
           <p>{copy.storyLead}</p>
@@ -1025,8 +1100,8 @@ export function FountHomePage({ lang, onLangChange }: FountHomePageProps) {
         <div className="fount-visual-grid">
           <article className="fount-visual-card">
             <img
-              src="/fount/architecture-stack.svg"
-              alt={lang === "zh" ? "Fount 五层架构线稿图" : "Line diagram of the five-layer Fount architecture"}
+              src="/fount/ai-architecture-stack.png"
+              alt={lang === "zh" ? "Fount 五层架构 AI 插图" : "AI illustration of the five-layer Fount architecture"}
             />
             <div>
               <span>Architecture</span>
@@ -1036,28 +1111,24 @@ export function FountHomePage({ lang, onLangChange }: FountHomePageProps) {
           </article>
           <article className="fount-visual-card">
             <img
-              src="/fount/case-field-room.svg"
-              alt={lang === "zh" ? "跨 Field 记忆案例线稿图" : "Line illustration of cross-field memory in a case scene"}
+              src="/fount/ai-forge-foundry-ecosystem.png"
+              alt={lang === "zh" ? "Forge 与 Foundry 生态 AI 插图" : "AI illustration of the Forge and Foundry ecosystem"}
             />
             <div>
-              <span>Case</span>
-              <h3>{text(VISION_EXAMPLES[1].title)}</h3>
-              <p>{text(VISION_EXAMPLES[1].body)}</p>
+              <span>Forge / Foundry</span>
+              <h3>{copy.forgeTitle}</h3>
+              <p>{copy.forgeLead}</p>
             </div>
           </article>
           <article className="fount-visual-card">
             <img
-              src="/fount/community-comments.svg"
-              alt={lang === "zh" ? "Field 生态评论墙线稿图" : "Line illustration of community comments around Fields"}
+              src="/fount/ai-account-system.png"
+              alt={lang === "zh" ? "Fount 账号系统 AI 插图" : "AI illustration of the Fount account system"}
             />
             <div>
-              <span>Voices</span>
-              <h3>{lang === "zh" ? "评论让生态有真实感" : "Voices make the ecosystem feel alive"}</h3>
-              <p>
-                {lang === "zh"
-                  ? "不是冷冰冰的能力列表，而是不同角色如何进入、使用、创造和分享 Field。"
-                  : "Not a cold feature list, but how different people enter, use, create, and share Fields."}
-              </p>
+              <span>Account</span>
+              <h3>{copy.accountTitle}</h3>
+              <p>{copy.accountLead}</p>
             </div>
           </article>
         </div>
@@ -1223,6 +1294,35 @@ export function FountHomePage({ lang, onLangChange }: FountHomePageProps) {
         </div>
       </section>
 
+      <section className="fount-section fount-account-section" id="product">
+        <div className="fount-section-head">
+          <h2>{copy.accountTitle}</h2>
+          <p>{copy.accountLead}</p>
+        </div>
+        <div className="fount-account-panel">
+          <div className="fount-account-image">
+            <img
+              src="/fount/ai-account-system.png"
+              alt={lang === "zh" ? "账号身份、权限和同步系统 AI 插图" : "AI illustration of account identity, permissions, and sync"}
+            />
+          </div>
+          <div className="fount-account-copy">
+            {ACCOUNT_FEATURES.map((feature) => (
+              <article className="fount-field-card" key={feature.name}>
+                <div className="fount-field-card-top">
+                  <small>{feature.name}</small>
+                  <h3>{text(feature.title)}</h3>
+                </div>
+                <p>{text(feature.body)}</p>
+              </article>
+            ))}
+            <a className="fount-secondary-action" href="/?view=login">
+              {copy.accountCta}
+            </a>
+          </div>
+        </div>
+      </section>
+
       <section className="fount-section" id="roadmap">
         <div className="fount-section-head">
           <h2>{copy.roadmapTitle}</h2>
@@ -1268,8 +1368,8 @@ export function FountHomePage({ lang, onLangChange }: FountHomePageProps) {
         <div className="fount-voices-layout">
           <div className="fount-voices-image">
             <img
-              src="/fount/community-comments.svg"
-              alt={lang === "zh" ? "Field 生态评论插图" : "Field ecosystem comments illustration"}
+              src="/fount/ai-forge-foundry-ecosystem.png"
+              alt={lang === "zh" ? "Forge、Foundry 和社区评论 AI 插图" : "AI illustration of Forge, Foundry, and community comments"}
             />
           </div>
           <div className="fount-voice-grid">
