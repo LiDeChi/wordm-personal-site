@@ -1,0 +1,443 @@
+- main [ref=e3] [box=0,0,1200,7568]:
+  - generic [ref=e4] [box=18,18,1164,64]:
+    - link "Fount home" [ref=e5] [cursor=pointer] [box=35,35,86,30]:
+      - /url: /
+      - generic [ref=e8] [box=75,37,46,25]: Fount
+    - navigation "Fount navigation" [ref=e9] [box=141,31,809,38]:
+      - link "Fields" [ref=e10] [cursor=pointer] [box=352,31,60,38]:
+        - /url: "#fields"
+      - link "Forge" [ref=e11] [cursor=pointer] [box=417,31,59,38]:
+        - /url: "#forge"
+      - link "Foundry" [ref=e12] [cursor=pointer] [box=482,31,74,38]:
+        - /url: "#foundry"
+      - link "SDK" [ref=e13] [cursor=pointer] [box=563,31,50,38]:
+        - /url: "#sdk"
+      - link "Pricing" [ref=e14] [cursor=pointer] [box=619,31,66,38]:
+        - /url: "#pricing"
+      - link "文档" [ref=e15] [cursor=pointer] [box=690,31,50,38]:
+        - /url: https://system.wordm.us
+    - generic [ref=e16] [box=970,31,199,38]:
+      - generic "Language" [ref=e17] [box=970,31,91,38]:
+        - button "中文" [pressed] [ref=e18] [cursor=pointer] [box=974,35,46,30]
+        - button "EN" [ref=e19] [cursor=pointer] [box=1020,35,37,30]
+      - link "Download" [ref=e20] [cursor=pointer] [box=1069,31,100,38]:
+        - /url: /download
+  - generic [ref=e21] [box=18,82,1164,1124]:
+    - generic [ref=e22] [box=18,138,515,992]:
+      - heading "Fount is your personal agent brain for discovering, entering, creating, and evolving Fields." [level=1] [ref=e23] [box=18,138,515,478]
+      - paragraph [ref=e24] [box=18,640,515,136]: Fount is not just an assistant. It is a personal agent brain that remembers your experiences, enters Fields with you, controls Field agents, discovers new Fields, and helps you reshape them through Forge.
+      - generic [ref=e25] [box=18,799,515,48]:
+        - link "Download Fount for Mac" [ref=e26] [cursor=pointer] [box=18,799,224,48]:
+          - /url: /download
+        - link "Explore Fields" [ref=e27] [cursor=pointer] [box=254,799,148,48]:
+          - /url: "#fields"
+      - paragraph [ref=e28] [box=18,871,515,22]: Personal agent brain. Open Fields. Shared experience. Built for everyone.
+      - paragraph [ref=e29] [box=18,917,515,57]: 下载 Fount，进入 Field，和你的个人 agent 一起发现、体验、创造和改造新的世界。
+      - generic "Fount concepts" [ref=e30] [box=18,1004,515,126]:
+        - article [ref=e31] [box=18,1004,121,126]:
+          - strong [ref=e32] [box=33,1019,91,23]: Fount
+          - generic [ref=e33] [box=33,1077,91,38]: 个人 agent 大脑
+        - article [ref=e34] [box=149,1004,121,126]:
+          - strong [ref=e35] [box=164,1019,91,23]: Field
+          - generic [ref=e36] [box=164,1077,91,38]: 可进入的产品环境
+        - article [ref=e37] [box=281,1004,121,126]:
+          - strong [ref=e38] [box=296,1019,91,23]: Forge
+          - generic [ref=e39] [box=296,1077,91,38]: 创造和改造 Field 的工坊
+        - article [ref=e40] [box=412,1004,121,126]:
+          - strong [ref=e41] [box=427,1019,91,23]: Foundry
+          - generic [ref=e42] [box=427,1058,91,57]: 发现、安装、购买、发布 Field 的生态
+    - generic "Fount app dashboard mockup" [ref=e43] [box=577,266,605,736]:
+      - generic [ref=e48] [box=578,305,603,696]:
+        - complementary [ref=e49] [box=578,305,118,696]:
+          - generic [ref=e50] [box=588,323,97,34]: Home
+          - generic [ref=e51] [box=588,363,97,34]: Fields
+          - generic [ref=e52] [box=588,403,97,34]: Forge
+          - generic [ref=e53] [box=588,443,97,34]: Foundry
+          - generic [ref=e54] [box=588,483,97,34]: Memory
+          - generic [ref=e55] [box=588,523,97,34]: Agents
+          - generic [ref=e56] [box=588,563,97,34]: Permissions
+        - main [ref=e57] [box=696,305,275,696]:
+          - generic [ref=e58] [box=714,323,239,65]:
+            - generic [ref=e59] [box=714,323,161,65]:
+              - strong [ref=e60] [box=714,323,161,24]: Fount Home
+              - generic [ref=e61] [box=714,351,161,37]: 3 Fields active · 12 memories ready to sync
+            - button "Enter Field" [ref=e62] [box=887,329,66,53]
+          - generic [ref=e63] [box=714,406,239,576]:
+            - article [ref=e64] [box=714,406,113,289]:
+              - generic [ref=e65] [box=729,421,83,77]:
+                - strong [ref=e66] [box=729,421,83,47]: Reading Room
+                - generic [ref=e67] [box=729,472,48,26]: Open
+              - paragraph [ref=e68] [box=729,511,83,19]: Reader · Tutor
+              - generic [ref=e69] [box=729,541,83,56]: Preferred quiet summaries
+              - generic [ref=e70] [box=729,610,83,71]:
+                - generic [ref=e71] [box=729,610,76,26]: Modifiable
+                - generic [ref=e72] [box=729,641,83,39]: Memory sync
+            - article [ref=e73] [box=840,406,113,289]:
+              - generic [ref=e74] [box=855,421,88,77]:
+                - strong [ref=e75] [box=855,421,88,47]: UI Playground
+                - generic [ref=e76] [box=855,472,56,26]: Editing
+              - paragraph [ref=e77] [box=855,511,88,37]: Critic · Layout agent
+              - generic [ref=e78] [box=855,560,88,37]: Likes dense calm layouts
+              - generic [ref=e79] [box=855,610,88,71]:
+                - generic [ref=e80] [box=855,610,88,39]: Source access
+                - generic [ref=e81] [box=855,655,82,26]: Forge-ready
+            - article [ref=e82] [box=714,707,113,275]:
+              - generic [ref=e83] [box=729,722,119,77]:
+                - strong [ref=e84] [box=729,722,119,47]: Finance Garden
+                - generic [ref=e85] [box=729,773,119,26]: Permission needed
+              - paragraph [ref=e86] [box=729,829,119,19]: Budget guide
+              - generic [ref=e87] [box=729,876,119,37]: "Risk boundary: conservative"
+              - generic [ref=e88] [box=729,942,119,26]:
+                - generic [ref=e89] [box=729,942,55,26]: Private
+                - generic [ref=e90] [box=790,942,55,26]: Ledger
+            - article [ref=e91] [box=840,707,113,275]:
+              - generic [ref=e92] [box=855,722,93,77]:
+                - strong [ref=e93] [box=855,722,93,47]: Memory Theater
+                - generic [ref=e94] [box=855,773,93,26]: Remembering
+              - paragraph [ref=e95] [box=855,812,93,37]: Archivist · Director
+              - generic [ref=e96] [box=855,861,93,37]: Project stories as scenes
+              - generic [ref=e97] [box=855,911,93,57]:
+                - generic [ref=e98] [box=855,911,84,26]: Fount-aware
+                - generic [ref=e99] [box=855,942,50,26]: Recall
+        - complementary [ref=e100] [box=971,305,210,696]:
+          - strong [ref=e101] [box=984,323,185,24]: Memory stream
+          - paragraph [ref=e102] [box=984,357,185,77]: Fount recalled your layout preference from UI Playground.
+          - paragraph [ref=e103] [box=984,444,185,77]: Foundry found a Field that matches your interest in agent games.
+          - paragraph [ref=e104] [box=984,530,185,77]: Forge can modify this Field because source access is granted.
+          - paragraph [ref=e105] [box=984,617,185,77]: Field agent requested permission to use Fount memory.
+  - generic [ref=e106] [box=18,1206,1164,606]:
+    - generic [ref=e107] [box=18,1303,1164,119]:
+      - heading "One personal brain. Many Fields." [level=2] [ref=e108] [box=18,1303,624,119]
+      - paragraph [ref=e109] [box=682,1332,500,90]: Fount 面向所有人。它是个人 agent 大脑：进入不同 Field，与 Field agent 互动，控制部分行动，积累经验，再把一个 Field 的记忆带到另一个 Field。
+    - generic [ref=e110] [box=18,1450,1164,265]:
+      - article [ref=e111] [box=18,1450,281,265]:
+        - generic [ref=e112] [box=41,1473,235,19]: "01"
+        - heading "Personal Agent Brain" [level=3] [ref=e113] [box=41,1514,235,26]
+        - paragraph [ref=e114] [box=41,1562,235,131]: Fount remembers your preferences, goals, history, creations, reactions, and decisions. It is the continuity layer across all Fields.
+      - article [ref=e115] [box=313,1450,281,265]:
+        - generic [ref=e116] [box=336,1473,235,19]: "02"
+        - heading "Cross-Field Memory" [level=3] [ref=e117] [box=336,1540,235,26]
+        - paragraph [ref=e118] [box=336,1614,235,78]: Reading Room 的阅读习惯可以影响 Learning Lab；UI Playground 的视觉偏好可以影响 Forge。
+      - article [ref=e119] [box=607,1450,281,265]:
+        - generic [ref=e120] [box=630,1473,235,19]: "03"
+        - heading "Field Control" [level=3] [ref=e121] [box=630,1540,235,26]
+        - paragraph [ref=e122] [box=630,1614,235,78]: Field agent 在 Field 规则与框架中行动，同时可以接收来自 Fount 的控制、引导、权限或上下文。
+      - article [ref=e123] [box=902,1450,281,265]:
+        - generic [ref=e124] [box=925,1473,235,19]: "04"
+        - heading "Autonomous Discovery" [level=3] [ref=e125] [box=925,1527,235,52]
+        - paragraph [ref=e126] [box=925,1614,235,78]: Fount 可以访问 Foundry，根据你的目标、好奇心、项目、情绪或日常节律推荐新 Field。
+  - generic [ref=e127] [box=18,1811,1164,1346]:
+    - generic [ref=e128] [box=18,1908,1164,239]:
+      - heading "Fields are not just apps. They are places your agent can experience." [level=2] [ref=e129] [box=18,1908,624,239]
+      - paragraph [ref=e130] [box=682,1997,500,149]: A Field can be a tool, a game, a learning space, a creative studio, a simulation, a shop, a reading room, or a small world. What makes it a Field is not its category, but that Fount can enter it, understand it, act through it, remember from it, and evolve with it.
+    - generic [ref=e131] [box=18,2175,1164,360]:
+      - generic [ref=e132] [box=18,2175,531,360]:
+        - generic [ref=e133] [box=43,2350,105,32]: Example Field
+        - strong [ref=e134] [box=43,2394,481,49]: Learning Lab
+        - paragraph [ref=e135] [box=43,2456,481,54]: Fount enters, learns the rules, guides agents, and syncs useful experience back to memory.
+      - generic [ref=e136] [box=565,2175,617,360]:
+        - generic [ref=e137] [box=565,2175,304,83]: Field interface
+        - generic [ref=e138] [box=878,2175,304,83]: Field rules
+        - generic [ref=e139] [box=565,2267,304,83]: Field agents
+        - generic [ref=e140] [box=878,2267,304,83]: Experience events
+        - generic [ref=e141] [box=565,2360,304,83]: Permissions
+        - generic [ref=e142] [box=878,2360,304,83]: Memory sync
+        - generic [ref=e143] [box=565,2452,304,83]: Source access
+        - generic [ref=e144] [box=878,2452,304,83]: Fount control channel
+    - generic [ref=e145] [box=18,2563,1164,498]:
+      - article [ref=e146] [box=18,2563,379,242]:
+        - generic [ref=e147] [box=39,2584,337,51]:
+          - heading "Reading Room" [level=3] [ref=e148] [box=39,2584,337,26]
+          - generic [ref=e149] [box=39,2616,337,19]: Reader · Tutor
+        - paragraph [ref=e150] [box=39,2652,337,52]: 阅读和学习 Field。Fount 记住你读到哪里、困惑什么、喜欢什么解释方式。
+        - generic [ref=e151] [box=39,2722,337,19]: "Experience: reading pace, confusion, taste"
+        - generic [ref=e152] [box=39,2758,337,26]:
+          - generic [ref=e153] [box=39,2758,84,26]: Fount-aware
+          - generic [ref=e154] [box=129,2758,88,26]: Memory sync
+          - generic [ref=e155] [box=223,2758,124,26]: Permission required
+      - article [ref=e156] [box=411,2563,379,242]:
+        - generic [ref=e157] [box=432,2584,337,51]:
+          - heading "UI Playground" [level=3] [ref=e158] [box=432,2584,337,26]
+          - generic [ref=e159] [box=432,2616,337,19]: Layout · Critic
+        - paragraph [ref=e160] [box=432,2652,337,52]: 界面创造 Field。Fount 记住视觉偏好，并能带到其他设计 Field。
+        - generic [ref=e161] [box=432,2722,337,19]: "Experience: layout preference"
+        - generic [ref=e162] [box=432,2758,337,26]:
+          - generic [ref=e163] [box=432,2758,76,26]: Modifiable
+          - generic [ref=e164] [box=514,2758,105,26]: Source available
+          - generic [ref=e165] [box=624,2758,105,26]: Has Field agents
+      - article [ref=e166] [box=803,2563,379,242]:
+        - generic [ref=e167] [box=824,2584,337,51]:
+          - heading "Memory Theater" [level=3] [ref=e168] [box=824,2584,337,26]
+          - generic [ref=e169] [box=824,2616,337,19]: Archivist · Scene maker
+        - paragraph [ref=e170] [box=824,2652,337,52]: 回顾人生、项目和经验的 Field。Fount 把过去事件重组为场景。
+        - generic [ref=e171] [box=824,2722,337,19]: "Experience: events as scenes"
+        - generic [ref=e172] [box=824,2758,337,26]:
+          - generic [ref=e173] [box=824,2758,64,26]: Playable
+          - generic [ref=e174] [box=894,2758,88,26]: Memory sync
+          - generic [ref=e175] [box=988,2758,84,26]: Fount-aware
+      - article [ref=e176] [box=18,2819,379,242]:
+        - generic [ref=e177] [box=39,2840,337,51]:
+          - heading "Agent Game Field" [level=3] [ref=e178] [box=39,2840,337,26]
+          - generic [ref=e179] [box=39,2872,337,19]: NPCs · Referee
+        - paragraph [ref=e180] [box=39,2908,337,52]: 包含多个角色 agent 的游戏 Field。Fount 可以观察、干预或控制部分 agent。
+        - generic [ref=e181] [box=39,2978,337,19]: "Experience: play style"
+        - generic [ref=e182] [box=39,3014,337,26]:
+          - generic [ref=e183] [box=39,3014,64,26]: Playable
+          - generic [ref=e184] [box=109,3014,105,26]: Has Field agents
+          - generic [ref=e185] [box=220,3014,124,26]: Permission required
+      - article [ref=e186] [box=411,2819,379,242]:
+        - generic [ref=e187] [box=432,2840,337,51]:
+          - heading "Learning Lab" [level=3] [ref=e188] [box=432,2840,337,26]
+          - generic [ref=e189] [box=432,2872,337,19]: Tutor · Quiz maker
+        - paragraph [ref=e190] [box=432,2908,337,52]: 学习 Field。Fount 根据你在其他 Field 的经验调整教学方式。
+        - generic [ref=e191] [box=432,2978,337,19]: "Experience: learning habits"
+        - generic [ref=e192] [box=432,3014,337,26]:
+          - generic [ref=e193] [box=432,3014,84,26]: Fount-aware
+          - generic [ref=e194] [box=522,3014,88,26]: Memory sync
+          - generic [ref=e195] [box=616,3014,76,26]: Modifiable
+      - article [ref=e196] [box=803,2819,379,242]:
+        - generic [ref=e197] [box=824,2840,337,51]:
+          - heading "Finance Garden" [level=3] [ref=e198] [box=824,2840,337,26]
+          - generic [ref=e199] [box=824,2872,337,19]: Budget guide
+        - paragraph [ref=e200] [box=824,2908,337,52]: 个人财务 Field。Fount 记住预算偏好、消费模式和风险边界。
+        - generic [ref=e201] [box=824,2978,337,19]: "Experience: budget rhythm"
+        - generic [ref=e202] [box=824,3014,337,26]:
+          - generic [ref=e203] [box=824,3014,124,26]: Permission required
+          - generic [ref=e204] [box=954,3014,55,26]: Private
+          - generic [ref=e205] [box=1015,3014,104,26]: Resource ledger
+  - generic [ref=e206] [box=18,3157,1164,1102]:
+    - generic [ref=e207] [box=18,3254,1164,239]:
+      - heading "Forge is where Fields are made, remixed, and reshaped." [level=2] [ref=e208] [box=18,3254,522,239]
+      - paragraph [ref=e209] [box=580,3433,602,60]: Forge 不是单纯的开发者 IDE。它是人和 Fount 一起创造可体验世界的工坊：普通用户改造体验，开发者连接源码、SDK、测试与发布。
+    - generic [ref=e210] [box=18,3520,1164,301]:
+      - article [ref=e211] [box=18,3520,574,301]:
+        - heading "For everyone" [level=3] [ref=e212] [box=43,3545,524,44]
+        - list [ref=e213] [box=43,3607,524,189]:
+          - listitem [ref=e214] [box=43,3607,524,30]: Customize a Field
+          - listitem [ref=e215] [box=43,3647,524,30]: Change the mood, layout, rules, and agents
+          - listitem [ref=e216] [box=43,3687,524,30]: Remix templates
+          - listitem [ref=e217] [box=43,3727,524,30]: Ask Fount to reshape an experience
+          - listitem [ref=e218] [box=43,3767,524,30]: Create personal spaces without writing code
+      - article [ref=e219] [box=608,3520,574,301]:
+        - heading "For builders" [level=3] [ref=e220] [box=633,3545,524,26]
+        - list [ref=e221] [box=633,3589,524,207]:
+          - listitem [ref=e222] [box=633,3589,524,26]: Edit source when permission is granted
+          - listitem [ref=e223] [box=633,3626,524,26]: Connect Fount SDK
+          - listitem [ref=e224] [box=633,3662,524,26]: Expose permissions and memory channels
+          - listitem [ref=e225] [box=633,3698,524,26]: Test with virtual users
+          - listitem [ref=e226] [box=633,3734,524,26]: Package as a Field
+          - listitem [ref=e227] [box=633,3770,524,26]: Publish to Foundry
+    - paragraph [ref=e228] [box=18,3849,1164,60]: Fount can use Forge to modify a Field only when the Field grants the right permissions, such as source access or editable configuration.
+    - generic "Forge workflow" [ref=e229] [box=18,3937,1164,226]:
+      - generic [ref=e230] [box=18,3937,284,108]:
+        - generic [ref=e231] [box=34,3953,252,18]: "01"
+        - strong [ref=e232] [box=34,4009,252,20]: Imagine
+      - generic [ref=e233] [box=312,3937,284,108]:
+        - generic [ref=e234] [box=328,3953,252,18]: "02"
+        - strong [ref=e235] [box=328,4009,252,20]: Enter a Field
+      - generic [ref=e236] [box=605,3937,284,108]:
+        - generic [ref=e237] [box=621,3953,252,18]: "03"
+        - strong [ref=e238] [box=621,4009,252,20]: Notice what should change
+      - generic [ref=e239] [box=899,3937,284,108]:
+        - generic [ref=e240] [box=915,3953,252,18]: "04"
+        - strong [ref=e241] [box=915,4009,252,20]: Ask Fount to reshape it
+      - generic [ref=e242] [box=18,4055,284,108]:
+        - generic [ref=e243] [box=34,4071,252,18]: "05"
+        - strong [ref=e244] [box=34,4127,252,20]: Check permissions
+      - generic [ref=e245] [box=312,4055,284,108]:
+        - generic [ref=e246] [box=328,4071,252,18]: "06"
+        - strong [ref=e247] [box=328,4127,252,20]: Modify in Forge
+      - generic [ref=e248] [box=605,4055,284,108]:
+        - generic [ref=e249] [box=621,4071,252,18]: "07"
+        - strong [ref=e250] [box=621,4107,252,41]: Test with Field agents and virtual users
+      - generic [ref=e251] [box=899,4055,284,108]:
+        - generic [ref=e252] [box=915,4071,252,18]: "08"
+        - strong [ref=e253] [box=915,4127,252,20]: Publish or keep private
+  - generic [ref=e254] [box=18,4259,1164,882]:
+    - generic [ref=e255] [box=18,4356,1164,179]:
+      - heading "Foundry is where people and Fount discover Fields." [level=2] [ref=e256] [box=18,4356,624,179]
+      - paragraph [ref=e257] [box=682,4446,500,90]: Foundry 不是普通商店。人可以发现 Field，Fount 也可以基于记忆、兴趣、目标、资源和权限边界，主动去 Foundry 寻找适合你的新 Field。
+    - generic [ref=e258] [box=18,4563,1164,394]:
+      - article [ref=e259] [box=18,4563,281,394]:
+        - generic [ref=e260] [box=39,4584,239,54]:
+          - heading "Quiet Study Room" [level=3] [ref=e261] [box=39,4584,180,52]
+          - generic [ref=e262] [box=233,4584,44,30]: Free
+        - paragraph [ref=e263] [box=39,4655,239,55]: 适合独处学习，Fount 可以记住用户的阅读节奏。
+        - generic [ref=e264] [box=39,4725,239,135]:
+          - generic [ref=e265] [box=39,4725,239,25]:
+            - term [ref=e266] [box=39,4733,100,17]: Fount-aware
+            - definition [ref=e267] [box=149,4733,128,17]: "Yes"
+          - generic [ref=e268] [box=39,4757,239,41]:
+            - term [ref=e269] [box=39,4765,100,33]: Resource budget
+            - definition [ref=e270] [box=149,4765,128,33]: Low CPU · Local memory
+          - generic [ref=e271] [box=39,4805,239,25]:
+            - term [ref=e272] [box=39,4813,100,17]: Permissions
+            - definition [ref=e273] [box=149,4813,128,17]: Reading state
+          - generic [ref=e274] [box=39,4836,239,25]:
+            - term [ref=e275] [box=39,4844,100,17]: Certification
+            - definition [ref=e276] [box=149,4844,128,17]: Certified
+        - generic [ref=e277] [box=39,4877,239,60]:
+          - generic [ref=e278] [box=39,4877,84,27]: Fount-aware
+          - generic [ref=e279] [box=129,4877,88,27]: Memory sync
+          - generic [ref=e280] [box=39,4910,108,27]: No source access
+      - article [ref=e281] [box=313,4563,281,394]:
+        - generic [ref=e282] [box=334,4584,239,78]:
+          - heading "Tiny Product Studio" [level=3] [ref=e283] [box=334,4584,126,78]
+          - generic [ref=e284] [box=474,4584,98,30]: Coming soon
+        - paragraph [ref=e285] [box=334,4678,239,52]: 适合把想法变成小产品，支持 Forge 改造。
+        - generic [ref=e286] [box=334,4746,239,117]:
+          - generic [ref=e287] [box=334,4746,239,24]:
+            - term [ref=e288] [box=334,4754,100,16]: Fount-aware
+            - definition [ref=e289] [box=444,4754,128,16]: "Yes"
+          - generic [ref=e290] [box=334,4777,239,24]:
+            - term [ref=e291] [box=334,4785,100,16]: Resource budget
+            - definition [ref=e292] [box=444,4785,128,16]: Medium compute
+          - generic [ref=e293] [box=334,4808,239,24]:
+            - term [ref=e294] [box=334,4816,100,16]: Permissions
+            - definition [ref=e295] [box=444,4816,128,16]: Source access
+          - generic [ref=e296] [box=334,4839,239,24]:
+            - term [ref=e297] [box=334,4847,100,16]: Certification
+            - definition [ref=e298] [box=444,4847,128,16]: Verified builder
+        - generic [ref=e299] [box=334,4879,239,57]:
+          - generic [ref=e300] [box=334,4879,82,26]: Forge-ready
+          - generic [ref=e301] [box=421,4879,83,26]: Field agents
+          - generic [ref=e302] [box=334,4911,105,26]: Source available
+      - article [ref=e303] [box=607,4563,281,394]:
+        - generic [ref=e304] [box=628,4584,239,58]:
+          - heading "Character Town" [level=3] [ref=e305] [box=628,4584,126,52]
+          - generic [ref=e306] [box=768,4584,98,30]: Coming soon
+        - paragraph [ref=e307] [box=628,4659,239,59]: 角色 agent 小镇，Fount 可以进入、观察、控制部分 agent。
+        - generic [ref=e308] [box=628,4733,239,123]:
+          - generic [ref=e309] [box=628,4733,239,26]:
+            - term [ref=e310] [box=628,4741,100,18]: Fount-aware
+            - definition [ref=e311] [box=738,4741,128,18]: "Yes"
+          - generic [ref=e312] [box=628,4766,239,26]:
+            - term [ref=e313] [box=628,4774,100,18]: Resource budget
+            - definition [ref=e314] [box=738,4774,128,18]: Medium GPU
+          - generic [ref=e315] [box=628,4799,239,26]:
+            - term [ref=e316] [box=628,4807,100,18]: Permissions
+            - definition [ref=e317] [box=738,4807,128,18]: Agent control
+          - generic [ref=e318] [box=628,4831,239,26]:
+            - term [ref=e319] [box=628,4839,100,18]: Certification
+            - definition [ref=e320] [box=738,4839,128,18]: Playtest
+        - generic [ref=e321] [box=628,4873,239,64]:
+          - generic [ref=e322] [box=628,4873,64,29]: Playable
+          - generic [ref=e323] [box=698,4873,83,29]: Field agents
+          - generic [ref=e324] [box=628,4908,124,29]: Permission required
+      - article [ref=e325] [box=902,4563,281,394]:
+        - generic [ref=e326] [box=923,4584,239,58]:
+          - heading "Personal Ritual Garden" [level=3] [ref=e327] [box=923,4584,180,52]
+          - generic [ref=e328] [box=1117,4584,44,30]: Free
+        - paragraph [ref=e329] [box=923,4659,239,59]: 帮助用户建立生活仪式，Fount 会记住习惯与情绪变化。
+        - generic [ref=e330] [box=923,4733,239,123]:
+          - generic [ref=e331] [box=923,4733,239,26]:
+            - term [ref=e332] [box=923,4741,100,18]: Fount-aware
+            - definition [ref=e333] [box=1033,4741,128,18]: "Yes"
+          - generic [ref=e334] [box=923,4766,239,26]:
+            - term [ref=e335] [box=923,4774,100,18]: Resource budget
+            - definition [ref=e336] [box=1033,4774,128,18]: Low compute
+          - generic [ref=e337] [box=923,4799,239,26]:
+            - term [ref=e338] [box=923,4807,100,18]: Permissions
+            - definition [ref=e339] [box=1033,4807,128,18]: Habit memory
+          - generic [ref=e340] [box=923,4831,239,26]:
+            - term [ref=e341] [box=923,4839,100,18]: Certification
+            - definition [ref=e342] [box=1033,4839,128,18]: Certified
+        - generic [ref=e343] [box=923,4873,239,64]:
+          - generic [ref=e344] [box=923,4873,84,29]: Fount-aware
+          - generic [ref=e345] [box=1012,4873,88,29]: Memory sync
+          - generic [ref=e346] [box=923,4908,85,29]: Forge config
+    - paragraph [ref=e347] [box=18,4986,760,60]: Fields are discovered by people, recommended by Fount, built in Forge, and experienced together.
+  - generic [ref=e348] [box=18,5141,1164,796]:
+    - generic [ref=e349] [box=18,5238,1164,119]:
+      - heading "The SDK turns an app into a Field." [level=2] [ref=e350] [box=18,5238,624,119]
+      - paragraph [ref=e351] [box=682,5298,500,60]: Fount SDK 让普通 app 获得与 Fount 互通经验、记忆、权限、控制和 agent 行动的能力，而不只是接上一个接口。
+    - generic [ref=e352] [box=18,5386,1164,368]:
+      - generic "App to Field diagram" [ref=e353] [box=18,5386,439,368]:
+        - generic [ref=e354] [box=41,5409,393,70]: Ordinary App / Product
+        - generic [ref=e355] [box=41,5489,393,36]: ↓
+        - generic [ref=e356] [box=41,5535,393,70]: Fount SDK
+        - generic [ref=e357] [box=41,5615,393,36]: ↓
+        - generic [ref=e358] [box=41,5661,393,70]: Field
+      - generic [ref=e359] [box=473,5386,709,368]:
+        - generic [ref=e360] [box=496,5500,122,40]: Fount identity
+        - generic [ref=e361] [box=628,5500,117,40]: Memory sync
+        - generic [ref=e362] [box=755,5500,152,40]: Experience events
+        - generic [ref=e363] [box=917,5500,138,40]: Permission layer
+        - generic [ref=e364] [box=496,5550,155,40]: Field agent control
+        - generic [ref=e365] [box=661,5550,137,40]: Resource ledger
+        - generic [ref=e366] [box=808,5550,151,40]: Foundry metadata
+        - generic [ref=e367] [box=969,5550,139,40]: Forge editability
+        - generic [ref=e368] [box=496,5599,90,40]: Licensing
+        - generic [ref=e369] [box=597,5599,83,40]: Updates
+    - paragraph [ref=e370] [box=18,5782,980,60]: Fount core and SDK can be open. Official Forge workflows, Foundry distribution, certification, testing, cloud sync, licensing, payments, recommendations, and developer analytics can be commercial services.
+  - generic [ref=e371] [box=18,5937,1164,458]:
+    - generic [ref=e372] [box=18,6034,1164,119]:
+      - heading "Experience flows both ways." [level=2] [ref=e373] [box=18,6034,624,119]
+      - paragraph [ref=e374] [box=682,6094,500,60]: A Field becomes more useful when Fount understands it. Fount becomes more personal when it experiences more Fields.
+    - generic "Experience loop" [ref=e375] [box=18,6182,1164,118]:
+      - generic [ref=e376] [box=18,6182,159,118]:
+        - generic [ref=e377] [box=34,6198,127,18]: "01"
+        - strong [ref=e378] [box=34,6263,127,20]: Enter
+      - generic [ref=e379] [box=185,6182,159,118]:
+        - generic [ref=e380] [box=201,6198,127,18]: "02"
+        - strong [ref=e381] [box=201,6263,127,20]: Experience
+      - generic [ref=e382] [box=353,6182,159,118]:
+        - generic [ref=e383] [box=369,6198,127,18]: "03"
+        - strong [ref=e384] [box=369,6263,127,20]: Remember
+      - generic [ref=e385] [box=520,6182,159,118]:
+        - generic [ref=e386] [box=536,6198,127,18]: "04"
+        - strong [ref=e387] [box=536,6263,127,20]: Recall
+      - generic [ref=e388] [box=688,6182,159,118]:
+        - generic [ref=e389] [box=704,6198,127,18]: "05"
+        - strong [ref=e390] [box=704,6263,127,20]: Discover
+      - generic [ref=e391] [box=855,6182,159,118]:
+        - generic [ref=e392] [box=871,6198,127,18]: "06"
+        - strong [ref=e393] [box=871,6263,127,20]: Modify
+      - generic [ref=e394] [box=1023,6182,159,118]:
+        - generic [ref=e395] [box=1039,6198,127,18]: "07"
+        - strong [ref=e396] [box=1039,6263,127,20]: Return
+  - generic [ref=e397] [box=18,6396,1164,712]:
+    - generic [ref=e398] [box=18,6493,1164,179]:
+      - heading "Start with Fount. Expand through Fields." [level=2] [ref=e399] [box=18,6493,624,179]
+      - paragraph [ref=e400] [box=682,6612,500,60]: 从安装 Fount 开始，随着你的 Field、记忆、改造和发布需求增长，再扩展到 Plus、Forge 和 Foundry。
+    - generic [ref=e401] [box=18,6700,1164,312]:
+      - article [ref=e402] [box=18,6700,281,312]:
+        - heading "Fount Free" [level=3] [ref=e403] [box=41,6723,235,26]
+        - strong [ref=e404] [box=41,6764,235,31]: Free
+        - paragraph [ref=e405] [box=41,6811,235,78]: 适合所有人。安装 Fount，进入 Fields，管理记忆、权限、基础资源账本，使用官方基础 Field。
+        - list [ref=e406] [box=41,6906,235,83]:
+          - listitem [ref=e407] [box=41,6906,235,21]: Personal agent brain
+          - listitem [ref=e408] [box=41,6937,235,21]: Basic Fields
+          - listitem [ref=e409] [box=41,6968,235,21]: Memory and permission control
+      - article [ref=e410] [box=313,6700,281,312]:
+        - heading "Fount Plus" [level=3] [ref=e411] [box=336,6723,235,26]
+        - strong [ref=e412] [box=336,6764,235,31]: Coming soon
+        - paragraph [ref=e413] [box=336,6811,235,78]: 适合深度个人使用。更多记忆能力、跨 Field 自动化、Foundry 推荐、本地和云端同步。
+        - list [ref=e414] [box=336,6906,235,83]:
+          - listitem [ref=e415] [box=336,6906,235,21]: More memory capacity
+          - listitem [ref=e416] [box=336,6937,235,21]: Cross-Field automation
+          - listitem [ref=e417] [box=336,6968,235,21]: Personal recommendations
+      - article [ref=e418] [box=607,6700,281,312]:
+        - heading "Forge Pro" [level=3] [ref=e419] [box=630,6723,235,26]
+        - strong [ref=e420] [box=630,6764,235,31]: Coming soon
+        - paragraph [ref=e421] [box=630,6811,235,78]: 适合创造者和开发者。高级 Field 改造、源码编辑、SDK 工具、虚拟用户测试、打包和发布。
+        - list [ref=e422] [box=630,6906,235,83]:
+          - listitem [ref=e423] [box=630,6906,235,21]: Advanced Forge workflows
+          - listitem [ref=e424] [box=630,6937,235,21]: Source and SDK tooling
+          - listitem [ref=e425] [box=630,6968,235,21]: Packaging and testing
+      - article [ref=e426] [box=902,6700,281,312]:
+        - heading "Foundry Developer" [level=3] [ref=e427] [box=925,6723,235,26]
+        - strong [ref=e428] [box=925,6764,235,31]: Coming soon
+        - paragraph [ref=e429] [box=925,6811,235,78]: 适合发布 Field 的创作者。Field listing、认证流程、授权、更新、分析和商业化工具。
+        - list [ref=e430] [box=925,6906,235,83]:
+          - listitem [ref=e431] [box=925,6906,235,21]: Field listing
+          - listitem [ref=e432] [box=925,6937,235,21]: Certification and licensing
+          - listitem [ref=e433] [box=925,6968,235,21]: Developer analytics
+  - generic [ref=e434] [box=18,7108,1164,442]:
+    - heading "Download Fount and enter your first Field." [level=2] [ref=e435] [box=210,7206,780,119]
+    - paragraph [ref=e436] [box=240,7347,720,60]: For everyone who wants a personal agent that remembers, discovers, plays, creates, and evolves through Fields.
+    - generic [ref=e437] [box=399,7429,401,48]:
+      - link "Download Fount for Mac" [ref=e438] [cursor=pointer] [box=399,7429,224,48]:
+        - /url: /download
+      - link "Explore Foundry" [ref=e439] [cursor=pointer] [box=635,7429,165,48]:
+        - /url: "#foundry"
