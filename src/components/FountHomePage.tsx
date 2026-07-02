@@ -880,20 +880,22 @@ export function FountHomePage({ lang, onLangChange }: FountHomePageProps) {
           Fount
         </a>
 
-        <nav className="fount-nav" aria-label="Fount sections">
+        <nav className="fount-nav fount-outline-nav" aria-label="Fount page outline">
           <a href="#concepts">{copy.navConcepts}</a>
           <a href="#architecture">{copy.navArchitecture}</a>
           <a href="#permissions">{copy.navPermissions}</a>
           <a href="#flow">{copy.navFlow}</a>
           <a href="#open">{copy.navOpen}</a>
           <a href="#roadmap">{copy.navRoadmap}</a>
-          <a href="/?view=blog">{copy.navBlog}</a>
-          <a href={SYSTEM_DOCS_URL} target="_blank" rel="noreferrer">
-            {copy.navDocs}
-          </a>
         </nav>
 
         <div className="fount-header-actions">
+          <nav className="fount-site-nav" aria-label="Site links">
+            <a href="/?view=blog">{copy.navBlog}</a>
+            <a href={SYSTEM_DOCS_URL} target="_blank" rel="noreferrer">
+              {copy.navDocs}
+            </a>
+          </nav>
           <div className="fount-lang-switch" aria-label="Language switcher">
             <button
               type="button"
@@ -986,6 +988,13 @@ export function FountHomePage({ lang, onLangChange }: FountHomePageProps) {
               <p>{text(concept.body)}</p>
             </article>
           ))}
+        </div>
+
+        <div className="fount-image-rail" aria-label={lang === "zh" ? "Fount 概念插图组" : "Fount concept illustration set"}>
+          <img src="/fount/hero-agent-fields.svg" alt="" aria-hidden="true" />
+          <img src="/fount/architecture-stack.svg" alt="" aria-hidden="true" />
+          <img src="/fount/case-field-room.svg" alt="" aria-hidden="true" />
+          <img src="/fount/community-comments.svg" alt="" aria-hidden="true" />
         </div>
       </section>
 
