@@ -1,0 +1,443 @@
+- main [ref=f128e3]:
+  - generic [ref=f128e4]:
+    - link "Fount home" [ref=f128e5] [cursor=pointer]:
+      - /url: /
+      - generic [ref=f128e8]: Fount
+    - navigation "Fount navigation" [ref=f128e9]:
+      - link "Fields" [ref=f128e10] [cursor=pointer]:
+        - /url: "#fields"
+      - link "Forge" [ref=f128e11] [cursor=pointer]:
+        - /url: "#forge"
+      - link "Foundry" [ref=f128e12] [cursor=pointer]:
+        - /url: "#foundry"
+      - link "SDK" [ref=f128e13] [cursor=pointer]:
+        - /url: "#sdk"
+      - link "Pricing" [ref=f128e14] [cursor=pointer]:
+        - /url: "#pricing"
+      - link "文档" [ref=f128e15] [cursor=pointer]:
+        - /url: https://system.wordm.us
+    - generic [ref=f128e16]:
+      - generic "Language" [ref=f128e17]:
+        - button "中文" [pressed] [ref=f128e18] [cursor=pointer]
+        - button "EN" [ref=f128e19] [cursor=pointer]
+      - link "Download" [ref=f128e20] [cursor=pointer]:
+        - /url: /download
+  - generic [ref=f128e21]:
+    - generic [ref=f128e22]:
+      - heading "Fount is your personal agent brain for discovering, entering, creating, and evolving Fields." [level=1] [ref=f128e23]
+      - paragraph [ref=f128e24]: Fount is not just an assistant. It is a personal agent brain that remembers your experiences, enters Fields with you, controls Field agents, discovers new Fields, and helps you reshape them through Forge.
+      - generic [ref=f128e25]:
+        - link "Download Fount for Mac" [ref=f128e26] [cursor=pointer]:
+          - /url: /download
+        - link "Explore Fields" [ref=f128e27] [cursor=pointer]:
+          - /url: "#fields"
+      - paragraph [ref=f128e28]: Personal agent brain. Open Fields. Shared experience. Built for everyone.
+      - paragraph [ref=f128e29]: 下载 Fount，进入 Field，和你的个人 agent 一起发现、体验、创造和改造新的世界。
+      - generic "Fount concepts" [ref=f128e30]:
+        - article [ref=f128e31]:
+          - strong [ref=f128e32]: Fount
+          - generic [ref=f128e33]: 个人 agent 大脑
+        - article [ref=f128e34]:
+          - strong [ref=f128e35]: Field
+          - generic [ref=f128e36]: 可进入的产品环境
+        - article [ref=f128e37]:
+          - strong [ref=f128e38]: Forge
+          - generic [ref=f128e39]: 创造和改造 Field 的工坊
+        - article [ref=f128e40]:
+          - strong [ref=f128e41]: Foundry
+          - generic [ref=f128e42]: 发现、安装、购买、发布 Field 的生态
+    - generic "Fount app dashboard mockup" [ref=f128e43]:
+      - generic [ref=f128e48]:
+        - complementary [ref=f128e49]:
+          - generic [ref=f128e50]: Home
+          - generic [ref=f128e51]: Fields
+          - generic [ref=f128e52]: Forge
+          - generic [ref=f128e53]: Foundry
+          - generic [ref=f128e54]: Memory
+          - generic [ref=f128e55]: Agents
+          - generic [ref=f128e56]: Permissions
+        - main [ref=f128e57]:
+          - generic [ref=f128e58]:
+            - generic [ref=f128e59]:
+              - strong [ref=f128e60]: Fount Home
+              - generic [ref=f128e61]: 3 Fields active · 12 memories ready to sync
+            - button "Enter Field" [ref=f128e62]
+          - generic [ref=f128e63]:
+            - article [ref=f128e64]:
+              - generic [ref=f128e65]:
+                - strong [ref=f128e66]: Reading Room
+                - generic [ref=f128e67]: Open
+              - paragraph [ref=f128e68]: Reader · Tutor
+              - generic [ref=f128e69]: Preferred quiet summaries
+              - generic [ref=f128e70]:
+                - generic [ref=f128e71]: Modifiable
+                - generic [ref=f128e72]: Memory sync
+            - article [ref=f128e73]:
+              - generic [ref=f128e74]:
+                - strong [ref=f128e75]: UI Playground
+                - generic [ref=f128e76]: Editing
+              - paragraph [ref=f128e77]: Critic · Layout agent
+              - generic [ref=f128e78]: Likes dense calm layouts
+              - generic [ref=f128e79]:
+                - generic [ref=f128e80]: Source access
+                - generic [ref=f128e81]: Forge-ready
+            - article [ref=f128e82]:
+              - generic [ref=f128e83]:
+                - strong [ref=f128e84]: Finance Garden
+                - generic [ref=f128e85]: Permission needed
+              - paragraph [ref=f128e86]: Budget guide
+              - generic [ref=f128e87]: "Risk boundary: conservative"
+              - generic [ref=f128e88]:
+                - generic [ref=f128e89]: Private
+                - generic [ref=f128e90]: Ledger
+            - article [ref=f128e91]:
+              - generic [ref=f128e92]:
+                - strong [ref=f128e93]: Memory Theater
+                - generic [ref=f128e94]: Remembering
+              - paragraph [ref=f128e95]: Archivist · Director
+              - generic [ref=f128e96]: Project stories as scenes
+              - generic [ref=f128e97]:
+                - generic [ref=f128e98]: Fount-aware
+                - generic [ref=f128e99]: Recall
+        - complementary [ref=f128e100]:
+          - strong [ref=f128e101]: Memory stream
+          - paragraph [ref=f128e102]: Fount recalled your layout preference from UI Playground.
+          - paragraph [ref=f128e103]: Foundry found a Field that matches your interest in agent games.
+          - paragraph [ref=f128e104]: Forge can modify this Field because source access is granted.
+          - paragraph [ref=f128e105]: Field agent requested permission to use Fount memory.
+  - generic [ref=f128e106]:
+    - generic [ref=f128e107]:
+      - heading "One personal brain. Many Fields." [level=2] [ref=f128e108]
+      - paragraph [ref=f128e109]: Fount 面向所有人。它是个人 agent 大脑：进入不同 Field，与 Field agent 互动，控制部分行动，积累经验，再把一个 Field 的记忆带到另一个 Field。
+    - generic [ref=f128e110]:
+      - article [ref=f128e111]:
+        - generic [ref=f128e112]: "01"
+        - heading "Personal Agent Brain" [level=3] [ref=f128e113]
+        - paragraph [ref=f128e114]: Fount remembers your preferences, goals, history, creations, reactions, and decisions. It is the continuity layer across all Fields.
+      - article [ref=f128e115]:
+        - generic [ref=f128e116]: "02"
+        - heading "Cross-Field Memory" [level=3] [ref=f128e117]
+        - paragraph [ref=f128e118]: Reading Room 的阅读习惯可以影响 Learning Lab；UI Playground 的视觉偏好可以影响 Forge。
+      - article [ref=f128e119]:
+        - generic [ref=f128e120]: "03"
+        - heading "Field Control" [level=3] [ref=f128e121]
+        - paragraph [ref=f128e122]: Field agent 在 Field 规则与框架中行动，同时可以接收来自 Fount 的控制、引导、权限或上下文。
+      - article [ref=f128e123]:
+        - generic [ref=f128e124]: "04"
+        - heading "Autonomous Discovery" [level=3] [ref=f128e125]
+        - paragraph [ref=f128e126]: Fount 可以访问 Foundry，根据你的目标、好奇心、项目、情绪或日常节律推荐新 Field。
+  - generic [ref=f128e127]:
+    - generic [ref=f128e128]:
+      - heading "Fields are not just apps. They are places your agent can experience." [level=2] [ref=f128e129]
+      - paragraph [ref=f128e130]: A Field can be a tool, a game, a learning space, a creative studio, a simulation, a shop, a reading room, or a small world. What makes it a Field is not its category, but that Fount can enter it, understand it, act through it, remember from it, and evolve with it.
+    - generic [ref=f128e131]:
+      - generic [ref=f128e132]:
+        - generic [ref=f128e133]: Example Field
+        - strong [ref=f128e134]: Learning Lab
+        - paragraph [ref=f128e135]: Fount enters, learns the rules, guides agents, and syncs useful experience back to memory.
+      - generic [ref=f128e136]:
+        - generic [ref=f128e137]: Field interface
+        - generic [ref=f128e138]: Field rules
+        - generic [ref=f128e139]: Field agents
+        - generic [ref=f128e140]: Experience events
+        - generic [ref=f128e141]: Permissions
+        - generic [ref=f128e142]: Memory sync
+        - generic [ref=f128e143]: Source access
+        - generic [ref=f128e144]: Fount control channel
+    - generic [ref=f128e145]:
+      - article [ref=f128e146]:
+        - generic [ref=f128e147]:
+          - heading "Reading Room" [level=3] [ref=f128e148]
+          - generic [ref=f128e149]: Reader · Tutor
+        - paragraph [ref=f128e150]: 阅读和学习 Field。Fount 记住你读到哪里、困惑什么、喜欢什么解释方式。
+        - generic [ref=f128e151]: "Experience: reading pace, confusion, taste"
+        - generic [ref=f128e152]:
+          - generic [ref=f128e153]: Fount-aware
+          - generic [ref=f128e154]: Memory sync
+          - generic [ref=f128e155]: Permission required
+      - article [ref=f128e156]:
+        - generic [ref=f128e157]:
+          - heading "UI Playground" [level=3] [ref=f128e158]
+          - generic [ref=f128e159]: Layout · Critic
+        - paragraph [ref=f128e160]: 界面创造 Field。Fount 记住视觉偏好，并能带到其他设计 Field。
+        - generic [ref=f128e161]: "Experience: layout preference"
+        - generic [ref=f128e162]:
+          - generic [ref=f128e163]: Modifiable
+          - generic [ref=f128e164]: Source available
+          - generic [ref=f128e165]: Has Field agents
+      - article [ref=f128e166]:
+        - generic [ref=f128e167]:
+          - heading "Memory Theater" [level=3] [ref=f128e168]
+          - generic [ref=f128e169]: Archivist · Scene maker
+        - paragraph [ref=f128e170]: 回顾人生、项目和经验的 Field。Fount 把过去事件重组为场景。
+        - generic [ref=f128e171]: "Experience: events as scenes"
+        - generic [ref=f128e172]:
+          - generic [ref=f128e173]: Playable
+          - generic [ref=f128e174]: Memory sync
+          - generic [ref=f128e175]: Fount-aware
+      - article [ref=f128e176]:
+        - generic [ref=f128e177]:
+          - heading "Agent Game Field" [level=3] [ref=f128e178]
+          - generic [ref=f128e179]: NPCs · Referee
+        - paragraph [ref=f128e180]: 包含多个角色 agent 的游戏 Field。Fount 可以观察、干预或控制部分 agent。
+        - generic [ref=f128e181]: "Experience: play style"
+        - generic [ref=f128e182]:
+          - generic [ref=f128e183]: Playable
+          - generic [ref=f128e184]: Has Field agents
+          - generic [ref=f128e185]: Permission required
+      - article [ref=f128e186]:
+        - generic [ref=f128e187]:
+          - heading "Learning Lab" [level=3] [ref=f128e188]
+          - generic [ref=f128e189]: Tutor · Quiz maker
+        - paragraph [ref=f128e190]: 学习 Field。Fount 根据你在其他 Field 的经验调整教学方式。
+        - generic [ref=f128e191]: "Experience: learning habits"
+        - generic [ref=f128e192]:
+          - generic [ref=f128e193]: Fount-aware
+          - generic [ref=f128e194]: Memory sync
+          - generic [ref=f128e195]: Modifiable
+      - article [ref=f128e196]:
+        - generic [ref=f128e197]:
+          - heading "Finance Garden" [level=3] [ref=f128e198]
+          - generic [ref=f128e199]: Budget guide
+        - paragraph [ref=f128e200]: 个人财务 Field。Fount 记住预算偏好、消费模式和风险边界。
+        - generic [ref=f128e201]: "Experience: budget rhythm"
+        - generic [ref=f128e202]:
+          - generic [ref=f128e203]: Permission required
+          - generic [ref=f128e204]: Private
+          - generic [ref=f128e205]: Resource ledger
+  - generic [ref=f128e206]:
+    - generic [ref=f128e207]:
+      - heading "Forge is where Fields are made, remixed, and reshaped." [level=2] [ref=f128e208]
+      - paragraph [ref=f128e209]: Forge 不是单纯的开发者 IDE。它是人和 Fount 一起创造可体验世界的工坊：普通用户改造体验，开发者连接源码、SDK、测试与发布。
+    - generic [ref=f128e210]:
+      - article [ref=f128e211]:
+        - heading "For everyone" [level=3] [ref=f128e212]
+        - list [ref=f128e213]:
+          - listitem [ref=f128e214]: Customize a Field
+          - listitem [ref=f128e215]: Change the mood, layout, rules, and agents
+          - listitem [ref=f128e216]: Remix templates
+          - listitem [ref=f128e217]: Ask Fount to reshape an experience
+          - listitem [ref=f128e218]: Create personal spaces without writing code
+      - article [ref=f128e219]:
+        - heading "For builders" [level=3] [ref=f128e220]
+        - list [ref=f128e221]:
+          - listitem [ref=f128e222]: Edit source when permission is granted
+          - listitem [ref=f128e223]: Connect Fount SDK
+          - listitem [ref=f128e224]: Expose permissions and memory channels
+          - listitem [ref=f128e225]: Test with virtual users
+          - listitem [ref=f128e226]: Package as a Field
+          - listitem [ref=f128e227]: Publish to Foundry
+    - paragraph [ref=f128e228]: Fount can use Forge to modify a Field only when the Field grants the right permissions, such as source access or editable configuration.
+    - generic "Forge workflow" [ref=f128e229]:
+      - generic [ref=f128e230]:
+        - generic [ref=f128e231]: "01"
+        - strong [ref=f128e232]: Imagine
+      - generic [ref=f128e233]:
+        - generic [ref=f128e234]: "02"
+        - strong [ref=f128e235]: Enter a Field
+      - generic [ref=f128e236]:
+        - generic [ref=f128e237]: "03"
+        - strong [ref=f128e238]: Notice what should change
+      - generic [ref=f128e239]:
+        - generic [ref=f128e240]: "04"
+        - strong [ref=f128e241]: Ask Fount to reshape it
+      - generic [ref=f128e242]:
+        - generic [ref=f128e243]: "05"
+        - strong [ref=f128e244]: Check permissions
+      - generic [ref=f128e245]:
+        - generic [ref=f128e246]: "06"
+        - strong [ref=f128e247]: Modify in Forge
+      - generic [ref=f128e248]:
+        - generic [ref=f128e249]: "07"
+        - strong [ref=f128e250]: Test with Field agents and virtual users
+      - generic [ref=f128e251]:
+        - generic [ref=f128e252]: "08"
+        - strong [ref=f128e253]: Publish or keep private
+  - generic [ref=f128e254]:
+    - generic [ref=f128e255]:
+      - heading "Foundry is where people and Fount discover Fields." [level=2] [ref=f128e256]
+      - paragraph [ref=f128e257]: Foundry 不是普通商店。人可以发现 Field，Fount 也可以基于记忆、兴趣、目标、资源和权限边界，主动去 Foundry 寻找适合你的新 Field。
+    - generic [ref=f128e258]:
+      - article [ref=f128e259]:
+        - generic [ref=f128e260]:
+          - heading "Quiet Study Room" [level=3] [ref=f128e261]
+          - generic [ref=f128e262]: Free
+        - paragraph [ref=f128e263]: 适合独处学习，Fount 可以记住用户的阅读节奏。
+        - generic [ref=f128e264]:
+          - generic [ref=f128e265]:
+            - term [ref=f128e266]: Fount-aware
+            - definition [ref=f128e267]: "Yes"
+          - generic [ref=f128e268]:
+            - term [ref=f128e269]: Resource budget
+            - definition [ref=f128e270]: Low CPU · Local memory
+          - generic [ref=f128e271]:
+            - term [ref=f128e272]: Permissions
+            - definition [ref=f128e273]: Reading state
+          - generic [ref=f128e274]:
+            - term [ref=f128e275]: Certification
+            - definition [ref=f128e276]: Certified
+        - generic [ref=f128e277]:
+          - generic [ref=f128e278]: Fount-aware
+          - generic [ref=f128e279]: Memory sync
+          - generic [ref=f128e280]: No source access
+      - article [ref=f128e281]:
+        - generic [ref=f128e282]:
+          - heading "Tiny Product Studio" [level=3] [ref=f128e283]
+          - generic [ref=f128e284]: Coming soon
+        - paragraph [ref=f128e285]: 适合把想法变成小产品，支持 Forge 改造。
+        - generic [ref=f128e286]:
+          - generic [ref=f128e287]:
+            - term [ref=f128e288]: Fount-aware
+            - definition [ref=f128e289]: "Yes"
+          - generic [ref=f128e290]:
+            - term [ref=f128e291]: Resource budget
+            - definition [ref=f128e292]: Medium compute
+          - generic [ref=f128e293]:
+            - term [ref=f128e294]: Permissions
+            - definition [ref=f128e295]: Source access
+          - generic [ref=f128e296]:
+            - term [ref=f128e297]: Certification
+            - definition [ref=f128e298]: Verified builder
+        - generic [ref=f128e299]:
+          - generic [ref=f128e300]: Forge-ready
+          - generic [ref=f128e301]: Field agents
+          - generic [ref=f128e302]: Source available
+      - article [ref=f128e303]:
+        - generic [ref=f128e304]:
+          - heading "Character Town" [level=3] [ref=f128e305]
+          - generic [ref=f128e306]: Coming soon
+        - paragraph [ref=f128e307]: 角色 agent 小镇，Fount 可以进入、观察、控制部分 agent。
+        - generic [ref=f128e308]:
+          - generic [ref=f128e309]:
+            - term [ref=f128e310]: Fount-aware
+            - definition [ref=f128e311]: "Yes"
+          - generic [ref=f128e312]:
+            - term [ref=f128e313]: Resource budget
+            - definition [ref=f128e314]: Medium GPU
+          - generic [ref=f128e315]:
+            - term [ref=f128e316]: Permissions
+            - definition [ref=f128e317]: Agent control
+          - generic [ref=f128e318]:
+            - term [ref=f128e319]: Certification
+            - definition [ref=f128e320]: Playtest
+        - generic [ref=f128e321]:
+          - generic [ref=f128e322]: Playable
+          - generic [ref=f128e323]: Field agents
+          - generic [ref=f128e324]: Permission required
+      - article [ref=f128e325]:
+        - generic [ref=f128e326]:
+          - heading "Personal Ritual Garden" [level=3] [ref=f128e327]
+          - generic [ref=f128e328]: Free
+        - paragraph [ref=f128e329]: 帮助用户建立生活仪式，Fount 会记住习惯与情绪变化。
+        - generic [ref=f128e330]:
+          - generic [ref=f128e331]:
+            - term [ref=f128e332]: Fount-aware
+            - definition [ref=f128e333]: "Yes"
+          - generic [ref=f128e334]:
+            - term [ref=f128e335]: Resource budget
+            - definition [ref=f128e336]: Low compute
+          - generic [ref=f128e337]:
+            - term [ref=f128e338]: Permissions
+            - definition [ref=f128e339]: Habit memory
+          - generic [ref=f128e340]:
+            - term [ref=f128e341]: Certification
+            - definition [ref=f128e342]: Certified
+        - generic [ref=f128e343]:
+          - generic [ref=f128e344]: Fount-aware
+          - generic [ref=f128e345]: Memory sync
+          - generic [ref=f128e346]: Forge config
+    - paragraph [ref=f128e347]: Fields are discovered by people, recommended by Fount, built in Forge, and experienced together.
+  - generic [ref=f128e348]:
+    - generic [ref=f128e349]:
+      - heading "The SDK turns an app into a Field." [level=2] [ref=f128e350]
+      - paragraph [ref=f128e351]: Fount SDK 让普通 app 获得与 Fount 互通经验、记忆、权限、控制和 agent 行动的能力，而不只是接上一个接口。
+    - generic [ref=f128e352]:
+      - generic "App to Field diagram" [ref=f128e353]:
+        - generic [ref=f128e354]: Ordinary App / Product
+        - generic [ref=f128e355]: ↓
+        - generic [ref=f128e356]: Fount SDK
+        - generic [ref=f128e357]: ↓
+        - generic [ref=f128e358]: Field
+      - generic [ref=f128e359]:
+        - generic [ref=f128e360]: Fount identity
+        - generic [ref=f128e361]: Memory sync
+        - generic [ref=f128e362]: Experience events
+        - generic [ref=f128e363]: Permission layer
+        - generic [ref=f128e364]: Field agent control
+        - generic [ref=f128e365]: Resource ledger
+        - generic [ref=f128e366]: Foundry metadata
+        - generic [ref=f128e367]: Forge editability
+        - generic [ref=f128e368]: Licensing
+        - generic [ref=f128e369]: Updates
+    - paragraph [ref=f128e370]: Fount core and SDK can be open. Official Forge workflows, Foundry distribution, certification, testing, cloud sync, licensing, payments, recommendations, and developer analytics can be commercial services.
+  - generic [ref=f128e371]:
+    - generic [ref=f128e372]:
+      - heading "Experience flows both ways." [level=2] [ref=f128e373]
+      - paragraph [ref=f128e374]: A Field becomes more useful when Fount understands it. Fount becomes more personal when it experiences more Fields.
+    - generic "Experience loop" [ref=f128e375]:
+      - generic [ref=f128e376]:
+        - generic [ref=f128e377]: "01"
+        - strong [ref=f128e378]: Enter
+      - generic [ref=f128e379]:
+        - generic [ref=f128e380]: "02"
+        - strong [ref=f128e381]: Experience
+      - generic [ref=f128e382]:
+        - generic [ref=f128e383]: "03"
+        - strong [ref=f128e384]: Remember
+      - generic [ref=f128e385]:
+        - generic [ref=f128e386]: "04"
+        - strong [ref=f128e387]: Recall
+      - generic [ref=f128e388]:
+        - generic [ref=f128e389]: "05"
+        - strong [ref=f128e390]: Discover
+      - generic [ref=f128e391]:
+        - generic [ref=f128e392]: "06"
+        - strong [ref=f128e393]: Modify
+      - generic [ref=f128e394]:
+        - generic [ref=f128e395]: "07"
+        - strong [ref=f128e396]: Return
+  - generic [ref=f128e397]:
+    - generic [ref=f128e398]:
+      - heading "Start with Fount. Expand through Fields." [level=2] [ref=f128e399]
+      - paragraph [ref=f128e400]: 从安装 Fount 开始，随着你的 Field、记忆、改造和发布需求增长，再扩展到 Plus、Forge 和 Foundry。
+    - generic [ref=f128e401]:
+      - article [ref=f128e402]:
+        - heading "Fount Free" [level=3] [ref=f128e403]
+        - strong [ref=f128e404]: Free
+        - paragraph [ref=f128e405]: 适合所有人。安装 Fount，进入 Fields，管理记忆、权限、基础资源账本，使用官方基础 Field。
+        - list [ref=f128e406]:
+          - listitem [ref=f128e407]: Personal agent brain
+          - listitem [ref=f128e408]: Basic Fields
+          - listitem [ref=f128e409]: Memory and permission control
+      - article [ref=f128e410]:
+        - heading "Fount Plus" [level=3] [ref=f128e411]
+        - strong [ref=f128e412]: Coming soon
+        - paragraph [ref=f128e413]: 适合深度个人使用。更多记忆能力、跨 Field 自动化、Foundry 推荐、本地和云端同步。
+        - list [ref=f128e414]:
+          - listitem [ref=f128e415]: More memory capacity
+          - listitem [ref=f128e416]: Cross-Field automation
+          - listitem [ref=f128e417]: Personal recommendations
+      - article [ref=f128e418]:
+        - heading "Forge Pro" [level=3] [ref=f128e419]
+        - strong [ref=f128e420]: Coming soon
+        - paragraph [ref=f128e421]: 适合创造者和开发者。高级 Field 改造、源码编辑、SDK 工具、虚拟用户测试、打包和发布。
+        - list [ref=f128e422]:
+          - listitem [ref=f128e423]: Advanced Forge workflows
+          - listitem [ref=f128e424]: Source and SDK tooling
+          - listitem [ref=f128e425]: Packaging and testing
+      - article [ref=f128e426]:
+        - heading "Foundry Developer" [level=3] [ref=f128e427]
+        - strong [ref=f128e428]: Coming soon
+        - paragraph [ref=f128e429]: 适合发布 Field 的创作者。Field listing、认证流程、授权、更新、分析和商业化工具。
+        - list [ref=f128e430]:
+          - listitem [ref=f128e431]: Field listing
+          - listitem [ref=f128e432]: Certification and licensing
+          - listitem [ref=f128e433]: Developer analytics
+  - generic [ref=f128e434]:
+    - heading "Download Fount and enter your first Field." [level=2] [ref=f128e435]
+    - paragraph [ref=f128e436]: For everyone who wants a personal agent that remembers, discovers, plays, creates, and evolves through Fields.
+    - generic [ref=f128e437]:
+      - link "Download Fount for Mac" [ref=f128e438] [cursor=pointer]:
+        - /url: /download
+      - link "Explore Foundry" [ref=f128e439] [cursor=pointer]:
+        - /url: "#foundry"
