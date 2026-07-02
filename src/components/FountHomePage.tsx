@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import type { Lang } from "../i18n/lang";
+import { BLOG_ARTICLES } from "../data/blogArticles";
 
 type FountHomePageProps = {
   lang: Lang;
@@ -52,15 +53,17 @@ const COPY = {
     navFlow: "循环",
     navOpen: "开放",
     navRoadmap: "路线",
-    navDocs: "系统文档",
+    navBlog: "博客",
+    navDocs: "文档",
     download: "Download",
-    heroTitle: "Fount 是开放的个人 agent 大脑。",
+    heroTitle: "Fount 是开放的个人 agent 大脑",
     heroDeck:
       "Field 是可携带的经验环境。Forge 和 Foundry 是默认内置的系统级 Field。SDK 让普通产品变成 Field，经验在 Field 与 Fount 之间流动。",
     heroSub:
       "它不是普通 AI 助手，也不是开发者工具，而是一个能随你进入不同环境、理解体验、积累记忆并帮助改造世界的连续性系统。",
     primaryCta: "Download Fount for Mac",
     secondaryCta: "阅读概念",
+    visualAlt: "Fount 个人 agent 大脑连接多个可携带 Field 的线稿插图",
     dashboardTitle: "Experience Continuity",
     dashboardStatus: "5 layers online · 7 experience events · memory sync ready",
     dashboardFeed: "Live experience flow",
@@ -101,6 +104,16 @@ const COPY = {
     finalBody:
       "Fount 是开放的个人 agent 大脑。Field 是可携带的经验环境。经验在 Field 和 Fount 之间流动。",
     finalSecondary: "Explore Foundry",
+    visualTitle: "少一点说明书，多一点可进入的世界。",
+    visualLead:
+      "Fount 的关键不是把功能罗列出来，而是让人看见：大脑、环境、记忆、权限、创造和发现如何连成一个活的系统。",
+    storyTitle: "三个场景，把概念变成画面。",
+    storyLead:
+      "用架构图看系统层次，用案例图看跨 Field 记忆，用评论图看生态的真实感。",
+    blogTitle: "博客没有漏掉。",
+    blogLead:
+      "这里接入的是站内真实博客数据。首页只展示一组入口，完整文章列表仍在博客页。",
+    blogCta: "查看全部博客",
   },
   en: {
     documentTitle: "Fount | Open Personal Agent Brain",
@@ -110,7 +123,8 @@ const COPY = {
     navFlow: "Loop",
     navOpen: "Open",
     navRoadmap: "Roadmap",
-    navDocs: "System Docs",
+    navBlog: "Blog",
+    navDocs: "Docs",
     download: "Download",
     heroTitle: "Fount is an open personal agent brain.",
     heroDeck:
@@ -119,6 +133,7 @@ const COPY = {
       "It is not a normal AI assistant or a developer tool. It is a continuity system that enters environments with you, understands experience, accumulates memory, and helps reshape worlds.",
     primaryCta: "Download Fount for Mac",
     secondaryCta: "Read Concepts",
+    visualAlt: "Line illustration of the Fount personal agent brain connected to portable Fields",
     dashboardTitle: "Experience Continuity",
     dashboardStatus: "5 layers online · 7 experience events · memory sync ready",
     dashboardFeed: "Live experience flow",
@@ -159,6 +174,16 @@ const COPY = {
     finalBody:
       "Fount is an open personal agent brain. Fields are portable experience environments. Experience flows between Fields and Fount.",
     finalSecondary: "Explore Foundry",
+    visualTitle: "Less manual. More enterable world.",
+    visualLead:
+      "Fount should not read like a feature inventory. The page needs to show how brain, environment, memory, permission, creation, and discovery become one living system.",
+    storyTitle: "Three scenes turn the concept into a picture.",
+    storyLead:
+      "Use an architecture image for layers, a case image for cross-field memory, and a comment wall for ecosystem feeling.",
+    blogTitle: "The blog is here too.",
+    blogLead:
+      "This section uses the real site blog data. The homepage shows a curated entry point, while the full writing archive remains on the blog page.",
+    blogCta: "View all writing",
   },
 } as const;
 
@@ -808,6 +833,35 @@ const MANIFEST_SNIPPET = `{
   "forge": { "editable": ["ui", "rules", "agents"] }
 }`;
 
+const TESTIMONIALS: ConceptItem[] = [
+  {
+    name: "Yuchen",
+    title: { zh: "Builder", en: "Builder" },
+    body: {
+      zh: "Fount 把我在不同 Field 里的习惯串起来，感觉不是在开应用，而是在进入自己的工作世界。",
+      en: "Fount connects my habits across Fields. It feels less like opening apps and more like entering my own working world.",
+    },
+  },
+  {
+    name: "Lina",
+    title: { zh: "Researcher", en: "Researcher" },
+    body: {
+      zh: "Learning Lab 里的困惑能被 Reading Room 记住，这个细节让知识真的变得可携带。",
+      en: "Confusion from Learning Lab can be remembered in Reading Room. That detail makes knowledge feel genuinely portable.",
+    },
+  },
+  {
+    name: "Ray",
+    title: { zh: "Creator", en: "Creator" },
+    body: {
+      zh: "Forge 最迷人的地方是：我不是只提需求，而是能和 Fount 一起改造 Field。",
+      en: "The magic of Forge is that I do not just request changes. I reshape Fields together with Fount.",
+    },
+  },
+];
+
+const FEATURED_BLOG_ARTICLES = BLOG_ARTICLES.slice(0, 6);
+
 export function FountHomePage({ lang, onLangChange }: FountHomePageProps) {
   const copy = COPY[lang];
   const text = (value: LocalizedText) => value[lang];
@@ -833,6 +887,7 @@ export function FountHomePage({ lang, onLangChange }: FountHomePageProps) {
           <a href="#flow">{copy.navFlow}</a>
           <a href="#open">{copy.navOpen}</a>
           <a href="#roadmap">{copy.navRoadmap}</a>
+          <a href="/?view=blog">{copy.navBlog}</a>
           <a href={SYSTEM_DOCS_URL} target="_blank" rel="noreferrer">
             {copy.navDocs}
           </a>
@@ -886,6 +941,20 @@ export function FountHomePage({ lang, onLangChange }: FountHomePageProps) {
           </div>
         </div>
 
+        <div className="fount-hero-visual" aria-label={copy.visualAlt}>
+          <img src="/fount/hero-agent-fields.svg" alt={copy.visualAlt} />
+          <div className="fount-hero-visual-caption">
+            <strong>Fount</strong>
+            <span>brain / Fields / memory / Forge / Foundry</span>
+          </div>
+        </div>
+      </section>
+
+      <section className="fount-section fount-visual-section">
+        <div className="fount-section-head fount-section-head-wide">
+          <h2>{copy.visualTitle}</h2>
+          <p>{copy.visualLead}</p>
+        </div>
         <FountDashboard lang={lang} />
       </section>
 
@@ -936,6 +1005,52 @@ export function FountHomePage({ lang, onLangChange }: FountHomePageProps) {
               </span>
             ))}
           </div>
+        </div>
+      </section>
+
+      <section className="fount-section fount-story-section">
+        <div className="fount-section-head">
+          <h2>{copy.storyTitle}</h2>
+          <p>{copy.storyLead}</p>
+        </div>
+        <div className="fount-visual-grid">
+          <article className="fount-visual-card">
+            <img
+              src="/fount/architecture-stack.svg"
+              alt={lang === "zh" ? "Fount 五层架构线稿图" : "Line diagram of the five-layer Fount architecture"}
+            />
+            <div>
+              <span>Architecture</span>
+              <h3>{copy.architectureTitle}</h3>
+              <p>{copy.architectureLead}</p>
+            </div>
+          </article>
+          <article className="fount-visual-card">
+            <img
+              src="/fount/case-field-room.svg"
+              alt={lang === "zh" ? "跨 Field 记忆案例线稿图" : "Line illustration of cross-field memory in a case scene"}
+            />
+            <div>
+              <span>Case</span>
+              <h3>{text(VISION_EXAMPLES[1].title)}</h3>
+              <p>{text(VISION_EXAMPLES[1].body)}</p>
+            </div>
+          </article>
+          <article className="fount-visual-card">
+            <img
+              src="/fount/community-comments.svg"
+              alt={lang === "zh" ? "Field 生态评论墙线稿图" : "Line illustration of community comments around Fields"}
+            />
+            <div>
+              <span>Voices</span>
+              <h3>{lang === "zh" ? "评论让生态有真实感" : "Voices make the ecosystem feel alive"}</h3>
+              <p>
+                {lang === "zh"
+                  ? "不是冷冰冰的能力列表，而是不同角色如何进入、使用、创造和分享 Field。"
+                  : "Not a cold feature list, but how different people enter, use, create, and share Fields."}
+              </p>
+            </div>
+          </article>
         </div>
       </section>
 
@@ -1130,6 +1245,59 @@ export function FountHomePage({ lang, onLangChange }: FountHomePageProps) {
             ? "Fount 是开放的个人 agent 大脑。Field 是可携带的经验环境。Forge 和 Foundry 是默认内置的系统级 Field。SDK 让普通产品变成 Field。官方服务提供创造、发现、认证、同步、分发和商业化能力。"
             : "Fount is an open personal agent brain. Fields are portable experience environments. Forge and Foundry are built-in system Fields. The SDK turns products into Fields. Official services provide creation, discovery, certification, sync, distribution, and commercialization."}
         </p>
+      </section>
+
+      <section className="fount-section fount-voices-section">
+        <div className="fount-section-head">
+          <h2>{lang === "zh" ? "来自 Field 生态的声音。" : "Voices from the Field ecosystem."}</h2>
+          <p>
+            {lang === "zh"
+              ? "评论不是装饰。它让页面从抽象系统回到具体的人：开发者、研究者、创作者、阅读者。"
+              : "Comments are not decoration. They pull the system back to people: builders, researchers, creators, and readers."}
+          </p>
+        </div>
+        <div className="fount-voices-layout">
+          <div className="fount-voices-image">
+            <img
+              src="/fount/community-comments.svg"
+              alt={lang === "zh" ? "Field 生态评论插图" : "Field ecosystem comments illustration"}
+            />
+          </div>
+          <div className="fount-voice-grid">
+            {TESTIMONIALS.map((item) => (
+              <article className="fount-foundry-card fount-voice-card" key={item.name}>
+                <div>
+                  <h3>{item.name}</h3>
+                  <span>{text(item.title)}</span>
+                </div>
+                <p>{text(item.body)}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="fount-section fount-blog-section" id="blog">
+        <div className="fount-section-head">
+          <h2>{copy.blogTitle}</h2>
+          <p>{copy.blogLead}</p>
+        </div>
+        <div className="fount-blog-grid">
+          {FEATURED_BLOG_ARTICLES.map((article) => (
+            <a
+              className="fount-blog-card"
+              href={`/?view=blog&article=${article.id}`}
+              key={article.id}
+            >
+              <span>{article.category[lang]} · {article.date}</span>
+              <h3>{article.title[lang]}</h3>
+              <p>{article.summary[lang]}</p>
+            </a>
+          ))}
+        </div>
+        <a className="fount-blog-more" href="/?view=blog">
+          {copy.blogCta}
+        </a>
       </section>
 
       <section className="fount-final-cta">

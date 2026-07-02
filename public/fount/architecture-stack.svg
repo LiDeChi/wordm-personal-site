@@ -1,0 +1,33 @@
+<svg width="1100" height="760" viewBox="0 0 1100 760" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1100" height="760" rx="28" fill="#fff9ef"/>
+  <g stroke="#d9c5a9" stroke-width="2">
+    <path d="M564 93 880 251 564 409 248 251 564 93Z" fill="#fffdf8"/>
+    <path d="M564 225 880 383 564 541 248 383 564 225Z" fill="#fbefdf"/>
+    <path d="M564 357 880 515 564 673 248 515 564 357Z" fill="#fffdf8"/>
+  </g>
+  <path d="M564 112v538" stroke="#b95f38" stroke-width="3" stroke-dasharray="8 15"/>
+  <circle cx="564" cy="112" r="10" fill="#d96f56"/>
+  <circle cx="564" cy="244" r="10" fill="#d96f56"/>
+  <circle cx="564" cy="376" r="10" fill="#d96f56"/>
+  <circle cx="564" cy="508" r="10" fill="#d96f56"/>
+  <circle cx="564" cy="650" r="10" fill="#d96f56"/>
+  <g font-family="Georgia, 'Times New Roman', serif" fill="#231914">
+    <text x="74" y="128" font-size="42">Five-layer</text>
+    <text x="74" y="176" font-size="42">Architecture</text>
+  </g>
+  <g font-family="JetBrains Mono, Menlo, monospace" font-size="22" fill="#2f5748">
+    <text x="92" y="260">01 Fount Core</text>
+    <text x="92" y="316">02 Field Runtime</text>
+    <text x="92" y="372">03 System Fields</text>
+    <text x="92" y="428">04 User Fields</text>
+    <text x="92" y="484">05 Official Services</text>
+  </g>
+  <g stroke="#2f5748" stroke-width="2.5" fill="none">
+    <path d="M737 220c-20-55-102-58-126-5-45-14-87 23-77 69-41 31-26 96 24 108 16 45 79 58 112 23 48 20 101-17 98-69 46-24 42-93-9-113-5-5-12-10-22-13Z"/>
+    <rect x="512" y="337" width="104" height="104" rx="18"/>
+    <path d="M532 378h64M532 402h46"/>
+    <path d="M545 486h38l30 42-49 40-49-40 30-42Z"/>
+    <path d="M746 496c44 22 69 54 76 96M746 592c13-42 38-74 74-95M763 545h92"/>
+    <circle cx="821" cy="592" r="22"/>
+  </g>
+</svg>

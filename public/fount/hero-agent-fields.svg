@@ -1,0 +1,33 @@
+<svg width="1200" height="900" viewBox="0 0 1200 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="900" rx="34" fill="#fff8ec"/>
+  <path d="M110 742C236 636 322 692 454 580C587 467 601 257 765 200C889 157 969 222 1088 124" stroke="#dec9aa" stroke-width="2"/>
+  <path d="M143 197C268 103 381 137 474 250C566 364 595 501 727 520C858 539 958 420 1078 466" stroke="#b95f38" stroke-width="2" stroke-opacity=".45"/>
+  <circle cx="532" cy="410" r="178" fill="#fffdf8" stroke="#d8c4a5" stroke-width="2"/>
+  <path d="M459 510c-52-47-72-106-62-176 7-49 28-91 62-126 38-39 86-58 144-58 54 0 100 18 138 54 37 36 57 80 61 132 4 54-12 102-48 145-32 39-74 62-126 70v56c0 32-26 58-58 58h-24c-32 0-58-26-58-58v-46c-10-16-20-33-29-51Z" fill="#fbefdf" stroke="#2f5748" stroke-width="3"/>
+  <path d="M493 346c23-46 90-44 110 4 20-29 65-24 78 10 39-1 62 37 46 71 22 30 7 73-30 83-6 35-41 57-74 44-24 26-67 26-91 0-37 12-76-16-77-55-35-16-43-62-16-89-13-24-6-54 16-70" stroke="#b95f38" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="578" cy="434" r="16" fill="#e9ad68"/>
+  <path d="M578 434V298M578 434l-80-88M578 434l95-74M578 434l-107 82M578 434l112 86" stroke="#d96f56" stroke-width="2.5" stroke-linecap="round"/>
+  <g stroke="#2f5748" stroke-width="2" fill="#fffdf8">
+    <rect x="822" y="160" width="212" height="126" rx="22"/>
+    <rect x="858" y="193" width="76" height="34" rx="5"/>
+    <path d="M855 246h142M868 264h91"/>
+    <rect x="830" y="388" width="230" height="132" rx="22"/>
+    <path d="M876 455h130M876 480h88"/>
+    <path d="M902 435v-50M971 435v-50"/>
+    <rect x="788" y="636" width="196" height="118" rx="22"/>
+    <path d="M834 702h104M834 724h66"/>
+    <path d="M868 682l31-51 31 51"/>
+  </g>
+  <g stroke="#b95f38" stroke-width="2.5" stroke-linecap="round">
+    <path d="M704 358c48-65 88-102 118-111"/>
+    <path d="M714 431c58 18 97 24 116 19"/>
+    <path d="M696 508c34 77 65 118 93 123"/>
+  </g>
+  <g fill="#2f5748" font-family="Georgia, 'Times New Roman', serif" font-size="30">
+    <text x="884" y="325">Work Field</text>
+    <text x="878" y="558">Study Field</text>
+    <text x="820" y="792">Creative Field</text>
+  </g>
+  <text x="483" y="732" fill="#2f5748" font-family="Georgia, 'Times New Roman', serif" font-size="38">Fount</text>
+  <text x="441" y="772" fill="#846c58" font-family="JetBrains Mono, Menlo, monospace" font-size="18">personal agent brain</text>
+</svg>

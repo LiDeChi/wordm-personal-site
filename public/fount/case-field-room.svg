@@ -1,0 +1,29 @@
+<svg width="1100" height="760" viewBox="0 0 1100 760" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1100" height="760" rx="28" fill="#fff8ed"/>
+  <path d="M94 602c172-104 276-42 425-147 132-93 151-250 307-292 73-20 134-8 190 32" stroke="#e6d1b5" stroke-width="2"/>
+  <rect x="104" y="146" width="892" height="430" rx="24" fill="#fffdf8" stroke="#d5bea0" stroke-width="2"/>
+  <path d="M158 214h246v286H158z" fill="#fbefdf" stroke="#d5bea0" stroke-width="2"/>
+  <path d="M450 230h260v170H450z" fill="#fff8ed" stroke="#d5bea0" stroke-width="2"/>
+  <path d="M744 230h188v270H744z" fill="#fff8ed" stroke="#d5bea0" stroke-width="2"/>
+  <path d="M492 464h190M500 500h154" stroke="#2f5748" stroke-width="3" stroke-linecap="round"/>
+  <rect x="474" y="442" width="176" height="24" rx="6" fill="#2f5748"/>
+  <rect x="528" y="400" width="118" height="44" rx="6" fill="#fffdf8" stroke="#2f5748" stroke-width="2"/>
+  <rect x="774" y="270" width="118" height="88" rx="10" fill="#fffdf8" stroke="#b95f38" stroke-width="2"/>
+  <rect x="792" y="384" width="110" height="76" rx="10" fill="#fbefdf" stroke="#b95f38" stroke-width="2"/>
+  <path d="M194 438c36-82 98-82 136 0M236 438c0-54 50-54 50 0" stroke="#2f5748" stroke-width="2.5"/>
+  <path d="M206 270h150M206 310h116M206 350h136" stroke="#8a7460" stroke-width="2" stroke-linecap="round"/>
+  <g fill="#231914" font-family="Georgia, 'Times New Roman', serif">
+    <text x="104" y="104" font-size="48">Case Field</text>
+    <text x="104" y="660" font-size="34">From confusion to recall to a better Field.</text>
+  </g>
+  <g fill="#2f5748" font-family="JetBrains Mono, Menlo, monospace" font-size="20">
+    <text x="456" y="194">Learning Lab</text>
+    <text x="762" y="194">Reading Room</text>
+    <text x="528" y="544">Forge edit</text>
+  </g>
+  <g stroke="#d96f56" stroke-width="3" stroke-linecap="round">
+    <path d="M404 314c34-16 48-24 46-24"/>
+    <path d="M710 314c22 0 30 0 34 0"/>
+    <path d="M664 464c36-52 61-86 80-102"/>
+  </g>
+</svg>
