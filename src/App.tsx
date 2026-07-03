@@ -6,12 +6,11 @@ import type {
 import { AccountEntryCard } from "./components/AccountEntryCard";
 import { LoginPage } from "./components/LoginPage";
 import { AdminPage } from "./components/AdminPage";
+import { FountHomePage } from "./components/FountHomePage";
 import { OneAgentProductPage } from "./components/OneAgentProductPage";
 import { ProjectDetailModal } from "./components/ProjectDetailModal";
 import { ProjectEntry } from "./components/ProjectEntry";
-import { ResumeAccessDenied } from "./components/ResumeAccessDenied";
 import { ShareAccessDenied } from "./components/ShareAccessDenied";
-import { ResumePage } from "./components/ResumePage";
 import { SiteAiChat } from "./components/SiteAiChat";
 import { SubdomainProjectView } from "./components/SubdomainProjectView";
 import { BLOG_ARTICLES, type BlogContentBlock } from "./data/blogArticles";
@@ -113,7 +112,6 @@ type HomeProject = {
 const BLOG_INITIAL_RENDER_COUNT = 18;
 const BLOG_RENDER_BATCH_SIZE = 18;
 const THEME_STORAGE_KEY = "wordm-theme-mode-v1";
-const CORE_HOST_MANIFEST_URL = "/releases/wordm-core-host/latest.json";
 
 const snapshot = projectsSnapshotRaw as ProjectsSnapshot;
 const initialProjects = mergeProjectLists(snapshot.projects, MANUAL_PROJECTS);
@@ -124,6 +122,7 @@ const PortfolioShowcase = lazy(() =>
 );
 const GOOGLE_OAUTH_PENDING_KEY = "wordm-google-oauth-pending-v1";
 const GOOGLE_OAUTH_PENDING_GRACE_MS = 1500;
+const SYSTEM_SITE_URL = "https://system.wordm.us";
 
 const HOME_PROJECTS: HomeProject[] = [
   {
@@ -174,17 +173,17 @@ const HOME_PROJECTS: HomeProject[] = [
   {
     key: "agent-core",
     unlockSlug: "agent-core",
-    name: "Agent Core",
-    href: "/",
-    previewUrl: "wordm.us",
-    coverUrl: "/home/agent-core-console.svg",
+    name: "Wordm System",
+    href: SYSTEM_SITE_URL,
+    previewUrl: "system.wordm.us",
+    coverUrl: "/home/wordm-system-architecture.jpg",
     coverAlt: {
-      zh: "Agent Core 运行时监控封面",
-      en: "Agent Core runtime monitor cover",
+      zh: "Wordm System 架构与开源 Core 封面",
+      en: "Wordm System architecture and open Core cover",
     },
     summary: {
-      zh: "wordm.us 主页里的 agent core 入口：agent loop、监控、记忆和生命周期都从这里展开。",
-      en: "The agent core entry on wordm.us: loops, monitoring, memory, and lifecycle now start from the home tab.",
+      zh: "系统架构、Core / WCP / Apps 的关系，以及开源 Core 源码入口。",
+      en: "The architecture map for Core, WCP, Apps, and the open Core source entry.",
     },
   },
   {
@@ -204,61 +203,6 @@ const HOME_PROJECTS: HomeProject[] = [
     },
   },
 ];
-
-const SYSTEM_CORE_LOOP = [
-  "tick",
-  "monitor",
-  "attention",
-  "allocator",
-  "spawn",
-  "memory",
-  "retire",
-  "skill",
-] as const;
-
-const SYSTEM_HOME_FEATURES = {
-  zh: [
-    {
-      title: "Core 是本机中枢",
-      text: "负责持续感知、资源预算、agent 生命周期、记忆和 skill 沉淀。",
-    },
-    {
-      title: "WCP 是连接层",
-      text: "App 声明环境、工具与权限，把 signal 上报给 Core，再接收 guidance。",
-    },
-    {
-      title: "Apps 保留专业上下文",
-      text: "Flipook、Agent 和未来 app 继续懂自己的对象；Core 负责跨环境判断。",
-    },
-  ],
-  en: [
-    {
-      title: "Core is the local center",
-      text: "It owns perception, resource budgets, agent lifecycles, memory, and skill crystallization.",
-    },
-    {
-      title: "WCP is the connective layer",
-      text: "Apps declare their environment, tools, and permissions, then exchange signals and guidance with Core.",
-    },
-    {
-      title: "Apps keep domain context",
-      text: "Flipook, Agent, and future apps keep their own objects while Core handles cross-environment judgment.",
-    },
-  ],
-} as const;
-
-type CoreHostRelease = {
-  version?: string;
-  currentUrl?: string;
-  currentFileName?: string;
-  sizeMB?: number;
-  generatedAt?: string;
-  signed?: boolean;
-  requirements?: {
-    macOS?: string;
-    architecture?: string;
-  };
-};
 
 function mergeProjectLists(
   baseProjects: PortfolioProject[],
@@ -316,6 +260,14 @@ function renderBlogContentBlock(
       <h4 key={key} className="blog-block-heading">
         {block.text[lang]}
       </h4>
+    );
+  }
+
+  if (block.type === "callout") {
+    return (
+      <p key={key} className="blog-block-callout">
+        {block.text[lang]}
+      </p>
     );
   }
 
@@ -403,45 +355,120 @@ function readInitialThemeMode(): ThemeMode {
   return "day";
 }
 
-function useCoreHostRelease() {
-  const [release, setRelease] = useState<CoreHostRelease | null>(null);
-  const [error, setError] = useState("");
+const CURSOR_REACTIVE_SELECTOR = [
+  ".fount-header",
+  ".fount-outline-nav a",
+  ".fount-site-nav a",
+  ".fount-hero-visual",
+  ".fount-dashboard",
+  ".fount-visual-card",
+  ".fount-concept-strip article",
+  ".fount-thick-card",
+  ".fount-field-world",
+  ".fount-layer-grid span",
+  ".fount-field-card",
+  ".fount-forge-columns article",
+  ".fount-flow-step",
+  ".fount-foundry-card",
+  ".fount-sdk-diagram",
+  ".fount-sdk-capabilities",
+  ".fount-loop-node",
+  ".fount-pricing-card",
+  ".fount-voices-image",
+  ".fount-account-image",
+  ".fount-blog-card",
+  ".fount-final-cta",
+  ".site-topbar",
+  ".system-cover-portal",
+  ".home-project-card",
+  ".blog-sidebar",
+  ".blog-article",
+  ".home-download-bar",
+].join(",");
 
+function useCursorReactiveSurfaces() {
   useEffect(() => {
-    let active = true;
+    const root = document.documentElement;
+    const coarsePointer = window.matchMedia?.("(pointer: coarse)").matches;
 
-    void fetch(CORE_HOST_MANIFEST_URL)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}`);
-        }
+    if (coarsePointer) {
+      return;
+    }
 
-        return response.json() as Promise<CoreHostRelease>;
-      })
-      .then((nextRelease) => {
-        if (!active) {
-          return;
-        }
+    let activeSurface: HTMLElement | null = null;
+    let latestEvent: PointerEvent | null = null;
+    let animationFrame = 0;
 
-        setRelease(nextRelease);
-        setError("");
-      })
-      .catch((releaseError) => {
-        if (!active) {
-          return;
-        }
+    const clearActiveSurface = () => {
+      if (!activeSurface) {
+        return;
+      }
 
-        setError(
-          releaseError instanceof Error ? releaseError.message : "unknown",
-        );
-      });
+      activeSurface.removeAttribute("data-cursor-active");
+      activeSurface = null;
+    };
+
+    const updateCursor = () => {
+      animationFrame = 0;
+
+      if (!latestEvent) {
+        return;
+      }
+
+      root.style.setProperty("--cursor-page-x", `${latestEvent.clientX}px`);
+      root.style.setProperty("--cursor-page-y", `${latestEvent.clientY}px`);
+
+      const target =
+        latestEvent.target instanceof Element
+          ? latestEvent.target.closest<HTMLElement>(CURSOR_REACTIVE_SELECTOR)
+          : null;
+
+      if (!target) {
+        clearActiveSurface();
+        return;
+      }
+
+      const rect = target.getBoundingClientRect();
+      const localX = latestEvent.clientX - rect.left;
+      const localY = latestEvent.clientY - rect.top;
+
+      if (activeSurface && activeSurface !== target) {
+        activeSurface.removeAttribute("data-cursor-active");
+      }
+
+      activeSurface = target;
+      activeSurface.dataset.cursorActive = "true";
+      activeSurface.style.setProperty("--cursor-x", `${localX}px`);
+      activeSurface.style.setProperty("--cursor-y", `${localY}px`);
+    };
+
+    const handlePointerMove = (event: PointerEvent) => {
+      latestEvent = event;
+
+      if (!animationFrame) {
+        animationFrame = window.requestAnimationFrame(updateCursor);
+      }
+    };
+
+    window.addEventListener("pointermove", handlePointerMove, {
+      passive: true,
+    });
+    window.addEventListener("pointerleave", clearActiveSurface, {
+      passive: true,
+    });
+    window.addEventListener("blur", clearActiveSurface);
 
     return () => {
-      active = false;
+      if (animationFrame) {
+        window.cancelAnimationFrame(animationFrame);
+      }
+
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerleave", clearActiveSurface);
+      window.removeEventListener("blur", clearActiveSurface);
+      clearActiveSurface();
     };
   }, []);
-
-  return { release, error };
 }
 
 function applyRuntimePricingFallback(
@@ -469,7 +496,7 @@ const APP_COPY = {
     profileLine3: "Base: New York / Beijing",
     tocHome: "主页",
     tocProjects: "项目",
-    tocBlog: "文章",
+    tocBlog: "博客",
     tocDeploy: "部署",
     tocContact: "联系",
     themeNight: "夜间",
@@ -482,7 +509,7 @@ const APP_COPY = {
     aboutArchiveTitle: "项目归档",
     aboutEntryText: "关于我",
     portfolioTitle: "作品集",
-    blogTitle: "文章",
+    blogTitle: "博客",
     blogIntro: "把短帖和长文放在同一条时间线上，方便从一个地方连续读完。",
     blogSourceSite: "站内",
     blogSourceX: "归档自 X",
@@ -490,16 +517,16 @@ const APP_COPY = {
     blogOriginalPrefix: "原始发布时间",
     blogReadSource: "查看原文",
     blogNextLabel: "下一篇",
-    blogEndOfList: "已经到最后一篇。",
-    blogLoadMore: "继续加载文章",
+    blogEndOfList: "已经到最后一篇博客。",
+    blogLoadMore: "继续加载博客",
     homeProjectsMeta: "Featured Projects",
-    homeProjectsTitle: "选择你想体验的产品",
+    homeProjectsTitle: "进入 wordm.us 生态",
     homeProjectsIntro:
-      "这里汇集 wordm.us 正在开放的产品入口：阅读空间、ARC 世界模型、个人 agent 工作台、Agent Core 运行时，以及 Town Agents 原型。先预览界面，再进入产品页，或选择多个入口下载成清单。",
-    systemCoverDomain: "wordm.us",
+      "这里汇总目前公开可进入的产品与实验：System 说明底座，Agent 承接个人工作台，Flipook、ARC3 和 Town Agents 保留各自的使用现场。",
+    systemCoverDomain: "system.wordm.us",
     systemCoverTitle: "System",
-    systemCoverSubtitle: "主页已经回到 wordm.us，Core 与 app 生态从这里展开。",
-    systemCoverCta: "回到主页",
+    systemCoverSubtitle: "架构图、Core / WCP / Apps 关系，以及开源 Core 源码入口都在这里。",
+    systemCoverCta: "进入 System",
     homeProjectsCta: "进入产品页",
     homeProjectsPreview: "预览页面",
     homeProjectsPreviewOpen: "打开",
@@ -511,29 +538,31 @@ const APP_COPY = {
     homeProjectsDownloadEmpty: "请先选择至少一个项目。",
     homeProjectsDownloadSelected: "下载",
     homeProjectsDownloadStatus: "已下载所选产品入口清单。",
-    systemHeroTitle: "一个会长出工具的世界",
+    systemHeroTitle: "wordm.us 的公开入口",
     systemHeroIntro:
-      "Wordm System 不是单一应用，而是一套让应用拥有 agent life loop 的架构。Core 负责持续感知、分配注意力、生成与回收子代理、沉淀 skill；Agent、Flipook 和未来 app 通过 WCP 接入，把信号与工具交给 Core，同时接收 Core 的指导。",
-    systemHeroCta: "查看项目入口",
-    systemHeroRead: "阅读文章",
-    systemHeroNodeHuman: "人",
-    systemHeroNodeHumanDetail: "提出模糊需求",
-    systemHeroNodeEnvironment: "环境",
-    systemHeroNodeEnvironmentDetail: "反馈与约束",
-    systemHeroNodeSystem: "Agent System",
-    systemHeroNodeSystemDetail: "生成 agent loop",
-    systemHeroNodeLoop: "Agent Loop",
-    systemHeroNodeLoopDetail: "感知 / 行动 / tick",
-    systemHeroNodeHistory: "历史",
-    systemHeroNodeHistoryDetail: "权限与轨迹",
-    systemHeroNodeTools: "工具",
-    systemHeroNodeToolsDetail: "API 与新工具",
-    coreDownloadKicker: "Core Host / 本机分发",
-    coreDownloadTitle: "下载 Mac 测试包，把本机 Core 跑起来。",
+      "这里集中呈现 Jian Yongjie 正在构建的产品、写作和 Agent 系统。愿景是让工具拥有可沉淀的经验；定位是公开的项目地图与进展记录；近况会通过产品入口、博客和 System 说明持续更新。",
+    systemHeroCta: "阅读 System 说明",
+    systemHeroRead: "查看产品近况",
+    systemHeroNodeHuman: "愿景",
+    systemHeroNodeHumanDetail: "工具积累经验",
+    systemHeroNodeEnvironment: "定位",
+    systemHeroNodeEnvironmentDetail: "公开项目地图",
+    systemHeroNodeSystem: "wordm.us",
+    systemHeroNodeSystemDetail: "产品 / 博客 / System",
+    systemHeroNodeLoop: "近况",
+    systemHeroNodeLoopDetail: "入口持续整理",
+    systemHeroNodeHistory: "Core",
+    systemHeroNodeHistoryDetail: "源码与架构",
+    systemHeroNodeTools: "Apps",
+    systemHeroNodeToolsDetail: "进入使用现场",
+    coreDownloadKicker: "近况 / System 与 Core",
+    coreDownloadTitle: "近况会集中在主站与 System 站持续更新。",
     coreDownloadIntro:
-      "Core Host 是启动本机 Agent Core 的 macOS 测试壳，用来验证 local runtime、WCP 协议和 app 接入链路。",
-    coreDownloadCta: "下载测试包",
-    coreManifestCta: "查看 manifest",
+      "主站展示可进入的产品、博客与实验；System 站解释 Core、WCP、Apps 的关系，并链接到开源 Core、文档和后续接入说明。",
+    coreDownloadCta: "进入 System",
+    coreManifestCta: "查看源码",
+    coreReleaseNote:
+      "Core Host 是未来可能出现的本机启动壳；当前公开入口是 GitHub 源码和架构说明。",
     coreReleaseLocal: "Local test build",
     coreReleaseSigned: "Developer ID signed",
     coreReleaseMissing: "Manifest 暂时不可用",
@@ -662,7 +691,7 @@ const APP_COPY = {
     profileLine3: "Base: New York / Beijing",
     tocHome: "Home",
     tocProjects: "Projects",
-    tocBlog: "Articles",
+    tocBlog: "Blog",
     tocDeploy: "Deploy",
     tocContact: "Contact",
     themeNight: "Night",
@@ -675,7 +704,7 @@ const APP_COPY = {
     aboutArchiveTitle: "Project archive",
     aboutEntryText: "About",
     portfolioTitle: "Portfolio Gallery",
-    blogTitle: "Articles",
+    blogTitle: "Blog",
     blogIntro:
       "Short notes and long-form pieces live on one timeline so the reading flow stays continuous.",
     blogSourceSite: "On site",
@@ -684,17 +713,17 @@ const APP_COPY = {
     blogOriginalPrefix: "Originally posted",
     blogReadSource: "Open source",
     blogNextLabel: "Next",
-    blogEndOfList: "You are at the last article.",
-    blogLoadMore: "Load more articles",
+    blogEndOfList: "You are at the last blog post.",
+    blogLoadMore: "Load more posts",
     homeProjectsMeta: "Featured Projects",
-    homeProjectsTitle: "Choose a product to explore",
+    homeProjectsTitle: "Enter the wordm.us ecosystem",
     homeProjectsIntro:
-      "Browse the open product entries across wordm.us: spatial reading, ARC world models, a personal agent workspace, the Agent Core runtime, and the Town Agents prototype. Preview the interface, open a product page, or select several entries to download as a list.",
-    systemCoverDomain: "wordm.us",
+      "This gathers the public product and experiment entries available now: System explains the base layer, Agent holds the personal workspace, while Flipook, ARC3, and Town Agents keep their own fields.",
+    systemCoverDomain: "system.wordm.us",
     systemCoverTitle: "System",
     systemCoverSubtitle:
-      "The system homepage now lives at wordm.us, where Core and app ecology start.",
-    systemCoverCta: "Back to home",
+      "Architecture, Core / WCP / Apps, and the open Core source live here.",
+    systemCoverCta: "Enter System",
     homeProjectsCta: "Open product page",
     homeProjectsPreview: "Page preview",
     homeProjectsPreviewOpen: "Open",
@@ -706,29 +735,31 @@ const APP_COPY = {
     homeProjectsDownloadEmpty: "Select at least one project first.",
     homeProjectsDownloadSelected: "Download",
     homeProjectsDownloadStatus: "Downloaded the selected product entry list.",
-    systemHeroTitle: "A world that grows its own tools",
+    systemHeroTitle: "The public entrance to wordm.us",
     systemHeroIntro:
-      "Wordm System is not a single app. It is an architecture that gives apps an agent life loop: Core senses, allocates attention, spawns and retires agents, crystallizes skills, and lets Agent, Flipook, and future apps connect through WCP.",
-    systemHeroCta: "View projects",
-    systemHeroRead: "Read articles",
-    systemHeroNodeHuman: "Human",
-    systemHeroNodeHumanDetail: "Fuzzy intent",
-    systemHeroNodeEnvironment: "Environment",
-    systemHeroNodeEnvironmentDetail: "Feedback and limits",
-    systemHeroNodeSystem: "Agent System",
-    systemHeroNodeSystemDetail: "Generates agent loops",
-    systemHeroNodeLoop: "Agent Loop",
-    systemHeroNodeLoopDetail: "Sense / act / tick",
-    systemHeroNodeHistory: "History",
-    systemHeroNodeHistoryDetail: "Rights and traces",
-    systemHeroNodeTools: "Tools",
-    systemHeroNodeToolsDetail: "APIs and new tools",
-    coreDownloadKicker: "Core Host / local distribution",
-    coreDownloadTitle: "Download the Mac test build and start the local Core.",
+      "This site presents the products, writing, and agent system Jian Yongjie is building. The vision is to let tools retain useful experience; the positioning is a public project map and progress record; current updates arrive through product entries, the blog, and System notes.",
+    systemHeroCta: "Read System notes",
+    systemHeroRead: "View current products",
+    systemHeroNodeHuman: "Vision",
+    systemHeroNodeHumanDetail: "Tools learn experience",
+    systemHeroNodeEnvironment: "Positioning",
+    systemHeroNodeEnvironmentDetail: "Public project map",
+    systemHeroNodeSystem: "wordm.us",
+    systemHeroNodeSystemDetail: "Products / Blog / System",
+    systemHeroNodeLoop: "Current",
+    systemHeroNodeLoopDetail: "Entries organized",
+    systemHeroNodeHistory: "Core",
+    systemHeroNodeHistoryDetail: "Source and architecture",
+    systemHeroNodeTools: "Apps",
+    systemHeroNodeToolsDetail: "Live product fields",
+    coreDownloadKicker: "Current / System and Core",
+    coreDownloadTitle: "Current updates are collected on the main site and the System site.",
     coreDownloadIntro:
-      "Core Host is a macOS shell for starting the local Agent Core while the runtime, WCP protocol, and app connection loop are still being validated.",
-    coreDownloadCta: "Download test build",
-    coreManifestCta: "Open manifest",
+      "The main site shows product, writing, and experiment entries. The System site explains Core, WCP, Apps, and links to the open Core source, docs, and future onboarding notes.",
+    coreDownloadCta: "Enter System",
+    coreManifestCta: "Open source",
+    coreReleaseNote:
+      "Core Host may become the local launch shell later. For now, the public entry is the GitHub source and architecture notes.",
     coreReleaseLocal: "Local test build",
     coreReleaseSigned: "Developer ID signed",
     coreReleaseMissing: "Manifest is temporarily unavailable",
@@ -1019,7 +1050,7 @@ function defaultShareScope(): ShareScope {
     allowPortfolio: true,
     allowBlog: true,
     allowDeploy: true,
-    allowResume: true,
+    allowResume: false,
     allowAllProjects: true,
     allowedProjectSlugs: [],
   };
@@ -1067,6 +1098,8 @@ function resolveShareDeniedStatus(options: {
 }
 
 function App() {
+  useCursorReactiveSurfaces();
+
   const params = new URLSearchParams(window.location.search);
   const hostname = window.location.hostname.toLowerCase();
   const isAdminHost =
@@ -1074,10 +1107,9 @@ function App() {
   const forcedSubdomain = params.get("subdomain");
   const forcedPage = params.get("page");
   const initialShowSlugs = parseShowSlugs(params.get("show"));
-  const initialRootView = toRootView(
-    params.get("view"),
-    window.location.pathname,
-  );
+  const initialRootView = initialShowSlugs.length
+    ? "portfolio"
+    : toRootView(params.get("view"), window.location.pathname);
   const initialBlogArticleId =
     normalizeBlogArticleId(params.get("article")) ??
     BLOG_ARTICLES[0]?.id ??
@@ -1211,8 +1243,6 @@ function App() {
     [blogArticles, visibleBlogCount],
   );
   const hasMoreBlogArticles = renderedBlogArticles.length < blogArticles.length;
-  const { release: coreHostRelease, error: coreHostReleaseError } =
-    useCoreHostRelease();
   const activeBlogArticle = useMemo(
     () =>
       blogArticles.find((article) => article.id === activeBlogArticleId) ??
@@ -1345,14 +1375,18 @@ function App() {
   ]);
 
   useEffect(() => {
-    const activeLangButton = document.querySelector(
+    const activeLangButton = document.querySelector<HTMLElement>(
       ".site-topbar-lang button.active",
     );
+    const langRail = activeLangButton?.parentElement;
 
-    activeLangButton?.scrollIntoView({
-      block: "nearest",
-      inline: "center",
-    });
+    if (!activeLangButton || !langRail) {
+      return;
+    }
+
+    langRail.scrollLeft =
+      activeLangButton.offsetLeft -
+      (langRail.clientWidth - activeLangButton.clientWidth) / 2;
   }, [lang]);
 
   useEffect(() => {
@@ -2083,6 +2117,7 @@ function App() {
 
     const scope = {
       ...options.scope,
+      allowResume: false,
       allowedProjectSlugs: options.scope.allowAllProjects
         ? []
         : options.scope.allowedProjectSlugs,
@@ -2190,7 +2225,7 @@ function App() {
         allowPortfolio: true,
         allowBlog: false,
         allowDeploy: true,
-        allowResume: authRole === "admin" || authRole === "tester",
+        allowResume: false,
         allowAllProjects: true,
         allowedProjectSlugs: [],
       },
@@ -2208,7 +2243,7 @@ function App() {
         allowPortfolio: true,
         allowBlog: false,
         allowDeploy: true,
-        allowResume: authRole === "admin" || authRole === "tester",
+        allowResume: false,
         allowAllProjects: true,
         allowedProjectSlugs: [],
       },
@@ -2226,7 +2261,7 @@ function App() {
         allowPortfolio: true,
         allowBlog: false,
         allowDeploy: true,
-        allowResume: authRole === "admin" || authRole === "tester",
+        allowResume: false,
         allowAllProjects: true,
         allowedProjectSlugs: [],
       },
@@ -2616,7 +2651,7 @@ function App() {
 
     return withSiteParams(subdomainProject.productionUrl, { lang, shareToken });
   }, [lang, shareToken, subdomainProject]);
-  const isResumeView =
+  const shouldBlockResumeView =
     forcedPage === "resume" ||
     hostname === "resume.wordm.us" ||
     hostname === "cv.wordm.us";
@@ -2640,8 +2675,6 @@ function App() {
     shareToken && shareAccess
       ? buildShareEntryUrl(shareToken, lang, shareAccess.scope, projects)
       : null;
-  const canAccessResume =
-    canManageShares || canShareAccessView("resume", shareAccess);
   const projectCatalogSlugs = useMemo(
     () => projects.map((project) => project.slug),
     [projects],
@@ -2663,12 +2696,6 @@ function App() {
     shareResolveStatus,
     allowedByShare: canShareAccessView("blog", shareAccess),
     bypass: Boolean(authUser),
-  });
-  const resumeShareDeniedStatus = resolveShareDeniedStatus({
-    shareToken,
-    shareResolveStatus,
-    allowedByShare: canShareAccessView("resume", shareAccess),
-    bypass: authRole === "admin" || authRole === "tester",
   });
   const subdomainShareDeniedStatus = resolveShareDeniedStatus({
     shareToken,
@@ -2717,20 +2744,6 @@ function App() {
       ),
     [selectedHomeProductKeySet],
   );
-  const coreHostDownloadUrl =
-    coreHostRelease?.currentUrl ||
-    "/releases/wordm-core-host/WordmCoreHost-current.zip";
-  const coreHostReleaseStatus = coreHostRelease?.signed
-    ? copy.coreReleaseSigned
-    : copy.coreReleaseLocal;
-  const coreHostReleaseVersion = coreHostRelease?.version
-    ? `v${coreHostRelease.version}`
-    : "v0.1.0";
-  const coreHostReleaseSize = coreHostRelease?.sizeMB
-    ? `${coreHostRelease.sizeMB} MB`
-    : "--";
-  const coreHostReleaseRequirement =
-    coreHostRelease?.requirements?.macOS || "macOS 14.0+";
 
   useEffect(() => {
     if (typeof document === "undefined" || !projectModalOpen) {
@@ -3104,7 +3117,19 @@ function App() {
     window.location.replace(subdomainExperienceUrl);
   }, [subdomainExperienceUrl]);
 
+  useEffect(() => {
+    if (!shouldBlockResumeView) {
+      return;
+    }
+
+    window.location.replace(withSiteParams("https://wordm.us", { lang }));
+  }, [lang, shouldBlockResumeView]);
+
   if (subdomainExperienceUrl) {
+    return null;
+  }
+
+  if (shouldBlockResumeView) {
     return null;
   }
 
@@ -3209,38 +3234,6 @@ function App() {
     );
   }
 
-  if (isResumeView) {
-    if (resumeShareDeniedStatus) {
-      return (
-        <ShareAccessDenied
-          lang={lang}
-          status={resumeShareDeniedStatus}
-          authPanel={authPanelProps}
-          fallbackSharedUrl={shareEntryUrl}
-        />
-      );
-    }
-
-    if (!canAccessResume) {
-      return (
-        <ResumeAccessDenied
-          lang={lang}
-          role={authRole}
-          shareToken={shareToken}
-          authPanel={authPanelProps}
-        />
-      );
-    }
-    return (
-      <ResumePage
-        lang={lang}
-        lastUpdated={lastUpdated}
-        shareToken={shareToken}
-        authPanel={authPanelProps}
-      />
-    );
-  }
-
   if (rootView === "login") {
     return (
       <LoginPage
@@ -3257,6 +3250,19 @@ function App() {
         onSignup={handleAuthSignup}
         onGoogleLogin={() => handleGoogleLogin(authReturnHref)}
         onLogout={handleLogout}
+      />
+    );
+  }
+
+  if (rootView === "home") {
+    return (
+      <FountHomePage
+        lang={lang}
+        onLangChange={setLang}
+        themeMode={themeMode}
+        onThemeToggle={() =>
+          setThemeMode((current) => (current === "night" ? "day" : "night"))
+        }
       />
     );
   }
@@ -3309,7 +3315,7 @@ function App() {
           >
             <button
               type="button"
-              className={`collection-switch-tab${rootView === "home" ? " active" : ""}`}
+              className="collection-switch-tab"
               onClick={() => switchRootView("home")}
             >
               {copy.tocHome}
@@ -3410,151 +3416,6 @@ function App() {
         </div>
 
         <section id="collection" className="main-collection-shell">
-          {rootView === "home" ? (
-            <>
-              <section
-                className="system-entry-hero"
-                aria-labelledby="system-home-title"
-              >
-                <div className="system-entry-copy">
-                  <p className="paper-meta">wordm.us / system home</p>
-                  <h1 id="system-home-title">{copy.systemHeroTitle}</h1>
-                  <p>{copy.systemHeroIntro}</p>
-                  <div className="system-entry-actions">
-                    <a
-                      className="system-entry-link system-entry-link-primary"
-                      href={relativeRootHref("portfolio", lang)}
-                      onClick={(event) => {
-                        event.preventDefault();
-                        switchRootView("portfolio");
-                      }}
-                    >
-                      {copy.systemHeroCta}
-                    </a>
-                    <a
-                      className="system-entry-link system-entry-link-secondary"
-                      href={relativeRootHref("blog", lang)}
-                      onClick={(event) => {
-                        event.preventDefault();
-                        switchRootView("blog");
-                      }}
-                    >
-                      {copy.systemHeroRead}
-                    </a>
-                  </div>
-                </div>
-
-                <div className="system-entry-map" aria-label="Wordm System map">
-                  <svg
-                    className="system-map-lines"
-                    viewBox="0 0 700 560"
-                    preserveAspectRatio="none"
-                    aria-hidden="true"
-                  >
-                    <defs>
-                      <marker
-                        id="system-map-arrow"
-                        markerWidth="8"
-                        markerHeight="8"
-                        refX="6.4"
-                        refY="4"
-                        orient="auto"
-                      >
-                        <path d="M0 0 8 4 0 8z" />
-                      </marker>
-                    </defs>
-                    <path d="M165 112 C240 140 282 214 332 282" />
-                    <path d="M535 108 C460 142 418 214 368 282" />
-                    <path d="M350 342 C300 382 250 420 178 456" />
-                    <path d="M382 342 C438 386 486 420 536 454" />
-                    <path d="M350 350 C352 400 352 442 352 492" />
-                  </svg>
-                  <div className="system-map-card system-map-card-human">
-                    <strong>{copy.systemHeroNodeHuman}</strong>
-                    <span>{copy.systemHeroNodeHumanDetail}</span>
-                  </div>
-                  <div className="system-map-card system-map-card-environment">
-                    <strong>{copy.systemHeroNodeEnvironment}</strong>
-                    <span>{copy.systemHeroNodeEnvironmentDetail}</span>
-                  </div>
-                  <div className="system-map-card system-map-card-system">
-                    <strong>{copy.systemHeroNodeSystem}</strong>
-                    <span>{copy.systemHeroNodeSystemDetail}</span>
-                  </div>
-                  <div className="system-map-card system-map-card-loop">
-                    <strong>{copy.systemHeroNodeLoop}</strong>
-                    <span>{copy.systemHeroNodeLoopDetail}</span>
-                  </div>
-                  <div className="system-map-card system-map-card-history">
-                    <strong>{copy.systemHeroNodeHistory}</strong>
-                    <span>{copy.systemHeroNodeHistoryDetail}</span>
-                  </div>
-                  <div className="system-map-card system-map-card-tools">
-                    <strong>{copy.systemHeroNodeTools}</strong>
-                    <span>{copy.systemHeroNodeToolsDetail}</span>
-                  </div>
-                </div>
-              </section>
-
-              <section className="system-home-detail-grid">
-                {SYSTEM_HOME_FEATURES[lang].map((feature) => (
-                  <article className="system-home-detail-card" key={feature.title}>
-                    <h2>{feature.title}</h2>
-                    <p>{feature.text}</p>
-                  </article>
-                ))}
-              </section>
-
-              <section className="system-home-loop-section">
-                <p className="paper-meta">Agent Core / life loop</p>
-                <div className="system-home-loop-grid">
-                  {SYSTEM_CORE_LOOP.map((item, index) => (
-                    <span key={item}>
-                      <b>{String(index + 1).padStart(2, "0")}</b>
-                      {item}
-                    </span>
-                  ))}
-                </div>
-              </section>
-
-              <section className="system-home-download-section">
-                <div className="system-home-download-copy">
-                  <p className="paper-meta">{copy.coreDownloadKicker}</p>
-                  <h2>{copy.coreDownloadTitle}</h2>
-                  <p>{copy.coreDownloadIntro}</p>
-                </div>
-                <div className="system-home-release-box">
-                  <span>{coreHostReleaseStatus}</span>
-                  <strong>Wordm Core Host</strong>
-                  <div className="system-home-release-meta">
-                    <code>{coreHostReleaseVersion}</code>
-                    <code>{coreHostReleaseSize}</code>
-                    <code>{coreHostReleaseRequirement}</code>
-                  </div>
-                  {coreHostReleaseError ? (
-                    <small>
-                      {copy.coreReleaseMissing}: {coreHostReleaseError}
-                    </small>
-                  ) : null}
-                  <div className="system-home-release-actions">
-                    <a
-                      className="system-entry-link system-entry-link-primary"
-                      href={coreHostDownloadUrl}
-                    >
-                      {copy.coreDownloadCta}
-                    </a>
-                    <a
-                      className="system-entry-link system-entry-link-secondary"
-                      href={CORE_HOST_MANIFEST_URL}
-                    >
-                      {copy.coreManifestCta}
-                    </a>
-                  </div>
-                </div>
-              </section>
-            </>
-          ) : null}
-
           {rootView === "blog" ? (
             <p className="visual-intro collection-switch-intro">
               {copy.blogIntro}
@@ -3593,6 +3454,7 @@ function App() {
                     >
                       <div className="paper-meta">
                         <span>{article.date}</span>
+                        <span>{article.category[lang]}</span>
                       </div>
                       <h3 className="blog-article-title">
                         {article.title[lang]}
@@ -3653,12 +3515,10 @@ function App() {
             >
               <a
                 className="system-cover-portal"
-                href={relativeRootHref("home", lang)}
+                href={withSiteParams(SYSTEM_SITE_URL, { lang })}
+                target="_blank"
+                rel="noreferrer"
                 aria-label={copy.systemCoverCta}
-                onClick={(event) => {
-                  event.preventDefault();
-                  switchRootView("home");
-                }}
               >
                 <span className="system-cover-bg" aria-hidden="true" />
                 <span
@@ -3693,6 +3553,7 @@ function App() {
                 {HOME_PROJECTS.map((project, index) => {
                   const selected = selectedHomeProductKeySet.has(project.key);
                   const projectHref = withSiteParams(project.href, { lang });
+                  const opensInNewTab = project.href === SYSTEM_SITE_URL;
 
                   return (
                     <article
@@ -3748,7 +3609,12 @@ function App() {
                         <h2>{project.name}</h2>
                         <p>{project.summary[lang]}</p>
                         <div className="home-project-actions">
-                          <a className="home-project-cta" href={projectHref}>
+                          <a
+                            className="home-project-cta"
+                            href={projectHref}
+                            target={opensInNewTab ? "_blank" : undefined}
+                            rel={opensInNewTab ? "noreferrer" : undefined}
+                          >
                             {copy.homeProjectsCta}
                             <span aria-hidden="true">→</span>
                           </a>

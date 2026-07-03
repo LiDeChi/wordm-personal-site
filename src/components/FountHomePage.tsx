@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import type { Lang } from "../i18n/lang";
-import { BLOG_ARTICLES } from "../data/blogArticles";
 
 type FountHomePageProps = {
   lang: Lang;
   onLangChange: (lang: Lang) => void;
+  themeMode: "day" | "night";
+  onThemeToggle: () => void;
 };
 
 type LocalizedText = Record<Lang, string>;
@@ -42,6 +43,14 @@ type PermissionItem = {
   level: string;
 };
 
+type PricingTier = {
+  name: string;
+  title: LocalizedText;
+  price: LocalizedText;
+  body: LocalizedText;
+  items: LocalizedText[];
+};
+
 type OutlineId = "vision" | "ecosystem" | "product";
 
 const SYSTEM_DOCS_URL = "https://system.wordm.us";
@@ -63,15 +72,19 @@ const COPY = {
     navRoadmap: "路线",
     navBlog: "博客",
     navDocs: "文档",
+    navUpdates: "更新",
+    navPricing: "定价",
     navAccount: "账号",
-    download: "Download",
-    heroTitle: "Fount 是开放的个人 agent 大脑",
-    heroDeck:
-      "Field 是可携带的经验环境。Forge 和 Foundry 是默认内置的系统级 Field。SDK 让普通产品变成 Field，经验在 Field 与 Fount 之间流动。",
-    heroSub:
-      "它不是普通 AI 助手，也不是开发者工具，而是一个能随你进入不同环境、理解体验、积累记忆并帮助改造世界的连续性系统。",
-    primaryCta: "Download Fount for Mac",
-    secondaryCta: "阅读概念",
+    themeNight: "夜",
+    themeDay: "日",
+    themeToNightAria: "切换到黑夜模式",
+    themeToDayAria: "切换到日间模式",
+    download: "下载 Mac app",
+    macDownload: "下载 Mac app",
+    platformNote: "其他平台即将到来",
+    heroTitle: "Fount",
+    heroDeck: "让你的 agent 不只会聊天，而是能记住经验、进入现场、改造工具。",
+    heroSub: "Fount 是个人 agent 大脑；Field 是它进入的产品现场。",
     visualAlt: "Fount 个人 agent 大脑连接多个可携带 Field 的线稿插图",
     dashboardTitle: "Experience Continuity",
     dashboardStatus: "5 layers online · 7 experience events · memory sync ready",
@@ -109,20 +122,19 @@ const COPY = {
     roadmapTitle: "从本地个人大脑到 Field 生态。",
     roadmapLead:
       "路线图先把 Fount Core 和几个 starter Field 跑通，再进入 Forge Lite、Foundry alpha、SDK 生态和商业网络。",
-    finalTitle: "Download Fount and enter your first Field.",
-    finalBody:
-      "Fount 是开放的个人 agent 大脑。Field 是可携带的经验环境。经验在 Field 和 Fount 之间流动。",
-    finalSecondary: "Explore Foundry",
+    finalTitle: "从第一个 Field 开始。",
+    finalBody: "先让 Fount 记住一次真实体验，再让它带着经验进入下一个现场。",
+    finalSecondary: "阅读文档",
     visualTitle: "从一个个人大脑进入多个 Field。",
     visualLead:
       "Fount 记录你的偏好、目标和经验；Field 提供可进入的环境；Forge 与 Foundry 让这些环境被创造、发现、安装和改造。",
-    storyTitle: "生态由创造、发现和信任组成。",
-    storyLead:
-      "Forge 负责创造与改造，Foundry 负责发现与分发，权限和认证负责把体验边界说清楚。",
-    blogTitle: "博客没有漏掉。",
-    blogLead:
-      "这里接入的是站内真实博客数据。首页只展示一组入口，完整文章列表仍在博客页。",
-    blogCta: "查看全部博客",
+    storyTitle: "它怎么工作",
+    storyLead: "Fount 在中间承接记忆和权限；不同 Field 提供真实环境；经验通过事件回到 Fount。",
+    useTitle: "进入后有什么用",
+    useLead: "访客需要先看懂结果：Fount 会把一次体验变成下一次行动的上下文。",
+    pricingTitle: "按进入世界的深度定价。",
+    pricingLead:
+      "从先玩起来，到长期探索，再到完整掌控你的 Field 生态。三档都围绕同一个目标：让 Fount 记住经验，并把经验带回下一次行动。",
     accountTitle: "账号系统是 Fount 的身份与权限层。",
     accountLead:
       "登录、角色、权限、同步和购买状态都应该在同一个账户系统里被管理。Fount 不是无状态访问入口，而是有身份边界的个人 agent 大脑。",
@@ -138,15 +150,19 @@ const COPY = {
     navRoadmap: "Roadmap",
     navBlog: "Blog",
     navDocs: "Docs",
+    navUpdates: "Updates",
+    navPricing: "Pricing",
     navAccount: "Account",
-    download: "Download",
-    heroTitle: "Fount is an open personal agent brain.",
-    heroDeck:
-      "Fields are portable experience environments. Forge and Foundry are built-in system Fields. The SDK turns products into Fields, and experience flows between Fields and Fount.",
-    heroSub:
-      "It is not a normal AI assistant or a developer tool. It is a continuity system that enters environments with you, understands experience, accumulates memory, and helps reshape worlds.",
-    primaryCta: "Download Fount for Mac",
-    secondaryCta: "Read Concepts",
+    themeNight: "Night",
+    themeDay: "Day",
+    themeToNightAria: "Switch to night mode",
+    themeToDayAria: "Switch to day mode",
+    download: "Download Mac app",
+    macDownload: "Download Mac app",
+    platformNote: "Other platforms coming soon",
+    heroTitle: "Fount",
+    heroDeck: "An agent that does more than chat: it remembers experience, enters live environments, and reshapes tools.",
+    heroSub: "Fount is the personal agent brain. Fields are the product environments it enters.",
     visualAlt: "Line illustration of the Fount personal agent brain connected to portable Fields",
     dashboardTitle: "Experience Continuity",
     dashboardStatus: "5 layers online · 7 experience events · memory sync ready",
@@ -184,20 +200,19 @@ const COPY = {
     roadmapTitle: "From local personal brain to Field ecosystem.",
     roadmapLead:
       "The roadmap starts with Fount Core and starter Fields, then moves into Forge Lite, Foundry alpha, SDK adoption, and commercial network services.",
-    finalTitle: "Download Fount and enter your first Field.",
-    finalBody:
-      "Fount is an open personal agent brain. Fields are portable experience environments. Experience flows between Fields and Fount.",
-    finalSecondary: "Explore Foundry",
+    finalTitle: "Start with one Field.",
+    finalBody: "Let Fount remember one real experience, then carry that context into the next environment.",
+    finalSecondary: "Read docs",
     visualTitle: "From one personal brain into many Fields.",
     visualLead:
       "Fount keeps your preferences, goals, and experience. Fields provide enterable environments. Forge and Foundry let those environments be created, discovered, installed, and reshaped.",
-    storyTitle: "The ecosystem is creation, discovery, and trust.",
-    storyLead:
-      "Forge creates and reshapes. Foundry discovers and distributes. Permissions and certification make the experience boundary explicit.",
-    blogTitle: "The blog is here too.",
-    blogLead:
-      "This section uses the real site blog data. The homepage shows a curated entry point, while the full writing archive remains on the blog page.",
-    blogCta: "View all writing",
+    storyTitle: "How it works",
+    storyLead: "Fount holds memory and permissions. Fields provide live environments. Experience returns through structured events.",
+    useTitle: "What visitors can use it for",
+    useLead: "The point is the outcome: one experience becomes context for the next action.",
+    pricingTitle: "Pricing follows how deeply you enter the world.",
+    pricingLead:
+      "Start by playing, keep exploring, then fully command your Field ecosystem. Each tier keeps the same promise: Fount remembers experience and carries it into the next action.",
     accountTitle: "Account is the identity and permission layer for Fount.",
     accountLead:
       "Login, roles, permissions, sync, and purchase state should be managed through one account system. Fount is not a stateless entry point; it is a personal agent brain with identity boundaries.",
@@ -248,6 +263,87 @@ const CORE_CONCEPTS: ConceptItem[] = [
     body: {
       zh: "人可以浏览，Fount 也可以基于记忆、兴趣、目标、资源和权限边界主动发现。",
       en: "People can browse it, and Fount can discover Fields based on memory, interests, goals, resources, and permission boundaries.",
+    },
+  },
+];
+
+const VISITOR_PROMISES: ConceptItem[] = [
+  {
+    name: "Remember",
+    title: { zh: "记得住", en: "Remembers" },
+    body: {
+      zh: "偏好、目标、选择和失败不会散落在不同工具里。",
+      en: "Preferences, goals, choices, and failures do not scatter across tools.",
+    },
+  },
+  {
+    name: "Enter",
+    title: { zh: "进得去", en: "Enters" },
+    body: {
+      zh: "Fount 和你一起进入 Field，而不是在聊天框外猜现场。",
+      en: "Fount enters Fields with you instead of guessing outside the product.",
+    },
+  },
+  {
+    name: "Reshape",
+    title: { zh: "改得动", en: "Reshapes" },
+    body: {
+      zh: "授权以后，Forge 可以把体验改成更适合你的版本。",
+      en: "With permission, Forge can reshape the experience around you.",
+    },
+  },
+];
+
+const VISITOR_FLOW: StepItem[] = [
+  {
+    label: "01",
+    title: { zh: "Field 声明边界", en: "Field declares boundaries" },
+    body: {
+      zh: "每个 Field 说明自己能提供什么、需要什么权限、会写回哪些经验。",
+      en: "Each Field declares what it offers, which permissions it needs, and what experience it writes back.",
+    },
+  },
+  {
+    label: "02",
+    title: { zh: "Fount 带着上下文进入", en: "Fount enters with context" },
+    body: {
+      zh: "它把你的偏好、目标和最近的经验带进现场，但只在允许范围内行动。",
+      en: "It brings your preferences, goals, and recent experience into the environment, inside permission limits.",
+    },
+  },
+  {
+    label: "03",
+    title: { zh: "经验回流成记忆", en: "Experience returns as memory" },
+    body: {
+      zh: "你看过、选过、改过、失败过的东西，变成下一次行动的上下文。",
+      en: "What you saw, chose, changed, or failed at becomes context for the next action.",
+    },
+  },
+];
+
+const VISITOR_USE_CASES: ConceptItem[] = [
+  {
+    name: "Work",
+    title: { zh: "个人工作台", en: "Personal workspace" },
+    body: {
+      zh: "让 agent 记住项目、文件、任务和你的判断口味。",
+      en: "Let the agent remember projects, files, tasks, and your judgment style.",
+    },
+  },
+  {
+    name: "Learning",
+    title: { zh: "阅读与学习", en: "Reading and learning" },
+    body: {
+      zh: "把困惑、标注和偏好带到下一本书或下一节课。",
+      en: "Carry confusion, notes, and preferences into the next book or lesson.",
+    },
+  },
+  {
+    name: "Creation",
+    title: { zh: "创造工具", en: "Creation tools" },
+    body: {
+      zh: "让 Forge 在权限边界内调整界面、规则和流程。",
+      en: "Let Forge adjust interfaces, rules, and workflows within permission boundaries.",
     },
   },
 ];
@@ -745,6 +841,51 @@ const BUSINESS_MODELS: ConceptItem[] = [
   },
 ];
 
+const PRICING_TIERS: PricingTier[] = [
+  {
+    name: "Player",
+    title: { zh: "先进入、先玩起来", en: "Enter and start playing" },
+    price: { zh: "免费", en: "Free" },
+    body: {
+      zh: "适合先体验 Fount.app、本地 Core 和 starter Fields。",
+      en: "For trying Fount.app, local Core, and starter Fields first.",
+    },
+    items: [
+      { zh: "本地个人 agent 大脑", en: "Local personal agent brain" },
+      { zh: "基础 Field Runtime", en: "Base Field Runtime" },
+      { zh: "Starter Fields 与基础记忆", en: "Starter Fields and base memory" },
+    ],
+  },
+  {
+    name: "Explorer",
+    title: { zh: "跨 Field 持续探索", en: "Explore across Fields" },
+    price: { zh: "个人订阅", en: "Personal plan" },
+    body: {
+      zh: "适合希望跨设备同步、扩大记忆、使用更多 Field 的个人用户。",
+      en: "For people who want sync, deeper memory, and more usable Fields.",
+    },
+    items: [
+      { zh: "云同步与跨设备连续性", en: "Cloud sync and cross-device continuity" },
+      { zh: "更大记忆与更多 Field", en: "Larger memory and more Fields" },
+      { zh: "Foundry 发现与安装", en: "Foundry discovery and installation" },
+    ],
+  },
+  {
+    name: "Master",
+    title: { zh: "创造、改造、发布 Field", en: "Create, reshape, and publish Fields" },
+    price: { zh: "专业方案", en: "Pro plan" },
+    body: {
+      zh: "适合创作者、开发者和团队，把 Forge、测试、发布和商业化接起来。",
+      en: "For creators, developers, and teams connecting Forge, testing, publishing, and commercialization.",
+    },
+    items: [
+      { zh: "Forge Pro 创作与改造", en: "Forge Pro creation and reshaping" },
+      { zh: "源码协作、模拟、测试", en: "Source collaboration, simulation, and testing" },
+      { zh: "发布、认证、授权和更新", en: "Publishing, certification, licensing, and updates" },
+    ],
+  },
+];
+
 const ROADMAP: StepItem[] = [
   {
     label: "Phase 1",
@@ -905,9 +1046,12 @@ const ACCOUNT_FEATURES: ConceptItem[] = [
   },
 ];
 
-const FEATURED_BLOG_ARTICLES = BLOG_ARTICLES.slice(0, 6);
-
-export function FountHomePage({ lang, onLangChange }: FountHomePageProps) {
+export function FountHomePage({
+  lang,
+  onLangChange,
+  themeMode,
+  onThemeToggle,
+}: FountHomePageProps) {
   const copy = COPY[lang];
   const text = (value: LocalizedText) => value[lang];
   const [activeOutline, setActiveOutline] = useState<OutlineId>("vision");
@@ -941,11 +1085,11 @@ export function FountHomePage({ lang, onLangChange }: FountHomePageProps) {
   }, []);
 
   return (
-    <main className="fount-page" data-lang={lang}>
+    <main className="fount-page fount-page-focused" data-lang={lang}>
       <header className="fount-header">
         <a className="fount-logo" href="#vision" aria-label="Fount home">
           <span className="fount-logo-mark" aria-hidden="true">
-            <span />
+            <img src="/fount/fount-logo-source.png" alt="" />
           </span>
           Fount
         </a>
@@ -965,30 +1109,49 @@ export function FountHomePage({ lang, onLangChange }: FountHomePageProps) {
 
         <div className="fount-header-actions">
           <nav className="fount-site-nav" aria-label="Site links">
-            <a href="/?view=blog">{copy.navBlog}</a>
             <a href={SYSTEM_DOCS_URL} target="_blank" rel="noreferrer">
               {copy.navDocs}
             </a>
-            <a href="/?view=login">{copy.navAccount}</a>
+            <a href="/?view=portfolio">{copy.navUpdates}</a>
+            <a href="/?view=blog">{copy.navBlog}</a>
+            <a href="#pricing">{copy.navPricing}</a>
           </nav>
-          <div className="fount-lang-switch" aria-label="Language switcher">
+          <div className="fount-header-utils">
+            <div className="fount-lang-switch" aria-label="Language switcher">
+              <button
+                type="button"
+                className={lang === "zh" ? "active" : ""}
+                onClick={() => onLangChange("zh")}
+              >
+                中文
+              </button>
+              <button
+                type="button"
+                className={lang === "en" ? "active" : ""}
+                onClick={() => onLangChange("en")}
+              >
+                EN
+              </button>
+            </div>
             <button
               type="button"
-              className={lang === "zh" ? "active" : ""}
-              onClick={() => onLangChange("zh")}
+              className="fount-theme-toggle"
+              aria-label={
+                themeMode === "night"
+                  ? copy.themeToDayAria
+                  : copy.themeToNightAria
+              }
+              aria-pressed={themeMode === "night"}
+              onClick={onThemeToggle}
             >
-              中文
+              {themeMode === "night" ? copy.themeDay : copy.themeNight}
             </button>
-            <button
-              type="button"
-              className={lang === "en" ? "active" : ""}
-              onClick={() => onLangChange("en")}
-            >
-              EN
-            </button>
+            <a className="fount-download-small" href="/Fount.dmg">
+              <span>{copy.download}</span>
+            </a>
           </div>
-          <a className="fount-download-small" href="/Fount.dmg">
-            {copy.download}
+          <a className="fount-account-link" href="/?view=login">
+            {copy.navAccount}
           </a>
         </div>
       </header>
@@ -997,22 +1160,19 @@ export function FountHomePage({ lang, onLangChange }: FountHomePageProps) {
         <div className="fount-hero-copy">
           <h1>{copy.heroTitle}</h1>
           <p className="fount-hero-deck">{copy.heroDeck}</p>
-          <p className="fount-hero-zh">{copy.heroSub}</p>
-
-          <div className="fount-actions">
-            <a className="fount-primary-action" href="/Fount.dmg">
-              {copy.primaryCta}
+          <p className="fount-hero-sub">{copy.heroSub}</p>
+          <div className="fount-actions fount-download-actions">
+            <a className="fount-primary-action fount-body-download fount-hero-download" href="/Fount.dmg">
+              <span>{copy.macDownload}</span>
             </a>
-            <a className="fount-secondary-action" href="#concepts">
-              {copy.secondaryCta}
-            </a>
+            <small className="fount-platform-note">{copy.platformNote}</small>
           </div>
 
           <div className="fount-concept-strip" aria-label="Core concepts">
-            {CORE_CONCEPTS.map((concept) => (
+            {VISITOR_PROMISES.map((concept) => (
               <article key={concept.name}>
-                <strong>{concept.name}</strong>
-                <span>{text(concept.title)}</span>
+                <strong>{text(concept.title)}</strong>
+                <span>{text(concept.body)}</span>
               </article>
             ))}
           </div>
@@ -1073,7 +1233,7 @@ export function FountHomePage({ lang, onLangChange }: FountHomePageProps) {
         </div>
       </section>
 
-      <section className="fount-section">
+      <section className="fount-section fount-thesis-section">
         <div className="fount-field-anatomy">
           <div className="fount-field-world">
             <span className="fount-world-label">{copy.visionLabel}</span>
@@ -1097,40 +1257,67 @@ export function FountHomePage({ lang, onLangChange }: FountHomePageProps) {
           <h2>{copy.storyTitle}</h2>
           <p>{copy.storyLead}</p>
         </div>
-        <div className="fount-visual-grid">
-          <article className="fount-visual-card">
+        <div className="fount-system-explainer">
+          <figure className="fount-system-image">
             <img
               src="/fount/ai-architecture-stack.png"
               alt={lang === "zh" ? "Fount 五层架构 AI 插图" : "AI illustration of the five-layer Fount architecture"}
             />
-            <div>
-              <span>Architecture</span>
-              <h3>{copy.architectureTitle}</h3>
-              <p>{copy.architectureLead}</p>
-            </div>
-          </article>
-          <article className="fount-visual-card">
-            <img
-              src="/fount/ai-forge-foundry-ecosystem.png"
-              alt={lang === "zh" ? "Forge 与 Foundry 生态 AI 插图" : "AI illustration of the Forge and Foundry ecosystem"}
-            />
-            <div>
-              <span>Forge / Foundry</span>
-              <h3>{copy.forgeTitle}</h3>
-              <p>{copy.forgeLead}</p>
-            </div>
-          </article>
-          <article className="fount-visual-card">
-            <img
-              src="/fount/ai-account-system.png"
-              alt={lang === "zh" ? "Fount 账号系统 AI 插图" : "AI illustration of the Fount account system"}
-            />
-            <div>
-              <span>Account</span>
-              <h3>{copy.accountTitle}</h3>
-              <p>{copy.accountLead}</p>
-            </div>
-          </article>
+            <figcaption>
+              {lang === "zh"
+                ? "这张图只表达一件事：Field 提供现场，Fount 带着记忆进入，经验再回流。"
+                : "One picture, one idea: Fields provide the environment, Fount enters with memory, and experience flows back."}
+            </figcaption>
+          </figure>
+          <div className="fount-system-steps">
+            {VISITOR_FLOW.map((step) => (
+              <article key={step.label}>
+                <span>{step.label}</span>
+                <h3>{text(step.title)}</h3>
+                <p>{text(step.body)}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="fount-section fount-use-section" id="product">
+        <div className="fount-section-head">
+          <h2>{copy.useTitle}</h2>
+          <p>{copy.useLead}</p>
+        </div>
+        <div className="fount-use-grid">
+          {VISITOR_USE_CASES.map((item) => (
+            <article className="fount-use-card" key={item.name}>
+              <span>{item.name}</span>
+              <h3>{text(item.title)}</h3>
+              <p>{text(item.body)}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="fount-section fount-pricing-section" id="pricing">
+        <div className="fount-section-head fount-section-head-wide">
+          <h2>{copy.pricingTitle}</h2>
+          <p>{copy.pricingLead}</p>
+        </div>
+        <div className="fount-pricing-grid fount-pricing-grid-focused">
+          {PRICING_TIERS.map((tier) => (
+            <article className="fount-pricing-card fount-pricing-tier" key={tier.name}>
+              <strong>{tier.name}</strong>
+              <div>
+                <h3>{text(tier.title)}</h3>
+                <b>{text(tier.price)}</b>
+              </div>
+              <p>{text(tier.body)}</p>
+              <ul>
+                {tier.items.map((item) => (
+                  <li key={text(item)}>{text(item)}</li>
+                ))}
+              </ul>
+            </article>
+          ))}
         </div>
       </section>
 
@@ -1386,39 +1573,16 @@ export function FountHomePage({ lang, onLangChange }: FountHomePageProps) {
         </div>
       </section>
 
-      <section className="fount-section fount-blog-section" id="blog">
-        <div className="fount-section-head">
-          <h2>{copy.blogTitle}</h2>
-          <p>{copy.blogLead}</p>
-        </div>
-        <div className="fount-blog-grid">
-          {FEATURED_BLOG_ARTICLES.map((article) => (
-            <a
-              className="fount-blog-card"
-              href={`/?view=blog&article=${article.id}`}
-              key={article.id}
-            >
-              <span>{article.category[lang]} · {article.date}</span>
-              <h3>{article.title[lang]}</h3>
-              <p>{article.summary[lang]}</p>
-            </a>
-          ))}
-        </div>
-        <a className="fount-blog-more" href="/?view=blog">
-          {copy.blogCta}
-        </a>
-      </section>
-
       <section className="fount-final-cta">
         <div>
           <h2>{copy.finalTitle}</h2>
           <p>{copy.finalBody}</p>
         </div>
         <div className="fount-actions">
-          <a className="fount-primary-action" href="/Fount.dmg">
-            {copy.primaryCta}
+          <a className="fount-primary-action fount-body-download fount-final-download" href="/Fount.dmg">
+            <span>{copy.macDownload}</span>
           </a>
-          <a className="fount-secondary-action" href="#flow">
+          <a className="fount-secondary-action" href={SYSTEM_DOCS_URL} target="_blank" rel="noreferrer">
             {copy.finalSecondary}
           </a>
         </div>
