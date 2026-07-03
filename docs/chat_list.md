@@ -126,3 +126,8 @@
 
 - 需求:  # In app browser: - The user has the in-app browser open with 1 tab. - Current URL: http://localhost:5173/#ecosystem  ## My request for Codex: 我说的是正文不要有博客，不代表顶上没有，你改了什么几把玩意儿； 然后现在下载按钮光标一悬置就透明，啥玩意儿； 下载按钮上显示Mac app的logo表示当前只有这个平台app可以下，然后下面小字显示其他平台即将到来； “看结构”不需要 
 - 状态: 已完成
+
+## 2026-07-03 14:30 +0800
+
+- 需求: 场景是什么意思 
+- 状态: 已完成
