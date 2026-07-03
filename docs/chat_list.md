@@ -121,3 +121,8 @@
 
 - 需求: 只读设计审查，项目 /Users/lidechi/Documents/Github/my-blog。请重点检查 Fount 首页顶栏和视觉层级：用户截图显示顶部一排大胶囊按钮很 low、组件大小不一、没对齐。阅读 src/components/FountHomePage.tsx 和 src/index.css 当前版本，不要改文件。请给出像设计师那样的具体问题清单和最小 CSS/结构建议。 
 - 状态: 已完成
+
+## 2026-07-03 14:28 +0800
+
+- 需求:  # In app browser: - The user has the in-app browser open with 1 tab. - Current URL: http://localhost:5173/#ecosystem  ## My request for Codex: 我说的是正文不要有博客，不代表顶上没有，你改了什么几把玩意儿； 然后现在下载按钮光标一悬置就透明，啥玩意儿； 下载按钮上显示Mac app的logo表示当前只有这个平台app可以下，然后下面小字显示其他平台即将到来； “看结构”不需要 
+- 状态: 已完成
