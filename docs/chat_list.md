@@ -116,3 +116,8 @@
 
 - 需求: 只读视觉/结构审查，项目路径 /Users/lidechi/Documents/Github/my-blog。用户反馈 Fount 首页：字太多、重点丢失、图片堆在一起看不懂、顶栏组件大小不一。请阅读 src/components/FountHomePage.tsx 和 src/index.css 当前版本，不要改文件。重点回答：1) 是否还有明显文字过载；2) 是否还有图片堆叠；3) 顶栏控件大小/布局是否可能不一致或移动端溢出；4) 给出最小修改建议，文件路径+选择器/区域即可。 
 - 状态: 已完成
+
+## 2026-07-03 14:23 +0800
+
+- 需求: 只读设计审查，项目 /Users/lidechi/Documents/Github/my-blog。请重点检查 Fount 首页顶栏和视觉层级：用户截图显示顶部一排大胶囊按钮很 low、组件大小不一、没对齐。阅读 src/components/FountHomePage.tsx 和 src/index.css 当前版本，不要改文件。请给出像设计师那样的具体问题清单和最小 CSS/结构建议。 
+- 状态: 已完成
