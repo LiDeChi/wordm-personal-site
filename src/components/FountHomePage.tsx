@@ -1018,8 +1018,8 @@ export function FountHomePage({ lang, onLangChange }: FountHomePageProps) {
           </div>
         </div>
 
-        <div className="fount-hero-visual" aria-label={copy.visualAlt}>
-          <img src="/fount/ai-hero-agent-fields.png" alt={copy.visualAlt} />
+        <div className="fount-hero-visual" aria-hidden="true">
+          <img src="/fount/ai-hero-agent-fields.png" alt="" />
           <div className="fount-hero-visual-caption">
             <strong>Fount</strong>
             <span>brain / Fields / memory / Forge / Foundry</span>
