@@ -136,3 +136,8 @@
 
 - 需求: 另外，logo里不要有那一圈白边，要主色填满整个logo 
 - 状态: 已完成
+
+## 2026-07-03 15:00 +0800
+
+- 需求:  # In app browser: - The user has the in-app browser open with 1 tab. - Current URL: http://127.0.0.1:5175/  ## My request for Codex: 文档、更新、博客 这个顺序； 账号放在最右边，UI做点明显区分； 语言切换太突出了，淡化； 语言切换旁边再加个日夜切换 
+- 状态: 已完成
