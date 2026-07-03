@@ -3,6 +3,7 @@ import type { Lang } from "../i18n/lang";
 
 type FountHomePageProps = {
   lang: Lang;
+  page?: "home" | "pricing";
   onLangChange: (lang: Lang) => void;
   themeMode: "day" | "night";
   onThemeToggle: () => void;
@@ -64,6 +65,8 @@ const OUTLINE_ITEMS: Array<{ id: OutlineId; label: LocalizedText }> = [
 const COPY = {
   zh: {
     documentTitle: "Fount | 开放的个人 Agent 大脑",
+    pricingDocumentTitle: "Fount Pricing | Player / Explorer / Master",
+    navHome: "首页",
     navConcepts: "概念",
     navArchitecture: "架构",
     navPermissions: "权限",
@@ -142,6 +145,8 @@ const COPY = {
   },
   en: {
     documentTitle: "Fount | Open Personal Agent Brain",
+    pricingDocumentTitle: "Fount Pricing | Player / Explorer / Master",
+    navHome: "Home",
     navConcepts: "Concepts",
     navArchitecture: "Architecture",
     navPermissions: "Permissions",
@@ -1048,19 +1053,27 @@ const ACCOUNT_FEATURES: ConceptItem[] = [
 
 export function FountHomePage({
   lang,
+  page = "home",
   onLangChange,
   themeMode,
   onThemeToggle,
 }: FountHomePageProps) {
   const copy = COPY[lang];
   const text = (value: LocalizedText) => value[lang];
+  const isPricingPage = page === "pricing";
   const [activeOutline, setActiveOutline] = useState<OutlineId>("vision");
 
   useEffect(() => {
-    document.title = copy.documentTitle;
-  }, [copy.documentTitle]);
+    document.title = isPricingPage
+      ? copy.pricingDocumentTitle
+      : copy.documentTitle;
+  }, [copy.documentTitle, copy.pricingDocumentTitle, isPricingPage]);
 
   useEffect(() => {
+    if (isPricingPage) {
+      return;
+    }
+
     const sectionIds: OutlineId[] = ["vision", "ecosystem", "product"];
     const updateActiveOutline = () => {
       const marker = window.scrollY + window.innerHeight * 0.34;
@@ -1082,30 +1095,36 @@ export function FountHomePage({
       window.removeEventListener("scroll", updateActiveOutline);
       window.removeEventListener("resize", updateActiveOutline);
     };
-  }, []);
+  }, [isPricingPage]);
 
   return (
-    <main className="fount-page fount-page-focused" data-lang={lang}>
+    <main className="fount-page fount-page-focused" data-lang={lang} data-page={page}>
       <header className="fount-header">
-        <a className="fount-logo" href="#vision" aria-label="Fount home">
+        <a className="fount-logo" href={isPricingPage ? "/" : "#vision"} aria-label="Fount home">
           <span className="fount-logo-mark" aria-hidden="true">
             <img src="/fount/fount-logo-source.png" alt="" />
           </span>
           Fount
         </a>
 
-        <nav className="fount-nav fount-outline-nav" aria-label="Fount page outline">
-          {OUTLINE_ITEMS.map((item) => (
-            <a
-              className={activeOutline === item.id ? "active" : ""}
-              href={`#${item.id}`}
-              aria-current={activeOutline === item.id ? "location" : undefined}
-              key={item.id}
-            >
-              {text(item.label)}
-            </a>
-          ))}
-        </nav>
+        {isPricingPage ? (
+          <nav className="fount-nav fount-outline-nav fount-pricing-back-nav" aria-label={copy.navPricing}>
+            <a href="/">{copy.navHome}</a>
+          </nav>
+        ) : (
+          <nav className="fount-nav fount-outline-nav" aria-label="Fount page outline">
+            {OUTLINE_ITEMS.map((item) => (
+              <a
+                className={activeOutline === item.id ? "active" : ""}
+                href={`#${item.id}`}
+                aria-current={activeOutline === item.id ? "location" : undefined}
+                key={item.id}
+              >
+                {text(item.label)}
+              </a>
+            ))}
+          </nav>
+        )}
 
         <div className="fount-header-actions">
           <nav className="fount-site-nav" aria-label="Site links">
@@ -1114,7 +1133,13 @@ export function FountHomePage({
             </a>
             <a href="/?view=portfolio">{copy.navUpdates}</a>
             <a href="/?view=blog">{copy.navBlog}</a>
-            <a href="#pricing">{copy.navPricing}</a>
+            <a
+              href="/?view=pricing"
+              className={isPricingPage ? "active" : ""}
+              aria-current={isPricingPage ? "page" : undefined}
+            >
+              {copy.navPricing}
+            </a>
           </nav>
           <div className="fount-header-utils">
             <div className="fount-lang-switch" aria-label="Language switcher">
@@ -1156,6 +1181,10 @@ export function FountHomePage({
         </div>
       </header>
 
+      {isPricingPage ? (
+        <FountPricingSection lang={lang} standalone />
+      ) : (
+        <>
       <section className="fount-hero" id="vision">
         <div className="fount-hero-copy">
           <h1>{copy.heroTitle}</h1>
@@ -1292,30 +1321,6 @@ export function FountHomePage({
               <span>{item.name}</span>
               <h3>{text(item.title)}</h3>
               <p>{text(item.body)}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="fount-section fount-pricing-section" id="pricing">
-        <div className="fount-section-head fount-section-head-wide">
-          <h2>{copy.pricingTitle}</h2>
-          <p>{copy.pricingLead}</p>
-        </div>
-        <div className="fount-pricing-grid fount-pricing-grid-focused">
-          {PRICING_TIERS.map((tier) => (
-            <article className="fount-pricing-card fount-pricing-tier" key={tier.name}>
-              <strong>{tier.name}</strong>
-              <div>
-                <h3>{text(tier.title)}</h3>
-                <b>{text(tier.price)}</b>
-              </div>
-              <p>{text(tier.body)}</p>
-              <ul>
-                {tier.items.map((item) => (
-                  <li key={text(item)}>{text(item)}</li>
-                ))}
-              </ul>
             </article>
           ))}
         </div>
@@ -1587,7 +1592,56 @@ export function FountHomePage({
           </a>
         </div>
       </section>
+        </>
+      )}
     </main>
+  );
+}
+
+function FountPricingSection({
+  lang,
+  standalone = false,
+}: {
+  lang: Lang;
+  standalone?: boolean;
+}) {
+  const copy = COPY[lang];
+  const text = (value: LocalizedText) => value[lang];
+
+  return (
+    <section
+      className={`fount-section fount-pricing-section${standalone ? " fount-pricing-page-section" : ""}`}
+      id="pricing"
+    >
+      <div className="fount-section-head fount-section-head-wide">
+        {standalone ? (
+          <div>
+            <p className="fount-pricing-page-label">{copy.navPricing}</p>
+            <h1>{copy.pricingTitle}</h1>
+          </div>
+        ) : (
+          <h2>{copy.pricingTitle}</h2>
+        )}
+        <p>{copy.pricingLead}</p>
+      </div>
+      <div className="fount-pricing-grid fount-pricing-grid-focused">
+        {PRICING_TIERS.map((tier) => (
+          <article className="fount-pricing-card fount-pricing-tier" key={tier.name}>
+            <div className="fount-pricing-tier-head">
+              <h3>{tier.name}</h3>
+              <span>{text(tier.title)}</span>
+            </div>
+            <b>{text(tier.price)}</b>
+            <p>{text(tier.body)}</p>
+            <ul>
+              {tier.items.map((item) => (
+                <li key={text(item)}>{text(item)}</li>
+              ))}
+            </ul>
+          </article>
+        ))}
+      </div>
+    </section>
   );
 }
 

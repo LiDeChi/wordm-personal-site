@@ -96,7 +96,7 @@ import {
 } from "./lib/projects";
 import type { PortfolioProject, ProjectsSnapshot } from "./types";
 
-type RootView = "home" | "blog" | "portfolio" | "login" | "about";
+type RootView = "home" | "blog" | "portfolio" | "login" | "about" | "pricing";
 type UnlockStorageMode = "remote" | "local" | "loading" | "idle";
 type ThemeMode = "day" | "night";
 type HomeProject = {
@@ -918,9 +918,15 @@ function toRootView(raw: string | null, pathname: string): RootView {
   if (pathname === "/login" || pathname === "/login/") {
     return "login";
   }
+  if (pathname === "/pricing" || pathname === "/pricing/") {
+    return "pricing";
+  }
 
   if (raw === "home") {
     return "home";
+  }
+  if (raw === "pricing") {
+    return "pricing";
   }
   if (raw === "blog") {
     return "blog";
@@ -988,6 +994,8 @@ function relativeRootHref(view: RootView, lang: Lang) {
     url.searchParams.set("view", "blog");
   } else if (view === "about") {
     url.searchParams.set("view", "about");
+  } else if (view === "pricing") {
+    url.searchParams.set("view", "pricing");
   }
 
   if (lang === "en") {
@@ -1322,6 +1330,8 @@ function App() {
       next.searchParams.set("view", "blog");
     } else if (rootView === "about") {
       next.searchParams.set("view", "about");
+    } else if (rootView === "pricing") {
+      next.searchParams.set("view", "pricing");
     } else {
       next.searchParams.delete("view");
     }
@@ -3254,10 +3264,11 @@ function App() {
     );
   }
 
-  if (rootView === "home") {
+  if (rootView === "home" || rootView === "pricing") {
     return (
       <FountHomePage
         lang={lang}
+        page={rootView === "pricing" ? "pricing" : "home"}
         onLangChange={setLang}
         themeMode={themeMode}
         onThemeToggle={() =>
