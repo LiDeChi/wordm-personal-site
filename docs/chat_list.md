@@ -141,3 +141,8 @@
 
 - 需求:  # In app browser: - The user has the in-app browser open with 1 tab. - Current URL: http://127.0.0.1:5175/  ## My request for Codex: 文档、更新、博客 这个顺序； 账号放在最右边，UI做点明显区分； 语言切换太突出了，淡化； 语言切换旁边再加个日夜切换 
 - 状态: 已完成
+
+## 2026-07-03 15:09 +0800
+
+- 需求:  # In app browser: - The user has the in-app browser open with 1 tab. - Current URL: http://127.0.0.1:5175/  ## My request for Codex: 正文里的下载按钮太小了，要有强力的视觉锚点； 顶栏增加定价，定价页面分三列显示，Player,Explorer,Master 
+- 状态: 已完成
