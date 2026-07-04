@@ -1307,6 +1307,7 @@ export function FountHomePage({
   const [activeOutline, setActiveOutline] = useState<OutlineId>("vision");
   const [release, setRelease] = useState<FountReleaseManifest | null>(null);
   const downloadUrl = release?.downloads?.websiteUrl ?? "/Fount.dmg";
+  const blogHref = lang === "en" ? "/blog?lang=en" : "/blog";
 
   useEffect(() => {
     document.title = isPricingPage
@@ -1415,7 +1416,7 @@ export function FountHomePage({
             >
               {copy.navUpdates}
             </a>
-            <a href="/?view=blog">{copy.navBlog}</a>
+            <a href={blogHref}>{copy.navBlog}</a>
             <a
               href="/?view=pricing"
               className={isPricingPage ? "active" : ""}

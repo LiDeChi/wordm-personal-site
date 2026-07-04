@@ -188,7 +188,7 @@ export function buildShareEntryUrl(
   }
 
   if (shareAccess.allowBlog) {
-    return withSiteParams('https://wordm.us?view=blog', { lang, shareToken })
+    return withSiteParams('https://wordm.us/blog', { lang, shareToken })
   }
 
   if (shareAccess.allowDeploy) {

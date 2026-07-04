@@ -904,6 +904,9 @@ function defaultSelection(
 }
 
 function toRootView(raw: string | null, pathname: string): RootView {
+  if (pathname === "/blog" || pathname === "/blog/") {
+    return "blog";
+  }
   if (pathname === "/login" || pathname === "/login/") {
     return "login";
   }
@@ -986,7 +989,7 @@ function relativeRootHref(view: RootView, lang: Lang) {
   } else if (view === "portfolio") {
     url.searchParams.set("view", "portfolio");
   } else if (view === "blog") {
-    url.searchParams.set("view", "blog");
+    url.pathname = "/blog";
   } else if (view === "about") {
     url.searchParams.set("view", "about");
   } else if (view === "pricing") {
@@ -1321,14 +1324,14 @@ function App() {
     }
 
     const next = new URL(window.location.href);
-    next.pathname = "/";
+    next.pathname = rootView === "blog" ? "/blog" : "/";
 
     if (rootView === "login") {
       next.searchParams.set("view", "login");
     } else if (rootView === "portfolio") {
       next.searchParams.set("view", "portfolio");
     } else if (rootView === "blog") {
-      next.searchParams.set("view", "blog");
+      next.searchParams.delete("view");
     } else if (rootView === "about") {
       next.searchParams.set("view", "about");
     } else if (rootView === "pricing") {
