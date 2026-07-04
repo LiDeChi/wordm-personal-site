@@ -23,48 +23,48 @@ type LoginMode = 'login' | 'signup'
 
 const LOGIN_COPY = {
   zh: {
-    kicker: 'NotesAI 账户',
-    title: '在 wordm.us 专门登录',
-    subtitle: '首页里的账号入口只保留一个 Enter；真正的注册、密码登录和 Google 登录都放在这个独立页面里。',
+    kicker: 'Fount Account',
+    title: '登录你的 Fount',
+    subtitle: '一个账号承接身份、权限、同步和购买状态。进入 Field、下载版本和管理访问都从这里开始。',
     loginMode: '登录',
-    signupMode: '创建账号',
+    signupMode: '创建',
     emailLabel: '邮箱',
     passwordLabel: '密码',
-    emailPlaceholder: 'you@company.com',
+    emailPlaceholder: 'you@example.com',
     passwordPlaceholder: '至少 6 位',
-    loginAction: '登录',
-    signupAction: '创建账号',
-    googleAction: '使用 Google 登录',
+    loginAction: '进入 Fount',
+    signupAction: '创建 Fount 账号',
+    googleAction: '使用 Google 继续',
     processing: '处理中...',
-    disabled: '未配置 Supabase，账号系统暂不可用。',
-    restoring: '正在恢复登录态...',
-    backHome: '返回首页',
+    disabled: '账号系统暂不可用。请先配置 Supabase 后再登录。',
+    restoring: '正在恢复 Fount 会话...',
+    backHome: '返回 Fount',
     currentRole: '当前身份',
     logout: '退出',
-    signedInTitle: '你已登录',
-    signedInBody: '这个账号已经可以承接后续的套餐、同步和跨设备能力。',
+    signedInTitle: 'Fount 已连接',
+    signedInBody: '这个账号会承接你的 Field 权限、下载状态和后续同步。',
   },
   en: {
-    kicker: 'NotesAI Account',
-    title: 'Use a dedicated sign-in page on wordm.us',
-    subtitle: 'The homepage reduces auth to a single Enter link. Email/password sign-up and Google auth live on this standalone page.',
+    kicker: 'Fount Account',
+    title: 'Sign in to Fount',
+    subtitle: 'One account carries identity, permissions, sync, purchases, Field access, and release downloads.',
     loginMode: 'Sign in',
-    signupMode: 'Create account',
+    signupMode: 'Create',
     emailLabel: 'Email',
     passwordLabel: 'Password',
-    emailPlaceholder: 'you@company.com',
+    emailPlaceholder: 'you@example.com',
     passwordPlaceholder: 'At least 6 characters',
-    loginAction: 'Sign in',
-    signupAction: 'Create account',
+    loginAction: 'Enter Fount',
+    signupAction: 'Create Fount account',
     googleAction: 'Continue with Google',
     processing: 'Processing...',
-    disabled: 'Supabase is not configured. Authentication is unavailable.',
-    restoring: 'Restoring session...',
-    backHome: 'Back home',
+    disabled: 'Account access is unavailable until Supabase is configured.',
+    restoring: 'Restoring Fount session...',
+    backHome: 'Back to Fount',
     currentRole: 'Current role',
     logout: 'Log out',
-    signedInTitle: 'You are signed in',
-    signedInBody: 'This account is now ready to carry plans, sync, and future cross-device capabilities.',
+    signedInTitle: 'Fount is connected',
+    signedInBody: 'This account now carries your Field permissions, download state, and future sync.',
   },
 } as const
 
@@ -104,10 +104,11 @@ export function LoginPage({
   }
 
   return (
-    <div className="login-page-shell">
+    <div className="login-page-shell fount-login-page" data-lang={lang}>
       <div className="login-page-topbar">
         <a className="login-back-link" href={homeHref}>
-          {copy.backHome}
+          <span className="login-brand-mark" aria-hidden="true">F</span>
+          <span>{copy.backHome}</span>
         </a>
         <div className="login-lang-switch" role="group" aria-label="Language">
           <button type="button" className={lang === 'zh' ? 'active' : ''} onClick={() => onLangChange('zh')}>

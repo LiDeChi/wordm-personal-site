@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import type { Lang } from "../i18n/lang";
 import { SocialLinks } from "./SocialLinks";
+import { ThemeModeIcon } from "./ThemeModeIcon";
 
 type FountHomePageProps = {
   lang: Lang;
@@ -1417,11 +1418,6 @@ export function FountHomePage({
               {copy.navPricing}
             </a>
           </nav>
-          <SocialLinks
-            ariaLabel={copy.socialLinksAria}
-            className="fount-social-links"
-            linkClassName="fount-social-link"
-          />
           <div className="fount-header-utils">
             <div className="fount-lang-switch" aria-label="Language switcher">
               <button
@@ -1450,7 +1446,7 @@ export function FountHomePage({
               aria-pressed={themeMode === "night"}
               onClick={onThemeToggle}
             >
-              {themeMode === "night" ? copy.themeDay : copy.themeNight}
+              <ThemeModeIcon mode={themeMode} />
             </button>
             <a className="fount-download-small" href={downloadUrl}>
               <span>{copy.download}</span>
@@ -1461,6 +1457,12 @@ export function FountHomePage({
           </a>
         </div>
       </header>
+
+      <SocialLinks
+        ariaLabel={copy.socialLinksAria}
+        className="fount-social-links fount-social-rail"
+        linkClassName="fount-social-link"
+      />
 
       {isPricingPage ? (
         <FountPricingSection lang={lang} standalone />

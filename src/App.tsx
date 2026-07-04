@@ -14,6 +14,7 @@ import { ShareAccessDenied } from "./components/ShareAccessDenied";
 import { SiteAiChat } from "./components/SiteAiChat";
 import { SocialLinks } from "./components/SocialLinks";
 import { SubdomainProjectView } from "./components/SubdomainProjectView";
+import { ThemeModeIcon } from "./components/ThemeModeIcon";
 import { BLOG_ARTICLES, type BlogContentBlock } from "./data/blogArticles";
 import {
   FEATURED_PROJECT_SLUGS,
@@ -3397,7 +3398,7 @@ function App() {
                 )
               }
             >
-              {themeMode === "night" ? copy.themeDay : copy.themeNight}
+              <ThemeModeIcon mode={themeMode} />
             </button>
 
             <SocialLinks
