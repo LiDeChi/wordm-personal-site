@@ -60,6 +60,12 @@ type PricingTier = {
   price: LocalizedText;
   priceCurrency?: LocalizedText;
   priceUnit?: LocalizedText;
+  priceNote?: LocalizedText;
+  priceOptions?: Array<{
+    label: LocalizedText;
+    value: LocalizedText;
+    highlight?: boolean;
+  }>;
   body: LocalizedText;
   items: LocalizedText[];
   undetermined?: boolean;
@@ -205,7 +211,7 @@ const COPY = {
     useLead: "访客需要先看懂结果：Fount 会把一次体验变成下一次行动的上下文。",
     pricingTitle: "定价",
     pricingLead:
-      "每个用户都从 Core 和 Forge 开始。差别不在于能不能创造，而在于你要把 Field 做到多远：自用、发布，还是持续生产。",
+      "Player 永久免费进入基础体验；Builder 面向完整 Forge 创作；Master 打开发布、运营和子代理网络。",
     accountTitle: "账号系统是 Fount 的身份与权限层。",
     accountLead:
       "登录、角色、权限、同步和购买状态都应该在同一个账户系统里被管理。Fount 不是无状态访问入口，而是有身份边界的个人 agent 大脑。",
@@ -306,7 +312,7 @@ const COPY = {
     useLead: "The point is the outcome: one experience becomes context for the next action.",
     pricingTitle: "Pricing",
     pricingLead:
-      "Every user starts with Core and Forge. The plans do not decide whether you can create; they decide how far your Fields can go: personal use, publishable creation, or continuous production.",
+      "Player is free forever for the base experience; Builder unlocks full Forge creation; Master opens publishing, operations, and subagent networks.",
     accountTitle: "Account is the identity and permission layer for Fount.",
     accountLead:
       "Login, roles, permissions, sync, and purchase state should be managed through one account system. Fount is not a stateless entry point; it is a personal agent brain with identity boundaries.",
@@ -1063,50 +1069,84 @@ const BUSINESS_MODELS: ConceptItem[] = [
 const PRICING_TIERS: PricingTier[] = [
   {
     name: "Player",
-    title: { zh: "使用并塑造自己的 Field", en: "Use and shape your Fields" },
+    title: { zh: "基础连接与体验", en: "Base connection and play" },
     price: { zh: "0", en: "0" },
-    priceCurrency: { zh: "¥", en: "$" },
-    priceUnit: { zh: "个人起步", en: "personal start" },
+    priceCurrency: { zh: "$", en: "$" },
+    priceUnit: { zh: "永久免费", en: "free forever" },
     body: {
-      zh: "适合使用 Core、探索 Foundry，并用 Forge 做轻量的个人改造。",
-      en: "For using Core, exploring Foundry, and shaping lightweight personal Fields with Forge.",
+      zh: "适合先进入 Fount，把卡片、白板和基础子代理跑起来。",
+      en: "For getting into Fount with cards, whiteboards, and base subagents.",
     },
     items: [
-      { zh: "Core、Fields、Forge 基础体验", en: "Core, Fields, and base Forge" },
-      { zh: "修改现有 Field 和小型私有 Field", en: "Modify existing Fields and make small private Fields" },
-      { zh: "基础记忆、自动化和个人工作流", en: "Base memory, automation, and personal workflows" },
+      { zh: "连接 Fount", en: "Connect with Fount" },
+      { zh: "基础子代理", en: "Base subagents" },
+      { zh: "基础卡片体验和白板体验", en: "Base card and whiteboard experience" },
     ],
   },
   {
     name: "Builder",
-    title: { zh: "创建可发布的 Field", en: "Create publishable Fields" },
-    price: { zh: "待定", en: "TBD" },
-    priceUnit: { zh: "即将公布", en: "announced soon" },
-    undetermined: true,
+    title: { zh: "完整 Forge 创作", en: "Full Forge creation" },
+    price: { zh: "7", en: "7" },
+    priceCurrency: { zh: "$", en: "$" },
+    priceUnit: { zh: "/ 月 活动价", en: "/ mo promo" },
+    priceNote: { zh: "标准价 $10/月，年付 $90", en: "Standard $10/mo, $90/yr" },
+    priceOptions: [
+      {
+        label: { zh: "订阅", en: "Subscription" },
+        value: { zh: "$10/月 · $90/年", en: "$10/mo · $90/yr" },
+      },
+      {
+        label: { zh: "活动价", en: "Promo" },
+        value: { zh: "$7/月 · $63/年", en: "$7/mo · $63/yr" },
+        highlight: true,
+      },
+      {
+        label: { zh: "买断", en: "Lifetime" },
+        value: { zh: "$99 · 活动期间 $49", en: "$99 · promo $49" },
+      },
+    ],
     body: {
-      zh: "适合创作者、独立开发者和高级用户，把想法做成别人能用的 Field。",
-      en: "For creators, indie developers, and advanced users turning ideas into Fields others can use.",
+      zh: "适合认真构建 Field，把 Forge 从轻量编辑器升级成完整创作工具箱。",
+      en: "For serious Field builders who want Forge as a full creation toolkit.",
     },
     items: [
-      { zh: "更完整的 Forge 创作环境", en: "A fuller Forge building environment" },
-      { zh: "版本、测试、原型和发布准备", en: "Versions, tests, prototypes, and release prep" },
-      { zh: "发布到 Foundry，分享或出售作品", en: "Publish to Foundry, share, or sell creations" },
+      { zh: "Forge 的完整能力", en: "Full Forge capabilities" },
+      { zh: "构建 Field 的工具包", en: "Toolkit for building Fields" },
+      { zh: "精美的 agent 回复", en: "Polished agent replies" },
+      { zh: "卡片自动化生成", en: "Automated card generation" },
+      { zh: "新特性的早期访问权", en: "Early access to new features" },
     ],
   },
   {
     name: "Master",
-    title: { zh: "运行完整生产系统", en: "Run a full production system" },
-    price: { zh: "待定", en: "TBD" },
-    priceUnit: { zh: "即将公布", en: "announced soon" },
-    undetermined: true,
+    title: { zh: "发布、运营与网络", en: "Publish, operate, network" },
+    price: { zh: "14", en: "14" },
+    priceCurrency: { zh: "$", en: "$" },
+    priceUnit: { zh: "/ 月 活动价", en: "/ mo promo" },
+    priceNote: { zh: "标准价 $20/月，年付 $180", en: "Standard $20/mo, $180/yr" },
+    priceOptions: [
+      {
+        label: { zh: "订阅", en: "Subscription" },
+        value: { zh: "$20/月 · $180/年", en: "$20/mo · $180/yr" },
+      },
+      {
+        label: { zh: "活动价", en: "Promo" },
+        value: { zh: "$14/月 · $126/年", en: "$14/mo · $126/yr" },
+        highlight: true,
+      },
+      {
+        label: { zh: "买断", en: "Lifetime" },
+        value: { zh: "$199 · 活动期间 $99", en: "$199 · promo $99" },
+      },
+    ],
     body: {
-      zh: "适合同时管理多个 Field、多个 agent、测试流水线和长期发布节奏。",
-      en: "For managing many Fields, agents, test loops, and long-term release systems.",
+      zh: "适合把 Field 从创作推进到发布、运营和持续协作。",
+      en: "For taking Fields from creation into publishing, operations, and ongoing collaboration.",
     },
     items: [
-      { zh: "多项目 Field 生产与 agent 编排", en: "Multi-Field production and agent coordination" },
-      { zh: "虚拟用户、自动测试和修复循环", en: "Virtual users, automated tests, and repair loops" },
-      { zh: "资源监控、反馈分析和商业化管理", en: "Resource monitoring, feedback analysis, and commercialization" },
+      { zh: "发布和运营全流程工具开放", en: "Full publish and operations tools" },
+      { zh: "一键发布 Foundry", en: "One-click publishing to Foundry" },
+      { zh: "子代理网络", en: "Subagent network" },
     ],
   },
 ];
@@ -2018,6 +2058,20 @@ function FountPricingSection({
                   {currency ? <span className="fount-pricing-currency">{currency}</span> : null}
                   <strong className="fount-pricing-amount">{price}</strong>
                   {unit ? <span className="fount-pricing-unit">{unit}</span> : null}
+                </div>
+              ) : null}
+              {tier.priceNote ? <p className="fount-pricing-price-note">{text(tier.priceNote)}</p> : null}
+              {tier.priceOptions?.length ? (
+                <div className="fount-pricing-offers" aria-label={`${tier.name} pricing options`}>
+                  {tier.priceOptions.map((option) => (
+                    <div
+                      className={`fount-pricing-offer${option.highlight ? " fount-pricing-offer-highlight" : ""}`}
+                      key={text(option.label)}
+                    >
+                      <span>{text(option.label)}</span>
+                      <strong>{text(option.value)}</strong>
+                    </div>
+                  ))}
                 </div>
               ) : null}
               <p>{text(tier.body)}</p>
