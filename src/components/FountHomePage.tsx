@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import type { CSSProperties } from "react";
 import type { Lang } from "../i18n/lang";
 import { SocialLinks } from "./SocialLinks";
 import { ThemeModeIcon } from "./ThemeModeIcon";
@@ -18,6 +19,13 @@ type ConceptItem = {
   title: LocalizedText;
   body: LocalizedText;
   meta?: LocalizedText;
+};
+
+type HomeBuildCard = {
+  label: string;
+  title: LocalizedText;
+  body: LocalizedText;
+  tone: "mint" | "blue" | "lilac" | "amber" | "coral" | "ink";
 };
 
 type ListBlock = {
@@ -141,8 +149,10 @@ const COPY = {
       "这里按时间记录 Fount 的版本变化、发布重点和校验信息。下载入口不放在这里，避免把更新历史变成下载页。",
     updatesEmpty: "还没有可展示的历史更新。",
     heroTitle: "Fount",
-    heroDeck: "让你的 agent 不只会聊天，而是能记住经验、进入现场、改造工具。",
-    heroSub: "Fount 是个人 agent 大脑；Field 是它进入的产品现场。",
+    heroDeck: "像玩游戏一样构建产品：把想法拖成卡片，把现场铺成白板，让 agent 执行、检查、发布。",
+    heroSub: "Fount / Forge 是一张可进入的产品白板。卡片是任务、角色、工具和验证点；你像指挥一局游戏一样推进产品。",
+    productImageAlt: "Forge 产品界面截图，展示左侧 agent 活动、中央白板和底部构建卡片",
+    cardShelfAria: "Fount 产品构建卡片",
     visualAlt: "Fount 个人 agent 大脑连接多个可携带 Field 的线稿插图",
     dashboardTitle: "Experience Continuity",
     dashboardStatus: "5 layers online · 7 experience events · memory sync ready",
@@ -240,8 +250,10 @@ const COPY = {
       "A chronological record of Fount releases, highlights, and verification details. Download buttons stay off this page so the history stays readable.",
     updatesEmpty: "No release history is available yet.",
     heroTitle: "Fount",
-    heroDeck: "An agent that does more than chat: it remembers experience, enters live environments, and reshapes tools.",
-    heroSub: "Fount is the personal agent brain. Fields are the product environments it enters.",
+    heroDeck: "Build products like a game: turn ideas into cards, spread the work on a whiteboard, and let agents execute, review, and ship.",
+    heroSub: "Fount / Forge is an enterable product whiteboard. Cards become tasks, roles, tools, and validation points, so building feels like directing a playable system.",
+    productImageAlt: "Forge product screenshot showing agent activity, a central whiteboard, and bottom build cards",
+    cardShelfAria: "Fount product build cards",
     visualAlt: "Line illustration of the Fount personal agent brain connected to portable Fields",
     dashboardTitle: "Experience Continuity",
     dashboardStatus: "5 layers online · 7 experience events · memory sync ready",
@@ -351,30 +363,60 @@ const CORE_CONCEPTS: ConceptItem[] = [
   },
 ];
 
-const VISITOR_PROMISES: ConceptItem[] = [
+const HOME_BUILD_CARDS: HomeBuildCard[] = [
   {
-    name: "Remember",
-    title: { zh: "记得住", en: "Remembers" },
+    label: "01",
+    title: { zh: "白板开局", en: "Whiteboard start" },
     body: {
-      zh: "偏好、目标、选择和失败不会散落在不同工具里。",
-      en: "Preferences, goals, choices, and failures do not scatter across tools.",
+      zh: "把产品现场、上下文和下一步都铺在同一张画布上。",
+      en: "Lay out the product scene, context, and next move on one canvas.",
     },
+    tone: "mint",
   },
   {
-    name: "Enter",
-    title: { zh: "进得去", en: "Enters" },
+    label: "02",
+    title: { zh: "卡片造物", en: "Card building" },
     body: {
-      zh: "Fount 和你一起进入 Field，而不是在聊天框外猜现场。",
-      en: "Fount enters Fields with you instead of guessing outside the product.",
+      zh: "需求、角色、工具、风险和验收都变成可移动卡片。",
+      en: "Requirements, roles, tools, risks, and checks become movable cards.",
     },
+    tone: "lilac",
   },
   {
-    name: "Reshape",
-    title: { zh: "改得动", en: "Reshapes" },
+    label: "03",
+    title: { zh: "Agent 入场", en: "Agents enter" },
     body: {
-      zh: "授权以后，Forge 可以把体验改成更适合你的版本。",
-      en: "With permission, Forge can reshape the experience around you.",
+      zh: "像派出队友一样分配 agent，让它们在边界内行动。",
+      en: "Assign agents like teammates and keep their actions bounded.",
     },
+    tone: "blue",
+  },
+  {
+    label: "04",
+    title: { zh: "跑测与审查", en: "Run and review" },
+    body: {
+      zh: "每一张卡都能进入测试、diff、截图和风险回看。",
+      en: "Each card can move through tests, diffs, screenshots, and risk review.",
+    },
+    tone: "amber",
+  },
+  {
+    label: "05",
+    title: { zh: "发布回合", en: "Ship turn" },
+    body: {
+      zh: "把完成的卡片收束成一次明确发布，而不是散落待办。",
+      en: "Turn finished cards into one clear release instead of scattered tasks.",
+    },
+    tone: "coral",
+  },
+  {
+    label: "06",
+    title: { zh: "经验留存", en: "Experience saved" },
+    body: {
+      zh: "本回合的判断、失败和偏好，会成为下一局构建的上下文。",
+      en: "This round's judgment, failures, and taste become context for the next.",
+    },
+    tone: "ink",
   },
 ];
 
@@ -1490,22 +1532,23 @@ export function FountHomePage({
             <small className="fount-platform-note">{copy.platformNote}</small>
           </div>
 
-          <div className="fount-concept-strip" aria-label="Core concepts">
-            {VISITOR_PROMISES.map((concept) => (
-              <article key={concept.name}>
-                <strong>{text(concept.title)}</strong>
-                <span>{text(concept.body)}</span>
-              </article>
-            ))}
-          </div>
+          <figure className="fount-product-preview">
+            <img src="/fount/forge-product-screenshot.png" alt={copy.productImageAlt} />
+          </figure>
         </div>
 
-        <div className="fount-hero-visual" aria-hidden="true">
-          <img src="/fount/ai-hero-agent-fields.png" alt="" />
-          <div className="fount-hero-visual-caption">
-            <strong>Fount</strong>
-            <span>brain / Fields / memory / Forge / Foundry</span>
-          </div>
+        <div className="fount-card-shelf" aria-label={copy.cardShelfAria}>
+          {HOME_BUILD_CARDS.map((card, index) => (
+            <article
+              className={`fount-build-card fount-build-card-${card.tone}`}
+              key={text(card.title)}
+              style={{ "--card-index": index } as CSSProperties}
+            >
+              <span>{card.label}</span>
+              <strong>{text(card.title)}</strong>
+              <p>{text(card.body)}</p>
+            </article>
+          ))}
         </div>
       </section>
 
