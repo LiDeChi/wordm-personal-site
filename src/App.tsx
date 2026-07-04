@@ -12,6 +12,7 @@ import { ProjectDetailModal } from "./components/ProjectDetailModal";
 import { ProjectEntry } from "./components/ProjectEntry";
 import { ShareAccessDenied } from "./components/ShareAccessDenied";
 import { SiteAiChat } from "./components/SiteAiChat";
+import { SocialLinks } from "./components/SocialLinks";
 import { SubdomainProjectView } from "./components/SubdomainProjectView";
 import { BLOG_ARTICLES, type BlogContentBlock } from "./data/blogArticles";
 import {
@@ -230,28 +231,6 @@ function mergeProjectLists(
   }
 
   return merged;
-}
-
-function SubstackIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      <path
-        fill="currentColor"
-        d="M4 4.5h16v1.8H4zm0 4.1h16v1.8H4zm0 4.1h16V20H4z"
-      />
-    </svg>
-  );
-}
-
-function XIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      <path
-        fill="currentColor"
-        d="M18.47 3h2.94l-6.42 7.34L22.55 21h-5.91l-4.63-6.07L6.7 21H3.75l6.87-7.85L1.36 3h6.06l4.18 5.52zm-1.04 16h1.63L6.54 4.9H4.8z"
-      />
-    </svg>
-  );
 }
 
 function renderBlogContentBlock(
@@ -578,6 +557,7 @@ const APP_COPY = {
     portfolioMode: "wordm.us 生态入口",
     cornerSubstack: "Substack",
     cornerX: "X",
+    socialLinksAria: "社交渠道",
     sessionRestoreFailed: "会话恢复失败",
     pleaseRelogin: "请重新登录。",
     loginUnavailable: "未配置 Supabase，无法登录。",
@@ -775,6 +755,7 @@ const APP_COPY = {
     portfolioMode: "Ecology entry on wordm.us",
     cornerSubstack: "Substack",
     cornerX: "X",
+    socialLinksAria: "Social channels",
     sessionRestoreFailed: "Session restore failed",
     pleaseRelogin: "Please log in again.",
     loginUnavailable: "Supabase is not configured. Login is unavailable.",
@@ -3419,28 +3400,11 @@ function App() {
               {themeMode === "night" ? copy.themeDay : copy.themeNight}
             </button>
 
-            <div className="collection-corner-links site-topbar-links">
-              <a
-                className="topbar-social-link"
-                href="https://substack.com/@parson1"
-                target="_blank"
-                rel="noreferrer"
-                aria-label={copy.cornerSubstack}
-                title={copy.cornerSubstack}
-              >
-                <SubstackIcon />
-              </a>
-              <a
-                className="topbar-social-link"
-                href="https://x.com/parsonjian"
-                target="_blank"
-                rel="noreferrer"
-                aria-label={copy.cornerX}
-                title={copy.cornerX}
-              >
-                <XIcon />
-              </a>
-            </div>
+            <SocialLinks
+              ariaLabel={copy.socialLinksAria}
+              className="collection-corner-links site-topbar-links"
+              linkClassName="topbar-social-link"
+            />
 
             <div className="site-topbar-account">
               <AccountEntryCard

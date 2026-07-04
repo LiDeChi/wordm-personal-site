@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import type { Lang } from "../i18n/lang";
+import { SocialLinks } from "./SocialLinks";
 
 type FountHomePageProps = {
   lang: Lang;
@@ -116,6 +117,7 @@ const COPY = {
     navUpdates: "更新",
     navPricing: "定价",
     navAccount: "账号",
+    socialLinksAria: "Fount 社交渠道",
     themeNight: "夜",
     themeDay: "日",
     themeToNightAria: "切换到黑夜模式",
@@ -214,6 +216,7 @@ const COPY = {
     navUpdates: "Updates",
     navPricing: "Pricing",
     navAccount: "Account",
+    socialLinksAria: "Fount social channels",
     themeNight: "Night",
     themeDay: "Day",
     themeToNightAria: "Switch to night mode",
@@ -1414,6 +1417,11 @@ export function FountHomePage({
               {copy.navPricing}
             </a>
           </nav>
+          <SocialLinks
+            ariaLabel={copy.socialLinksAria}
+            className="fount-social-links"
+            linkClassName="fount-social-link"
+          />
           <div className="fount-header-utils">
             <div className="fount-lang-switch" aria-label="Language switcher">
               <button

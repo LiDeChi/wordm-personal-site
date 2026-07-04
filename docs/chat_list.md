@@ -216,3 +216,8 @@
 
 - 需求:  # In app browser: - The user has the in-app browser open with 1 tab. - Current URL: http://localhost:5173/?view=updates#updates  ## My request for Codex: 怎么更新页的顶栏都变了； 
 - 状态: 已完成
+
+## 2026-07-04 12:16 +0800
+
+- 需求: https://t.me/fount_ai https://x.com/parsonjian https://www.reddit.com/r/Fount/ https://www.facebook.com/groups/1734944400854875 https://substack.com/@parson1 这些都是关联的社交渠道，放到官网上去 
+- 状态: 已完成
