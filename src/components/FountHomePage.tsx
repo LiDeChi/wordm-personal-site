@@ -50,6 +50,8 @@ type PricingTier = {
   name: string;
   title: LocalizedText;
   price: LocalizedText;
+  priceCurrency?: LocalizedText;
+  priceUnit?: LocalizedText;
   body: LocalizedText;
   items: LocalizedText[];
   undetermined?: boolean;
@@ -191,7 +193,7 @@ const COPY = {
     storyLead: "Fount 在中间承接记忆和权限；不同 Field 提供真实环境；经验通过事件回到 Fount。",
     useTitle: "进入后有什么用",
     useLead: "访客需要先看懂结果：Fount 会把一次体验变成下一次行动的上下文。",
-    pricingTitle: "按进入世界的深度定价。",
+    pricingTitle: "定价",
     pricingLead:
       "从先玩起来，到长期探索，再到完整掌控你的 Field 生态。三档都围绕同一个目标：让 Fount 记住经验，并把经验带回下一次行动。",
     accountTitle: "账号系统是 Fount 的身份与权限层。",
@@ -290,7 +292,7 @@ const COPY = {
     storyLead: "Fount holds memory and permissions. Fields provide live environments. Experience returns through structured events.",
     useTitle: "What visitors can use it for",
     useLead: "The point is the outcome: one experience becomes context for the next action.",
-    pricingTitle: "Pricing follows how deeply you enter the world.",
+    pricingTitle: "Pricing",
     pricingLead:
       "Start by playing, keep exploring, then fully command your Field ecosystem. Each tier keeps the same promise: Fount remembers experience and carries it into the next action.",
     accountTitle: "Account is the identity and permission layer for Fount.",
@@ -1021,6 +1023,8 @@ const PRICING_TIERS: PricingTier[] = [
     name: "Player",
     title: { zh: "先进入、先玩起来", en: "Enter and start playing" },
     price: { zh: "0", en: "0" },
+    priceCurrency: { zh: "¥", en: "$" },
+    priceUnit: { zh: "永久免费", en: "free forever" },
     body: {
       zh: "适合先体验 Fount.app、本地 Core 和 starter Fields。",
       en: "For trying Fount.app, local Core, and starter Fields first.",
@@ -1034,7 +1038,8 @@ const PRICING_TIERS: PricingTier[] = [
   {
     name: "Explorer",
     title: { zh: "跨 Field 持续探索", en: "Explore across Fields" },
-    price: { zh: "", en: "" },
+    price: { zh: "待定", en: "TBD" },
+    priceUnit: { zh: "即将公布", en: "announced soon" },
     undetermined: true,
     body: {
       zh: "适合希望跨设备同步、扩大记忆、使用更多 Field 的个人用户。",
@@ -1049,7 +1054,8 @@ const PRICING_TIERS: PricingTier[] = [
   {
     name: "Master",
     title: { zh: "创造、改造、发布 Field", en: "Create, reshape, and publish Fields" },
-    price: { zh: "", en: "" },
+    price: { zh: "待定", en: "TBD" },
+    priceUnit: { zh: "即将公布", en: "announced soon" },
     undetermined: true,
     body: {
       zh: "适合创作者、开发者和团队，把 Forge、测试、发布和商业化接起来。",
@@ -1940,16 +1946,17 @@ function FountPricingSection({
         {standalone ? (
           <div>
             <p className="fount-pricing-page-label">{copy.navPricing}</p>
-            <h1>{copy.pricingTitle}</h1>
           </div>
         ) : (
-          <h2>{copy.pricingTitle}</h2>
+          <h2>{copy.navPricing}</h2>
         )}
         <p>{copy.pricingLead}</p>
       </div>
       <div className="fount-pricing-grid fount-pricing-grid-focused">
         {PRICING_TIERS.map((tier) => {
           const price = text(tier.price).trim();
+          const currency = tier.priceCurrency ? text(tier.priceCurrency).trim() : "";
+          const unit = tier.priceUnit ? text(tier.priceUnit).trim() : "";
 
           return (
             <article
@@ -1961,7 +1968,13 @@ function FountPricingSection({
                 <h3>{tier.name}</h3>
                 <span>{text(tier.title)}</span>
               </div>
-              {price ? <b>{price}</b> : null}
+              {price ? (
+                <div className="fount-pricing-price" aria-label={`${currency}${price} ${unit}`.trim()}>
+                  {currency ? <span className="fount-pricing-currency">{currency}</span> : null}
+                  <strong className="fount-pricing-amount">{price}</strong>
+                  {unit ? <span className="fount-pricing-unit">{unit}</span> : null}
+                </div>
+              ) : null}
               <p>{text(tier.body)}</p>
               <ul>
                 {tier.items.map((item) => (
