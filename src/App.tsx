@@ -96,7 +96,14 @@ import {
 } from "./lib/projects";
 import type { PortfolioProject, ProjectsSnapshot } from "./types";
 
-type RootView = "home" | "blog" | "portfolio" | "login" | "about" | "pricing";
+type RootView =
+  | "home"
+  | "blog"
+  | "portfolio"
+  | "login"
+  | "about"
+  | "pricing"
+  | "updates";
 type UnlockStorageMode = "remote" | "local" | "loading" | "idle";
 type ThemeMode = "day" | "night";
 type HomeProject = {
@@ -921,9 +928,15 @@ function toRootView(raw: string | null, pathname: string): RootView {
   if (pathname === "/pricing" || pathname === "/pricing/") {
     return "pricing";
   }
+  if (pathname === "/updates" || pathname === "/updates/") {
+    return "updates";
+  }
 
   if (raw === "home") {
     return "home";
+  }
+  if (raw === "updates") {
+    return "updates";
   }
   if (raw === "pricing") {
     return "pricing";
@@ -996,6 +1009,8 @@ function relativeRootHref(view: RootView, lang: Lang) {
     url.searchParams.set("view", "about");
   } else if (view === "pricing") {
     url.searchParams.set("view", "pricing");
+  } else if (view === "updates") {
+    url.searchParams.set("view", "updates");
   }
 
   if (lang === "en") {
@@ -1115,9 +1130,13 @@ function App() {
   const forcedSubdomain = params.get("subdomain");
   const forcedPage = params.get("page");
   const initialShowSlugs = parseShowSlugs(params.get("show"));
+  const hashRootView =
+    !params.has("view") && window.location.hash === "#updates"
+      ? "updates"
+      : null;
   const initialRootView = initialShowSlugs.length
     ? "portfolio"
-    : toRootView(params.get("view"), window.location.pathname);
+    : hashRootView ?? toRootView(params.get("view"), window.location.pathname);
   const initialBlogArticleId =
     normalizeBlogArticleId(params.get("article")) ??
     BLOG_ARTICLES[0]?.id ??
@@ -1332,6 +1351,8 @@ function App() {
       next.searchParams.set("view", "about");
     } else if (rootView === "pricing") {
       next.searchParams.set("view", "pricing");
+    } else if (rootView === "updates") {
+      next.searchParams.set("view", "updates");
     } else {
       next.searchParams.delete("view");
     }
@@ -3264,11 +3285,17 @@ function App() {
     );
   }
 
-  if (rootView === "home" || rootView === "pricing") {
+  if (rootView === "home" || rootView === "pricing" || rootView === "updates") {
     return (
       <FountHomePage
         lang={lang}
-        page={rootView === "pricing" ? "pricing" : "home"}
+        page={
+          rootView === "pricing"
+            ? "pricing"
+            : rootView === "updates"
+              ? "updates"
+              : "home"
+        }
         onLangChange={setLang}
         themeMode={themeMode}
         onThemeToggle={() =>
