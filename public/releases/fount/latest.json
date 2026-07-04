@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "product": {
+    "id": "fount",
+    "name": "Fount",
+    "platform": "mac"
+  },
+  "channel": "stable",
+  "version": "0.1.4",
+  "build": "4",
+  "tag": "fount-v0.1.4",
+  "releasedAt": "2026-07-04T03:10:25.844Z",
+  "releaseNotes": {
+    "summary": "Make the Release Steward update pipeline clearer for non-technical operators by showing stages, nodes, target products, outputs, and status.",
+    "websiteMarkdownUrl": "/releases/fount/0.1.4.md"
+  },
+  "downloads": {
+    "assetName": "fount-mac-0.1.4.zip",
+    "websiteUrl": "https://wordm.us/downloads/fount/Fount-mac-current.zip",
+    "versionedWebsiteUrl": "https://wordm.us/downloads/fount/fount-mac-0.1.4.zip",
+    "sizeBytes": 11943362,
+    "sha256": "48ab01e7c95daab1d6bff50d25859f1277d1bb67b9b579eba40456523ca58ffe",
+    "githubUrl": "https://github.com/LiDeChi/fount-public/releases/download/fount-v0.1.4/fount-mac-0.1.4.zip"
+  }
+}

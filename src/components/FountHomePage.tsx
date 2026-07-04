@@ -3,7 +3,7 @@ import type { Lang } from "../i18n/lang";
 
 type FountHomePageProps = {
   lang: Lang;
-  page?: "home" | "pricing";
+  page?: "home" | "pricing" | "updates";
   onLangChange: (lang: Lang) => void;
   themeMode: "day" | "night";
   onThemeToggle: () => void;
@@ -50,9 +50,46 @@ type PricingTier = {
   price: LocalizedText;
   body: LocalizedText;
   items: LocalizedText[];
+  undetermined?: boolean;
+};
+
+type FaqItem = {
+  question: LocalizedText;
+  answer: LocalizedText;
 };
 
 type OutlineId = "vision" | "ecosystem" | "product";
+
+type FountReleaseManifest = {
+  version: string;
+  build: string;
+  releasedAt: string;
+  releaseNotes?: {
+    summary?: string;
+    websiteMarkdownUrl?: string;
+  };
+  downloads?: {
+    websiteUrl?: string;
+    versionedWebsiteUrl?: string;
+    githubUrl?: string;
+    sha256?: string;
+    sizeBytes?: number;
+  };
+};
+
+type FountReleaseEntry = {
+  version: string;
+  build: string;
+  releasedAt: string;
+  notes?: {
+    summary?: string;
+    websiteMarkdownUrl?: string;
+  };
+  downloads?: {
+    sha256?: string;
+    sizeBytes?: number;
+  };
+};
 
 const SYSTEM_DOCS_URL = "https://system.wordm.us";
 
@@ -66,6 +103,7 @@ const COPY = {
   zh: {
     documentTitle: "Fount | 开放的个人 Agent 大脑",
     pricingDocumentTitle: "Fount Pricing | Player / Explorer / Master",
+    updatesDocumentTitle: "Fount 更新记录 | Release History",
     navHome: "首页",
     navConcepts: "概念",
     navArchitecture: "架构",
@@ -85,6 +123,18 @@ const COPY = {
     download: "下载 Mac app",
     macDownload: "下载 Mac app",
     platformNote: "其他平台即将到来",
+    releaseLabel: "最新版本",
+    releaseFallbackTitle: "公开下载即将开放",
+    releaseFallbackBody:
+      "发布流水线已经预留官网、GitHub、社区频道和热更新清单。首个公开包生成后，这里会自动显示版本、说明和下载入口。",
+    releaseDownload: "下载当前版本",
+    releaseGithub: "GitHub 下载",
+    releaseNotes: "更新说明",
+    releaseChecksum: "校验",
+    updatesTitle: "更新记录",
+    updatesLead:
+      "这里按时间记录 Fount 的版本变化、发布重点和校验信息。下载入口不放在这里，避免把更新历史变成下载页。",
+    updatesEmpty: "还没有可展示的历史更新。",
     heroTitle: "Fount",
     heroDeck: "让你的 agent 不只会聊天，而是能记住经验、进入现场、改造工具。",
     heroSub: "Fount 是个人 agent 大脑；Field 是它进入的产品现场。",
@@ -105,6 +155,9 @@ const COPY = {
     packageTitle: "初始下载包",
     packageLead:
       "用户下载 Fount.app 后，默认获得 Core、Field Runtime、系统 Field 和 Starter Fields。没有账号也应能进入本地优先的基础体验。",
+    builtInFieldsTitle: "Fount 自带哪些 Field。",
+    builtInFieldsLead:
+      "初始体验分成两组：系统 Field 负责记忆、权限、创造和分发；Starter Fields 负责让用户一打开就能进入真实场景。Core 和 Runtime 是底座，不算 Field。",
     permissionsTitle: "权限默认拒绝，体验默认可控。",
     permissionsLead:
       "Field 可以请求能力，但 Fount 不应默认开放记忆、本地文件、网络、资源预算、源码访问或跨 Field 回忆。所有修改都从权限边界开始。",
@@ -142,10 +195,13 @@ const COPY = {
     accountLead:
       "登录、角色、权限、同步和购买状态都应该在同一个账户系统里被管理。Fount 不是无状态访问入口，而是有身份边界的个人 agent 大脑。",
     accountCta: "进入账号",
+    faqTitle: "常见问题",
+    faqLead: "把第一次看到 Fount 时最容易卡住的问题放在这里：它是什么、带什么、怎么保护权限，以及为什么 Field 生态值得存在。",
   },
   en: {
     documentTitle: "Fount | Open Personal Agent Brain",
     pricingDocumentTitle: "Fount Pricing | Player / Explorer / Master",
+    updatesDocumentTitle: "Fount Updates | Release History",
     navHome: "Home",
     navConcepts: "Concepts",
     navArchitecture: "Architecture",
@@ -165,6 +221,18 @@ const COPY = {
     download: "Download Mac app",
     macDownload: "Download Mac app",
     platformNote: "Other platforms coming soon",
+    releaseLabel: "Latest release",
+    releaseFallbackTitle: "Public download is opening soon",
+    releaseFallbackBody:
+      "The release pipeline is ready for the website, GitHub, community channels, and the hot-update manifest. Once the first public build is published, this section will show the version, notes, and download entry automatically.",
+    releaseDownload: "Download current version",
+    releaseGithub: "GitHub download",
+    releaseNotes: "Release notes",
+    releaseChecksum: "Checksum",
+    updatesTitle: "Release history",
+    updatesLead:
+      "A chronological record of Fount releases, highlights, and verification details. Download buttons stay off this page so the history stays readable.",
+    updatesEmpty: "No release history is available yet.",
     heroTitle: "Fount",
     heroDeck: "An agent that does more than chat: it remembers experience, enters live environments, and reshapes tools.",
     heroSub: "Fount is the personal agent brain. Fields are the product environments it enters.",
@@ -185,6 +253,9 @@ const COPY = {
     packageTitle: "Initial download package",
     packageLead:
       "When a user downloads Fount.app, it includes Core, Field Runtime, system Fields, and starter Fields. The base experience should work local-first, even without an account.",
+    builtInFieldsTitle: "Which Fields come with Fount.",
+    builtInFieldsLead:
+      "The first experience has two groups: system Fields handle memory, permissions, creation, and distribution; Starter Fields make the app usable immediately. Core and Runtime are the base, not Fields.",
     permissionsTitle: "Permissions are denied by default. Experience stays controlled.",
     permissionsLead:
       "Fields may request capability, but Fount should not default to memory, local files, network, resource budgets, source access, or cross-field recall. Every modification begins with the permission boundary.",
@@ -222,6 +293,8 @@ const COPY = {
     accountLead:
       "Login, roles, permissions, sync, and purchase state should be managed through one account system. Fount is not a stateless entry point; it is a personal agent brain with identity boundaries.",
     accountCta: "Open Account",
+    faqTitle: "FAQ",
+    faqLead: "The questions that usually block a first read: what Fount is, what comes inside it, how permissions work, and why the Field ecosystem exists.",
   },
 } as const;
 
@@ -577,6 +650,99 @@ const FIELD_TYPES: ConceptItem[] = [
   },
 ];
 
+const BUILT_IN_FIELDS: ConceptItem[] = [
+  {
+    name: "Forge",
+    title: { zh: "创造和改造 Field", en: "Create and reshape Fields" },
+    body: {
+      zh: "把想法变成 Field 草案，修改界面、规则、角色、流程；开发者还可以接源码、SDK、测试和发布链路。",
+      en: "Turns ideas into Field drafts, edits UI, rules, roles, and workflows; developers can connect source, SDK, testing, and publishing.",
+    },
+    meta: { zh: "System Field", en: "System Field" },
+  },
+  {
+    name: "Foundry",
+    title: { zh: "发现、安装和发布 Field", en: "Discover, install, and publish Fields" },
+    body: {
+      zh: "展示 Field 的能力、权限、价格、认证和版本，也允许 Fount 按用户目标主动发现新 Field。",
+      en: "Shows capability, permissions, pricing, certification, and versions, while letting Fount discover Fields based on user goals.",
+    },
+    meta: { zh: "System Field", en: "System Field" },
+  },
+  {
+    name: "Memory",
+    title: { zh: "管理个人经验", en: "Manage personal experience" },
+    body: {
+      zh: "查看、整理和控制哪些经验进入短期记忆、长期记忆、Field-local memory 或跨 Field 召回。",
+      en: "Reviews and controls what enters working memory, long-term memory, Field-local memory, or cross-field recall.",
+    },
+    meta: { zh: "System Field", en: "System Field" },
+  },
+  {
+    name: "Permissions",
+    title: { zh: "审查每个 Field 的权限", en: "Review every Field permission" },
+    body: {
+      zh: "集中处理记忆读写、文件、网络、预算、agent 控制、Forge 修改和商业发布等授权边界。",
+      en: "Centralizes memory, files, network, budget, agent control, Forge editing, and commercial publishing boundaries.",
+    },
+    meta: { zh: "System Field", en: "System Field" },
+  },
+  {
+    name: "Ledger",
+    title: { zh: "记录资源和商业状态", en: "Track resources and commercial state" },
+    body: {
+      zh: "记录资源预算、购买状态、授权、安装来源、更新记录和可审计的关键变更。",
+      en: "Tracks resource budgets, purchase state, licensing, install sources, updates, and auditable changes.",
+    },
+    meta: { zh: "System Field", en: "System Field" },
+  },
+  {
+    name: "Reading Room",
+    title: { zh: "阅读室", en: "Reading room" },
+    body: {
+      zh: "让 Fount 记住你的阅读偏好、困惑、标注和解释方式，把一次阅读带到下一本书。",
+      en: "Lets Fount remember reading preferences, confusion, highlights, and explanation style across books.",
+    },
+    meta: { zh: "Starter Field", en: "Starter Field" },
+  },
+  {
+    name: "UI Playground",
+    title: { zh: "界面偏好实验场", en: "Interface preference playground" },
+    body: {
+      zh: "记录你对密度、排版、动效、颜色和信息层级的判断，供 Forge 改造新 Field 时召回。",
+      en: "Records taste around density, typography, motion, color, and hierarchy for Forge to recall later.",
+    },
+    meta: { zh: "Starter Field", en: "Starter Field" },
+  },
+  {
+    name: "Agent Game",
+    title: { zh: "多 agent 互动场", en: "Multi-agent interaction space" },
+    body: {
+      zh: "观察角色、协作、限制和策略，让 Fount 理解你偏好的 agent 行为模式。",
+      en: "Explores roles, collaboration, constraints, and strategy so Fount learns preferred agent behavior.",
+    },
+    meta: { zh: "Starter Field", en: "Starter Field" },
+  },
+  {
+    name: "Learning Lab",
+    title: { zh: "学习实验室", en: "Learning lab" },
+    body: {
+      zh: "沉淀概念卡点、例子偏好和练习结果，让下一次学习不从零开始。",
+      en: "Captures conceptual blockers, example preferences, and practice results so learning does not restart from zero.",
+    },
+    meta: { zh: "Starter Field", en: "Starter Field" },
+  },
+  {
+    name: "Finance Garden",
+    title: { zh: "个人财务花园", en: "Personal finance garden" },
+    body: {
+      zh: "在严格权限下记录风险边界、预算习惯和计划变化，默认不开放敏感数据。",
+      en: "Under strict permissions, records risk boundaries, budgeting habits, and plan changes without exposing sensitive data by default.",
+    },
+    meta: { zh: "Starter Field", en: "Starter Field" },
+  },
+];
+
 const PERMISSIONS: PermissionItem[] = [
   {
     name: "Memory",
@@ -850,7 +1016,7 @@ const PRICING_TIERS: PricingTier[] = [
   {
     name: "Player",
     title: { zh: "先进入、先玩起来", en: "Enter and start playing" },
-    price: { zh: "免费", en: "Free" },
+    price: { zh: "0", en: "0" },
     body: {
       zh: "适合先体验 Fount.app、本地 Core 和 starter Fields。",
       en: "For trying Fount.app, local Core, and starter Fields first.",
@@ -864,7 +1030,8 @@ const PRICING_TIERS: PricingTier[] = [
   {
     name: "Explorer",
     title: { zh: "跨 Field 持续探索", en: "Explore across Fields" },
-    price: { zh: "个人订阅", en: "Personal plan" },
+    price: { zh: "", en: "" },
+    undetermined: true,
     body: {
       zh: "适合希望跨设备同步、扩大记忆、使用更多 Field 的个人用户。",
       en: "For people who want sync, deeper memory, and more usable Fields.",
@@ -878,7 +1045,8 @@ const PRICING_TIERS: PricingTier[] = [
   {
     name: "Master",
     title: { zh: "创造、改造、发布 Field", en: "Create, reshape, and publish Fields" },
-    price: { zh: "专业方案", en: "Pro plan" },
+    price: { zh: "", en: "" },
+    undetermined: true,
     body: {
       zh: "适合创作者、开发者和团队，把 Forge、测试、发布和商业化接起来。",
       en: "For creators, developers, and teams connecting Forge, testing, publishing, and commercialization.",
@@ -1051,6 +1219,69 @@ const ACCOUNT_FEATURES: ConceptItem[] = [
   },
 ];
 
+const FAQ_ITEMS: FaqItem[] = [
+  {
+    question: {
+      zh: "Fount 和普通 AI 聊天助手有什么区别？",
+      en: "How is Fount different from a normal AI chat assistant?",
+    },
+    answer: {
+      zh: "普通助手主要在聊天框里回答问题；Fount 的重点是进入 Field，带着你的经验和权限边界参与真实产品现场，并把这次体验变成下一次行动的上下文。",
+      en: "A normal assistant mainly answers inside a chat box. Fount enters Fields, carries your experience and permission boundaries into live product environments, and turns each session into context for the next action.",
+    },
+  },
+  {
+    question: {
+      zh: "下载 Fount 后默认会有哪些 Field？",
+      en: "Which Fields are available after downloading Fount?",
+    },
+    answer: {
+      zh: "默认会有 Forge、Foundry、Memory、Permissions、Ledger 这些系统 Field，以及 Reading Room、UI Playground、Agent Game、Learning Lab、Finance Garden 这类 starter Fields。具体 starter Fields 可以随版本替换，但系统 Field 是生态的基础能力。",
+      en: "Fount includes system Fields such as Forge, Foundry, Memory, Permissions, and Ledger, plus starter Fields like Reading Room, UI Playground, Agent Game, Learning Lab, and Finance Garden. Starter Fields may change by release; system Fields are the foundation.",
+    },
+  },
+  {
+    question: {
+      zh: "Field 和普通 app 是一回事吗？",
+      en: "Is a Field just another app?",
+    },
+    answer: {
+      zh: "不是。普通 app 主要服务人；Field 同时服务人和 Fount。它需要声明 manifest、权限、事件、记忆通道、控制通道和可被 Forge 修改的范围。",
+      en: "No. A normal app mainly serves a person; a Field serves both the person and Fount. It declares a manifest, permissions, events, memory channels, control channels, and the parts Forge may reshape.",
+    },
+  },
+  {
+    question: {
+      zh: "Fount 会默认读取我的记忆、文件或网络权限吗？",
+      en: "Does Fount read my memory, files, or network permissions by default?",
+    },
+    answer: {
+      zh: "不会。页面里的原则是默认拒绝：记忆读写、本地文件、网络、资源预算、agent 控制、源码访问和跨 Field 召回都需要明确授权。",
+      en: "No. The principle is deny-by-default: memory access, local files, network, resource budget, agent control, source access, and cross-field recall require explicit permission.",
+    },
+  },
+  {
+    question: {
+      zh: "开发者怎样把自己的产品变成 Field？",
+      en: "How can developers turn a product into a Field?",
+    },
+    answer: {
+      zh: "通过 Fount SDK 声明 Field manifest、权限、experience events、memory sync、control channel 和 Forge editability。这样 Fount 才能理解产品结构，并在授权范围内进入和协作。",
+      en: "Through the Fount SDK: declare a Field manifest, permissions, experience events, memory sync, control channel, and Forge editability. That lets Fount understand the product and collaborate inside permitted boundaries.",
+    },
+  },
+  {
+    question: {
+      zh: "没有账号也能用吗？",
+      en: "Can I use it without an account?",
+    },
+    answer: {
+      zh: "基础体验应该本地优先，没有账号也能进入 Core、Runtime 和 starter Fields。账号主要用于跨设备同步、购买状态、角色权限、分享链接和官方服务。",
+      en: "The base experience should be local-first: Core, Runtime, and starter Fields can work without an account. Accounts are for cross-device sync, purchase state, roles, share links, and official services.",
+    },
+  },
+];
+
 export function FountHomePage({
   lang,
   page = "home",
@@ -1061,16 +1292,28 @@ export function FountHomePage({
   const copy = COPY[lang];
   const text = (value: LocalizedText) => value[lang];
   const isPricingPage = page === "pricing";
+  const isUpdatesPage = page === "updates";
+  const isStandalonePage = isPricingPage || isUpdatesPage;
   const [activeOutline, setActiveOutline] = useState<OutlineId>("vision");
+  const [release, setRelease] = useState<FountReleaseManifest | null>(null);
+  const downloadUrl = release?.downloads?.websiteUrl ?? "/Fount.dmg";
 
   useEffect(() => {
     document.title = isPricingPage
       ? copy.pricingDocumentTitle
-      : copy.documentTitle;
-  }, [copy.documentTitle, copy.pricingDocumentTitle, isPricingPage]);
+      : isUpdatesPage
+        ? copy.updatesDocumentTitle
+        : copy.documentTitle;
+  }, [
+    copy.documentTitle,
+    copy.pricingDocumentTitle,
+    copy.updatesDocumentTitle,
+    isPricingPage,
+    isUpdatesPage,
+  ]);
 
   useEffect(() => {
-    if (isPricingPage) {
+    if (isStandalonePage) {
       return;
     }
 
@@ -1095,20 +1338,48 @@ export function FountHomePage({
       window.removeEventListener("scroll", updateActiveOutline);
       window.removeEventListener("resize", updateActiveOutline);
     };
-  }, [isPricingPage]);
+  }, [isStandalonePage]);
+
+  useEffect(() => {
+    if (isUpdatesPage) {
+      return;
+    }
+
+    let cancelled = false;
+
+    fetch("/releases/fount/latest.json", { cache: "no-store" })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data) => {
+        if (!cancelled && data?.version) {
+          setRelease(data as FountReleaseManifest);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setRelease(null);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isUpdatesPage]);
 
   return (
     <main className="fount-page fount-page-focused" data-lang={lang} data-page={page}>
       <header className="fount-header">
-        <a className="fount-logo" href={isPricingPage ? "/" : "#vision"} aria-label="Fount home">
+        <a className="fount-logo" href={isStandalonePage ? "/" : "#vision"} aria-label="Fount home">
           <span className="fount-logo-mark" aria-hidden="true">
             <img src="/fount/fount-logo-source.png" alt="" />
           </span>
           Fount
         </a>
 
-        {isPricingPage ? (
-          <nav className="fount-nav fount-outline-nav fount-pricing-back-nav" aria-label={copy.navPricing}>
+        {isStandalonePage ? (
+          <nav
+            className="fount-nav fount-outline-nav fount-pricing-back-nav"
+            aria-label={isPricingPage ? copy.navPricing : copy.navUpdates}
+          >
             <a href="/">{copy.navHome}</a>
           </nav>
         ) : (
@@ -1131,7 +1402,13 @@ export function FountHomePage({
             <a href={SYSTEM_DOCS_URL} target="_blank" rel="noreferrer">
               {copy.navDocs}
             </a>
-            <a href="/?view=portfolio">{copy.navUpdates}</a>
+            <a
+              href="/?view=updates"
+              className={isUpdatesPage ? "active" : ""}
+              aria-current={isUpdatesPage ? "page" : undefined}
+            >
+              {copy.navUpdates}
+            </a>
             <a href="/?view=blog">{copy.navBlog}</a>
             <a
               href="/?view=pricing"
@@ -1164,16 +1441,18 @@ export function FountHomePage({
               aria-label={
                 themeMode === "night"
                   ? copy.themeToDayAria
-                  : copy.themeToNightAria
+                : copy.themeToNightAria
               }
               aria-pressed={themeMode === "night"}
               onClick={onThemeToggle}
             >
               {themeMode === "night" ? copy.themeDay : copy.themeNight}
             </button>
-            <a className="fount-download-small" href="/Fount.dmg">
-              <span>{copy.download}</span>
-            </a>
+            {!isUpdatesPage ? (
+              <a className="fount-download-small" href={downloadUrl}>
+                <span>{copy.download}</span>
+              </a>
+            ) : null}
           </div>
           <a className="fount-account-link" href="/?view=login">
             {copy.navAccount}
@@ -1183,6 +1462,8 @@ export function FountHomePage({
 
       {isPricingPage ? (
         <FountPricingSection lang={lang} standalone />
+      ) : isUpdatesPage ? (
+        <FountUpdatesSection lang={lang} />
       ) : (
         <>
       <section className="fount-hero" id="vision">
@@ -1191,7 +1472,7 @@ export function FountHomePage({
           <p className="fount-hero-deck">{copy.heroDeck}</p>
           <p className="fount-hero-sub">{copy.heroSub}</p>
           <div className="fount-actions fount-download-actions">
-            <a className="fount-primary-action fount-body-download fount-hero-download" href="/Fount.dmg">
+            <a className="fount-primary-action fount-body-download fount-hero-download" href={downloadUrl}>
               <span>{copy.macDownload}</span>
             </a>
             <small className="fount-platform-note">{copy.platformNote}</small>
@@ -1366,6 +1647,28 @@ export function FountHomePage({
             <span>starter Fields</span>
             <span>system Fields</span>
           </div>
+        </div>
+      </section>
+
+      <section className="fount-section fount-built-in-fields-section">
+        <div className="fount-section-head fount-section-head-wide">
+          <h2>{copy.builtInFieldsTitle}</h2>
+          <p>{copy.builtInFieldsLead}</p>
+        </div>
+
+        <div className="fount-built-in-field-grid">
+          {BUILT_IN_FIELDS.map((field) => (
+            <article className="fount-field-card fount-built-in-field-card" key={field.name}>
+              <div className="fount-field-card-top">
+                <small>{field.meta ? text(field.meta) : "Field"}</small>
+                <h3>{field.name}</h3>
+              </div>
+              <div>
+                <strong>{text(field.title)}</strong>
+                <p>{text(field.body)}</p>
+              </div>
+            </article>
+          ))}
         </div>
       </section>
 
@@ -1578,13 +1881,29 @@ export function FountHomePage({
         </div>
       </section>
 
+      <section className="fount-section fount-faq-section">
+        <div className="fount-section-head fount-section-head-wide">
+          <h2>{copy.faqTitle}</h2>
+          <p>{copy.faqLead}</p>
+        </div>
+
+        <div className="fount-faq-list">
+          {FAQ_ITEMS.map((item) => (
+            <article className="fount-faq-item" key={text(item.question)}>
+              <h3>{text(item.question)}</h3>
+              <p>{text(item.answer)}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
       <section className="fount-final-cta">
         <div>
           <h2>{copy.finalTitle}</h2>
           <p>{copy.finalBody}</p>
         </div>
         <div className="fount-actions">
-          <a className="fount-primary-action fount-body-download fount-final-download" href="/Fount.dmg">
+          <a className="fount-primary-action fount-body-download fount-final-download" href={downloadUrl}>
             <span>{copy.macDownload}</span>
           </a>
           <a className="fount-secondary-action" href={SYSTEM_DOCS_URL} target="_blank" rel="noreferrer">
@@ -1625,21 +1944,102 @@ function FountPricingSection({
         <p>{copy.pricingLead}</p>
       </div>
       <div className="fount-pricing-grid fount-pricing-grid-focused">
-        {PRICING_TIERS.map((tier) => (
-          <article className="fount-pricing-card fount-pricing-tier" key={tier.name}>
-            <div className="fount-pricing-tier-head">
-              <h3>{tier.name}</h3>
-              <span>{text(tier.title)}</span>
+        {PRICING_TIERS.map((tier) => {
+          const price = text(tier.price).trim();
+
+          return (
+            <article
+              className={`fount-pricing-card fount-pricing-tier${tier.undetermined ? " fount-pricing-tier-undetermined" : ""}`}
+              data-state={tier.undetermined ? "undetermined" : "available"}
+              key={tier.name}
+            >
+              <div className="fount-pricing-tier-head">
+                <h3>{tier.name}</h3>
+                <span>{text(tier.title)}</span>
+              </div>
+              {price ? <b>{price}</b> : null}
+              <p>{text(tier.body)}</p>
+              <ul>
+                {tier.items.map((item) => (
+                  <li key={text(item)}>{text(item)}</li>
+                ))}
+              </ul>
+            </article>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+function FountUpdatesSection({ lang }: { lang: Lang }) {
+  const copy = COPY[lang];
+  const [releases, setReleases] = useState<FountReleaseEntry[]>([]);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    fetch("/releases/fount/releases.json", { cache: "no-store" })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data) => {
+        if (!cancelled) {
+          setReleases(Array.isArray(data?.releases) ? data.releases : []);
+          setLoaded(true);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setReleases([]);
+          setLoaded(true);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  return (
+    <section className="fount-section fount-updates-page-section" id="updates">
+      <div className="fount-section-head fount-section-head-wide">
+        <div>
+          <p className="fount-pricing-page-label">{copy.navUpdates}</p>
+          <h1>{copy.updatesTitle}</h1>
+        </div>
+        <p>{copy.updatesLead}</p>
+      </div>
+
+      <div className="fount-release-history">
+        {releases.map((release) => (
+          <article className="fount-release-history-card" key={`${release.version}-${release.build}`}>
+            <div className="fount-release-history-version">
+              <span>Fount</span>
+              <h2>{release.version}</h2>
             </div>
-            <b>{text(tier.price)}</b>
-            <p>{text(tier.body)}</p>
-            <ul>
-              {tier.items.map((item) => (
-                <li key={text(item)}>{text(item)}</li>
-              ))}
-            </ul>
+            <div className="fount-release-history-body">
+              <p>{release.notes?.summary ?? copy.releaseFallbackBody}</p>
+              <div className="fount-release-history-meta">
+                <code>build {release.build}</code>
+                <code>{formatReleaseDate(release.releasedAt, lang)}</code>
+                {release.downloads?.sha256 ? (
+                  <code>{copy.releaseChecksum}: {release.downloads.sha256.slice(0, 12)}</code>
+                ) : null}
+                {release.downloads?.sizeBytes ? (
+                  <code>{formatReleaseSize(release.downloads.sizeBytes)}</code>
+                ) : null}
+              </div>
+              {release.notes?.websiteMarkdownUrl ? (
+                <a className="fount-release-notes-link" href={release.notes.websiteMarkdownUrl}>
+                  {copy.releaseNotes}
+                </a>
+              ) : null}
+            </div>
           </article>
         ))}
+        {loaded && releases.length === 0 ? (
+          <p className="fount-release-empty">{copy.updatesEmpty}</p>
+        ) : null}
       </div>
     </section>
   );
@@ -1700,4 +2100,18 @@ function FountDashboard({ lang }: { lang: Lang }) {
       </div>
     </section>
   );
+}
+
+function formatReleaseDate(value: string, lang: Lang) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return value;
+  }
+
+  return date.toLocaleDateString(lang === "zh" ? "zh-CN" : "en-US");
+}
+
+function formatReleaseSize(sizeBytes: number) {
+  const sizeMb = sizeBytes / 1024 / 1024;
+  return `${sizeMb.toFixed(1)} MB`;
 }

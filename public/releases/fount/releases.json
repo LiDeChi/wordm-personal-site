@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "product": {
+    "id": "fount",
+    "name": "Fount",
+    "platform": "mac"
+  },
+  "releases": [
+    {
+      "version": "0.1.4",
+      "build": "4",
+      "releasedAt": "2026-07-04T03:10:25.844Z",
+      "notes": {
+        "summary": "Make the Release Steward update pipeline clearer for non-technical operators by showing stages, nodes, target products, outputs, and status.",
+        "websiteMarkdownUrl": "/releases/fount/0.1.4.md"
+      },
+      "downloads": {
+        "assetName": "fount-mac-0.1.4.zip",
+        "websiteUrl": "https://wordm.us/downloads/fount/Fount-mac-current.zip",
+        "versionedWebsiteUrl": "https://wordm.us/downloads/fount/fount-mac-0.1.4.zip",
+        "sizeBytes": 11943362,
+        "sha256": "48ab01e7c95daab1d6bff50d25859f1277d1bb67b9b579eba40456523ca58ffe",
+        "githubUrl": "https://github.com/LiDeChi/fount-public/releases/download/fount-v0.1.4/fount-mac-0.1.4.zip"
+      }
+    },
+    {
+      "version": "0.1.3",
+      "build": "3",
+      "releasedAt": "2026-07-04T02:25:08.664Z",
+      "notes": {
+        "summary": "Add Release Steward as a complete system Field inside Fount for release updates, publishing checks, and hot-update control.",
+        "websiteMarkdownUrl": "/releases/fount/0.1.3.md"
+      },
+      "downloads": {
+        "assetName": "fount-mac-0.1.3.zip",
+        "websiteUrl": "https://wordm.us/downloads/fount/Fount-mac-current.zip",
+        "versionedWebsiteUrl": "https://wordm.us/downloads/fount/fount-mac-0.1.3.zip",
+        "sizeBytes": 11930657,
+        "sha256": "f261a77c49a6665e9e723eda90fd01cb7a3e18dc4d239b6029e8b6d4a757b2c6"
+      }
+    },
+    {
+      "version": "0.1.2",
+      "build": "1",
+      "releasedAt": "2026-07-03T13:45:16.208Z",
+      "notes": {
+        "summary": "Enable in-app update checking with CDN cache-busting, archive download, and SHA256 verification.",
+        "websiteMarkdownUrl": "/releases/fount/0.1.2.md"
+      },
+      "downloads": {
+        "assetName": "fount-mac-0.1.2.zip",
+        "websiteUrl": "https://wordm.us/downloads/fount/Fount-mac-current.zip",
+        "versionedWebsiteUrl": "https://wordm.us/downloads/fount/fount-mac-0.1.2.zip",
+        "sizeBytes": 11734589,
+        "sha256": "85a68b18a6f07369ed1a49bc6880524dff088fc349cfcd879be720682718cf82"
+      }
+    },
+    {
+      "version": "0.1.1",
+      "build": "5",
+      "releasedAt": "2026-07-03T13:43:39.020Z",
+      "notes": {
+        "summary": "Add in-app update checking with CDN cache-busting, archive download, and SHA256 verification.",
+        "websiteMarkdownUrl": "/releases/fount/0.1.1.md"
+      },
+      "downloads": {
+        "assetName": "fount-mac-0.1.1.zip",
+        "websiteUrl": "https://wordm.us/downloads/fount/Fount-mac-current.zip",
+        "versionedWebsiteUrl": "https://wordm.us/downloads/fount/fount-mac-0.1.1.zip",
+        "sizeBytes": 11734590,
+        "sha256": "0dc80149aa3c8c970e4e7d772ec14ce49d873a8e2d15bb9174d51e4f55723f8b"
+      }
+    }
+  ]
+}
