@@ -57,6 +57,17 @@ function FacebookIcon() {
   );
 }
 
+function DiscordIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path
+        fill="currentColor"
+        d="M19.54 5.23A17.63 17.63 0 0 0 15.07 3.9c-.2.35-.43.82-.59 1.2a16.42 16.42 0 0 0-4.96 0c-.16-.38-.39-.85-.6-1.2a17.56 17.56 0 0 0-4.46 1.33C1.63 9.44.86 13.56 1.24 17.62a17.8 17.8 0 0 0 5.47 2.77c.44-.6.83-1.24 1.16-1.92-.64-.24-1.25-.54-1.82-.89.15-.11.3-.23.44-.35a12.6 12.6 0 0 0 11.02 0c.15.12.29.24.44.35-.57.35-1.18.65-1.82.89.33.68.72 1.32 1.16 1.92a17.75 17.75 0 0 0 5.47-2.77c.45-4.7-.76-8.78-3.22-12.39ZM8.62 15.13c-1.07 0-1.94-.98-1.94-2.19s.85-2.19 1.94-2.19c1.08 0 1.96.99 1.94 2.19 0 1.21-.86 2.19-1.94 2.19Zm6.76 0c-1.07 0-1.94-.98-1.94-2.19s.85-2.19 1.94-2.19c1.08 0 1.96.99 1.94 2.19 0 1.21-.86 2.19-1.94 2.19Z"
+      />
+    </svg>
+  );
+}
+
 function SubstackIcon() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -92,6 +103,12 @@ const SOCIAL_LINKS: SocialLink[] = [
     label: "Facebook",
     href: "https://www.facebook.com/groups/1734944400854875",
     icon: <FacebookIcon />,
+  },
+  {
+    key: "discord",
+    label: "Discord",
+    href: "https://discord.gg/2p7fJpXequ",
+    icon: <DiscordIcon />,
   },
   {
     key: "substack",
