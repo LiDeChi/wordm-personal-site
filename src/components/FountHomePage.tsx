@@ -162,6 +162,23 @@ type FountReleaseEntry = {
 
 const SYSTEM_DOCS_URL = "https://system.wordm.us";
 
+function resolvePublicHref(primaryEnvName: string, fallback: string) {
+  const env = import.meta.env as Record<string, string | undefined>;
+  const value = env[primaryEnvName]?.trim();
+  if (value) {
+    return value;
+  }
+
+  if (primaryEnvName.startsWith("NEXT_PUBLIC_")) {
+    const viteValue = env[`VITE_${primaryEnvName.slice("NEXT_PUBLIC_".length)}`]?.trim();
+    if (viteValue) {
+      return viteValue;
+    }
+  }
+
+  return fallback;
+}
+
 const OUTLINE_ITEMS: Array<{ id: OutlineId; label: LocalizedText }> = [
   { id: "vision", label: { zh: "愿景", en: "Vision" } },
   { id: "ecosystem", label: { zh: "生态", en: "Ecosystem" } },
@@ -1176,9 +1193,9 @@ const FOUNT_PRICING_PLANS: PricingPlan[] = [
     futureAnchor: "Future price: $99+",
     cta: "Get Builder",
     hrefs: {
-      monthly: "/checkout/builder-monthly",
-      yearly: "/checkout/builder-yearly",
-      lifetime: "/checkout/builder-lifetime",
+      monthly: resolvePublicHref("NEXT_PUBLIC_FOUNT_BUILDER_MONTHLY_URL", "/checkout/builder-monthly"),
+      yearly: resolvePublicHref("NEXT_PUBLIC_FOUNT_BUILDER_YEARLY_URL", "/checkout/builder-yearly"),
+      lifetime: resolvePublicHref("NEXT_PUBLIC_FOUNT_BUILDER_LIFETIME_URL", "/checkout/builder-lifetime"),
     },
     features: [
       "Forge toolkit for building Fields",
@@ -1210,9 +1227,9 @@ const FOUNT_PRICING_PLANS: PricingPlan[] = [
     futureAnchor: "Future price: $199+",
     cta: "Get Master",
     hrefs: {
-      monthly: "/checkout/master-monthly",
-      yearly: "/checkout/master-yearly",
-      lifetime: "/checkout/master-lifetime",
+      monthly: resolvePublicHref("NEXT_PUBLIC_FOUNT_MASTER_MONTHLY_URL", "/checkout/master-monthly"),
+      yearly: resolvePublicHref("NEXT_PUBLIC_FOUNT_MASTER_YEARLY_URL", "/checkout/master-yearly"),
+      lifetime: resolvePublicHref("NEXT_PUBLIC_FOUNT_MASTER_LIFETIME_URL", "/checkout/master-lifetime"),
     },
     features: [
       "Everything in Builder",
