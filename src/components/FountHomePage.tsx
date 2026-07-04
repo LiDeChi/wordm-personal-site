@@ -1293,7 +1293,7 @@ export function FountHomePage({
   const text = (value: LocalizedText) => value[lang];
   const isPricingPage = page === "pricing";
   const isUpdatesPage = page === "updates";
-  const isStandalonePage = isPricingPage || isUpdatesPage;
+  const isHomePage = page === "home";
   const [activeOutline, setActiveOutline] = useState<OutlineId>("vision");
   const [release, setRelease] = useState<FountReleaseManifest | null>(null);
   const downloadUrl = release?.downloads?.websiteUrl ?? "/Fount.dmg";
@@ -1313,7 +1313,7 @@ export function FountHomePage({
   ]);
 
   useEffect(() => {
-    if (isStandalonePage) {
+    if (!isHomePage) {
       return;
     }
 
@@ -1338,13 +1338,9 @@ export function FountHomePage({
       window.removeEventListener("scroll", updateActiveOutline);
       window.removeEventListener("resize", updateActiveOutline);
     };
-  }, [isStandalonePage]);
+  }, [isHomePage]);
 
   useEffect(() => {
-    if (isUpdatesPage) {
-      return;
-    }
-
     let cancelled = false;
 
     fetch("/releases/fount/latest.json", { cache: "no-store" })
@@ -1363,26 +1359,26 @@ export function FountHomePage({
     return () => {
       cancelled = true;
     };
-  }, [isUpdatesPage]);
+  }, []);
 
   return (
     <main className="fount-page fount-page-focused" data-lang={lang} data-page={page}>
       <header className="fount-header">
-        <a className="fount-logo" href={isStandalonePage ? "/" : "#vision"} aria-label="Fount home">
+        <a className="fount-logo" href={isHomePage ? "#vision" : "/"} aria-label="Fount home">
           <span className="fount-logo-mark" aria-hidden="true">
             <img src="/fount/fount-logo-source.png" alt="" />
           </span>
           Fount
         </a>
 
-        {isStandalonePage ? (
+        {isPricingPage ? (
           <nav
             className="fount-nav fount-outline-nav fount-pricing-back-nav"
-            aria-label={isPricingPage ? copy.navPricing : copy.navUpdates}
+            aria-label={copy.navPricing}
           >
             <a href="/">{copy.navHome}</a>
           </nav>
-        ) : (
+        ) : isHomePage ? (
           <nav className="fount-nav fount-outline-nav" aria-label="Fount page outline">
             {OUTLINE_ITEMS.map((item) => (
               <a
@@ -1395,7 +1391,7 @@ export function FountHomePage({
               </a>
             ))}
           </nav>
-        )}
+        ) : null}
 
         <div className="fount-header-actions">
           <nav className="fount-site-nav" aria-label="Site links">
@@ -1448,11 +1444,9 @@ export function FountHomePage({
             >
               {themeMode === "night" ? copy.themeDay : copy.themeNight}
             </button>
-            {!isUpdatesPage ? (
-              <a className="fount-download-small" href={downloadUrl}>
-                <span>{copy.download}</span>
-              </a>
-            ) : null}
+            <a className="fount-download-small" href={downloadUrl}>
+              <span>{copy.download}</span>
+            </a>
           </div>
           <a className="fount-account-link" href="/?view=login">
             {copy.navAccount}
