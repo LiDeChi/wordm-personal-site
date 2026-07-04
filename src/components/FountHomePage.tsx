@@ -106,7 +106,7 @@ const OUTLINE_ITEMS: Array<{ id: OutlineId; label: LocalizedText }> = [
 const COPY = {
   zh: {
     documentTitle: "Fount | 开放的个人 Agent 大脑",
-    pricingDocumentTitle: "Fount Pricing | Player / Explorer / Master",
+    pricingDocumentTitle: "Fount Pricing | Player / Builder / Master",
     updatesDocumentTitle: "Fount 更新记录 | Release History",
     navHome: "首页",
     navConcepts: "概念",
@@ -195,7 +195,7 @@ const COPY = {
     useLead: "访客需要先看懂结果：Fount 会把一次体验变成下一次行动的上下文。",
     pricingTitle: "定价",
     pricingLead:
-      "从先玩起来，到长期探索，再到完整掌控你的 Field 生态。三档都围绕同一个目标：让 Fount 记住经验，并把经验带回下一次行动。",
+      "每个用户都从 Core 和 Forge 开始。差别不在于能不能创造，而在于你要把 Field 做到多远：自用、发布，还是持续生产。",
     accountTitle: "账号系统是 Fount 的身份与权限层。",
     accountLead:
       "登录、角色、权限、同步和购买状态都应该在同一个账户系统里被管理。Fount 不是无状态访问入口，而是有身份边界的个人 agent 大脑。",
@@ -205,7 +205,7 @@ const COPY = {
   },
   en: {
     documentTitle: "Fount | Open Personal Agent Brain",
-    pricingDocumentTitle: "Fount Pricing | Player / Explorer / Master",
+    pricingDocumentTitle: "Fount Pricing | Player / Builder / Master",
     updatesDocumentTitle: "Fount Updates | Release History",
     navHome: "Home",
     navConcepts: "Concepts",
@@ -294,7 +294,7 @@ const COPY = {
     useLead: "The point is the outcome: one experience becomes context for the next action.",
     pricingTitle: "Pricing",
     pricingLead:
-      "Start by playing, keep exploring, then fully command your Field ecosystem. Each tier keeps the same promise: Fount remembers experience and carries it into the next action.",
+      "Every user starts with Core and Forge. The plans do not decide whether you can create; they decide how far your Fields can go: personal use, publishable creation, or continuous production.",
     accountTitle: "Account is the identity and permission layer for Fount.",
     accountLead:
       "Login, roles, permissions, sync, and purchase state should be managed through one account system. Fount is not a stateless entry point; it is a personal agent brain with identity boundaries.",
@@ -1021,50 +1021,50 @@ const BUSINESS_MODELS: ConceptItem[] = [
 const PRICING_TIERS: PricingTier[] = [
   {
     name: "Player",
-    title: { zh: "先进入、先玩起来", en: "Enter and start playing" },
+    title: { zh: "使用并塑造自己的 Field", en: "Use and shape your Fields" },
     price: { zh: "0", en: "0" },
     priceCurrency: { zh: "¥", en: "$" },
-    priceUnit: { zh: "永久免费", en: "free forever" },
+    priceUnit: { zh: "个人起步", en: "personal start" },
     body: {
-      zh: "适合先体验 Fount.app、本地 Core 和 starter Fields。",
-      en: "For trying Fount.app, local Core, and starter Fields first.",
+      zh: "适合使用 Core、探索 Foundry，并用 Forge 做轻量的个人改造。",
+      en: "For using Core, exploring Foundry, and shaping lightweight personal Fields with Forge.",
     },
     items: [
-      { zh: "本地个人 agent 大脑", en: "Local personal agent brain" },
-      { zh: "基础 Field Runtime", en: "Base Field Runtime" },
-      { zh: "Starter Fields 与基础记忆", en: "Starter Fields and base memory" },
+      { zh: "Core、Fields、Forge 基础体验", en: "Core, Fields, and base Forge" },
+      { zh: "修改现有 Field 和小型私有 Field", en: "Modify existing Fields and make small private Fields" },
+      { zh: "基础记忆、自动化和个人工作流", en: "Base memory, automation, and personal workflows" },
     ],
   },
   {
-    name: "Explorer",
-    title: { zh: "跨 Field 持续探索", en: "Explore across Fields" },
+    name: "Builder",
+    title: { zh: "创建可发布的 Field", en: "Create publishable Fields" },
     price: { zh: "待定", en: "TBD" },
     priceUnit: { zh: "即将公布", en: "announced soon" },
     undetermined: true,
     body: {
-      zh: "适合希望跨设备同步、扩大记忆、使用更多 Field 的个人用户。",
-      en: "For people who want sync, deeper memory, and more usable Fields.",
+      zh: "适合创作者、独立开发者和高级用户，把想法做成别人能用的 Field。",
+      en: "For creators, indie developers, and advanced users turning ideas into Fields others can use.",
     },
     items: [
-      { zh: "云同步与跨设备连续性", en: "Cloud sync and cross-device continuity" },
-      { zh: "更大记忆与更多 Field", en: "Larger memory and more Fields" },
-      { zh: "Foundry 发现与安装", en: "Foundry discovery and installation" },
+      { zh: "更完整的 Forge 创作环境", en: "A fuller Forge building environment" },
+      { zh: "版本、测试、原型和发布准备", en: "Versions, tests, prototypes, and release prep" },
+      { zh: "发布到 Foundry，分享或出售作品", en: "Publish to Foundry, share, or sell creations" },
     ],
   },
   {
     name: "Master",
-    title: { zh: "创造、改造、发布 Field", en: "Create, reshape, and publish Fields" },
+    title: { zh: "运行完整生产系统", en: "Run a full production system" },
     price: { zh: "待定", en: "TBD" },
     priceUnit: { zh: "即将公布", en: "announced soon" },
     undetermined: true,
     body: {
-      zh: "适合创作者、开发者和团队，把 Forge、测试、发布和商业化接起来。",
-      en: "For creators, developers, and teams connecting Forge, testing, publishing, and commercialization.",
+      zh: "适合同时管理多个 Field、多个 agent、测试流水线和长期发布节奏。",
+      en: "For managing many Fields, agents, test loops, and long-term release systems.",
     },
     items: [
-      { zh: "Forge Pro 创作与改造", en: "Forge Pro creation and reshaping" },
-      { zh: "源码协作、模拟、测试", en: "Source collaboration, simulation, and testing" },
-      { zh: "发布、认证、授权和更新", en: "Publishing, certification, licensing, and updates" },
+      { zh: "多项目 Field 生产与 agent 编排", en: "Multi-Field production and agent coordination" },
+      { zh: "虚拟用户、自动测试和修复循环", en: "Virtual users, automated tests, and repair loops" },
+      { zh: "资源监控、反馈分析和商业化管理", en: "Resource monitoring, feedback analysis, and commercialization" },
     ],
   },
 ];
