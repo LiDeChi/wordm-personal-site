@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import type { Lang } from "../i18n/lang";
 import { SocialLinks } from "./SocialLinks";
 import { ThemeModeIcon } from "./ThemeModeIcon";
 
 type FountHomePageProps = {
   lang: Lang;
-  page?: "home" | "pricing" | "updates";
+  page?: "home" | "pricing" | "partners" | "updates";
   onLangChange: (lang: Lang) => void;
   themeMode: "day" | "night";
   onThemeToggle: () => void;
@@ -84,6 +84,44 @@ type PricingFaqItem = {
   answer: string;
 };
 
+type PartnerStep = {
+  label: string;
+  title: string;
+  body: string;
+};
+
+type PartnerCard = {
+  title: string;
+  body: string;
+};
+
+type CommissionTier = {
+  title: string;
+  body: string;
+  subscription: string;
+  lifetime: string;
+  bestFor: string;
+};
+
+type EarningsExample = {
+  title: string;
+  price: string;
+  publicAffiliate: string;
+  publicEstimate: string;
+  invitedPartner: string;
+  invitedEstimate: string;
+};
+
+type PartnerBenefit = {
+  title: string;
+  body: string;
+};
+
+type PartnerFaqItem = {
+  question: string;
+  answer: string[];
+};
+
 type FaqItem = {
   question: LocalizedText;
   answer: LocalizedText;
@@ -134,6 +172,7 @@ const COPY = {
   zh: {
     documentTitle: "Fount | 开放的个人 Agent 大脑",
     pricingDocumentTitle: "Fount Pricing | Player / Builder / Master",
+    partnersDocumentTitle: "Fount Partner Program",
     updatesDocumentTitle: "Fount 更新记录 | Release History",
     navHome: "首页",
     navConcepts: "概念",
@@ -235,6 +274,7 @@ const COPY = {
   en: {
     documentTitle: "Fount | Open Personal Agent Brain",
     pricingDocumentTitle: "Fount Pricing | Player / Builder / Master",
+    partnersDocumentTitle: "Fount Partner Program",
     updatesDocumentTitle: "Fount Updates | Release History",
     navHome: "Home",
     navConcepts: "Concepts",
@@ -1277,6 +1317,209 @@ const FOUNT_PRICING_FAQ: PricingFaqItem[] = [
   },
 ];
 
+const PARTNER_AUDIENCE_TAGS = [
+  "Creator",
+  "Educator",
+  "Builder",
+  "Community",
+  "Field Maker",
+  "Agent Explorer",
+];
+
+const PARTNER_STEPS: PartnerStep[] = [
+  {
+    label: "Step 1",
+    title: "Apply",
+    body: "Tell us who you are, what audience you serve, and how you want to introduce Fount.",
+  },
+  {
+    label: "Step 2",
+    title: "Get your partner link",
+    body: "Approved partners receive a Creem-powered referral link or coupon code for tracking referrals.",
+  },
+  {
+    label: "Step 3",
+    title: "Share real Fount workflows",
+    body: "Create tutorials, videos, articles, newsletters, templates, demos, or community sessions.",
+  },
+  {
+    label: "Step 4",
+    title: "Earn commission",
+    body: "Earn commission when referred users purchase eligible Fount plans.",
+  },
+];
+
+const PARTNER_AUDIENCES: PartnerCard[] = [
+  {
+    title: "Tutorial creators",
+    body: "People who make videos, articles, walkthroughs, or courses about AI agents, coding agents, productivity tools, or creative workflows.",
+  },
+  {
+    title: "Community owners",
+    body: "People who run Discord communities, newsletters, indie builder groups, AI tool communities, or creator groups.",
+  },
+  {
+    title: "Builders and consultants",
+    body: "People who help others build workflows, automations, personal tools, Mac apps, AI-native systems, or agent-based products.",
+  },
+  {
+    title: "Field makers",
+    body: "People who want to create their own Fields, templates, examples, workflows, or agent setups inside the Fount ecosystem.",
+  },
+];
+
+const COMMISSION_TIERS: CommissionTier[] = [
+  {
+    title: "Public Affiliate",
+    body: "For people who want to share Fount with their audience using a referral link.",
+    subscription: "25% recurring commission for the first 12 months.",
+    lifetime: "20% one-time commission.",
+    bestFor: "Newsletter mentions, blog posts, resource lists, tool directories, and light recommendations.",
+  },
+  {
+    title: "Invited Ecosystem Partner",
+    body: "For creators, educators, builders, and community owners who create meaningful tutorials, demos, workflows, templates, or Field examples.",
+    subscription: "30% recurring commission for the first 12 months.",
+    lifetime: "25% one-time commission.",
+    bestFor: "Video tutorials, launch reviews, courses, community workshops, Field templates, and serious product walkthroughs.",
+  },
+];
+
+const EARNINGS_EXAMPLES: EarningsExample[] = [
+  {
+    title: "Builder Founding Lifetime",
+    price: "$49",
+    publicAffiliate: "20%",
+    publicEstimate: "$9.80 before platform adjustments",
+    invitedPartner: "25%",
+    invitedEstimate: "$12.25 before platform adjustments",
+  },
+  {
+    title: "Master Founding Lifetime",
+    price: "$99",
+    publicAffiliate: "20%",
+    publicEstimate: "$19.80 before platform adjustments",
+    invitedPartner: "25%",
+    invitedEstimate: "$24.75 before platform adjustments",
+  },
+  {
+    title: "Builder Subscription",
+    price: "$7/month",
+    publicAffiliate: "25% for 12 months",
+    publicEstimate: "up to $21 per customer before platform adjustments",
+    invitedPartner: "30% for 12 months",
+    invitedEstimate: "up to $25.20 per customer before platform adjustments",
+  },
+  {
+    title: "Master Subscription",
+    price: "$14/month",
+    publicAffiliate: "25% for 12 months",
+    publicEstimate: "up to $42 per customer before platform adjustments",
+    invitedPartner: "30% for 12 months",
+    invitedEstimate: "up to $50.40 per customer before platform adjustments",
+  },
+];
+
+const PARTNER_BENEFITS: PartnerBenefit[] = [
+  {
+    title: "Referral link or coupon code",
+    body: "Each approved partner receives a unique link or code for tracking referrals through Creem.",
+  },
+  {
+    title: "Commission tracking",
+    body: "Partners can track eligible referrals and commission through the affiliate system when available.",
+  },
+  {
+    title: "Early access",
+    body: "Partners receive early access to selected Fount features, Field examples, and ecosystem experiments.",
+  },
+  {
+    title: "Partner materials",
+    body: "Partners get screenshots, demo talking points, positioning notes, comparison notes, and launch copy.",
+  },
+  {
+    title: "Ecosystem visibility",
+    body: "High-quality tutorials, Fields, templates, or demos may be featured by Fount.",
+  },
+  {
+    title: "Future Field opportunities",
+    body: "As Foundry grows, partners may be able to publish, sell, or promote their own Fields, templates, and workflows.",
+  },
+];
+
+const ENCOURAGED_PARTNER_CONTENT = [
+  "Real product walkthroughs",
+  "Field creation tutorials",
+  "Agent workflow examples",
+  "Before/after workflow demos",
+  "Honest reviews",
+  "Founder interviews",
+  "Community workshops",
+  "Template or Field showcases",
+  "Educational content about personal agents",
+];
+
+const DISALLOWED_PARTNER_PROMOTION = [
+  "Coupon spam",
+  "Fake scarcity",
+  "Misleading claims",
+  "Impersonating Fount",
+  "Claiming to be an official Fount employee",
+  "Paid ads using the Fount brand name without permission",
+  "Promising that all future cloud services are included forever",
+  "Promising unlimited AI usage, unlimited cloud sync, or unlimited hosted agent runtime",
+  "Misrepresenting Founding Lifetime as everything forever",
+  "Fake reviews or undisclosed paid promotion where disclosure is legally required",
+  "Low-quality traffic, bot traffic, or fraudulent signups",
+];
+
+const PARTNER_FAQ: PartnerFaqItem[] = [
+  {
+    question: "Is this an affiliate program or a partner program?",
+    answer: [
+      "Both. Fount uses affiliate tracking and commission, but we call it a Partner Program because we care more about real education, demos, Fields, and ecosystem building than generic link sharing.",
+    ],
+  },
+  {
+    question: "How much commission do partners earn?",
+    answer: [
+      "Public affiliates can earn 25% recurring commission for subscription plans during the first 12 months, and 20% one-time commission for Founding Lifetime plans.",
+      "Invited ecosystem partners can earn 30% recurring commission for subscription plans during the first 12 months, and 25% one-time commission for Founding Lifetime plans.",
+    ],
+  },
+  {
+    question: "Can I promote Founding Lifetime?",
+    answer: [
+      "Yes. Founding Lifetime is the main early access offer. Please describe it accurately as long-term access to the local Fount experience included in the user's plan.",
+      "Do not describe it as unlimited access to every future cloud service.",
+    ],
+  },
+  {
+    question: "When are commissions paid?",
+    answer: [
+      "Commission payment timing depends on Creem and the final payout configuration. Commissions are generally paid after successful payments are confirmed and refund windows are cleared.",
+    ],
+  },
+  {
+    question: "Can I use paid ads?",
+    answer: [
+      "Paid ads require approval. Partners may not bid on Fount brand keywords, impersonate Fount, or create ads that look like official Fount pages without permission.",
+    ],
+  },
+  {
+    question: "Can I create tutorials or templates?",
+    answer: [
+      "Yes. Tutorials, demos, templates, workflows, and Field examples are strongly encouraged. High-quality partner content may be featured by Fount.",
+    ],
+  },
+  {
+    question: "Will future cloud services have the same commission?",
+    answer: [
+      "Not necessarily. Future cloud services, paid compute, hosted runtime, marketplace promotion, and enterprise services may have separate commission rules.",
+    ],
+  },
+];
+
 const ROADMAP: StepItem[] = [
   {
     label: "Phase 1",
@@ -1510,6 +1753,7 @@ export function FountHomePage({
   const copy = COPY[lang];
   const text = (value: LocalizedText) => value[lang];
   const isPricingPage = page === "pricing";
+  const isPartnersPage = page === "partners";
   const isUpdatesPage = page === "updates";
   const isHomePage = page === "home";
   const [activeOutline, setActiveOutline] = useState<OutlineId>("vision");
@@ -1521,13 +1765,17 @@ export function FountHomePage({
   useEffect(() => {
     document.title = isPricingPage
       ? copy.pricingDocumentTitle
+      : isPartnersPage
+        ? copy.partnersDocumentTitle
       : isUpdatesPage
         ? copy.updatesDocumentTitle
         : copy.documentTitle;
   }, [
     copy.documentTitle,
+    copy.partnersDocumentTitle,
     copy.pricingDocumentTitle,
     copy.updatesDocumentTitle,
+    isPartnersPage,
     isPricingPage,
     isUpdatesPage,
   ]);
@@ -1591,10 +1839,10 @@ export function FountHomePage({
           Fount
         </a>
 
-        {isPricingPage ? (
+        {isPricingPage || isPartnersPage ? (
           <nav
             className="fount-nav fount-outline-nav fount-pricing-back-nav"
-            aria-label={copy.navPricing}
+            aria-label={isPartnersPage ? "Fount Partner Program" : copy.navPricing}
           >
             <a href="/">{copy.navHome}</a>
           </nav>
@@ -1682,6 +1930,8 @@ export function FountHomePage({
 
       {isPricingPage ? (
         <FountPricingSection lang={lang} standalone />
+      ) : isPartnersPage ? (
+        <FountPartnerPage />
       ) : isUpdatesPage ? (
         <FountUpdatesSection lang={lang} />
       ) : (
@@ -2134,7 +2384,379 @@ export function FountHomePage({
       </section>
         </>
       )}
+      <FountFooter />
     </main>
+  );
+}
+
+function resolvePartnerApplyHref() {
+  const creemApplyUrl = (
+    import.meta.env.NEXT_PUBLIC_CREEM_AFFILIATE_APPLY_URL ||
+    import.meta.env.VITE_CREEM_AFFILIATE_APPLY_URL ||
+    ""
+  ).trim();
+
+  if (creemApplyUrl) {
+    return creemApplyUrl;
+  }
+
+  const contactEmail = (
+    import.meta.env.NEXT_PUBLIC_PARTNER_CONTACT_EMAIL ||
+    import.meta.env.VITE_PARTNER_CONTACT_EMAIL ||
+    "partners@wordm.us"
+  ).trim();
+
+  return `mailto:${contactEmail}?subject=${encodeURIComponent("Fount Partner Program Application")}`;
+}
+
+function FountFooter() {
+  return (
+    <footer className="fount-footer" id="fount-footer">
+      <div className="fount-footer-brand">
+        <a className="fount-logo" href="/" aria-label="Fount home">
+          <span className="fount-logo-mark" aria-hidden="true">
+            <img src="/fount/fount-logo-source.png" alt="" />
+          </span>
+          Fount
+        </a>
+        <p>Local-first personal agent framework for creating Fields.</p>
+      </div>
+      <nav className="fount-footer-grid" aria-label="Fount footer">
+        <div>
+          <strong>Product</strong>
+          <a href="/?view=pricing">Pricing</a>
+          <a href="/Fount.dmg">Download</a>
+          <a href={SYSTEM_DOCS_URL} target="_blank" rel="noreferrer">
+            Docs
+          </a>
+        </div>
+        <div>
+          <strong>Ecosystem</strong>
+          <a href="/partners">Partner Program</a>
+          <a href="/#ecosystem">Field Creators</a>
+          <a href="/?view=updates">Updates</a>
+        </div>
+        <div>
+          <strong>Resources</strong>
+          <a href="/blog">Blog</a>
+          <a href="/#open">Foundry</a>
+          <a href={resolvePartnerApplyHref()}>Community</a>
+        </div>
+      </nav>
+    </footer>
+  );
+}
+
+function FountPartnerPage() {
+  const applyHref = resolvePartnerApplyHref();
+
+  return (
+    <section className="fount-section fount-partner-page fount-partners-page-section" id="partners">
+      <div className="fount-partner-hero">
+        <div className="fount-partner-hero-copy">
+          <h1>Become a Fount Partner.</h1>
+          <p className="fount-partner-hero-lead">
+            Help creators, builders, and AI agent explorers build their own Fields - and earn commission for bringing
+            the right people into the Fount ecosystem.
+          </p>
+          <p>
+            Fount is a local-first personal agent framework for creating Fields. We are looking for partners who can
+            explain, teach, build, and share real workflows around personal agents and Field creation.
+          </p>
+          <div className="fount-pricing-actions">
+            <a className="fount-pricing-primary-action" href={applyHref}>
+              Apply to Join
+            </a>
+            <a className="fount-pricing-secondary-action" href="#commission">
+              View Commission
+            </a>
+          </div>
+          <small>
+            Invite-first during early access. High-quality tutorials, demos, templates, and community education are
+            prioritized.
+          </small>
+        </div>
+        <div className="fount-partner-tag-board" aria-hidden="true">
+          {PARTNER_AUDIENCE_TAGS.map((tag) => (
+            <span key={tag}>{tag}</span>
+          ))}
+        </div>
+      </div>
+
+      <PartnerHowItWorks />
+      <PartnerAudience />
+      <PartnerCommissionSection />
+      <PartnerExampleEarnings />
+      <PartnerBenefits />
+      <PartnerPromotionGuidelines />
+      <PartnerCloudBoundary />
+      <PartnerApplyCTA applyHref={applyHref} />
+      <PartnerFAQ />
+      <FinalPartnerCTA applyHref={applyHref} />
+    </section>
+  );
+}
+
+function PartnerSectionTitle({
+  kicker,
+  title,
+  children,
+}: {
+  kicker?: string;
+  title: string;
+  children?: ReactNode;
+}) {
+  return (
+    <div className="fount-partner-section-title">
+      {kicker ? <p>{kicker}</p> : null}
+      <h2>{title}</h2>
+      {children}
+    </div>
+  );
+}
+
+function PartnerHowItWorks() {
+  return (
+    <div className="fount-partner-paper-section">
+      <PartnerSectionTitle kicker="Partner flow" title="How it works">
+        <p>
+          Fount uses Creem Affiliate Program for referral tracking, attribution, and commission management.
+        </p>
+      </PartnerSectionTitle>
+      <div className="fount-partner-step-grid">
+        {PARTNER_STEPS.map((step) => (
+          <article className="fount-partner-step-card" key={step.title}>
+            <span>{step.label}</span>
+            <h3>{step.title}</h3>
+            <p>{step.body}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function PartnerAudience() {
+  return (
+    <div className="fount-partner-paper-section">
+      <PartnerSectionTitle kicker="Audience" title="Who should join?">
+        <p>
+          The Fount Partner Program is designed for people who can help others understand and use personal agents,
+          Field creation, and local-first AI workflows.
+        </p>
+      </PartnerSectionTitle>
+      <div className="fount-partner-card-grid">
+        {PARTNER_AUDIENCES.map((item) => (
+          <article className="fount-partner-info-card" key={item.title}>
+            <h3>{item.title}</h3>
+            <p>{item.body}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function PartnerCommissionSection() {
+  return (
+    <div className="fount-partner-paper-section fount-partner-commission" id="commission">
+      <PartnerSectionTitle kicker="Commission" title="Commission">
+        <p>
+          During early access, Fount rewards partners who bring the right people into the ecosystem. The goal is to
+          support real education, real demos, and high-trust recommendations.
+        </p>
+      </PartnerSectionTitle>
+      <div className="fount-commission-grid">
+        {COMMISSION_TIERS.map((tier) => (
+          <article className="fount-commission-card" key={tier.title}>
+            <h3>{tier.title}</h3>
+            <p>{tier.body}</p>
+            <dl>
+              <div>
+                <dt>Subscriptions</dt>
+                <dd>{tier.subscription}</dd>
+              </div>
+              <div>
+                <dt>Founding Lifetime</dt>
+                <dd>{tier.lifetime}</dd>
+              </div>
+              <div>
+                <dt>Best for</dt>
+                <dd>{tier.bestFor}</dd>
+              </div>
+            </dl>
+          </article>
+        ))}
+      </div>
+      <div className="fount-partner-note">
+        <strong>Important note</strong>
+        <p>
+          Commission is calculated from eligible net revenue after refunds, chargebacks, taxes, platform fees, and
+          applicable Creem affiliate fees.
+        </p>
+        <p>
+          If Creem currently supports only one commission tier, use the public affiliate rate in Creem and handle
+          invited partner bonuses manually until tiered commission is available.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function PartnerExampleEarnings() {
+  return (
+    <div className="fount-partner-paper-section">
+      <PartnerSectionTitle kicker="Examples" title="Example earnings" />
+      <div className="fount-earnings-grid">
+        {EARNINGS_EXAMPLES.map((example) => (
+          <article className="fount-earnings-card" key={example.title}>
+            <div>
+              <h3>{example.title}</h3>
+              <span>{example.price}</span>
+            </div>
+            <dl>
+              <div>
+                <dt>Public Affiliate</dt>
+                <dd>{example.publicAffiliate}</dd>
+                <dd>{example.publicEstimate}</dd>
+              </div>
+              <div>
+                <dt>Invited Partner</dt>
+                <dd>{example.invitedPartner}</dd>
+                <dd>{example.invitedEstimate}</dd>
+              </div>
+            </dl>
+          </article>
+        ))}
+      </div>
+      <p className="fount-partner-small-note">
+        Actual commission depends on successful payments, refunds, cancellations, taxes, platform fees, Creem affiliate
+        fees, and final program settings.
+      </p>
+    </div>
+  );
+}
+
+function PartnerBenefits() {
+  return (
+    <div className="fount-partner-paper-section">
+      <PartnerSectionTitle kicker="Partner kit" title="What partners receive" />
+      <div className="fount-benefit-list">
+        {PARTNER_BENEFITS.map((benefit) => (
+          <article key={benefit.title}>
+            <h3>{benefit.title}</h3>
+            <p>{benefit.body}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function PartnerPromotionGuidelines() {
+  return (
+    <div className="fount-partner-guidelines">
+      <div className="fount-partner-paper-section">
+        <PartnerSectionTitle kicker="Encouraged" title="What we encourage">
+          <p>
+            Fount works best when people can see real use cases. We prioritize partners who help users understand how
+            to build with Fount.
+          </p>
+        </PartnerSectionTitle>
+        <ul className="fount-partner-chip-list">
+          {ENCOURAGED_PARTNER_CONTENT.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+      </div>
+      <div className="fount-partner-paper-section">
+        <PartnerSectionTitle kicker="Promotion rules" title="Promotion rules">
+          <p>
+            The partner program is meant to grow the Fount ecosystem with trust. Some promotion methods are not
+            allowed.
+          </p>
+        </PartnerSectionTitle>
+        <ul className="fount-partner-disallowed-list">
+          {DISALLOWED_PARTNER_PROMOTION.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+function PartnerCloudBoundary() {
+  return (
+    <div className="fount-partner-cloud-boundary">
+      <div>
+        <p>Cloud boundary for partners</p>
+        <h2>Important: local-first product, future cloud separate.</h2>
+        <p>
+          Fount is currently focused on the local-first experience. Partners should describe Founding Lifetime
+          accurately: it gives users long-term access to the local Fount experience included in their plan.
+        </p>
+        <p>
+          Partners should not claim that Founding Lifetime includes every future cloud service, hosted runtime, paid
+          compute, team collaboration feature, or marketplace promotion service forever.
+        </p>
+        <p>
+          Future cloud services may require separate subscriptions, usage-based pricing, or new partner terms.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function PartnerApplyCTA({ applyHref }: { applyHref: string }) {
+  return (
+    <div className="fount-partner-apply" id="apply">
+      <div>
+        <p>Apply</p>
+        <h2>Apply to join the Fount Partner Program</h2>
+        <p>Tell us who you are, what audience you serve, and how you want to introduce Fount.</p>
+      </div>
+      <a className="fount-pricing-primary-action" href={applyHref}>
+        Apply to Join
+      </a>
+    </div>
+  );
+}
+
+function PartnerFAQ() {
+  return (
+    <div className="fount-partner-paper-section">
+      <PartnerSectionTitle kicker="FAQ" title="Partner FAQ" />
+      <div className="fount-pricing-faq-list">
+        {PARTNER_FAQ.map((item, index) => (
+          <details className="fount-pricing-faq-item" key={item.question} open={index === 0}>
+            <summary>{item.question}</summary>
+            {item.answer.map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
+          </details>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function FinalPartnerCTA({ applyHref }: { applyHref: string }) {
+  return (
+    <div className="fount-partner-final">
+      <div>
+        <h2>Help shape the first layer of the Fount ecosystem.</h2>
+        <p>If you can teach, build, explain, or bring the right people into Fount, we would like to hear from you.</p>
+      </div>
+      <div className="fount-pricing-actions">
+        <a className="fount-pricing-primary-action" href={applyHref}>
+          Apply to Join
+        </a>
+        <a className="fount-pricing-secondary-action" href="/?view=pricing">
+          Back to Pricing
+        </a>
+      </div>
+    </div>
   );
 }
 
@@ -2358,20 +2980,35 @@ function FountPricingSection({
       <div className="fount-partner-cta">
         <div>
           <p>Partner Program</p>
-          <h2>Want to help grow the Fount ecosystem?</h2>
+          <h2>Help grow the Fount ecosystem.</h2>
           <p>
-            If you create tutorials, videos, newsletters, templates, workflows, or communities around AI agents and
-            creative tools, you can join the Fount Partner Program.
+            Fount is looking for creators, educators, community owners, indie builders, and AI agent enthusiasts who
+            can help more people understand personal agents, Field creation, and local-first AI workflows.
           </p>
           <p>
-            Partners can earn commission, receive early access, and help bring the first generation of Fields into the
-            ecosystem.
+            Join the Fount Partner Program to earn commission, receive early access, and help bring the first
+            generation of Fields into the ecosystem.
           </p>
-          <small>Best for creators, educators, community owners, and AI agent builders.</small>
+          <small>
+            Best for tutorial creators, newsletter writers, community owners, automation consultants, and AI agent
+            builders.
+          </small>
         </div>
-        <a className="fount-pricing-secondary-action" href="mailto:parsonjian@gmail.com?subject=Fount%20Partner%20Program">
-          Join Partner Program
-        </a>
+        <div className="fount-partner-cta-side">
+          <div className="fount-partner-cta-tags" aria-hidden="true">
+            {PARTNER_AUDIENCE_TAGS.map((tag) => (
+              <span key={tag}>{tag}</span>
+            ))}
+          </div>
+          <div className="fount-pricing-actions">
+            <a className="fount-pricing-primary-action" href="/partners">
+              Join Partner Program
+            </a>
+            <a className="fount-pricing-secondary-action" href="/partners#commission">
+              View Commission
+            </a>
+          </div>
+        </div>
       </div>
 
       <div className="fount-pricing-faq">
