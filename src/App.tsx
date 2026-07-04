@@ -83,7 +83,6 @@ import {
   mergeRoleRules,
   normalizeAuthError,
   parseRoleEmailSet,
-  resolveSafeAuthRedirectUrl,
   signupWithPassword,
   subscribeAuthState,
   toAuthUserSummary,
@@ -1006,19 +1005,6 @@ function relativeRootHref(view: RootView, lang: Lang) {
   return `${url.pathname}${search ? `?${search}` : ""}`;
 }
 
-function withAuthReturnTo(href: string, returnTo: string | null) {
-  const url = new URL(href, "https://wordm.us");
-
-  if (returnTo) {
-    url.searchParams.set("return_to", returnTo);
-  } else {
-    url.searchParams.delete("return_to");
-  }
-
-  const search = url.searchParams.toString();
-  return `${url.pathname}${search ? `?${search}` : ""}`;
-}
-
 async function copyTextToClipboard(text: string): Promise<boolean> {
   if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
     try {
@@ -1127,9 +1113,6 @@ function App() {
     BLOG_ARTICLES[0]?.id ??
     null;
   const initialProjectSlug = normalizeSlug(params.get("project"));
-  const initialAuthReturnTo = resolveSafeAuthRedirectUrl(
-    params.get("return_to"),
-  );
   const initialUnlockSlug = normalizeSlug(params.get("unlock"));
   const initialCheckoutSlug = normalizeSlug(params.get("checkout_slug"));
   const initialShareToken = params.get("share")?.trim() || null;
@@ -1285,22 +1268,9 @@ function App() {
     relativeRootHref("home", lang),
     "https://wordm.us",
   ).toString();
-  const authReturnHref = initialAuthReturnTo ?? defaultHomeHref;
-  const currentLocationForAuth =
-    typeof window !== "undefined"
-      ? (() => {
-          const next = new URL(window.location.href);
-          next.searchParams.delete("return_to");
-          return next.toString();
-        })()
-      : null;
-  const loginHref = withAuthReturnTo(
-    relativeRootHref("login", lang),
-    rootView === "login"
-      ? authReturnHref
-      : resolveSafeAuthRedirectUrl(currentLocationForAuth),
-  );
-  const homeHref = authReturnHref;
+  const accountHref = relativeRootHref("login", lang);
+  const loginHref = accountHref;
+  const homeHref = defaultHomeHref;
 
   const primaryUpdatedAt =
     snapshot.centerControlGeneratedAt || snapshot.generatedAt;
@@ -1372,11 +1342,7 @@ function App() {
       next.searchParams.delete("share");
     }
 
-    if (rootView === "login" && initialAuthReturnTo) {
-      next.searchParams.set("return_to", initialAuthReturnTo);
-    } else {
-      next.searchParams.delete("return_to");
-    }
+    next.searchParams.delete("return_to");
 
     window.history.replaceState({}, "", next);
   }, [
@@ -1386,7 +1352,6 @@ function App() {
     activeBlogArticleId,
     unlockTargetSlug,
     shareToken,
-    initialAuthReturnTo,
     isOneAgentProductPage,
   ]);
 
@@ -2411,23 +2376,6 @@ function App() {
     }
   }
 
-  function redirectAfterDedicatedLogin() {
-    if (rootView !== "login" || typeof window === "undefined") {
-      return false;
-    }
-
-    const target =
-      resolveSafeAuthRedirectUrl(authReturnHref) ?? defaultHomeHref;
-    const current = resolveSafeAuthRedirectUrl(window.location.href);
-
-    if (current === target) {
-      return false;
-    }
-
-    window.location.assign(target);
-    return true;
-  }
-
   async function handleAuthLogin(email: string, password: string) {
     if (!authEnabled) {
       setAuthStatusMessage(copy.authUnavailable);
@@ -2452,7 +2400,6 @@ function App() {
           : withDone(copy.loginSuccess, lang),
       );
 
-      redirectAfterDedicatedLogin();
     } catch (loginError) {
       const detail = normalizeAuthError(loginError, copy.loginFallback);
       setAuthStatusMessage(withDetail(copy.loginFailed, detail));
@@ -2496,7 +2443,6 @@ function App() {
           : withDone(copy.signupSuccess, lang),
       );
 
-      redirectAfterDedicatedLogin();
     } catch (signupError) {
       const detail = normalizeAuthError(signupError, copy.signupFallback);
       setAuthStatusMessage(withDetail(copy.signupFailed, detail));
@@ -3264,7 +3210,7 @@ function App() {
         onLangChange={setLang}
         onLogin={handleAuthLogin}
         onSignup={handleAuthSignup}
-        onGoogleLogin={() => handleGoogleLogin(authReturnHref)}
+        onGoogleLogin={() => handleGoogleLogin(accountHref)}
         onLogout={handleLogout}
       />
     );

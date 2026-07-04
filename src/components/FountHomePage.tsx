@@ -1308,6 +1308,7 @@ export function FountHomePage({
   const [release, setRelease] = useState<FountReleaseManifest | null>(null);
   const downloadUrl = release?.downloads?.websiteUrl ?? "/Fount.dmg";
   const blogHref = lang === "en" ? "/blog?lang=en" : "/blog";
+  const accountHref = lang === "en" ? "/?view=login&lang=en" : "/?view=login";
 
   useEffect(() => {
     document.title = isPricingPage
@@ -1459,7 +1460,7 @@ export function FountHomePage({
               <span>{copy.download}</span>
             </a>
           </div>
-          <a className="fount-account-link" href="/?view=login">
+          <a className="fount-account-link" href={accountHref}>
             {copy.navAccount}
           </a>
         </div>
@@ -1822,7 +1823,7 @@ export function FountHomePage({
                 <p>{text(feature.body)}</p>
               </article>
             ))}
-            <a className="fount-secondary-action" href="/?view=login">
+            <a className="fount-secondary-action" href={accountHref}>
               {copy.accountCta}
             </a>
           </div>
