@@ -7,6 +7,23 @@
   },
   "releases": [
     {
+      "version": "0.1.5",
+      "build": "5",
+      "releasedAt": "2026-07-04T05:14:12.165Z",
+      "notes": {
+        "summary": "Add a visible configuration and credential readiness panel to the Release Steward Field.",
+        "websiteMarkdownUrl": "/releases/fount/0.1.5.md"
+      },
+      "downloads": {
+        "assetName": "fount-mac-0.1.5.zip",
+        "websiteUrl": "https://wordm.us/downloads/fount/Fount-mac-current.zip",
+        "versionedWebsiteUrl": "https://wordm.us/downloads/fount/fount-mac-0.1.5.zip",
+        "sizeBytes": 12380600,
+        "sha256": "9ea4cfe368461f8e699747845d9363de82c9319abb4fdb54931f9945099f25d4",
+        "githubUrl": "https://github.com/LiDeChi/fount-public/releases/download/fount-v0.1.5/fount-mac-0.1.5.zip"
+      }
+    },
+    {
       "version": "0.1.4",
       "build": "4",
       "releasedAt": "2026-07-04T03:10:25.844Z",
