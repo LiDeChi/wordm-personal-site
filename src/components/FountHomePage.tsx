@@ -54,21 +54,34 @@ type PermissionItem = {
   level: string;
 };
 
-type PricingTier = {
+type BillingMode = "monthly" | "yearly" | "lifetime";
+
+type PricingPlan = {
+  id: "player" | "builder" | "master";
   name: string;
-  title: LocalizedText;
-  price: LocalizedText;
-  priceCurrency?: LocalizedText;
-  priceUnit?: LocalizedText;
-  priceNote?: LocalizedText;
-  priceOptions?: Array<{
-    label: LocalizedText;
-    value: LocalizedText;
-    highlight?: boolean;
-  }>;
-  body: LocalizedText;
-  items: LocalizedText[];
-  undetermined?: boolean;
+  badge: string;
+  sticker?: string;
+  description: string;
+  prices: Record<BillingMode, string>;
+  priceSubtexts: Record<BillingMode, string>;
+  futureAnchor?: string;
+  cta: string;
+  hrefs: Record<BillingMode, string>;
+  features: string[];
+  note: string;
+  featured?: boolean;
+};
+
+type ComparisonRow = {
+  feature: string;
+  player: string;
+  builder: string;
+  master: string;
+};
+
+type PricingFaqItem = {
+  question: string;
+  answer: string;
 };
 
 type FaqItem = {
@@ -1066,88 +1079,201 @@ const BUSINESS_MODELS: ConceptItem[] = [
   },
 ];
 
-const PRICING_TIERS: PricingTier[] = [
+const BILLING_MODES: Array<{ id: BillingMode; label: string }> = [
+  { id: "monthly", label: "Monthly" },
+  { id: "yearly", label: "Yearly" },
+  { id: "lifetime", label: "Founding Lifetime" },
+];
+
+const FOUNT_PRICING_PLANS: PricingPlan[] = [
   {
+    id: "player",
     name: "Player",
-    title: { zh: "基础连接与体验", en: "Base connection and play" },
-    price: { zh: "0", en: "0" },
-    priceCurrency: { zh: "$", en: "$" },
-    priceUnit: { zh: "永久免费", en: "free forever" },
-    body: {
-      zh: "适合先进入 Fount，把卡片、白板和基础子代理跑起来。",
-      en: "For getting into Fount with cards, whiteboards, and base subagents.",
+    badge: "Free forever",
+    description: "For anyone who wants to experience Fount and connect with basic sub-agents.",
+    prices: {
+      monthly: "$0",
+      yearly: "$0",
+      lifetime: "$0",
     },
-    items: [
-      { zh: "连接 Fount", en: "Connect with Fount" },
-      { zh: "基础子代理", en: "Base subagents" },
-      { zh: "基础卡片体验和白板体验", en: "Base card and whiteboard experience" },
+    priceSubtexts: {
+      monthly: "Free forever",
+      yearly: "Free forever",
+      lifetime: "Free forever",
+    },
+    cta: "Start Free",
+    hrefs: {
+      monthly: "/Fount.dmg",
+      yearly: "/Fount.dmg",
+      lifetime: "/Fount.dmg",
+    },
+    features: [
+      "Connect with Fount",
+      "Basic sub-agent experience",
+      "Basic card workspace",
+      "Basic whiteboard workspace",
+      "Local-first experience",
+      "Community access",
     ],
+    note: "Best for exploring the Fount framework before building your own Fields.",
   },
   {
+    id: "builder",
     name: "Builder",
-    title: { zh: "完整 Forge 创作", en: "Full Forge creation" },
-    price: { zh: "7", en: "7" },
-    priceCurrency: { zh: "$", en: "$" },
-    priceUnit: { zh: "/ 月 活动价", en: "/ mo promo" },
-    priceNote: { zh: "标准价 $10/月，年付 $90", en: "Standard $10/mo, $90/yr" },
-    priceOptions: [
-      {
-        label: { zh: "订阅", en: "Subscription" },
-        value: { zh: "$10/月 · $90/年", en: "$10/mo · $90/yr" },
-      },
-      {
-        label: { zh: "活动价", en: "Promo" },
-        value: { zh: "$7/月 · $63/年", en: "$7/mo · $63/yr" },
-        highlight: true,
-      },
-      {
-        label: { zh: "买断", en: "Lifetime" },
-        value: { zh: "$99 · 活动期间 $49", en: "$99 · promo $49" },
-      },
-    ],
-    body: {
-      zh: "适合认真构建 Field，把 Forge 从轻量编辑器升级成完整创作工具箱。",
-      en: "For serious Field builders who want Forge as a full creation toolkit.",
+    badge: "Best for Field creators",
+    sticker: "Best starting point",
+    description: "For creators who want to build Fields with Forge.",
+    prices: {
+      monthly: "$7",
+      yearly: "$63",
+      lifetime: "$49",
     },
-    items: [
-      { zh: "Forge 的完整能力", en: "Full Forge capabilities" },
-      { zh: "构建 Field 的工具包", en: "Toolkit for building Fields" },
-      { zh: "精美的 agent 回复", en: "Polished agent replies" },
-      { zh: "卡片自动化生成", en: "Automated card generation" },
-      { zh: "新特性的早期访问权", en: "Early access to new features" },
+    priceSubtexts: {
+      monthly: "/ month",
+      yearly: "/ year",
+      lifetime: "Founding Lifetime Access",
+    },
+    futureAnchor: "Future price: $99+",
+    cta: "Get Builder",
+    hrefs: {
+      monthly: "/checkout/builder-monthly",
+      yearly: "/checkout/builder-yearly",
+      lifetime: "/checkout/builder-lifetime",
+    },
+    features: [
+      "Forge toolkit for building Fields",
+      "Local Field creation workflow",
+      "High-quality agent response experience",
+      "Automated card generation",
+      "Advanced card and whiteboard workflows",
+      "Early access to new local features",
+      "Builder role in the Fount ecosystem",
     ],
+    note: "Includes long-term access to the local Builder experience. Future cloud services may require separate plans.",
   },
   {
+    id: "master",
     name: "Master",
-    title: { zh: "发布、运营与网络", en: "Publish, operate, network" },
-    price: { zh: "14", en: "14" },
-    priceCurrency: { zh: "$", en: "$" },
-    priceUnit: { zh: "/ 月 活动价", en: "/ mo promo" },
-    priceNote: { zh: "标准价 $20/月，年付 $180", en: "Standard $20/mo, $180/yr" },
-    priceOptions: [
-      {
-        label: { zh: "订阅", en: "Subscription" },
-        value: { zh: "$20/月 · $180/年", en: "$20/mo · $180/yr" },
-      },
-      {
-        label: { zh: "活动价", en: "Promo" },
-        value: { zh: "$14/月 · $126/年", en: "$14/mo · $126/yr" },
-        highlight: true,
-      },
-      {
-        label: { zh: "买断", en: "Lifetime" },
-        value: { zh: "$199 · 活动期间 $99", en: "$199 · promo $99" },
-      },
-    ],
-    body: {
-      zh: "适合把 Field 从创作推进到发布、运营和持续协作。",
-      en: "For taking Fields from creation into publishing, operations, and ongoing collaboration.",
+    badge: "Founding ecosystem member",
+    sticker: "Founding",
+    description: "For founding creators who want to publish, operate, and shape the Field ecosystem.",
+    prices: {
+      monthly: "$14",
+      yearly: "$126",
+      lifetime: "$99",
     },
-    items: [
-      { zh: "发布和运营全流程工具开放", en: "Full publish and operations tools" },
-      { zh: "一键发布 Foundry", en: "One-click publishing to Foundry" },
-      { zh: "子代理网络", en: "Subagent network" },
+    priceSubtexts: {
+      monthly: "/ month",
+      yearly: "/ year",
+      lifetime: "Founding Lifetime Access",
+    },
+    futureAnchor: "Future price: $199+",
+    cta: "Get Master",
+    hrefs: {
+      monthly: "/checkout/master-monthly",
+      yearly: "/checkout/master-yearly",
+      lifetime: "/checkout/master-lifetime",
+    },
+    features: [
+      "Everything in Builder",
+      "Full local publishing and operation workflow",
+      "Early Foundry publishing access",
+      "Sub-agent network features",
+      "Priority access to ecosystem experiments",
+      "Founding Master status",
+      "Better fit for serious Field creators",
     ],
+    note: "Master is for early creators who want to help shape the Fount ecosystem. Future cloud hosting, paid compute, team collaboration, and marketplace promotion may require separate plans.",
+    featured: true,
+  },
+];
+
+const FOUNT_COMPARISON_ROWS: ComparisonRow[] = [
+  { feature: "Connect with Fount", player: "Yes", builder: "Yes", master: "Yes" },
+  { feature: "Basic sub-agents", player: "Yes", builder: "Yes", master: "Yes" },
+  { feature: "Basic card workspace", player: "Yes", builder: "Yes", master: "Yes" },
+  { feature: "Basic whiteboard workspace", player: "Yes", builder: "Yes", master: "Yes" },
+  { feature: "Forge toolkit", player: "-", builder: "Yes", master: "Yes" },
+  { feature: "Build custom Fields", player: "Limited", builder: "Yes", master: "Yes" },
+  { feature: "Automated card generation", player: "Limited", builder: "Yes", master: "Yes" },
+  { feature: "High-quality agent response experience", player: "-", builder: "Yes", master: "Yes" },
+  { feature: "Advanced card and whiteboard workflows", player: "-", builder: "Yes", master: "Yes" },
+  { feature: "Local publishing workflow", player: "-", builder: "Limited", master: "Yes" },
+  { feature: "Foundry early publishing access", player: "-", builder: "-", master: "Yes" },
+  { feature: "Sub-agent network features", player: "-", builder: "Limited", master: "Yes" },
+  { feature: "Early access to new local features", player: "-", builder: "Yes", master: "Priority" },
+  { feature: "Founding ecosystem status", player: "-", builder: "Builder", master: "Master" },
+  { feature: "Future cloud services", player: "Separate", builder: "Separate", master: "Separate" },
+];
+
+const FOUNDING_INCLUDED = [
+  "Local Fount experience",
+  "Local Forge and Field workflows",
+  "Card and whiteboard features included in your plan",
+  "Early local feature updates",
+  "Founding ecosystem status",
+];
+
+const FOUNDING_NOT_INCLUDED = [
+  "Cloud sync",
+  "Hosted agent runtime",
+  "Paid model or compute usage",
+  "Team collaboration",
+  "Commercial Foundry promotion",
+  "Marketplace growth services",
+  "Enterprise or managed services",
+];
+
+const FOUNT_PRICING_FAQ: PricingFaqItem[] = [
+  {
+    question: "Is Player really free forever?",
+    answer:
+      "Yes. Player is free forever. It is designed as the entry point into Fount, with basic connection, sub-agent, card, and whiteboard experiences.",
+  },
+  {
+    question: "What is the difference between Builder and Master?",
+    answer:
+      "Builder is for creating Fields with Forge. It includes the local toolkit, automated card generation, high-quality agent response experience, and advanced creation workflows. Master is for founding creators who want the full local publishing and operation workflow, early Foundry publishing access, sub-agent network features, and a stronger role in shaping the Fount ecosystem.",
+  },
+  {
+    question: "What does Founding Lifetime include?",
+    answer:
+      "Founding Lifetime includes long-term access to the local Fount experience included in your plan. It is an early supporter offer for users who join before the product is fully mature. It includes the local core experience, Forge/Field workflows, and early access to local feature updates.",
+  },
+  {
+    question: "Does Founding Lifetime include all future cloud services?",
+    answer:
+      "No. Future cloud services may require separate plans. This includes cloud sync, hosted agent runtime, paid compute, team collaboration, commercial Foundry promotion, marketplace growth services, and enterprise services.",
+  },
+  {
+    question: "Why is the price lower during early access?",
+    answer:
+      "The product is still evolving. Early users receive a lower price because they are joining earlier, giving feedback, and helping shape the Fount ecosystem. As Fount becomes more complete, pricing may increase.",
+  },
+  {
+    question: "Can I upgrade from Builder to Master later?",
+    answer:
+      "Upgrade support will be available during early access. The exact upgrade price can be calculated based on the product's purchase system.",
+  },
+  {
+    question: "Can I use Fount without cloud services?",
+    answer:
+      "Yes. Fount is currently local-first. The core experience is designed to work without cloud services.",
+  },
+  {
+    question: "Who should choose Master?",
+    answer:
+      "Choose Master if you want to publish, operate, and organize Fields more seriously, explore sub-agent network features, and become part of the founding layer of the Fount ecosystem.",
+  },
+  {
+    question: "Will prices increase later?",
+    answer:
+      "Yes. Founding prices are early access prices and may increase as the product becomes more mature.",
+  },
+  {
+    question: "Is this for developers only?",
+    answer:
+      "No. Fount is not only for developers. It is for anyone who wants to create and organize AI Fields, including creators, designers, independent builders, researchers, educators, and people exploring personal agents.",
   },
 ];
 
@@ -2019,70 +2145,272 @@ function FountPricingSection({
   lang: Lang;
   standalone?: boolean;
 }) {
-  const copy = COPY[lang];
-  const text = (value: LocalizedText) => value[lang];
+  const [billingMode, setBillingMode] = useState<BillingMode>("lifetime");
+  const billingNote =
+    billingMode === "lifetime"
+      ? "Limited early access offer. Pay once for long-term access to the local product experience. Future cloud services may require separate plans."
+      : "Founding Lifetime is a limited early access offer for the local Fount experience. It does not include future high-cost cloud services.";
+  const foundingHref = FOUNT_PRICING_PLANS.find((plan) => plan.id === "master")?.hrefs.lifetime ?? "#pricing-cards";
+  const playerHref = FOUNT_PRICING_PLANS[0]?.hrefs.lifetime ?? "/Fount.dmg";
 
   return (
     <section
-      className={`fount-section fount-pricing-section${standalone ? " fount-pricing-page-section" : ""}`}
+      className={`fount-section fount-pricing-section fount-pricing-longform${standalone ? " fount-pricing-page-section" : ""}`}
       id="pricing"
+      data-lang={lang}
     >
-      <div className="fount-section-head fount-section-head-wide">
-        {standalone ? (
-          <div>
-            <p className="fount-pricing-page-label">{copy.navPricing}</p>
+      <div className="fount-pricing-hero">
+        <div className="fount-pricing-hero-copy">
+          <p className="fount-pricing-page-label">Pricing</p>
+          <h1>Build your own AI Field.</h1>
+          <p className="fount-pricing-hero-lead">
+            Fount is a local-first personal agent framework for creating Fields - living workspaces where agents, cards,
+            memories, tools, and workflows can grow together.
+          </p>
+          <p className="fount-pricing-hero-support">
+            Start free with Player, build with Forge in Builder, and join the founding layer of the Fount ecosystem with Master.
+          </p>
+          <div className="fount-pricing-actions">
+            <a className="fount-pricing-primary-action" href={foundingHref}>
+              Get Founding Access
+            </a>
+            <a className="fount-pricing-secondary-action" href={playerHref}>
+              Start with Player
+            </a>
           </div>
-        ) : (
-          <h2>{copy.navPricing}</h2>
-        )}
-        <p>{copy.pricingLead}</p>
+          <small>Early access pricing. Local-first product. Future cloud services may require separate plans.</small>
+        </div>
+        <div className="fount-pricing-hero-board" aria-hidden="true">
+          <span>Agent</span>
+          <span>Card</span>
+          <span>Field</span>
+          <span>Forge</span>
+          <span>Memory</span>
+          <span>Workflow</span>
+        </div>
       </div>
-      <div className="fount-pricing-grid fount-pricing-grid-focused">
-        {PRICING_TIERS.map((tier) => {
-          const price = text(tier.price).trim();
-          const currency = tier.priceCurrency ? text(tier.priceCurrency).trim() : "";
-          const unit = tier.priceUnit ? text(tier.priceUnit).trim() : "";
 
-          return (
+      <div className="fount-early-access-note">
+        <span className="fount-note-icon">seed</span>
+        <div>
+          <strong>Early Access</strong>
+          <h2>Fount is still in early access.</h2>
+          <p>
+            The founding prices below are lower because the product is still evolving. Early users get long-term access
+            to the local core experience, direct influence on the roadmap, and a place in the first layer of the Fount
+            ecosystem.
+          </p>
+          <p>
+            Future cloud services, hosted agent runtime, paid compute, team collaboration, and marketplace promotion may
+            require separate plans.
+          </p>
+        </div>
+      </div>
+
+      <div className="fount-billing-tabs" aria-label="Purchase mode">
+        <div className="fount-billing-tab-list" role="tablist" aria-label="Billing mode">
+          {BILLING_MODES.map((mode) => (
+            <button
+              type="button"
+              role="tab"
+              aria-selected={billingMode === mode.id}
+              className={billingMode === mode.id ? "active" : ""}
+              key={mode.id}
+              onClick={() => setBillingMode(mode.id)}
+            >
+              {mode.label}
+            </button>
+          ))}
+        </div>
+        <p>{billingNote}</p>
+      </div>
+
+      <div className="fount-pricing-grid fount-pricing-grid-focused" id="pricing-cards">
+        {FOUNT_PRICING_PLANS.map((plan) => (
             <article
-              className={`fount-pricing-card fount-pricing-tier${tier.undetermined ? " fount-pricing-tier-undetermined" : ""}`}
-              data-state={tier.undetermined ? "undetermined" : "available"}
-              key={tier.name}
+              className={`fount-pricing-card fount-pricing-tier fount-pricing-plan-${plan.id}${plan.featured ? " fount-pricing-tier-featured" : ""}`}
+              id={`pricing-${plan.id}`}
+              key={plan.id}
             >
               <div className="fount-pricing-tier-head">
-                <h3>{tier.name}</h3>
-                <span>{text(tier.title)}</span>
+                <div>
+                  <span className="fount-plan-badge">{plan.badge}</span>
+                  <h3>{plan.name}</h3>
+                </div>
+                {plan.sticker ? <span className="fount-plan-sticker">{plan.sticker}</span> : null}
               </div>
-              {price ? (
-                <div className="fount-pricing-price" aria-label={`${currency}${price} ${unit}`.trim()}>
-                  {currency ? <span className="fount-pricing-currency">{currency}</span> : null}
-                  <strong className="fount-pricing-amount">{price}</strong>
-                  {unit ? <span className="fount-pricing-unit">{unit}</span> : null}
-                </div>
-              ) : null}
-              {tier.priceNote ? <p className="fount-pricing-price-note">{text(tier.priceNote)}</p> : null}
-              {tier.priceOptions?.length ? (
-                <div className="fount-pricing-offers" aria-label={`${tier.name} pricing options`}>
-                  {tier.priceOptions.map((option) => (
-                    <div
-                      className={`fount-pricing-offer${option.highlight ? " fount-pricing-offer-highlight" : ""}`}
-                      key={text(option.label)}
-                    >
-                      <span>{text(option.label)}</span>
-                      <strong>{text(option.value)}</strong>
-                    </div>
+              <p className="fount-plan-description">{plan.description}</p>
+              <div className="fount-pricing-price" aria-label={`${plan.name} ${plan.prices[billingMode]}`}>
+                <strong className="fount-pricing-amount">{plan.prices[billingMode]}</strong>
+                <span className="fount-pricing-unit">{plan.priceSubtexts[billingMode]}</span>
+              </div>
+              {billingMode === "yearly" && plan.id !== "player" ? <span className="fount-save-badge">Save 25%</span> : null}
+              {plan.futureAnchor ? <p className="fount-pricing-price-note">{plan.futureAnchor}</p> : null}
+              <a className={plan.featured ? "fount-pricing-primary-action" : "fount-pricing-secondary-action"} href={plan.hrefs[billingMode]}>
+                {plan.cta}
+              </a>
+              <div className="fount-plan-includes">
+                <span>Includes</span>
+                <ul>
+                  {plan.features.map((feature) => (
+                    <li key={feature}>{feature}</li>
                   ))}
-                </div>
-              ) : null}
-              <p>{text(tier.body)}</p>
-              <ul>
-                {tier.items.map((item) => (
-                  <li key={text(item)}>{text(item)}</li>
-                ))}
-              </ul>
+                </ul>
+              </div>
+              <p className="fount-plan-note">{plan.note}</p>
             </article>
-          );
-        })}
+        ))}
+      </div>
+
+      <div className="fount-comparison-section">
+        <div className="fount-pricing-section-title">
+          <p>Plan comparison</p>
+          <h2>Choose by how far you want to take your Fields.</h2>
+        </div>
+        <div className="fount-comparison-table-wrap">
+          <table className="fount-comparison-table">
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th>Player</th>
+                <th>Builder</th>
+                <th>Master</th>
+              </tr>
+            </thead>
+            <tbody>
+              {FOUNT_COMPARISON_ROWS.map((row) => (
+                <tr key={row.feature}>
+                  <th scope="row">{row.feature}</th>
+                  <td>{row.player}</td>
+                  <td>{row.builder}</td>
+                  <td>{row.master}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div className="fount-founding-section">
+        <div className="fount-pricing-section-title">
+          <p>Founding Lifetime</p>
+          <h2>What does Founding Lifetime mean?</h2>
+        </div>
+        <div className="fount-founding-copy">
+          <p>
+            Founding Lifetime Access is an early supporter offer. You pay once and receive long-term access to the local
+            Fount experience included in your plan. It is designed for early users who want to support the product before
+            it is fully mature and help shape the Fount ecosystem from the beginning.
+          </p>
+          <p>
+            It includes the local core experience, Forge/Field creation features, and early access to the evolving
+            ecosystem. It does not mean every future cloud service, hosted runtime, paid compute, team collaboration
+            feature, or marketplace promotion service will be free forever.
+          </p>
+        </div>
+        <div className="fount-founding-grid">
+          <article className="fount-founding-card fount-founding-card-included">
+            <h3>Included</h3>
+            <ul>
+              {FOUNDING_INCLUDED.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </article>
+          <article className="fount-founding-card">
+            <h3>Not automatically included</h3>
+            <ul>
+              {FOUNDING_NOT_INCLUDED.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </article>
+        </div>
+        <a className="fount-pricing-primary-action" href={foundingHref}>
+          Get Founding Access
+        </a>
+      </div>
+
+      <div className="fount-cloud-boundary">
+        <div>
+          <p>Cloud boundary</p>
+          <h2>Local-first now. Cloud later.</h2>
+          <p>
+            Fount is currently focused on the local-first experience. You can use the core framework, build Fields, work
+            with cards and agents, and explore the ecosystem without relying on cloud services.
+          </p>
+          <p>
+            In the future, Fount may introduce optional cloud services such as sync, hosted agent runtime, team
+            collaboration, paid compute, and Foundry promotion. These services may have separate pricing because they
+            carry ongoing infrastructure costs.
+          </p>
+        </div>
+        <div className="fount-cloud-diagram" aria-hidden="true">
+          <span>Future optional cloud layer</span>
+          <div>Local Fount</div>
+          <b>{"->"}</b>
+          <div>Fields</div>
+          <b>{"->"}</b>
+          <div>Foundry</div>
+        </div>
+      </div>
+
+      <div className="fount-partner-cta">
+        <div>
+          <p>Partner Program</p>
+          <h2>Want to help grow the Fount ecosystem?</h2>
+          <p>
+            If you create tutorials, videos, newsletters, templates, workflows, or communities around AI agents and
+            creative tools, you can join the Fount Partner Program.
+          </p>
+          <p>
+            Partners can earn commission, receive early access, and help bring the first generation of Fields into the
+            ecosystem.
+          </p>
+          <small>Best for creators, educators, community owners, and AI agent builders.</small>
+        </div>
+        <a className="fount-pricing-secondary-action" href="mailto:parsonjian@gmail.com?subject=Fount%20Partner%20Program">
+          Join Partner Program
+        </a>
+      </div>
+
+      <div className="fount-pricing-faq">
+        <div className="fount-pricing-section-title">
+          <p>FAQ</p>
+          <h2>Clear boundaries before you buy.</h2>
+        </div>
+        <div className="fount-pricing-faq-list">
+          {FOUNT_PRICING_FAQ.map((item, index) => (
+            <details className="fount-pricing-faq-item" key={item.question} open={index === 0}>
+              <summary>{item.question}</summary>
+              <p>{item.answer}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+
+      <div className="fount-pricing-final-cta">
+        <div className="fount-floating-card-cloud" aria-hidden="true">
+          {["Agent", "Card", "Field", "Forge", "Foundry", "Memory", "Workflow"].map((label) => (
+            <span key={label}>{label}</span>
+          ))}
+        </div>
+        <div>
+          <h2>Join the founding layer of Fount.</h2>
+          <p>
+            Start free with Player, build your first Field with Builder, or become a founding Master and help shape the
+            future of the Fount ecosystem.
+          </p>
+          <div className="fount-pricing-actions">
+            <a className="fount-pricing-primary-action" href={foundingHref}>
+              Get Founding Access
+            </a>
+            <a className="fount-pricing-secondary-action" href={playerHref}>
+              Start Free
+            </a>
+          </div>
+          <small>Local-first early access. Future cloud services may require separate plans.</small>
+        </div>
       </div>
     </section>
   );
