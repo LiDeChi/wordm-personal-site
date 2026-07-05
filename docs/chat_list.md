@@ -441,3 +441,8 @@
 
 - 需求:  # In app browser: - The user has the in-app browser open with 1 tab. - Current URL: http://localhost:5173/?lang=zh  ## My request for Codex: 博客跳转去的页面跟主页明显不同； 而且主页的色调跟其他也不同； 
 - 状态: 已完成
+
+## 2026-07-05 16:42 +0800
+
+- 需求:  # In app browser: - The user has the in-app browser open with 1 tab. - Current URL: http://localhost:5173/?view=pricing&lang=zh&qa-pricing-centered=1783239557792  ## My request for Codex: 要强调这是买Forge的价格而不是Fount的，Fount是免费的 
+- 状态: 已完成
