@@ -4,7 +4,7 @@ import type {
   MouseEvent as ReactMouseEvent,
 } from "react";
 import { AccountEntryCard } from "./components/AccountEntryCard";
-import { LoginPage } from "./components/LoginPage";
+import { LoginPage, type AccountTier } from "./components/LoginPage";
 import { AdminPage } from "./components/AdminPage";
 import { FountHomePage } from "./components/FountHomePage";
 import { OneAgentProductPage } from "./components/OneAgentProductPage";
@@ -71,6 +71,12 @@ import {
   savePricingConfigFromSupabase,
 } from "./lib/pricing-remote";
 import {
+  fetchSiteAnalyticsEvents,
+  isDownloadHref,
+  trackSiteEvent,
+  type SiteAnalyticsRecord,
+} from "./lib/site-analytics";
+import {
   type AuthRoleRulesJson,
   type AuthRole,
   type AuthRoleRules,
@@ -104,6 +110,7 @@ type RootView =
   | "login"
   | "about"
   | "pricing"
+  | "partners"
   | "updates";
 type UnlockStorageMode = "remote" | "local" | "loading" | "idle";
 type ThemeMode = "day" | "night";
@@ -912,6 +919,16 @@ function toRootView(raw: string | null, pathname: string): RootView {
   if (pathname === "/pricing" || pathname === "/pricing/") {
     return "pricing";
   }
+  if (
+    pathname === "/partners" ||
+    pathname === "/partners/" ||
+    pathname === "/affiliate" ||
+    pathname === "/affiliate/" ||
+    pathname === "/partner-program" ||
+    pathname === "/partner-program/"
+  ) {
+    return "partners";
+  }
   if (pathname === "/updates" || pathname === "/updates/") {
     return "updates";
   }
@@ -924,6 +941,9 @@ function toRootView(raw: string | null, pathname: string): RootView {
   }
   if (raw === "pricing") {
     return "pricing";
+  }
+  if (raw === "partners" || raw === "affiliate" || raw === "partner-program") {
+    return "partners";
   }
   if (raw === "blog") {
     return "blog";
@@ -993,13 +1013,13 @@ function relativeRootHref(view: RootView, lang: Lang) {
     url.searchParams.set("view", "about");
   } else if (view === "pricing") {
     url.searchParams.set("view", "pricing");
+  } else if (view === "partners") {
+    url.pathname = "/partners";
   } else if (view === "updates") {
     url.searchParams.set("view", "updates");
   }
 
-  if (lang === "en") {
-    url.searchParams.set("lang", "en");
-  }
+  url.searchParams.set("lang", lang);
 
   const search = url.searchParams.toString();
   return `${url.pathname}${search ? `?${search}` : ""}`;
@@ -1224,6 +1244,14 @@ function App() {
   const [lastCreatedShareId, setLastCreatedShareId] = useState<string | null>(
     null,
   );
+  const [analyticsEvents, setAnalyticsEvents] = useState<
+    SiteAnalyticsRecord[]
+  >([]);
+  const [analyticsBusy, setAnalyticsBusy] = useState(false);
+  const [analyticsStatusMessage, setAnalyticsStatusMessage] = useState("");
+  const analyticsPageStartedAtRef = useRef(Date.now());
+  const analyticsPageKeyRef = useRef<string | null>(null);
+  const analyticsPageMetadataRef = useRef<Record<string, unknown>>({});
   const [selectedSlugs, setSelectedSlugs] = useState<string[]>(() => {
     if (initialShowSlugs.length) {
       return initialShowSlugs;
@@ -1289,12 +1317,19 @@ function App() {
   }, [themeMode]);
 
   useEffect(() => {
+    if (rootView === "blog") {
+      document.title = lang === "zh" ? "Fount 博客 | Notes" : "Fount Blog | Notes";
+    }
+  }, [lang, rootView]);
+
+  useEffect(() => {
     if (isOneAgentProductPage) {
       return;
     }
 
     const next = new URL(window.location.href);
-    next.pathname = rootView === "blog" ? "/blog" : "/";
+    next.pathname =
+      rootView === "blog" ? "/blog" : rootView === "partners" ? "/partners" : "/";
 
     if (rootView === "login") {
       next.searchParams.set("view", "login");
@@ -1306,17 +1341,15 @@ function App() {
       next.searchParams.set("view", "about");
     } else if (rootView === "pricing") {
       next.searchParams.set("view", "pricing");
+    } else if (rootView === "partners") {
+      next.searchParams.delete("view");
     } else if (rootView === "updates") {
       next.searchParams.set("view", "updates");
     } else {
       next.searchParams.delete("view");
     }
 
-    if (lang === "en") {
-      next.searchParams.set("lang", "en");
-    } else {
-      next.searchParams.delete("lang");
-    }
+    next.searchParams.set("lang", lang);
 
     if (selectedProjectSlug && (rootView === "portfolio" || rootView === "about")) {
       next.searchParams.set("project", selectedProjectSlug);
@@ -1730,6 +1763,23 @@ function App() {
     }
 
     if (authUser) {
+      const pendingAt = readGoogleOAuthPendingAt();
+      if (pendingAt) {
+        void trackSiteEvent(authConfig, {
+          eventType: "login",
+          userRole: authUser.role,
+          metadata: {
+            rootView,
+            lang,
+            selectedProjectSlug,
+            activeBlogArticleId,
+            shareMode: Boolean(shareToken),
+            method: "google",
+            outcome: "success",
+            pendingMs: Date.now() - pendingAt,
+          },
+        });
+      }
       clearGoogleOAuthPending();
       setAuthBusy(false);
       return;
@@ -1780,8 +1830,14 @@ function App() {
     authEnabled,
     authLoading,
     authUser,
+    authConfig,
+    activeBlogArticleId,
     copy.googleLoggingIn,
     copy.googleLoginCancelled,
+    lang,
+    rootView,
+    selectedProjectSlug,
+    shareToken,
   ]);
 
   useEffect(() => {
@@ -1933,11 +1989,7 @@ function App() {
     }
 
     next.searchParams.set("view", "portfolio");
-    if (lang === "en") {
-      next.searchParams.set("lang", "en");
-    } else {
-      next.searchParams.delete("lang");
-    }
+    next.searchParams.set("lang", lang);
     return next.toString();
   }
 
@@ -1956,11 +2008,7 @@ function App() {
     }
 
     next.searchParams.set("view", "portfolio");
-    if (lang === "en") {
-      next.searchParams.set("lang", "en");
-    } else {
-      next.searchParams.delete("lang");
-    }
+    next.searchParams.set("lang", lang);
     return next.toString();
   }
 
@@ -2376,6 +2424,34 @@ function App() {
     }
   }
 
+  function analyticsContext(extra: Record<string, unknown> = {}) {
+    return {
+      ...analyticsBaseMetadata,
+      ...extra,
+    };
+  }
+
+  async function handleAnalyticsReload() {
+    if (!canManagePricing) {
+      setAnalyticsEvents([]);
+      setAnalyticsStatusMessage(copy.shareListLoadFailed);
+      return;
+    }
+
+    setAnalyticsBusy(true);
+    setAnalyticsStatusMessage("");
+
+    try {
+      const events = await fetchSiteAnalyticsEvents(authConfig, 100);
+      setAnalyticsEvents(events);
+    } catch (error) {
+      const detail = normalizeAuthError(error, "ANALYTICS_LIST_FAILED");
+      setAnalyticsStatusMessage(detail);
+    } finally {
+      setAnalyticsBusy(false);
+    }
+  }
+
   async function handleAuthLogin(email: string, password: string) {
     if (!authEnabled) {
       setAuthStatusMessage(copy.authUnavailable);
@@ -2399,6 +2475,11 @@ function App() {
           ? withEmail(copy.loginSuccess, normalizedUser.email)
           : withDone(copy.loginSuccess, lang),
       );
+      void trackSiteEvent(authConfig, {
+        eventType: "login",
+        userRole: normalizedUser?.role ?? "user",
+        metadata: analyticsContext({ method: "password", outcome: "success" }),
+      });
 
     } catch (loginError) {
       const detail = normalizeAuthError(loginError, copy.loginFallback);
@@ -2432,6 +2513,11 @@ function App() {
 
       if (result.outcome === "confirm") {
         setAuthStatusMessage(copy.confirmEmail);
+        void trackSiteEvent(authConfig, {
+          eventType: "signup",
+          userRole: "guest",
+          metadata: analyticsContext({ method: "password", outcome: "confirm" }),
+        });
         return;
       }
 
@@ -2442,6 +2528,11 @@ function App() {
           ? withEmail(copy.signupAndLoginSuccess, normalizedUser.email)
           : withDone(copy.signupSuccess, lang),
       );
+      void trackSiteEvent(authConfig, {
+        eventType: "signup",
+        userRole: normalizedUser?.role ?? "user",
+        metadata: analyticsContext({ method: "password", outcome: "session" }),
+      });
 
     } catch (signupError) {
       const detail = normalizeAuthError(signupError, copy.signupFallback);
@@ -2474,6 +2565,11 @@ function App() {
           ? withEmail(copy.loginSuccess, normalizedUser.email)
           : withDone(copy.loginSuccess, lang),
       );
+      void trackSiteEvent(authConfig, {
+        eventType: "login",
+        userRole: normalizedUser?.role ?? "user",
+        metadata: analyticsContext({ method: "password", outcome: "success", source: "combined_submit" }),
+      });
     } catch (loginError) {
       try {
         const result = await signupWithPassword(authConfig, email, password);
@@ -2485,6 +2581,11 @@ function App() {
 
         if (result.outcome === "confirm") {
           setAuthStatusMessage(copy.confirmEmail);
+          void trackSiteEvent(authConfig, {
+            eventType: "signup",
+            userRole: "guest",
+            metadata: analyticsContext({ method: "password", outcome: "confirm", source: "combined_submit" }),
+          });
           return;
         }
 
@@ -2495,6 +2596,11 @@ function App() {
             ? withEmail(copy.signupAndLoginSuccess, normalizedUser.email)
             : withDone(copy.signupSuccess, lang),
         );
+        void trackSiteEvent(authConfig, {
+          eventType: "signup",
+          userRole: normalizedUser?.role ?? "user",
+          metadata: analyticsContext({ method: "password", outcome: "session", source: "combined_submit" }),
+        });
       } catch {
         const detail = normalizeAuthError(loginError, copy.loginFallback);
         setAuthStatusMessage(withDetail(copy.loginFailed, detail));
@@ -2515,6 +2621,11 @@ function App() {
     setAuthStatusMessage(copy.googleLoggingIn);
 
     try {
+      void trackSiteEvent(authConfig, {
+        eventType: "login",
+        userRole: "guest",
+        metadata: analyticsContext({ method: "google", outcome: "started" }),
+      });
       const redirected = await loginWithGoogle(authConfig, redirectTo);
 
       if (!redirected) {
@@ -2539,6 +2650,12 @@ function App() {
     setAuthStatusMessage(copy.loggingOut);
 
     try {
+      await trackSiteEvent(authConfig, {
+        eventType: "logout",
+        userRole: authRole,
+        metadata: analyticsContext({ outcome: "success" }),
+        flush: true,
+      });
       await logout(authConfig);
       setAuthUser(null);
       setAuthStatusMessage(copy.logoutSuccess);
@@ -2620,6 +2737,24 @@ function App() {
   const isAdminView = forcedPage === "admin" || hostname === "admin.wordm.us";
 
   const authRole: AuthRole = authUser?.role ?? "guest";
+  const analyticsBaseMetadata = useMemo(
+    () => ({
+      rootView,
+      lang,
+      selectedProjectSlug,
+      activeBlogArticleId,
+      subdomainProjectSlug: subdomainProject?.slug ?? null,
+      shareMode: Boolean(shareToken),
+    }),
+    [
+      activeBlogArticleId,
+      lang,
+      rootView,
+      selectedProjectSlug,
+      shareToken,
+      subdomainProject?.slug,
+    ],
+  );
   const projectOfferStates = useMemo(() => {
     const next = new Map<string, ProjectOfferState>();
     for (const project of projects) {
@@ -2633,6 +2768,39 @@ function App() {
   const canManageShares =
     isAdminHost || authRole === "admin" || authRole === "tester";
   const canManagePricing = authRole === "admin" || authRole === "tester";
+  useEffect(() => {
+    if (!isAdminView || !canManagePricing) {
+      setAnalyticsEvents([]);
+      return;
+    }
+
+    let active = true;
+    setAnalyticsBusy(true);
+    setAnalyticsStatusMessage("");
+
+    void fetchSiteAnalyticsEvents(authConfig, 100)
+      .then((events) => {
+        if (active) {
+          setAnalyticsEvents(events);
+        }
+      })
+      .catch((error) => {
+        if (active) {
+          setAnalyticsStatusMessage(
+            normalizeAuthError(error, "ANALYTICS_LIST_FAILED"),
+          );
+        }
+      })
+      .finally(() => {
+        if (active) {
+          setAnalyticsBusy(false);
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [authConfig, canManagePricing, isAdminView]);
   const shareEntryUrl =
     shareToken && shareAccess
       ? buildShareEntryUrl(shareToken, lang, shareAccess.scope, projects)
@@ -2643,6 +2811,76 @@ function App() {
   );
   const unlockActionDisabled =
     unlockBusy || checkoutBusyKind !== null || unlockStorageMode === "loading";
+  const accountPlanSummary = useMemo(() => {
+    if (authRole === "admin" || authRole === "tester") {
+      return {
+        tier: "privileged" as AccountTier,
+        unlockedProjectCount: projects.length,
+      };
+    }
+
+    const grants = unlockState?.grants ?? [];
+    const directPaidProjectSlugs = new Set<string>();
+    const directUnlockedProjectSlugs = new Set<string>();
+    const allCurrentProjectSlugs = new Set<string>();
+    let hasAllAccess = false;
+    let hasAllCurrent = false;
+
+    for (const grant of grants) {
+      if (grant.kind === "all_access" || grant.kind === "all_current_plus_year") {
+        hasAllAccess = true;
+      }
+
+      if (grant.kind === "all_current") {
+        hasAllCurrent = true;
+        for (const slug of grant.catalogSlugs ?? []) {
+          allCurrentProjectSlugs.add(slug);
+        }
+      }
+
+      if ((grant.kind === "single" || grant.kind === "free_pick") && grant.projectSlug) {
+        directUnlockedProjectSlugs.add(grant.projectSlug);
+        if (grant.kind === "single") {
+          directPaidProjectSlugs.add(grant.projectSlug);
+        }
+      }
+    }
+
+    if (hasAllAccess) {
+      return {
+        tier: "all_access" as AccountTier,
+        unlockedProjectCount: projects.length,
+      };
+    }
+
+    if (hasAllCurrent) {
+      return {
+        tier: "all_current" as AccountTier,
+        unlockedProjectCount:
+          allCurrentProjectSlugs.size || projectCatalogSlugs.length,
+      };
+    }
+
+    if (directPaidProjectSlugs.size) {
+      return {
+        tier: "single" as AccountTier,
+        unlockedProjectCount: directUnlockedProjectSlugs.size,
+      };
+    }
+
+    return {
+      tier: "free" as AccountTier,
+      unlockedProjectCount: directUnlockedProjectSlugs.size,
+    };
+  }, [authRole, projectCatalogSlugs, projects.length, unlockState]);
+  const accountSinglePriceLabel =
+    lang === "zh"
+      ? pricingConfig.singleUnlock.defaultPriceZh
+      : pricingConfig.singleUnlock.defaultPriceEn;
+  const accountAllAccessPriceLabel =
+    lang === "zh"
+      ? pricingConfig.allAccess.priceZh
+      : pricingConfig.allAccess.priceEn;
   const subdomainProjectPaidAccess = subdomainProject
     ? hasProjectPremiumAccess(subdomainProject.slug, authRole, unlockState) ||
       canShareAccessProject(subdomainProject.slug, shareAccess)
@@ -2706,6 +2944,178 @@ function App() {
       ),
     [selectedHomeProductKeySet],
   );
+
+  useEffect(() => {
+    if (!authEnabled || authLoading) {
+      return;
+    }
+
+    const pageKey = [
+      window.location.pathname,
+      window.location.search,
+      rootView,
+      lang,
+      selectedProjectSlug ?? "",
+      activeBlogArticleId ?? "",
+      subdomainProject?.slug ?? "",
+    ].join("|");
+    const now = Date.now();
+    const previousPageKey = analyticsPageKeyRef.current;
+
+    if (previousPageKey === pageKey) {
+      analyticsPageMetadataRef.current = analyticsBaseMetadata;
+      return;
+    }
+
+    if (previousPageKey && previousPageKey !== pageKey) {
+      const durationMs = now - analyticsPageStartedAtRef.current;
+      if (durationMs >= 1000) {
+        void trackSiteEvent(authConfig, {
+          eventType: "engagement",
+          userRole: authRole,
+          durationMs,
+          metadata: {
+            ...analyticsPageMetadataRef.current,
+            trigger: "route_change",
+          },
+          flush: true,
+        });
+      }
+    }
+
+    analyticsPageKeyRef.current = pageKey;
+    analyticsPageStartedAtRef.current = now;
+    analyticsPageMetadataRef.current = analyticsBaseMetadata;
+
+    void trackSiteEvent(authConfig, {
+      eventType: "page_view",
+      userRole: authRole,
+      metadata: analyticsBaseMetadata,
+    });
+  }, [
+    activeBlogArticleId,
+    analyticsBaseMetadata,
+    authConfig,
+    authEnabled,
+    authLoading,
+    authRole,
+    lang,
+    rootView,
+    selectedProjectSlug,
+    subdomainProject?.slug,
+  ]);
+
+  useEffect(() => {
+    if (!authEnabled || typeof window === "undefined" || typeof document === "undefined") {
+      return;
+    }
+
+    const flushEngagement = (trigger: string) => {
+      const durationMs = Date.now() - analyticsPageStartedAtRef.current;
+      if (durationMs < 1000) {
+        return;
+      }
+
+      analyticsPageStartedAtRef.current = Date.now();
+      void trackSiteEvent(authConfig, {
+        eventType: "engagement",
+        userRole: authRole,
+        durationMs,
+        metadata: {
+          ...analyticsPageMetadataRef.current,
+          trigger,
+        },
+        flush: true,
+      });
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "hidden") {
+        flushEngagement("visibility_hidden");
+      }
+    };
+    const handlePageHide = () => flushEngagement("page_hide");
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("pagehide", handlePageHide);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("pagehide", handlePageHide);
+    };
+  }, [authConfig, authEnabled, authRole]);
+
+  useEffect(() => {
+    if (!authEnabled || typeof document === "undefined") {
+      return;
+    }
+
+    const handleDocumentClick = (event: MouseEvent) => {
+      const source = event.target instanceof Element ? event.target : null;
+      const target = source?.closest<HTMLElement>(
+        "a, button, [role='button'], [data-analytics]",
+      );
+      if (!target) {
+        return;
+      }
+
+      const interactiveFormField = source?.closest(
+        "input, textarea, select, [contenteditable='true']",
+      );
+      if (interactiveFormField && interactiveFormField === source) {
+        return;
+      }
+
+      const anchor = target.closest("a") as HTMLAnchorElement | null;
+      const href = anchor?.href ?? target.getAttribute("data-href") ?? null;
+      const label =
+        target.getAttribute("data-analytics") ||
+        target.getAttribute("aria-label") ||
+        target.getAttribute("title") ||
+        target.textContent ||
+        "";
+      const elementTag = target.tagName.toLowerCase();
+      const metadata = {
+        ...analyticsBaseMetadata,
+        targetId: target.id || null,
+        targetRole: target.getAttribute("role"),
+        targetType: target.getAttribute("type"),
+      };
+
+      void trackSiteEvent(authConfig, {
+        eventType: "click",
+        userRole: authRole,
+        elementTag,
+        elementLabel: label,
+        elementHref: href,
+        metadata,
+      });
+
+      if (anchor && (anchor.hasAttribute("download") || isDownloadHref(href))) {
+        void trackSiteEvent(authConfig, {
+          eventType: "download",
+          userRole: authRole,
+          elementTag,
+          elementLabel: label,
+          elementHref: href,
+          downloadUrl: href,
+          downloadName:
+            anchor.getAttribute("download") ||
+            anchor.textContent ||
+            anchor.href.split("/").pop() ||
+            null,
+          metadata,
+          flush: true,
+        });
+      }
+    };
+
+    document.addEventListener("click", handleDocumentClick, true);
+
+    return () => {
+      document.removeEventListener("click", handleDocumentClick, true);
+    };
+  }, [analyticsBaseMetadata, authConfig, authEnabled, authRole]);
 
   useEffect(() => {
     if (typeof document === "undefined" || !projectModalOpen) {
@@ -3149,6 +3559,9 @@ function App() {
         pricingBusy={pricingBusy}
         pricingStatusMessage={pricingStatusMessage}
         pricingConfig={adminPricingConfig}
+        analyticsBusy={analyticsBusy}
+        analyticsStatusMessage={analyticsStatusMessage}
+        analyticsEvents={analyticsEvents}
         onToggleProject={(slug) => {
           setSelectedSlugs((prev) => {
             if (prev.includes(slug)) {
@@ -3192,6 +3605,7 @@ function App() {
         onPricingConfigChange={setAdminPricingConfig}
         onPricingReload={() => void reloadPricingConfig(true)}
         onPricingSave={() => void handleSavePricingConfig()}
+        onAnalyticsReload={() => void handleAnalyticsReload()}
       />
     );
   }
@@ -3207,22 +3621,39 @@ function App() {
         userRole={authRole}
         statusMessage={authStatusMessage}
         homeHref={homeHref}
+        accountTier={accountPlanSummary.tier}
+        unlockedProjectCount={accountPlanSummary.unlockedProjectCount}
+        singleUpgradeHref={relativeRootHref("portfolio", lang)}
+        singleUpgradeEnabled={pricingConfig.singleUnlock.enabled}
+        singleUpgradePriceLabel={accountSinglePriceLabel}
+        allAccessEnabled={pricingConfig.allAccess.enabled}
+        allAccessPriceLabel={accountAllAccessPriceLabel}
+        upgradeBusy={unlockActionDisabled}
+        upgradeStatusMessage={unlockStatusMessage}
         onLangChange={setLang}
         onLogin={handleAuthLogin}
         onSignup={handleAuthSignup}
         onGoogleLogin={() => handleGoogleLogin(accountHref)}
         onLogout={handleLogout}
+        onUpgradeAllAccess={() => void handleUnlockAllAccess()}
       />
     );
   }
 
-  if (rootView === "home" || rootView === "pricing" || rootView === "updates") {
+  if (
+    rootView === "home" ||
+    rootView === "pricing" ||
+    rootView === "partners" ||
+    rootView === "updates"
+  ) {
     return (
       <FountHomePage
         lang={lang}
         page={
           rootView === "pricing"
             ? "pricing"
+            : rootView === "partners"
+              ? "partners"
             : rootView === "updates"
               ? "updates"
               : "home"
@@ -3262,10 +3693,90 @@ function App() {
   }
 
   return (
-    <div className="page-container">
+    <div
+      className={`page-container${rootView === "blog" ? " fount-blog-container fount-page-focused" : ""}`}
+      data-page={rootView === "blog" ? "blog" : undefined}
+    >
       <main
         className={`main-content portfolio-main-content${rootView === "blog" ? " blog-main" : ""}${rootView === "about" ? " about-main" : ""}`}
       >
+        {rootView === "blog" ? (
+          <header className="fount-header fount-blog-topbar">
+            <a className="fount-logo" href={relativeRootHref("home", lang)} aria-label="Fount home">
+              <span className="fount-logo-mark" aria-hidden="true">
+                <img src="/fount/fount-logo-source.png" alt="" />
+              </span>
+              Fount
+            </a>
+
+            <nav
+              className="fount-nav fount-outline-nav fount-pricing-back-nav"
+              aria-label={lang === "zh" ? "Fount 博客" : "Fount Blog"}
+            >
+              <a href={relativeRootHref("home", lang)}>
+                {lang === "zh" ? "首页" : "Home"}
+              </a>
+            </nav>
+
+            <div className="fount-header-actions">
+              <nav className="fount-site-nav" aria-label="Site links">
+                <a href={SYSTEM_SITE_URL} target="_blank" rel="noreferrer">
+                  {lang === "zh" ? "文档" : "Docs"}
+                </a>
+                <a href={relativeRootHref("updates", lang)}>
+                  {lang === "zh" ? "更新" : "Updates"}
+                </a>
+                <a className="active" href={relativeRootHref("blog", lang)} aria-current="page">
+                  {lang === "zh" ? "博客" : "Blog"}
+                </a>
+                <a href={relativeRootHref("pricing", lang)}>
+                  {lang === "zh" ? "定价" : "Pricing"}
+                </a>
+              </nav>
+              <div className="fount-header-utils">
+                <div className="fount-lang-switch" aria-label="Language switcher">
+                  <button
+                    type="button"
+                    className={lang === "zh" ? "active" : ""}
+                    onClick={() => setLang("zh")}
+                  >
+                    中文
+                  </button>
+                  <button
+                    type="button"
+                    className={lang === "en" ? "active" : ""}
+                    onClick={() => setLang("en")}
+                  >
+                    EN
+                  </button>
+                </div>
+                <button
+                  type="button"
+                  className="fount-theme-toggle"
+                  aria-label={
+                    themeMode === "night"
+                      ? copy.themeToDayAria
+                      : copy.themeToNightAria
+                  }
+                  aria-pressed={themeMode === "night"}
+                  onClick={() =>
+                    setThemeMode((current) =>
+                      current === "night" ? "day" : "night",
+                    )
+                  }
+                >
+                  <ThemeModeIcon mode={themeMode} />
+                </button>
+                <a className="fount-download-small" href="/Fount.dmg">
+                  <span>{lang === "zh" ? "下载 Mac app" : "Download Mac app"}</span>
+                </a>
+              </div>
+              <a className="fount-account-link" href={accountHref}>
+                {lang === "zh" ? "账号" : "Account"}
+              </a>
+            </div>
+          </header>
+        ) : (
         <div className="site-topbar">
           <div className="site-topbar-primary">
             <a
@@ -3298,7 +3809,7 @@ function App() {
             </button>
             <button
               type="button"
-              className={`collection-switch-tab${rootView === "blog" ? " active" : ""}`}
+              className="collection-switch-tab"
               onClick={() => switchRootView("blog")}
             >
               {copy.tocBlog}
@@ -3366,6 +3877,7 @@ function App() {
             </div>
           </div>
         </div>
+        )}
 
         <section id="collection" className="main-collection-shell">
           {rootView === "blog" ? (

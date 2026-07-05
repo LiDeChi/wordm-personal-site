@@ -16,7 +16,6 @@ type PagesFunction = (context: PagesContext) => Promise<Response> | Response;
 const CREEM_API_BASE = "https://api.creem.io/v1";
 const DEFAULT_LIMIT = 20;
 const PAGE_SIZE = 100;
-const MAX_PAGES = 10;
 
 function jsonResponse(body: unknown, init: ResponseInit = {}) {
   return new Response(JSON.stringify(body), {
@@ -63,37 +62,23 @@ function isExcludedTransaction(item: unknown) {
 }
 
 async function countProductTransactions(apiKey: string, productId: string) {
-  let count = 0;
+  const url = new URL(`${CREEM_API_BASE}/transactions/search`);
+  url.searchParams.set("page_size", String(PAGE_SIZE));
+  url.searchParams.set("product_id", productId);
 
-  for (let page = 1; page <= MAX_PAGES; page += 1) {
-    const url = new URL(`${CREEM_API_BASE}/transactions/search`);
-    url.searchParams.set("page", String(page));
-    url.searchParams.set("page_size", String(PAGE_SIZE));
-    url.searchParams.set("product_id", productId);
+  const response = await fetch(url.toString(), {
+    headers: {
+      "x-api-key": apiKey,
+    },
+  });
 
-    const response = await fetch(url.toString(), {
-      headers: {
-        "x-api-key": apiKey,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`CREEM_TRANSACTIONS_FAILED_${response.status}`);
-    }
-
-    const payload = (await response.json()) as { items?: unknown[]; pagination?: Record<string, unknown> };
-    const items = Array.isArray(payload.items) ? payload.items : [];
-    count += items.filter((item) => !isExcludedTransaction(item)).length;
-
-    const totalPagesRaw =
-      payload.pagination?.total_pages ?? payload.pagination?.totalPages ?? payload.pagination?.pages;
-    const totalPages = Number.parseInt(String(totalPagesRaw ?? ""), 10);
-    if (items.length < PAGE_SIZE || (Number.isFinite(totalPages) && page >= totalPages)) {
-      break;
-    }
+  if (!response.ok) {
+    throw new Error(`CREEM_TRANSACTIONS_FAILED_${response.status}`);
   }
 
-  return count;
+  const payload = (await response.json()) as { items?: unknown[] };
+  const items = Array.isArray(payload.items) ? payload.items : [];
+  return items.filter((item) => !isExcludedTransaction(item)).length;
 }
 
 export const onRequestGet: PagesFunction = async ({ env }) => {
@@ -121,22 +106,26 @@ export const onRequestGet: PagesFunction = async ({ env }) => {
     return jsonResponse({ error: "EARLY_BIRD_COUNTER_NOT_CONFIGURED" }, { status: 503 });
   }
 
-  const counts = await Promise.all(
-    productIds.map((productId) => countProductTransactions(apiKey, productId)),
-  );
-  const claimed = Math.min(
-    limit,
-    Math.max(
-      0,
-      counts.reduce((sum, value) => sum + value, 0),
-    ),
-  );
+  try {
+    const counts = await Promise.all(
+      productIds.map((productId) => countProductTransactions(apiKey, productId)),
+    );
+    const claimed = Math.min(
+      limit,
+      Math.max(
+        0,
+        counts.reduce((sum, value) => sum + value, 0),
+      ),
+    );
 
-  return jsonResponse({
-    claimed,
-    limit,
-    remaining: Math.max(0, limit - claimed),
-    active: claimed < limit,
-    source: "creem",
-  });
+    return jsonResponse({
+      claimed,
+      limit,
+      remaining: Math.max(0, limit - claimed),
+      active: claimed < limit,
+      source: "creem",
+    });
+  } catch {
+    return jsonResponse({ error: "EARLY_BIRD_COUNTER_FAILED" }, { status: 503 });
+  }
 };

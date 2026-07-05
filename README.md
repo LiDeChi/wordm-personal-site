@@ -40,6 +40,18 @@ VITE_UNLOCK_PRODUCT_ALL_CURRENT=prod_yyy
 VITE_UNLOCK_PRODUCT_ALL_CURRENT_PLUS_YEAR=prod_zzz
 VITE_SELFHOST_INSTALL_URL=https://github.com/LiDeChi/center-control#付费用户一键安装deploy-ticket
 VITE_SELFHOST_INSTALL_SCRIPT_URL=https://raw.githubusercontent.com/LiDeChi/center-control/main/scripts/install-center-control.sh
+NEXT_PUBLIC_CREEM_AFFILIATE_APPLY_URL=https://...
+NEXT_PUBLIC_PARTNER_CONTACT_EMAIL=partners@wordm.us
+NEXT_PUBLIC_FOUNT_BUILDER_MONTHLY_URL=https://...
+NEXT_PUBLIC_FOUNT_BUILDER_YEARLY_URL=https://...
+NEXT_PUBLIC_FOUNT_BUILDER_EARLY_BIRD_URL=https://...
+NEXT_PUBLIC_FOUNT_BUILDER_LIFETIME_URL=https://...
+NEXT_PUBLIC_FOUNT_MASTER_MONTHLY_URL=https://...
+NEXT_PUBLIC_FOUNT_MASTER_YEARLY_URL=https://...
+NEXT_PUBLIC_FOUNT_MASTER_EARLY_BIRD_URL=https://...
+NEXT_PUBLIC_FOUNT_MASTER_LIFETIME_URL=https://...
+NEXT_PUBLIC_FOUNT_EARLY_BIRD_LIMIT=20
+NEXT_PUBLIC_FOUNT_EARLY_BIRD_CLAIMED=0
 ```
 
 - 推荐使用你提到的同一套 Supabase 项目（`latti-wordm`）来保证账号一致。
@@ -49,6 +61,9 @@ VITE_SELFHOST_INSTALL_SCRIPT_URL=https://raw.githubusercontent.com/LiDeChi/cente
 - `VITE_UNLOCK_PRODUCT_ALL_CURRENT` / `VITE_UNLOCK_PRODUCT_ALL_CURRENT_PLUS_YEAR` 仍可作为兼容回退值；前端会优先读取 `VITE_UNLOCK_PRODUCT_ALL_ACCESS`。
 - `VITE_SELFHOST_INSTALL_URL` 用于支付成功后的“自部署安装”入口，默认指向 `center-control` 安装说明。
 - `VITE_SELFHOST_INSTALL_SCRIPT_URL` 用于部署页生成一键部署命令，默认指向 `center-control` 官方安装脚本。
+- `NEXT_PUBLIC_CREEM_AFFILIATE_APPLY_URL` 用于 Fount Partner Program 的申请按钮；未配置时会回退到 `NEXT_PUBLIC_PARTNER_CONTACT_EMAIL` 生成的 `mailto:`。
+- `NEXT_PUBLIC_FOUNT_*_URL` 用于 Fount 定价页的 Builder / Master 付款入口；未配置时页面会保留 `/checkout/...` 占位路由。
+- `NEXT_PUBLIC_FOUNT_EARLY_BIRD_LIMIT` / `NEXT_PUBLIC_FOUNT_EARLY_BIRD_CLAIMED` 是早鸟进度的构建时回退值；线上会优先通过 `/api/fount-early-bird-status` 从 Creem 交易统计当前进度。
 - 若不配置，会使用 `latti` 当前公开计划商品作为默认值。
 - 站点会将 Supabase 会话同步到 `.wordm.us` 域级 cookie，因此 `wordm.us`、`resume.wordm.us`、`p-*.wordm.us` 会共享登录态。
 - 账号角色共四类：`admin`（管理员）、`tester`（测试账号）、`user`（普通账号）、`guest`（游客）。
@@ -130,6 +145,28 @@ KIMI_API_BASE_URL=https://api.moonshot.ai/v1
 - `supabase/functions/manage-pricing-config`
 - 其中 `resolve-share-link` 需要以 `--no-verify-jwt` 部署，供游客免登录访问
 - 若希望分享链接直接进入部署页，`create-deploy-ticket` 也要以 `--no-verify-jwt` 部署
+
+### 站点行为监控（Analytics）
+
+站点会通过一方埋点记录访问、点击、下载、停留、注册、登录、退出事件。事件写入 Supabase 表：
+
+- `supabase/migrations/20260704120000_wordm_site_analytics.sql`
+- `supabase/functions/site-analytics`
+
+前端会发送页面路径、清理后的 query、referrer、语言、视口、session id、登录用户 id/角色、按钮/链接标签、下载地址/文件名、停留时长和必要上下文；不会采集密码、输入框内容或原始 IP。
+
+部署 Supabase 侧：
+
+```bash
+npx supabase db push
+npx supabase functions deploy site-analytics
+```
+
+如需区分同一来源 IP，可配置盐化哈希；未配置时不会写入 IP 信息：
+
+```bash
+npx supabase secrets set WORDM_ANALYTICS_IP_SALT=<long-random-secret>
+```
 
 ### 部署票据（Deploy Ticket）配置
 

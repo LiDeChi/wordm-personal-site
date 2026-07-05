@@ -6,6 +6,7 @@ import type { ShareLinkRecord, ShareScope } from '../lib/share-links'
 import { formatDate } from '../lib/projects'
 import { withSiteParams } from '../lib/lang-url'
 import type { ProjectOfferKind, ProjectPricingOverride, SitePricingConfig } from '../lib/project-offers'
+import type { SiteAnalyticsRecord } from '../lib/site-analytics'
 
 type ShareFlagKey = 'allowPortfolio' | 'allowBlog' | 'allowDeploy' | 'allowAllProjects'
 
@@ -27,6 +28,9 @@ type AdminPageProps = {
   pricingBusy: boolean
   pricingStatusMessage: string
   pricingConfig: SitePricingConfig
+  analyticsBusy: boolean
+  analyticsStatusMessage: string
+  analyticsEvents: SiteAnalyticsRecord[]
   onToggleProject: (slug: string) => void
   onSelectFeatured: () => void
   onSelectAll: () => void
@@ -45,6 +49,7 @@ type AdminPageProps = {
   onPricingConfigChange: (value: SitePricingConfig) => void
   onPricingReload: () => void
   onPricingSave: () => void
+  onAnalyticsReload: () => void
 }
 
 const COPY = {
@@ -81,6 +86,17 @@ const COPY = {
     pricingSingleEnabled: '允许单独解锁',
     pricingResetProject: '清空项目覆盖',
     pricingInherited: '留空则继承全局',
+    analyticsTitle: '站点行为监控',
+    analyticsHint: '最近 100 条访问、点击、下载、停留、注册、登录与退出事件。',
+    analyticsReload: '刷新事件',
+    analyticsEmpty: '暂无站点事件',
+    analyticsNeedLogin: '请先登录管理员或测试账号，才能查看站点行为明细。',
+    analyticsSession: '会话',
+    analyticsUser: '用户',
+    analyticsDuration: '停留',
+    analyticsElement: '元素',
+    analyticsDownload: '下载',
+    analyticsReferrer: '来源',
     detail: '查看详情',
     subdomain: '项目子域',
     source: '源码',
@@ -159,6 +175,17 @@ const COPY = {
     pricingSingleEnabled: 'Single unlock enabled',
     pricingResetProject: 'Clear project override',
     pricingInherited: 'Leave blank to inherit global values',
+    analyticsTitle: 'Site behavior monitoring',
+    analyticsHint: 'Latest 100 visit, click, download, engagement, signup, login, and logout events.',
+    analyticsReload: 'Refresh events',
+    analyticsEmpty: 'No site events yet',
+    analyticsNeedLogin: 'Log in with an admin or tester account to view site behavior details.',
+    analyticsSession: 'Session',
+    analyticsUser: 'User',
+    analyticsDuration: 'Engaged',
+    analyticsElement: 'Element',
+    analyticsDownload: 'Download',
+    analyticsReferrer: 'Referrer',
     detail: 'View detail',
     subdomain: 'Project subdomain',
     source: 'Source',
@@ -252,6 +279,54 @@ function statusLabel(lang: Lang, status: ShareLinkRecord['status']) {
   return copy.shareStatusActive
 }
 
+function formatDuration(durationMs: number | null, fallback: string) {
+  if (typeof durationMs !== 'number' || !Number.isFinite(durationMs)) {
+    return fallback
+  }
+
+  if (durationMs < 1000) {
+    return `${durationMs}ms`
+  }
+
+  const seconds = Math.round(durationMs / 1000)
+  if (seconds < 60) {
+    return `${seconds}s`
+  }
+
+  const minutes = Math.floor(seconds / 60)
+  const remainingSeconds = seconds % 60
+  return remainingSeconds ? `${minutes}m ${remainingSeconds}s` : `${minutes}m`
+}
+
+function formatAnalyticsEventType(eventType: SiteAnalyticsRecord['eventType'], lang: Lang) {
+  const zhLabels: Record<SiteAnalyticsRecord['eventType'], string> = {
+    page_view: '访问',
+    click: '点击',
+    download: '下载',
+    engagement: '停留',
+    signup: '注册',
+    login: '登录',
+    logout: '退出',
+  }
+  const enLabels: Record<SiteAnalyticsRecord['eventType'], string> = {
+    page_view: 'Visit',
+    click: 'Click',
+    download: 'Download',
+    engagement: 'Engagement',
+    signup: 'Signup',
+    login: 'Login',
+    logout: 'Logout',
+  }
+  return lang === 'zh' ? zhLabels[eventType] : enLabels[eventType]
+}
+
+function shortId(value: string | null | undefined, fallback: string) {
+  if (!value) {
+    return fallback
+  }
+  return value.length > 12 ? value.slice(0, 12) : value
+}
+
 function formatDateTimeLocal(value: string | null | undefined) {
   if (!value) {
     return ''
@@ -321,6 +396,9 @@ export function AdminPage({
   pricingBusy,
   pricingStatusMessage,
   pricingConfig,
+  analyticsBusy,
+  analyticsStatusMessage,
+  analyticsEvents,
   onToggleProject,
   onSelectFeatured,
   onSelectAll,
@@ -339,6 +417,7 @@ export function AdminPage({
   onPricingConfigChange,
   onPricingReload,
   onPricingSave,
+  onAnalyticsReload,
 }: AdminPageProps) {
   const copy = COPY[lang]
   const [shareSearch, setShareSearch] = useState('')
@@ -547,6 +626,48 @@ export function AdminPage({
       </div>
     </section>
   ) : null
+  const analyticsSection = (
+    <section className="project-detail-section admin-content-section admin-analytics-section">
+      <div className="admin-section-head">
+        <div>
+          <h2>{copy.analyticsTitle}</h2>
+          <p>{copy.analyticsHint}</p>
+        </div>
+        <button type="button" onClick={onAnalyticsReload} disabled={analyticsBusy || !canManagePricing}>
+          {copy.analyticsReload}
+        </button>
+      </div>
+      {!canManagePricing ? <p className="unlock-status-message">{copy.analyticsNeedLogin}</p> : null}
+      {analyticsStatusMessage ? <p className="debug-error">{analyticsStatusMessage}</p> : null}
+      {canManagePricing ? (
+        <div className="admin-analytics-list">
+          {analyticsEvents.length === 0 ? <p className="debug-share-empty">{copy.analyticsEmpty}</p> : null}
+          {analyticsEvents.map((event) => {
+            const pagePath = `${event.path}${event.search ?? ''}`
+            const elementLine = [event.elementTag, event.elementLabel, event.elementHref].filter(Boolean).join(' · ')
+            const downloadLine = [event.downloadName, event.downloadUrl].filter(Boolean).join(' · ')
+            return (
+              <article key={event.id} className="admin-analytics-card">
+                <div className="admin-analytics-card-head">
+                  <strong>{formatAnalyticsEventType(event.eventType, lang)}</strong>
+                  <span className="mono">{formatMetaDate(event.createdAt, lang)}</span>
+                </div>
+                <p className="admin-analytics-page mono">{pagePath}</p>
+                <div className="admin-analytics-meta-grid">
+                  <span>{copy.analyticsSession}: <b className="mono">{shortId(event.sessionId, copy.noCommand)}</b></span>
+                  <span>{copy.analyticsUser}: <b className="mono">{shortId(event.userId, event.userRole ?? copy.noCommand)}</b></span>
+                  <span>{copy.analyticsDuration}: <b>{formatDuration(event.durationMs, copy.noCommand)}</b></span>
+                </div>
+                {elementLine ? <p className="admin-analytics-detail">{copy.analyticsElement}: {elementLine}</p> : null}
+                {downloadLine ? <p className="admin-analytics-detail">{copy.analyticsDownload}: {downloadLine}</p> : null}
+                {event.referrer ? <p className="admin-analytics-detail">{copy.analyticsReferrer}: {event.referrer}</p> : null}
+              </article>
+            )
+          })}
+        </div>
+      ) : null}
+    </section>
+  )
 
   return (
     <div className="subdomain-page admin-page-shell">
@@ -706,6 +827,8 @@ export function AdminPage({
             </section>
 
             {shareLinksSection}
+
+            {analyticsSection}
 
             <section className="project-detail-section admin-content-section">
               <h2>{copy.projects}</h2>

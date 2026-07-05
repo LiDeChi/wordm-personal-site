@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
+import { BLOG_ARTICLES } from "../data/blogArticles";
 import type { Lang } from "../i18n/lang";
 import { SocialLinks } from "./SocialLinks";
 import { ThemeModeIcon } from "./ThemeModeIcon";
 
 type FountHomePageProps = {
   lang: Lang;
-  page?: "home" | "pricing" | "partners" | "updates";
+  page?: "home" | "pricing" | "partners" | "updates" | "blog";
   onLangChange: (lang: Lang) => void;
   themeMode: "day" | "night";
   onThemeToggle: () => void;
@@ -21,11 +22,23 @@ type ConceptItem = {
   meta?: LocalizedText;
 };
 
-type HomeBuildCard = {
+type HomeCardTone = "mint" | "blue" | "lilac" | "amber" | "coral" | "ink";
+
+type HomeChapterId = "what" | "ecosystem" | "product" | "vision";
+
+type HomeChapterItem = {
   label: string;
-  title: LocalizedText;
   body: LocalizedText;
-  tone: "mint" | "blue" | "lilac" | "amber" | "coral" | "ink";
+  note?: LocalizedText;
+  kind?: "line" | "formula";
+};
+
+type HomeChapter = {
+  id: HomeChapterId;
+  title: LocalizedText;
+  cardBody: LocalizedText;
+  tone: HomeCardTone;
+  items: HomeChapterItem[];
 };
 
 type ListBlock = {
@@ -64,6 +77,9 @@ type PricingPlan = {
   description: string;
   prices: Record<BillingMode, string>;
   priceSubtexts: Record<BillingMode, string>;
+  earlyBirdLifetimePrice?: string;
+  earlyBirdLifetimeHref?: string;
+  earlyBirdNextPrice?: string;
   futureAnchor?: string;
   cta: string;
   hrefs: Record<BillingMode, string>;
@@ -82,6 +98,12 @@ type ComparisonRow = {
 type PricingFaqItem = {
   question: string;
   answer: string;
+};
+
+type EarlyBirdStatus = {
+  claimed: number;
+  limit: number;
+  active: boolean;
 };
 
 type PartnerStep = {
@@ -179,6 +201,31 @@ function resolvePublicHref(primaryEnvName: string, fallback: string) {
   return fallback;
 }
 
+function resolvePublicNumber(primaryEnvName: string, fallback: number) {
+  const env = import.meta.env as Record<string, string | undefined>;
+  const raw =
+    env[primaryEnvName] ??
+    (primaryEnvName.startsWith("NEXT_PUBLIC_")
+      ? env[`VITE_${primaryEnvName.slice("NEXT_PUBLIC_".length)}`]
+      : undefined);
+  const value = Number.parseInt(raw ?? "", 10);
+  return Number.isFinite(value) ? value : fallback;
+}
+
+const FOUNT_EARLY_BIRD_LIMIT = Math.max(
+  1,
+  resolvePublicNumber("NEXT_PUBLIC_FOUNT_EARLY_BIRD_LIMIT", 20),
+);
+const FOUNT_EARLY_BIRD_CLAIMED = Math.min(
+  FOUNT_EARLY_BIRD_LIMIT,
+  Math.max(0, resolvePublicNumber("NEXT_PUBLIC_FOUNT_EARLY_BIRD_CLAIMED", 0)),
+);
+const FOUNT_EARLY_BIRD_INITIAL_STATUS: EarlyBirdStatus = {
+  claimed: FOUNT_EARLY_BIRD_CLAIMED,
+  limit: FOUNT_EARLY_BIRD_LIMIT,
+  active: FOUNT_EARLY_BIRD_CLAIMED < FOUNT_EARLY_BIRD_LIMIT,
+};
+
 const OUTLINE_ITEMS: Array<{ id: OutlineId; label: LocalizedText }> = [
   { id: "vision", label: { zh: "愿景", en: "Vision" } },
   { id: "ecosystem", label: { zh: "生态", en: "Ecosystem" } },
@@ -191,6 +238,7 @@ const COPY = {
     pricingDocumentTitle: "Fount Pricing | Player / Builder / Master",
     partnersDocumentTitle: "Fount Partner Program",
     updatesDocumentTitle: "Fount 更新记录 | Release History",
+    blogDocumentTitle: "Fount 博客 | Notes",
     navHome: "首页",
     navConcepts: "概念",
     navArchitecture: "架构",
@@ -223,11 +271,17 @@ const COPY = {
     updatesLead:
       "这里按时间记录 Fount 的版本变化、发布重点和校验信息。下载入口不放在这里，避免把更新历史变成下载页。",
     updatesEmpty: "还没有可展示的历史更新。",
+    blogTitle: "Fount 博客",
+    blogLead:
+      "把关于 Fount、Field、agent system 和产品生态的思考放在同一条时间线上。这里是站内阅读入口，不再跳回旧的作品集页面。",
+    blogEmpty: "还没有可展示的博客。",
     heroTitle: "Fount",
-    heroDeck: "像玩游戏一样构建产品：把想法拖成卡片，把现场铺成白板，让 agent 执行、检查、发布。",
-    heroSub: "Fount / Forge 是一张可进入的产品白板。卡片是任务、角色、工具和验证点；你像指挥一局游戏一样推进产品。",
+    heroDeck: "像玩游戏一样构建产品。",
+    heroSub: "想法变成卡片，现场铺成白板，agent 参与执行、检查和发布。",
     productImageAlt: "Forge 产品界面截图，展示左侧 agent 活动、中央白板和底部构建卡片",
     cardShelfAria: "Fount 产品构建卡片",
+    cardShelfEmptyTitle: "章节卡片库",
+    cardShelfEmptyBody: "待写入",
     visualAlt: "Fount 个人 agent 大脑连接多个可携带 Field 的线稿插图",
     dashboardTitle: "Experience Continuity",
     dashboardStatus: "5 layers online · 7 experience events · memory sync ready",
@@ -293,6 +347,7 @@ const COPY = {
     pricingDocumentTitle: "Fount Pricing | Player / Builder / Master",
     partnersDocumentTitle: "Fount Partner Program",
     updatesDocumentTitle: "Fount Updates | Release History",
+    blogDocumentTitle: "Fount Blog | Notes",
     navHome: "Home",
     navConcepts: "Concepts",
     navArchitecture: "Architecture",
@@ -325,11 +380,17 @@ const COPY = {
     updatesLead:
       "A chronological record of Fount releases, highlights, and verification details. Download buttons stay off this page so the history stays readable.",
     updatesEmpty: "No release history is available yet.",
+    blogTitle: "Fount Blog",
+    blogLead:
+      "Notes on Fount, Fields, agent systems, and product ecosystems in one timeline. This is the in-site reading entry, not the old portfolio blog shell.",
+    blogEmpty: "No blog posts are available yet.",
     heroTitle: "Fount",
-    heroDeck: "Build products like a game: turn ideas into cards, spread the work on a whiteboard, and let agents execute, review, and ship.",
-    heroSub: "Fount / Forge is an enterable product whiteboard. Cards become tasks, roles, tools, and validation points, so building feels like directing a playable system.",
+    heroDeck: "Build products like a game.",
+    heroSub: "Ideas become cards, the work opens on a whiteboard, and agents execute, review, and ship.",
     productImageAlt: "Forge product screenshot showing agent activity, a central whiteboard, and bottom build cards",
     cardShelfAria: "Fount product build cards",
+    cardShelfEmptyTitle: "Chapter card library",
+    cardShelfEmptyBody: "Waiting for chapters",
     visualAlt: "Line illustration of the Fount personal agent brain connected to portable Fields",
     dashboardTitle: "Experience Continuity",
     dashboardStatus: "5 layers online · 7 experience events · memory sync ready",
@@ -439,62 +500,104 @@ const CORE_CONCEPTS: ConceptItem[] = [
   },
 ];
 
-const HOME_BUILD_CARDS: HomeBuildCard[] = [
+const HOME_CHAPTERS: HomeChapter[] = [
   {
-    label: "01",
-    title: { zh: "白板开局", en: "Whiteboard start" },
-    body: {
-      zh: "把产品现场、上下文和下一步都铺在同一张画布上。",
-      en: "Lay out the product scene, context, and next move on one canvas.",
+    id: "what",
+    title: { zh: "这是什么 app", en: "What kind of app is this?" },
+    cardBody: {
+      zh: "一套会生长的产品体验生态。",
+      en: "A growing ecosystem for product experiences.",
     },
     tone: "mint",
+    items: [
+      {
+        label: "1.1",
+        body: {
+          zh: "Fount 不是一个孤立 app，而是一套通用产品体验生态。它先服务那些好玩、可探索、和想象世界有关的产品，再逐步长出 Forge、Foundry 和更多 Field。",
+          en: "Fount is not an isolated app, but a general ecosystem for product experiences. It starts with playful, explorable, imagination-driven products, then grows Forge, Foundry, and more Fields.",
+        },
+      },
+    ],
   },
   {
-    label: "02",
-    title: { zh: "卡片造物", en: "Card building" },
-    body: {
-      zh: "需求、角色、工具、风险和验收都变成可移动卡片。",
-      en: "Requirements, roles, tools, risks, and checks become movable cards.",
+    id: "ecosystem",
+    title: { zh: "生态如何组成", en: "How the ecosystem is composed" },
+    cardBody: {
+      zh: "框架、SDK、社区和用户共同驱动。",
+      en: "Framework, SDK, community, and users drive it together.",
     },
     tone: "lilac",
+    items: [
+      {
+        label: "2.1",
+        kind: "formula",
+        body: {
+          zh: "Ecosystem = Framework + SDK + Community + Users",
+          en: "Ecosystem = Framework + SDK + Community + Users",
+        },
+        note: {
+          zh: "框架和 SDK 让产品可以变成 Field；社区和用户让它们被创造、流通和验证。",
+          en: "Framework and SDK let products become Fields; community and users create, circulate, and validate them.",
+        },
+      },
+      {
+        label: "2.2",
+        kind: "formula",
+        body: {
+          zh: "Field = Environment + Rules + Tools + Agents + Memory + UI",
+          en: "Field = Environment + Rules + Tools + Agents + Memory + UI",
+        },
+        note: {
+          zh: "Field 是今天 app + agent 的完整化：Fount 是大脑，Forge 是手，Foundry 是入口，而 Agents 是最需要加强的一层。",
+          en: "A Field completes today's app + agent pattern: Fount is the brain, Forge the hand, Foundry the entry point, and Agents are the layer to strengthen.",
+        },
+      },
+    ],
   },
   {
-    label: "03",
-    title: { zh: "Agent 入场", en: "Agents enter" },
-    body: {
-      zh: "像派出队友一样分配 agent，让它们在边界内行动。",
-      en: "Assign agents like teammates and keep their actions bounded.",
+    id: "product",
+    title: { zh: "这个产品是什么", en: "What this product is" },
+    cardBody: {
+      zh: "给人和 agent 共用的创造工作台。",
+      en: "A shared creation workbench for people and agents.",
     },
     tone: "blue",
+    items: [
+      {
+        label: "3.1",
+        kind: "formula",
+        body: {
+          zh: "Fount + Forge = Field Workbench",
+          en: "Fount + Forge = Field Workbench",
+        },
+        note: {
+          zh: "人在白板上整理目标、卡片和判断；agent 在同一现场执行、检查，并把经验写回 Fount。",
+          en: "People organize goals, cards, and judgment on the whiteboard; agents act in the same environment, check the work, and write experience back to Fount.",
+        },
+      },
+    ],
   },
   {
-    label: "04",
-    title: { zh: "跑测与审查", en: "Run and review" },
-    body: {
-      zh: "每一张卡都能进入测试、diff、截图和风险回看。",
-      en: "Each card can move through tests, diffs, screenshots, and risk review.",
+    id: "vision",
+    title: { zh: "愿景", en: "Vision" },
+    cardBody: {
+      zh: "让机器产生智慧，也产生世界。",
+      en: "Let machines generate intelligence, and worlds.",
     },
     tone: "amber",
-  },
-  {
-    label: "05",
-    title: { zh: "发布回合", en: "Ship turn" },
-    body: {
-      zh: "把完成的卡片收束成一次明确发布，而不是散落待办。",
-      en: "Turn finished cards into one clear release instead of scattered tasks.",
-    },
-    tone: "coral",
-  },
-  {
-    label: "06",
-    title: { zh: "经验留存", en: "Experience saved" },
-    body: {
-      zh: "本回合的判断、失败和偏好，会成为下一局构建的上下文。",
-      en: "This round's judgment, failures, and taste become context for the next.",
-    },
-    tone: "ink",
+    items: [
+      {
+        label: "4.1",
+        body: {
+          zh: "愿景是让人机交互不止停在问答，而是一起进入、创造和改造世界。机器不只是工具，也可以成为产生智慧、经验和新世界的地方。",
+          en: "The vision is to move human-machine interaction beyond Q&A into entering, creating, and reshaping worlds together. Machines are not only tools; they can become places where intelligence, experience, and new worlds emerge.",
+        },
+      },
+    ],
   },
 ];
+
+const HOME_CHAPTER_ID_SET = new Set<HomeChapterId>(HOME_CHAPTERS.map((chapter) => chapter.id));
 
 const VISITOR_FLOW: StepItem[] = [
   {
@@ -1136,10 +1239,10 @@ const BUSINESS_MODELS: ConceptItem[] = [
   },
 ];
 
-const BILLING_MODES: Array<{ id: BillingMode; label: string }> = [
-  { id: "monthly", label: "Monthly" },
-  { id: "yearly", label: "Yearly" },
-  { id: "lifetime", label: "Founding Lifetime" },
+const BILLING_MODES: Array<{ id: BillingMode; label: LocalizedText }> = [
+  { id: "monthly", label: { zh: "月付", en: "Monthly" } },
+  { id: "yearly", label: { zh: "年付", en: "Yearly" } },
+  { id: "lifetime", label: { zh: "买断", en: "Lifetime" } },
 ];
 
 const FOUNT_PRICING_PLANS: PricingPlan[] = [
@@ -1190,6 +1293,12 @@ const FOUNT_PRICING_PLANS: PricingPlan[] = [
       yearly: "/ year",
       lifetime: "Founding Lifetime Access",
     },
+    earlyBirdLifetimePrice: "$29",
+    earlyBirdLifetimeHref: resolvePublicHref(
+      "NEXT_PUBLIC_FOUNT_BUILDER_EARLY_BIRD_URL",
+      resolvePublicHref("NEXT_PUBLIC_FOUNT_BUILDER_LIFETIME_URL", "/checkout/builder-lifetime"),
+    ),
+    earlyBirdNextPrice: "$49",
     futureAnchor: "Future price: $99+",
     cta: "Get Builder",
     hrefs: {
@@ -1224,6 +1333,12 @@ const FOUNT_PRICING_PLANS: PricingPlan[] = [
       yearly: "/ year",
       lifetime: "Founding Lifetime Access",
     },
+    earlyBirdLifetimePrice: "$49",
+    earlyBirdLifetimeHref: resolvePublicHref(
+      "NEXT_PUBLIC_FOUNT_MASTER_EARLY_BIRD_URL",
+      resolvePublicHref("NEXT_PUBLIC_FOUNT_MASTER_LIFETIME_URL", "/checkout/master-lifetime"),
+    ),
+    earlyBirdNextPrice: "$99",
     futureAnchor: "Future price: $199+",
     cta: "Get Master",
     hrefs: {
@@ -1244,6 +1359,191 @@ const FOUNT_PRICING_PLANS: PricingPlan[] = [
     featured: true,
   },
 ];
+
+const FOUNT_PRICING_PAGE_COPY: Record<
+  Lang,
+  {
+    label: string;
+    title: string;
+    lead: string;
+    billingAria: string;
+    billingNotes: Record<BillingMode, string>;
+    earlyBirdNote: (nextPrice: string) => string;
+  }
+> = {
+  zh: {
+    label: "定价",
+    title: "买的是 Forge，Fount 免费。",
+    lead: "Fount 本体永久免费。这里的价格是 Forge 创作能力：Builder 用来构建 Field，Master 面向发布、运营和生态参与。",
+    billingAria: "购买方式",
+    billingNotes: {
+      monthly: "按月购买 Forge，Fount 免费使用。",
+      yearly: "年付购买 Forge，更适合持续创作；Fount 仍永久免费。",
+      lifetime: "早期买断的是本地 Forge 能力，不是 Fount 本体；未来高成本云服务可能单独计费。",
+    },
+    earlyBirdNote: (nextPrice) => `Forge 早鸟买断 · 下一档 ${nextPrice}`,
+  },
+  en: {
+    label: "Pricing",
+    title: "Buy Forge. Fount stays free.",
+    lead: "Fount itself is free forever. These prices are for Forge creation: Builder builds Fields, while Master adds publishing, operations, and ecosystem participation.",
+    billingAria: "Purchase mode",
+    billingNotes: {
+      monthly: "Monthly buys Forge. Fount remains free.",
+      yearly: "Yearly buys Forge for ongoing creation. Fount remains free forever.",
+      lifetime: "Early lifetime pricing is for local Forge capability, not Fount itself; future high-cost cloud services may be separate.",
+    },
+    earlyBirdNote: (nextPrice) => `Forge Early Bird lifetime · Next tier ${nextPrice}`,
+  },
+};
+
+const FOUNT_PRICING_PLAN_COPY: Record<
+  Lang,
+  Record<
+    PricingPlan["id"],
+    {
+      badge: string;
+      sticker?: string;
+      description: string;
+      priceSubtexts: Record<BillingMode, string>;
+      cta: string;
+      features: string[];
+      note: string;
+      futureAnchor?: string;
+    }
+  >
+> = {
+  zh: {
+    player: {
+      badge: "Fount 永久免费",
+      description: "Fount 本体免费开放；先体验基础 sub-agent、卡片和白板。",
+      priceSubtexts: {
+        monthly: "Fount 免费",
+        yearly: "Fount 免费",
+        lifetime: "Fount 免费",
+      },
+      cta: "免费开始",
+      features: [
+        "连接 Fount",
+        "基础 sub-agent 体验",
+        "基础卡片工作区",
+        "基础白板工作区",
+        "本地优先体验",
+        "社区访问",
+      ],
+      note: "Player 是免费的 Fount 入口；需要创作和发布 Field 时，再购买 Forge。",
+    },
+    builder: {
+      badge: "Forge 创作能力",
+      sticker: "推荐起点",
+      description: "适合用 Forge 构建 Field；Fount 本体仍永久免费。",
+      priceSubtexts: {
+        monthly: "Forge / 月",
+        yearly: "Forge / 年",
+        lifetime: "Forge 买断",
+      },
+      cta: "获取 Builder",
+      features: [
+        "Forge Field 创作工具",
+        "本地 Field 创建流程",
+        "更好的 agent 响应体验",
+        "自动生成卡片",
+        "高级卡片和白板流程",
+        "本地新功能早期体验",
+        "Fount 生态 Builder 身份",
+      ],
+      note: "价格对应 Forge Builder 能力；Fount Core 免费使用。未来云服务可能单独计费。",
+      futureAnchor: "未来价格：$99+",
+    },
+    master: {
+      badge: "生态创始成员",
+      sticker: "Founding",
+      description: "适合购买 Forge Master，用于发布、运营和参与 Field 生态。",
+      priceSubtexts: {
+        monthly: "Forge / 月",
+        yearly: "Forge / 年",
+        lifetime: "Forge 买断",
+      },
+      cta: "获取 Master",
+      features: [
+        "包含 Builder 全部能力",
+        "完整本地发布和运营流程",
+        "Foundry 早期发布权限",
+        "Sub-agent 网络能力",
+        "优先生态实验访问",
+        "Founding Master 身份",
+        "更适合严肃 Field 创作者",
+      ],
+      note: "价格对应 Forge Master 能力；Fount 本体免费。未来云托管、付费算力、团队协作和市场推广可能单独计费。",
+      futureAnchor: "未来价格：$199+",
+    },
+  },
+  en: {
+    player: {
+      badge: "Fount free forever",
+      description: "Fount itself is free; start with basic sub-agents, cards, and whiteboards.",
+      priceSubtexts: {
+        monthly: "Fount free",
+        yearly: "Fount free",
+        lifetime: "Fount free",
+      },
+      cta: "Start Free",
+      features: [
+        "Connect with Fount",
+        "Basic sub-agent experience",
+        "Basic card workspace",
+        "Basic whiteboard workspace",
+        "Local-first experience",
+        "Community access",
+      ],
+      note: "Player is the free Fount entry. Buy Forge when you are ready to create and publish Fields.",
+    },
+    builder: {
+      badge: "Forge creation",
+      sticker: "Best starting point",
+      description: "For building Fields with Forge. Fount itself stays free forever.",
+      priceSubtexts: {
+        monthly: "Forge / month",
+        yearly: "Forge / year",
+        lifetime: "Forge Lifetime",
+      },
+      cta: "Get Builder",
+      features: [
+        "Forge toolkit for building Fields",
+        "Local Field creation workflow",
+        "High-quality agent response experience",
+        "Automated card generation",
+        "Advanced card and whiteboard workflows",
+        "Early access to new local features",
+        "Builder role in the Fount ecosystem",
+      ],
+      note: "This price is for Forge Builder capability; Fount Core remains free. Future cloud services may require separate plans.",
+      futureAnchor: "Future price: $99+",
+    },
+    master: {
+      badge: "Founding ecosystem member",
+      sticker: "Founding",
+      description: "For Forge Master: publishing, operations, and shaping the Field ecosystem.",
+      priceSubtexts: {
+        monthly: "Forge / month",
+        yearly: "Forge / year",
+        lifetime: "Forge Lifetime",
+      },
+      cta: "Get Master",
+      features: [
+        "Everything in Builder",
+        "Full local publishing and operation workflow",
+        "Early Foundry publishing access",
+        "Sub-agent network features",
+        "Priority access to ecosystem experiments",
+        "Founding Master status",
+        "Better fit for serious Field creators",
+      ],
+      note: "This price is for Forge Master capability; Fount itself stays free. Future cloud hosting, paid compute, team collaboration, and marketplace promotion may require separate plans.",
+      futureAnchor: "Future price: $199+",
+    },
+  },
+};
 
 const FOUNT_COMPARISON_ROWS: ComparisonRow[] = [
   { feature: "Connect with Fount", player: "Yes", builder: "Yes", master: "Yes" },
@@ -1772,12 +2072,22 @@ export function FountHomePage({
   const isPricingPage = page === "pricing";
   const isPartnersPage = page === "partners";
   const isUpdatesPage = page === "updates";
+  const isBlogPage = page === "blog";
   const isHomePage = page === "home";
   const [activeOutline, setActiveOutline] = useState<OutlineId>("vision");
+  const [viewedHomeChapterIds, setViewedHomeChapterIds] = useState<HomeChapterId[]>([]);
   const [release, setRelease] = useState<FountReleaseManifest | null>(null);
   const downloadUrl = release?.downloads?.websiteUrl ?? "/Fount.dmg";
-  const blogHref = lang === "en" ? "/blog?lang=en" : "/blog";
-  const accountHref = lang === "en" ? "/?view=login&lang=en" : "/?view=login";
+  const langParam = `lang=${lang}`;
+  const homeHref = `/?${langParam}`;
+  const updatesHref = `/?view=updates&${langParam}`;
+  const pricingHref = `/?view=pricing&${langParam}`;
+  const blogHref = `/blog?${langParam}`;
+  const accountHref = `/?view=login&${langParam}`;
+  const viewedHomeChapterIdSet = new Set(viewedHomeChapterIds);
+  const viewedHomeCards = HOME_CHAPTERS.flatMap((chapter, chapterIndex) =>
+    viewedHomeChapterIdSet.has(chapter.id) ? [{ chapter, chapterNumber: chapterIndex + 1 }] : [],
+  );
 
   useEffect(() => {
     document.title = isPricingPage
@@ -1786,12 +2096,16 @@ export function FountHomePage({
         ? copy.partnersDocumentTitle
       : isUpdatesPage
         ? copy.updatesDocumentTitle
+      : isBlogPage
+        ? copy.blogDocumentTitle
         : copy.documentTitle;
   }, [
+    copy.blogDocumentTitle,
     copy.documentTitle,
     copy.partnersDocumentTitle,
     copy.pricingDocumentTitle,
     copy.updatesDocumentTitle,
+    isBlogPage,
     isPartnersPage,
     isPricingPage,
     isUpdatesPage,
@@ -1826,6 +2140,61 @@ export function FountHomePage({
   }, [isHomePage]);
 
   useEffect(() => {
+    if (!isHomePage) {
+      setViewedHomeChapterIds([]);
+      return;
+    }
+
+    const chapterNodes = Array.from(document.querySelectorAll<HTMLElement>("[data-home-chapter]"));
+
+    const revealChapter = (chapterId: string | undefined) => {
+      if (!chapterId || !HOME_CHAPTER_ID_SET.has(chapterId as HomeChapterId)) {
+        return;
+      }
+
+      const typedChapterId = chapterId as HomeChapterId;
+      setViewedHomeChapterIds((currentIds) =>
+        currentIds.includes(typedChapterId) ? currentIds : [...currentIds, typedChapterId],
+      );
+    };
+
+    const revealVisibleChapters = () => {
+      const activationLine = window.innerHeight * 0.42;
+      chapterNodes.forEach((node) => {
+        const rect = node.getBoundingClientRect();
+        if (rect.top <= activationLine && rect.bottom >= 0) {
+          revealChapter(node.dataset.homeChapter);
+        }
+      });
+    };
+
+    const observer =
+      "IntersectionObserver" in window
+        ? new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                  revealChapter((entry.target as HTMLElement).dataset.homeChapter);
+                }
+              });
+            },
+            { rootMargin: "0px 0px -58% 0px", threshold: 0.18 },
+          )
+        : null;
+
+    chapterNodes.forEach((node) => observer?.observe(node));
+    revealVisibleChapters();
+    window.addEventListener("scroll", revealVisibleChapters, { passive: true });
+    window.addEventListener("resize", revealVisibleChapters);
+
+    return () => {
+      observer?.disconnect();
+      window.removeEventListener("scroll", revealVisibleChapters);
+      window.removeEventListener("resize", revealVisibleChapters);
+    };
+  }, [isHomePage]);
+
+  useEffect(() => {
     let cancelled = false;
 
     fetch("/releases/fount/latest.json", { cache: "no-store" })
@@ -1849,19 +2218,27 @@ export function FountHomePage({
   return (
     <main className="fount-page fount-page-focused" data-lang={lang} data-page={page}>
       <header className="fount-header">
-        <a className="fount-logo" href={isHomePage ? "#vision" : "/"} aria-label="Fount home">
+        <a className="fount-logo" href={isHomePage ? "#vision" : homeHref} aria-label="Fount home">
           <span className="fount-logo-mark" aria-hidden="true">
             <img src="/fount/fount-logo-source.png" alt="" />
           </span>
           Fount
         </a>
 
-        {isPricingPage || isPartnersPage ? (
+        {isPricingPage || isPartnersPage || isBlogPage || isUpdatesPage ? (
           <nav
             className="fount-nav fount-outline-nav fount-pricing-back-nav"
-            aria-label={isPartnersPage ? "Fount Partner Program" : copy.navPricing}
+            aria-label={
+              isPartnersPage
+                ? "Fount Partner Program"
+                : isBlogPage
+                  ? copy.navBlog
+                  : isUpdatesPage
+                    ? copy.navUpdates
+                    : copy.navPricing
+            }
           >
-            <a href="/">{copy.navHome}</a>
+            <a href={homeHref}>{copy.navHome}</a>
           </nav>
         ) : isHomePage ? (
           <nav className="fount-nav fount-outline-nav" aria-label="Fount page outline">
@@ -1884,15 +2261,21 @@ export function FountHomePage({
               {copy.navDocs}
             </a>
             <a
-              href="/?view=updates"
+              href={updatesHref}
               className={isUpdatesPage ? "active" : ""}
               aria-current={isUpdatesPage ? "page" : undefined}
             >
               {copy.navUpdates}
             </a>
-            <a href={blogHref}>{copy.navBlog}</a>
             <a
-              href="/?view=pricing"
+              href={blogHref}
+              className={isBlogPage ? "active" : ""}
+              aria-current={isBlogPage ? "page" : undefined}
+            >
+              {copy.navBlog}
+            </a>
+            <a
+              href={pricingHref}
               className={isPricingPage ? "active" : ""}
               aria-current={isPricingPage ? "page" : undefined}
             >
@@ -1951,6 +2334,8 @@ export function FountHomePage({
         <FountPartnerPage />
       ) : isUpdatesPage ? (
         <FountUpdatesSection lang={lang} />
+      ) : isBlogPage ? (
+        <FountBlogSection lang={lang} />
       ) : (
         <>
       <section className="fount-hero" id="vision">
@@ -1970,19 +2355,70 @@ export function FountHomePage({
           </figure>
         </div>
 
-        <div className="fount-card-shelf" aria-label={copy.cardShelfAria}>
-          {HOME_BUILD_CARDS.map((card, index) => (
-            <article
-              className={`fount-build-card fount-build-card-${card.tone}`}
-              key={text(card.title)}
-              style={{ "--card-index": index } as CSSProperties}
-            >
-              <span>{card.label}</span>
-              <strong>{text(card.title)}</strong>
-              <p>{text(card.body)}</p>
-            </article>
-          ))}
+        <div
+          className="fount-card-shelf"
+          data-empty={viewedHomeCards.length === 0 ? "true" : undefined}
+          aria-label={copy.cardShelfAria}
+          aria-live="polite"
+        >
+          {viewedHomeCards.length > 0 ? (
+            viewedHomeCards.map((card, index) => (
+              <article
+                className={`fount-build-card fount-build-card-${card.chapter.tone}`}
+                key={card.chapter.id}
+                style={{ "--card-index": index } as CSSProperties}
+              >
+                <span>{String(card.chapterNumber).padStart(2, "0")}</span>
+                <strong>{text(card.chapter.title)}</strong>
+                <p>{text(card.chapter.cardBody)}</p>
+              </article>
+            ))
+          ) : (
+            <div className="fount-card-library-empty" role="status">
+              <span>{copy.cardShelfEmptyTitle}</span>
+              <strong>{copy.cardShelfEmptyBody}</strong>
+            </div>
+          )}
         </div>
+      </section>
+
+      <section
+        className="fount-scroll-chapters"
+        aria-label={lang === "zh" ? "Fount 主页章节" : "Fount homepage chapters"}
+      >
+        {HOME_CHAPTERS.map((chapter, chapterIndex) => (
+          <section
+            className={`fount-scroll-chapter fount-scroll-chapter-${chapter.tone}`}
+            data-home-chapter={chapter.id}
+            id={`chapter-${chapter.id}`}
+            key={chapter.id}
+          >
+            <div className="fount-scroll-chapter-index">{String(chapterIndex + 1).padStart(2, "0")}</div>
+            <div className="fount-scroll-chapter-copy">
+              <h2>{text(chapter.title)}</h2>
+              <ol className="fount-scroll-chapter-list">
+                {chapter.items.map((item) => (
+                  <li
+                    className={`fount-scroll-chapter-item fount-scroll-chapter-item-${item.kind ?? "line"}`}
+                    key={item.label}
+                  >
+                    <span>{item.label}</span>
+                    <div className="fount-scroll-chapter-item-copy">
+                      {item.kind === "formula" ? (
+                        <p className="fount-scroll-formula">
+                          <code>{text(item.body)}</code>
+                        </p>
+                      ) : (
+                        <p>{text(item.body)}</p>
+                      )}
+                      {item.note ? <small>{text(item.note)}</small> : null}
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </section>
+        ))}
       </section>
 
       <section className="fount-section fount-visual-section">
@@ -2401,7 +2837,7 @@ export function FountHomePage({
       </section>
         </>
       )}
-      <FountFooter />
+      <FountFooter lang={lang} />
     </main>
   );
 }
@@ -2426,11 +2862,13 @@ function resolvePartnerApplyHref() {
   return `mailto:${contactEmail}?subject=${encodeURIComponent("Fount Partner Program Application")}`;
 }
 
-function FountFooter() {
+function FountFooter({ lang }: { lang: Lang }) {
+  const langParam = `lang=${lang}`;
+
   return (
     <footer className="fount-footer" id="fount-footer">
       <div className="fount-footer-brand">
-        <a className="fount-logo" href="/" aria-label="Fount home">
+        <a className="fount-logo" href={`/?${langParam}`} aria-label="Fount home">
           <span className="fount-logo-mark" aria-hidden="true">
             <img src="/fount/fount-logo-source.png" alt="" />
           </span>
@@ -2441,7 +2879,7 @@ function FountFooter() {
       <nav className="fount-footer-grid" aria-label="Fount footer">
         <div>
           <strong>Product</strong>
-          <a href="/?view=pricing">Pricing</a>
+          <a href={`/?view=pricing&${langParam}`}>Pricing</a>
           <a href="/Fount.dmg">Download</a>
           <a href={SYSTEM_DOCS_URL} target="_blank" rel="noreferrer">
             Docs
@@ -2449,14 +2887,14 @@ function FountFooter() {
         </div>
         <div>
           <strong>Ecosystem</strong>
-          <a href="/partners">Partner Program</a>
-          <a href="/#ecosystem">Field Creators</a>
-          <a href="/?view=updates">Updates</a>
+          <a href={`/partners?${langParam}`}>Partner Program</a>
+          <a href={`/?${langParam}#ecosystem`}>Field Creators</a>
+          <a href={`/?view=updates&${langParam}`}>Updates</a>
         </div>
         <div>
           <strong>Resources</strong>
-          <a href="/blog">Blog</a>
-          <a href="/#open">Foundry</a>
+          <a href={`/blog?${langParam}`}>Blog</a>
+          <a href={`/?${langParam}#open`}>Foundry</a>
           <a href={resolvePartnerApplyHref()}>Community</a>
         </div>
       </nav>
@@ -2785,12 +3223,69 @@ function FountPricingSection({
   standalone?: boolean;
 }) {
   const [billingMode, setBillingMode] = useState<BillingMode>("lifetime");
-  const billingNote =
-    billingMode === "lifetime"
-      ? "Limited early access offer. Pay once for long-term access to the local product experience. Future cloud services may require separate plans."
-      : "Founding Lifetime is a limited early access offer for the local Fount experience. It does not include future high-cost cloud services.";
+  const [earlyBirdStatus, setEarlyBirdStatus] = useState<EarlyBirdStatus>(
+    FOUNT_EARLY_BIRD_INITIAL_STATUS,
+  );
+  const pricingCopy = FOUNT_PRICING_PAGE_COPY[lang];
+  const activeBillingIndex = BILLING_MODES.findIndex((mode) => mode.id === billingMode);
+  const earlyBirdLimit = Math.max(1, earlyBirdStatus.limit);
+  const earlyBirdClaimed = Math.min(earlyBirdLimit, Math.max(0, earlyBirdStatus.claimed));
+  const earlyBirdActive = earlyBirdStatus.active && earlyBirdClaimed < earlyBirdLimit;
+  const billingNote = pricingCopy.billingNotes[billingMode];
   const foundingHref = FOUNT_PRICING_PLANS.find((plan) => plan.id === "master")?.hrefs.lifetime ?? "#pricing-cards";
   const playerHref = FOUNT_PRICING_PLANS[0]?.hrefs.lifetime ?? "/Fount.dmg";
+
+  useEffect(() => {
+    let cancelled = false;
+
+    fetch("/api/fount-early-bird-status", { cache: "no-store" })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data) => {
+        if (cancelled || !data || typeof data !== "object") {
+          return;
+        }
+
+        const claimed = Number((data as EarlyBirdStatus).claimed);
+        const limit = Number((data as EarlyBirdStatus).limit);
+        if (!Number.isFinite(claimed) || !Number.isFinite(limit) || limit <= 0) {
+          return;
+        }
+
+        const normalizedClaimed = Math.min(limit, Math.max(0, claimed));
+        setEarlyBirdStatus({
+          claimed: normalizedClaimed,
+          limit,
+          active: Boolean((data as EarlyBirdStatus).active) && normalizedClaimed < limit,
+        });
+      })
+      .catch(() => {
+        // Keep build-time fallback status when the runtime counter is unavailable.
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const getPlanPrice = (plan: PricingPlan) =>
+    billingMode === "lifetime" && earlyBirdActive && plan.earlyBirdLifetimePrice
+      ? plan.earlyBirdLifetimePrice
+      : plan.prices[billingMode];
+
+  const getPlanHref = (plan: PricingPlan) =>
+    billingMode === "lifetime" && earlyBirdActive && plan.earlyBirdLifetimeHref
+      ? plan.earlyBirdLifetimeHref
+      : plan.hrefs[billingMode];
+
+  const getPlanCopy = (plan: PricingPlan) => FOUNT_PRICING_PLAN_COPY[lang][plan.id];
+
+  const getPlanPriceNote = (plan: PricingPlan) => {
+    if (billingMode === "lifetime" && earlyBirdActive && plan.earlyBirdNextPrice) {
+      return pricingCopy.earlyBirdNote(plan.earlyBirdNextPrice);
+    }
+
+    return getPlanCopy(plan).futureAnchor;
+  };
 
   return (
     <section
@@ -2798,56 +3293,19 @@ function FountPricingSection({
       id="pricing"
       data-lang={lang}
     >
-      <div className="fount-pricing-hero">
+      <div className="fount-pricing-hero fount-pricing-hero-compact">
         <div className="fount-pricing-hero-copy">
-          <p className="fount-pricing-page-label">Pricing</p>
-          <h1>Build your own AI Field.</h1>
-          <p className="fount-pricing-hero-lead">
-            Fount is a local-first personal agent framework for creating Fields - living workspaces where agents, cards,
-            memories, tools, and workflows can grow together.
-          </p>
-          <p className="fount-pricing-hero-support">
-            Start free with Player, build with Forge in Builder, and join the founding layer of the Fount ecosystem with Master.
-          </p>
-          <div className="fount-pricing-actions">
-            <a className="fount-pricing-primary-action" href={foundingHref}>
-              Get Founding Access
-            </a>
-            <a className="fount-pricing-secondary-action" href={playerHref}>
-              Start with Player
-            </a>
-          </div>
-          <small>Early access pricing. Local-first product. Future cloud services may require separate plans.</small>
+          <p className="fount-pricing-page-label">{pricingCopy.label}</p>
+          <h1>{pricingCopy.title}</h1>
+          <p className="fount-pricing-hero-lead">{pricingCopy.lead}</p>
         </div>
-        <div className="fount-pricing-hero-board" aria-hidden="true">
-          <span>Agent</span>
-          <span>Card</span>
-          <span>Field</span>
-          <span>Forge</span>
-          <span>Memory</span>
-          <span>Workflow</span>
-        </div>
-      </div>
-
-      <div className="fount-early-access-note">
-        <span className="fount-note-icon">seed</span>
-        <div>
-          <strong>Early Access</strong>
-          <h2>Fount is still in early access.</h2>
-          <p>
-            The founding prices below are lower because the product is still evolving. Early users get long-term access
-            to the local core experience, direct influence on the roadmap, and a place in the first layer of the Fount
-            ecosystem.
-          </p>
-          <p>
-            Future cloud services, hosted agent runtime, paid compute, team collaboration, and marketplace promotion may
-            require separate plans.
-          </p>
-        </div>
-      </div>
-
-      <div className="fount-billing-tabs" aria-label="Purchase mode">
-        <div className="fount-billing-tab-list" role="tablist" aria-label="Billing mode">
+        <div className="fount-billing-tabs" aria-label={pricingCopy.billingAria}>
+          <div
+            className="fount-billing-tab-list"
+            role="tablist"
+            aria-label={pricingCopy.billingAria}
+            style={{ "--billing-index": Math.max(0, activeBillingIndex) } as CSSProperties}
+          >
           {BILLING_MODES.map((mode) => (
             <button
               type="button"
@@ -2857,15 +3315,20 @@ function FountPricingSection({
               key={mode.id}
               onClick={() => setBillingMode(mode.id)}
             >
-              {mode.label}
+              {mode.label[lang]}
             </button>
           ))}
+          </div>
+          <p>{billingNote}</p>
         </div>
-        <p>{billingNote}</p>
       </div>
 
       <div className="fount-pricing-grid fount-pricing-grid-focused" id="pricing-cards">
-        {FOUNT_PRICING_PLANS.map((plan) => (
+        {FOUNT_PRICING_PLANS.map((plan) => {
+          const planCopy = getPlanCopy(plan);
+          const priceNote = getPlanPriceNote(plan);
+
+          return (
             <article
               className={`fount-pricing-card fount-pricing-tier fount-pricing-plan-${plan.id}${plan.featured ? " fount-pricing-tier-featured" : ""}`}
               id={`pricing-${plan.id}`}
@@ -2873,32 +3336,35 @@ function FountPricingSection({
             >
               <div className="fount-pricing-tier-head">
                 <div>
-                  <span className="fount-plan-badge">{plan.badge}</span>
+                  <span className="fount-plan-badge">{planCopy.badge}</span>
                   <h3>{plan.name}</h3>
                 </div>
-                {plan.sticker ? <span className="fount-plan-sticker">{plan.sticker}</span> : null}
+                {planCopy.sticker ? <span className="fount-plan-sticker">{planCopy.sticker}</span> : null}
               </div>
-              <p className="fount-plan-description">{plan.description}</p>
-              <div className="fount-pricing-price" aria-label={`${plan.name} ${plan.prices[billingMode]}`}>
-                <strong className="fount-pricing-amount">{plan.prices[billingMode]}</strong>
-                <span className="fount-pricing-unit">{plan.priceSubtexts[billingMode]}</span>
+              <p className="fount-plan-description">{planCopy.description}</p>
+              <div className="fount-pricing-price" aria-label={`${plan.name} ${getPlanPrice(plan)}`}>
+                <strong className="fount-pricing-amount">{getPlanPrice(plan)}</strong>
+                <span className="fount-pricing-unit">{planCopy.priceSubtexts[billingMode]}</span>
               </div>
-              {billingMode === "yearly" && plan.id !== "player" ? <span className="fount-save-badge">Save 25%</span> : null}
-              {plan.futureAnchor ? <p className="fount-pricing-price-note">{plan.futureAnchor}</p> : null}
-              <a className={plan.featured ? "fount-pricing-primary-action" : "fount-pricing-secondary-action"} href={plan.hrefs[billingMode]}>
-                {plan.cta}
+              {billingMode === "yearly" && plan.id !== "player" ? (
+                <span className="fount-save-badge">{lang === "zh" ? "省 25%" : "Save 25%"}</span>
+              ) : null}
+              <p className="fount-pricing-price-note">{priceNote ?? "\u00a0"}</p>
+              <a className={plan.featured ? "fount-pricing-primary-action" : "fount-pricing-secondary-action"} href={getPlanHref(plan)}>
+                {planCopy.cta}
               </a>
               <div className="fount-plan-includes">
-                <span>Includes</span>
+                <span>{lang === "zh" ? "包含" : "Includes"}</span>
                 <ul>
-                  {plan.features.map((feature) => (
+                  {planCopy.features.map((feature) => (
                     <li key={feature}>{feature}</li>
                   ))}
                 </ul>
               </div>
-              <p className="fount-plan-note">{plan.note}</p>
+              <p className="fount-plan-note">{planCopy.note}</p>
             </article>
-        ))}
+          );
+        })}
       </div>
 
       <div className="fount-comparison-section">
@@ -3066,6 +3532,58 @@ function FountPricingSection({
           <small>Local-first early access. Future cloud services may require separate plans.</small>
         </div>
       </div>
+    </section>
+  );
+}
+
+function FountBlogSection({ lang }: { lang: Lang }) {
+  const copy = COPY[lang];
+  const articles = BLOG_ARTICLES;
+
+  return (
+    <section className="fount-section fount-blog-page-section" id="blog">
+      <div className="fount-section-head fount-section-head-wide">
+        <div>
+          <p className="fount-pricing-page-label">{copy.navBlog}</p>
+          <h1>{copy.blogTitle}</h1>
+        </div>
+        <p>{copy.blogLead}</p>
+      </div>
+
+      <div className="fount-blog-page-grid">
+        {articles.map((article) => {
+          const summary = article.summary[lang].trim();
+          const note = article.note[lang].trim();
+          const sourceLabel =
+            article.source === "x"
+              ? "X"
+              : article.source === "substack"
+                ? "Substack"
+                : "Fount";
+
+          return (
+            <article className="fount-blog-page-card" key={article.id}>
+              <div className="fount-blog-page-meta">
+                <span>{article.date}</span>
+                <span>{article.category[lang]}</span>
+                <span>{sourceLabel}</span>
+              </div>
+              <h2>{article.title[lang]}</h2>
+              {summary ? <p>{summary}</p> : null}
+              {note ? <strong>{note}</strong> : null}
+              {article.sourceUrl ? (
+                <a className="fount-release-notes-link" href={article.sourceUrl} target="_blank" rel="noreferrer">
+                  {lang === "zh" ? "查看原文" : "Open original"}
+                </a>
+              ) : null}
+            </article>
+          );
+        })}
+      </div>
+
+      {articles.length === 0 ? (
+        <p className="fount-release-empty">{copy.blogEmpty}</p>
+      ) : null}
     </section>
   );
 }
