@@ -26,3 +26,9 @@ supabase/.temp/
 *.sln
 *.sw?
 .gstack/
+
+# Keep the project-level Codex launch action, ignore other local Codex state.
+.codex/*
+!.codex/environments/
+.codex/environments/*
+!.codex/environments/environment.toml

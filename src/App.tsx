@@ -111,7 +111,9 @@ type RootView =
   | "about"
   | "pricing"
   | "partners"
-  | "updates";
+  | "updates"
+  | "fields"
+  | "docs";
 type UnlockStorageMode = "remote" | "local" | "loading" | "idle";
 type ThemeMode = "day" | "night";
 type HomeProject = {
@@ -932,12 +934,24 @@ function toRootView(raw: string | null, pathname: string): RootView {
   if (pathname === "/updates" || pathname === "/updates/") {
     return "updates";
   }
+  if (pathname === "/fields" || pathname === "/fields/") {
+    return "fields";
+  }
+  if (pathname === "/docs" || pathname === "/docs/") {
+    return "docs";
+  }
 
   if (raw === "home") {
     return "home";
   }
   if (raw === "updates") {
     return "updates";
+  }
+  if (raw === "fields" || raw === "field") {
+    return "fields";
+  }
+  if (raw === "docs" || raw === "documentation") {
+    return "docs";
   }
   if (raw === "pricing") {
     return "pricing";
@@ -1017,6 +1031,10 @@ function relativeRootHref(view: RootView, lang: Lang) {
     url.pathname = "/partners";
   } else if (view === "updates") {
     url.searchParams.set("view", "updates");
+  } else if (view === "fields") {
+    url.pathname = "/fields";
+  } else if (view === "docs") {
+    url.pathname = "/docs";
   }
 
   url.searchParams.set("lang", lang);
@@ -1317,6 +1335,10 @@ function App() {
   }, [themeMode]);
 
   useEffect(() => {
+    document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
+  }, [lang]);
+
+  useEffect(() => {
     if (rootView === "blog") {
       document.title = lang === "zh" ? "Fount 博客 | Notes" : "Fount Blog | Notes";
     }
@@ -1329,7 +1351,15 @@ function App() {
 
     const next = new URL(window.location.href);
     next.pathname =
-      rootView === "blog" ? "/blog" : rootView === "partners" ? "/partners" : "/";
+      rootView === "blog"
+        ? "/blog"
+        : rootView === "partners"
+          ? "/partners"
+          : rootView === "fields"
+            ? "/fields"
+            : rootView === "docs"
+              ? "/docs"
+              : "/";
 
     if (rootView === "login") {
       next.searchParams.set("view", "login");
@@ -1345,6 +1375,10 @@ function App() {
       next.searchParams.delete("view");
     } else if (rootView === "updates") {
       next.searchParams.set("view", "updates");
+    } else if (rootView === "fields") {
+      next.searchParams.delete("view");
+    } else if (rootView === "docs") {
+      next.searchParams.delete("view");
     } else {
       next.searchParams.delete("view");
     }
@@ -3644,7 +3678,9 @@ function App() {
     rootView === "home" ||
     rootView === "pricing" ||
     rootView === "partners" ||
-    rootView === "updates"
+    rootView === "updates" ||
+    rootView === "fields" ||
+    rootView === "docs"
   ) {
     return (
       <FountHomePage
@@ -3654,10 +3690,15 @@ function App() {
             ? "pricing"
             : rootView === "partners"
               ? "partners"
-            : rootView === "updates"
-              ? "updates"
-              : "home"
+              : rootView === "updates"
+                ? "updates"
+                : rootView === "fields"
+                  ? "fields"
+                  : rootView === "docs"
+                    ? "docs"
+                    : "home"
         }
+        onTabChange={switchRootView}
         onLangChange={setLang}
         themeMode={themeMode}
         onThemeToggle={() =>
@@ -3720,7 +3761,8 @@ function App() {
 
             <div className="fount-header-actions">
               <nav className="fount-site-nav" aria-label="Site links">
-                <a href={SYSTEM_SITE_URL} target="_blank" rel="noreferrer">
+                <a href={relativeRootHref("fields", lang)}>Fields</a>
+                <a href={relativeRootHref("docs", lang)}>
                   {lang === "zh" ? "文档" : "Docs"}
                 </a>
                 <a href={relativeRootHref("updates", lang)}>

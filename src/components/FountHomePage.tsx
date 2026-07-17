@@ -1,17 +1,54 @@
 import { useEffect, useState } from "react";
-import type { CSSProperties, ReactNode } from "react";
+import type {
+  CSSProperties,
+  MouseEvent as ReactMouseEvent,
+  ReactNode,
+} from "react";
 import { BLOG_ARTICLES } from "../data/blogArticles";
+import { FOUNT_FIELDS } from "../data/fountFields";
 import type { Lang } from "../i18n/lang";
+import { withSiteParams } from "../lib/lang-url";
+import { FountDocsSection } from "./FountDocsSection";
 import { SocialLinks } from "./SocialLinks";
 import { ThemeModeIcon } from "./ThemeModeIcon";
 
 type FountHomePageProps = {
   lang: Lang;
-  page?: "home" | "pricing" | "partners" | "updates" | "blog";
+  page?: "home" | "pricing" | "partners" | "updates" | "blog" | "fields" | "docs";
+  onTabChange?: (tab: FountPrimaryTab) => void;
   onLangChange: (lang: Lang) => void;
   themeMode: "day" | "night";
   onThemeToggle: () => void;
 };
+
+type FountPrimaryTab = "home" | "fields" | "docs";
+
+function handleFountTabClick(
+  event: ReactMouseEvent<HTMLAnchorElement>,
+  tab: FountPrimaryTab,
+  onTabChange?: (tab: FountPrimaryTab) => void,
+) {
+  if (
+    !onTabChange ||
+    event.defaultPrevented ||
+    event.button !== 0 ||
+    event.metaKey ||
+    event.ctrlKey ||
+    event.shiftKey ||
+    event.altKey
+  ) {
+    return;
+  }
+
+  event.preventDefault();
+  onTabChange(tab);
+}
+
+function resetFieldPageScroll() {
+  window.scrollTo(0, 0);
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
+}
 
 type LocalizedText = Record<Lang, string>;
 
@@ -182,8 +219,6 @@ type FountReleaseEntry = {
   };
 };
 
-const SYSTEM_DOCS_URL = "https://system.wordm.us";
-
 function resolvePublicHref(primaryEnvName: string, fallback: string) {
   const env = import.meta.env as Record<string, string | undefined>;
   const value = env[primaryEnvName]?.trim();
@@ -232,6 +267,13 @@ const OUTLINE_ITEMS: Array<{ id: OutlineId; label: LocalizedText }> = [
   { id: "product", label: { zh: "产品", en: "Product" } },
 ];
 
+const DOCS_OUTLINE_ITEMS: Array<{ id: string; label: LocalizedText }> = [
+  { id: "docs-start", label: { zh: "开始", en: "Start" } },
+  { id: "docs-system", label: { zh: "系统", en: "System" } },
+  { id: "docs-worlds", label: { zh: "后验", en: "Posterior" } },
+  { id: "docs-field", label: { zh: "Field", en: "Field" } },
+];
+
 const COPY = {
   zh: {
     documentTitle: "Fount | 开放的个人 Agent 大脑",
@@ -239,6 +281,8 @@ const COPY = {
     partnersDocumentTitle: "Fount Partner Program",
     updatesDocumentTitle: "Fount 更新记录 | Release History",
     blogDocumentTitle: "Fount 博客 | Notes",
+    fieldsDocumentTitle: "我的 Fields | Fount",
+    docsDocumentTitle: "Fount 文档 | 系统、Field 与 SDK",
     navHome: "首页",
     navConcepts: "概念",
     navArchitecture: "架构",
@@ -248,6 +292,7 @@ const COPY = {
     navRoadmap: "路线",
     navBlog: "博客",
     navDocs: "文档",
+    navFields: "Fields",
     navUpdates: "更新",
     navPricing: "定价",
     navAccount: "账号",
@@ -275,6 +320,18 @@ const COPY = {
     blogLead:
       "把关于 Fount、Field、agent system 和产品生态的思考放在同一条时间线上。这里是站内阅读入口，不再跳回旧的作品集页面。",
     blogEmpty: "还没有可展示的博客。",
+    fieldsEyebrow: "Built with Fount",
+    fieldsTitle: "我的 Fields",
+    fieldsLead:
+      "这里收录我已经做出、正在维护或继续生长的 Field。每一个 Field 都有自己的环境、规则、工具和 agent，也可以被 Fount 理解和进入。",
+    fieldsCount: "个 Field",
+    fieldsOpen: "进入 Field",
+    fieldsListAria: "我创建的 Field 列表",
+    fieldsBackToList: "返回完整列表",
+    fieldsOpenSeparate: "单独打开",
+    fieldsProductPage: "产品页",
+    fieldsSwitchAria: "切换 Field",
+    fieldsEmbedHint: "若页面无法内嵌，请单独打开。",
     heroTitle: "Fount",
     heroDeck: "像玩游戏一样构建产品。",
     heroSub: "想法变成卡片，现场铺成白板，agent 参与执行、检查和发布。",
@@ -348,6 +405,8 @@ const COPY = {
     partnersDocumentTitle: "Fount Partner Program",
     updatesDocumentTitle: "Fount Updates | Release History",
     blogDocumentTitle: "Fount Blog | Notes",
+    fieldsDocumentTitle: "My Fields | Fount",
+    docsDocumentTitle: "Fount Docs | System, Fields, and SDK",
     navHome: "Home",
     navConcepts: "Concepts",
     navArchitecture: "Architecture",
@@ -357,6 +416,7 @@ const COPY = {
     navRoadmap: "Roadmap",
     navBlog: "Blog",
     navDocs: "Docs",
+    navFields: "Fields",
     navUpdates: "Updates",
     navPricing: "Pricing",
     navAccount: "Account",
@@ -384,6 +444,18 @@ const COPY = {
     blogLead:
       "Notes on Fount, Fields, agent systems, and product ecosystems in one timeline. This is the in-site reading entry, not the old portfolio blog shell.",
     blogEmpty: "No blog posts are available yet.",
+    fieldsEyebrow: "Built with Fount",
+    fieldsTitle: "My Fields",
+    fieldsLead:
+      "A collection of Fields I have built, maintain, or keep growing. Each Field has its own environment, rules, tools, and agents, while remaining understandable and enterable by Fount.",
+    fieldsCount: "Fields",
+    fieldsOpen: "Enter Field",
+    fieldsListAria: "Fields I created",
+    fieldsBackToList: "Back to full list",
+    fieldsOpenSeparate: "Open separately",
+    fieldsProductPage: "Product page",
+    fieldsSwitchAria: "Switch Field",
+    fieldsEmbedHint: "If embedding is blocked, open it separately.",
     heroTitle: "Fount",
     heroDeck: "Build products like a game.",
     heroSub: "Ideas become cards, the work opens on a whiteboard, and agents execute, review, and ship.",
@@ -2063,6 +2135,7 @@ const FAQ_ITEMS: FaqItem[] = [
 export function FountHomePage({
   lang,
   page = "home",
+  onTabChange,
   onLangChange,
   themeMode,
   onThemeToggle,
@@ -2073,6 +2146,8 @@ export function FountHomePage({
   const isPartnersPage = page === "partners";
   const isUpdatesPage = page === "updates";
   const isBlogPage = page === "blog";
+  const isFieldsPage = page === "fields";
+  const isDocsPage = page === "docs";
   const isHomePage = page === "home";
   const [activeOutline, setActiveOutline] = useState<OutlineId>("vision");
   const [viewedHomeChapterIds, setViewedHomeChapterIds] = useState<HomeChapterId[]>([]);
@@ -2083,6 +2158,8 @@ export function FountHomePage({
   const updatesHref = `/?view=updates&${langParam}`;
   const pricingHref = `/?view=pricing&${langParam}`;
   const blogHref = `/blog?${langParam}`;
+  const fieldsHref = `/fields?${langParam}`;
+  const docsHref = `/docs?${langParam}`;
   const accountHref = `/?view=login&${langParam}`;
   const viewedHomeChapterIdSet = new Set(viewedHomeChapterIds);
   const viewedHomeCards = HOME_CHAPTERS.flatMap((chapter, chapterIndex) =>
@@ -2094,18 +2171,26 @@ export function FountHomePage({
       ? copy.pricingDocumentTitle
       : isPartnersPage
         ? copy.partnersDocumentTitle
-      : isUpdatesPage
-        ? copy.updatesDocumentTitle
-      : isBlogPage
-        ? copy.blogDocumentTitle
-        : copy.documentTitle;
+        : isFieldsPage
+          ? copy.fieldsDocumentTitle
+          : isDocsPage
+            ? copy.docsDocumentTitle
+            : isUpdatesPage
+              ? copy.updatesDocumentTitle
+              : isBlogPage
+                ? copy.blogDocumentTitle
+                : copy.documentTitle;
   }, [
     copy.blogDocumentTitle,
     copy.documentTitle,
+    copy.docsDocumentTitle,
+    copy.fieldsDocumentTitle,
     copy.partnersDocumentTitle,
     copy.pricingDocumentTitle,
     copy.updatesDocumentTitle,
     isBlogPage,
+    isDocsPage,
+    isFieldsPage,
     isPartnersPage,
     isPricingPage,
     isUpdatesPage,
@@ -2218,14 +2303,26 @@ export function FountHomePage({
   return (
     <main className="fount-page fount-page-focused" data-lang={lang} data-page={page}>
       <header className="fount-header">
-        <a className="fount-logo" href={isHomePage ? "#vision" : homeHref} aria-label="Fount home">
+        <a
+          className="fount-logo"
+          href={isHomePage ? "#vision" : homeHref}
+          aria-label="Fount home"
+          onClick={
+            isHomePage
+              ? undefined
+              : (event) => handleFountTabClick(event, "home", onTabChange)
+          }
+        >
           <span className="fount-logo-mark" aria-hidden="true">
             <img src="/fount/fount-logo-source.png" alt="" />
           </span>
           Fount
         </a>
 
-        {isPricingPage || isPartnersPage || isBlogPage || isUpdatesPage ? (
+        {isPricingPage ||
+        isPartnersPage ||
+        isBlogPage ||
+        isUpdatesPage ? (
           <nav
             className="fount-nav fount-outline-nav fount-pricing-back-nav"
             aria-label={
@@ -2238,7 +2335,14 @@ export function FountHomePage({
                     : copy.navPricing
             }
           >
-            <a href={homeHref}>{copy.navHome}</a>
+            <a
+              href={homeHref}
+              onClick={(event) =>
+                handleFountTabClick(event, "home", onTabChange)
+              }
+            >
+              {copy.navHome}
+            </a>
           </nav>
         ) : isHomePage ? (
           <nav className="fount-nav fount-outline-nav" aria-label="Fount page outline">
@@ -2253,11 +2357,49 @@ export function FountHomePage({
               </a>
             ))}
           </nav>
+        ) : isDocsPage ? (
+          <nav
+            className="fount-nav fount-outline-nav fount-docs-outline-nav"
+            aria-label={copy.navDocs}
+          >
+            {DOCS_OUTLINE_ITEMS.map((item) => (
+              <a href={`#${item.id}`} key={item.id}>
+                {text(item.label)}
+              </a>
+            ))}
+          </nav>
         ) : null}
 
         <div className="fount-header-actions">
           <nav className="fount-site-nav" aria-label="Site links">
-            <a href={SYSTEM_DOCS_URL} target="_blank" rel="noreferrer">
+            <a
+              href={homeHref}
+              className={isHomePage ? "active" : ""}
+              aria-current={isHomePage ? "page" : undefined}
+              onClick={(event) =>
+                handleFountTabClick(event, "home", onTabChange)
+              }
+            >
+              Fount
+            </a>
+            <a
+              href={fieldsHref}
+              className={isFieldsPage ? "active" : ""}
+              aria-current={isFieldsPage ? "page" : undefined}
+              onClick={(event) =>
+                handleFountTabClick(event, "fields", onTabChange)
+              }
+            >
+              {copy.navFields}
+            </a>
+            <a
+              href={docsHref}
+              className={isDocsPage ? "active" : ""}
+              aria-current={isDocsPage ? "page" : undefined}
+              onClick={(event) =>
+                handleFountTabClick(event, "docs", onTabChange)
+              }
+            >
               {copy.navDocs}
             </a>
             <a
@@ -2328,7 +2470,11 @@ export function FountHomePage({
         linkClassName="fount-social-link"
       />
 
-      {isPricingPage ? (
+      {isDocsPage ? (
+        <FountDocsSection lang={lang} />
+      ) : isFieldsPage ? (
+        <FountFieldsSection lang={lang} />
+      ) : isPricingPage ? (
         <FountPricingSection lang={lang} standalone />
       ) : isPartnersPage ? (
         <FountPartnerPage />
@@ -2830,15 +2976,238 @@ export function FountHomePage({
           <a className="fount-primary-action fount-body-download fount-final-download" href={downloadUrl}>
             <span>{copy.macDownload}</span>
           </a>
-          <a className="fount-secondary-action" href={SYSTEM_DOCS_URL} target="_blank" rel="noreferrer">
+          <a
+            className="fount-secondary-action"
+            href={docsHref}
+            onClick={(event) =>
+              handleFountTabClick(event, "docs", onTabChange)
+            }
+          >
             {copy.finalSecondary}
           </a>
         </div>
       </section>
         </>
       )}
-      <FountFooter lang={lang} />
+      <FountFooter lang={lang} onTabChange={onTabChange} />
     </main>
+  );
+}
+
+function FountFieldsSection({ lang }: { lang: Lang }) {
+  const copy = COPY[lang];
+  const [selectedFieldKey, setSelectedFieldKey] = useState<string | null>(null);
+  const selectedField =
+    FOUNT_FIELDS.find((field) => field.key === selectedFieldKey) ?? null;
+
+  useEffect(() => {
+    if (!selectedFieldKey) {
+      return;
+    }
+
+    resetFieldPageScroll();
+    const frame = window.requestAnimationFrame(resetFieldPageScroll);
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [selectedFieldKey]);
+
+  const selectField = (
+    event: ReactMouseEvent<HTMLAnchorElement>,
+    fieldKey: string,
+  ) => {
+    if (
+      event.defaultPrevented ||
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey
+    ) {
+      return;
+    }
+
+    event.preventDefault();
+    event.currentTarget.blur();
+    resetFieldPageScroll();
+    setSelectedFieldKey(fieldKey);
+  };
+
+  const returnToFieldList = () => {
+    setSelectedFieldKey(null);
+    resetFieldPageScroll();
+    window.requestAnimationFrame(() => {
+      resetFieldPageScroll();
+    });
+  };
+
+  if (selectedField) {
+    const selectedHref = withSiteParams(selectedField.href, { lang });
+
+    return (
+      <section
+        className="fount-section fount-fields-page-section is-preview-open"
+        id="fields"
+      >
+        <div className="fount-fields-workspace">
+          <aside className="fount-fields-sidebar">
+            <header className="fount-fields-sidebar-header">
+              <div>
+                <p>{copy.fieldsEyebrow}</p>
+                <h1>{copy.fieldsTitle}</h1>
+              </div>
+              <button type="button" onClick={returnToFieldList}>
+                <svg viewBox="0 0 20 20" aria-hidden="true">
+                  <path d="M11.75 4.75 6.5 10l5.25 5.25" />
+                </svg>
+                <span>{copy.fieldsBackToList}</span>
+              </button>
+            </header>
+
+            <nav
+              className="fount-fields-sidebar-list"
+              aria-label={copy.fieldsSwitchAria}
+            >
+              {FOUNT_FIELDS.map((field, index) => {
+                const isActive = field.key === selectedField.key;
+
+                return (
+                  <a
+                    className={isActive ? "is-active" : undefined}
+                    href={withSiteParams(field.href, { lang })}
+                    aria-current={isActive ? "page" : undefined}
+                    aria-label={`${copy.fieldsSwitchAria}: ${field.name}`}
+                    key={field.key}
+                    onClick={(event) => selectField(event, field.key)}
+                  >
+                    <figure>
+                      <img
+                        src={field.coverUrl}
+                        alt=""
+                        loading={index > 1 ? "lazy" : "eager"}
+                      />
+                    </figure>
+                    <span className="fount-fields-sidebar-copy">
+                      <small>{String(index + 1).padStart(2, "0")}</small>
+                      <strong>{field.name}</strong>
+                      <span>{field.kind[lang]}</span>
+                    </span>
+                    <i aria-hidden="true" />
+                  </a>
+                );
+              })}
+            </nav>
+          </aside>
+
+          <section
+            className="fount-field-product-pane"
+            aria-label={`${selectedField.name} ${copy.fieldsProductPage}`}
+          >
+            <header className="fount-field-product-toolbar">
+              <div>
+                <span>{selectedField.kind[lang]}</span>
+                <strong>{selectedField.name}</strong>
+                <code>{selectedField.previewUrl}</code>
+              </div>
+              <div className="fount-field-product-actions">
+                <span className="fount-field-embed-hint">{copy.fieldsEmbedHint}</span>
+                <a href={selectedHref} target="_blank" rel="noreferrer">
+                  <span>{copy.fieldsOpenSeparate}</span>
+                  <svg viewBox="0 0 20 20" aria-hidden="true">
+                    <path d="M7.25 5.5H5.5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2v-1.75" />
+                    <path d="M10 3.5h6.5V10M16.25 3.75 9 11" />
+                  </svg>
+                </a>
+                <button
+                  type="button"
+                  aria-label={copy.fieldsBackToList}
+                  title={copy.fieldsBackToList}
+                  onClick={returnToFieldList}
+                >
+                  <svg viewBox="0 0 20 20" aria-hidden="true">
+                    <path d="m5 5 10 10M15 5 5 15" />
+                  </svg>
+                </button>
+              </div>
+            </header>
+
+            <iframe
+              key={`${selectedField.key}-${lang}`}
+              className="fount-field-product-frame"
+              src={selectedHref}
+              title={`${selectedField.name} ${copy.fieldsProductPage}`}
+              allow="clipboard-read; clipboard-write; fullscreen"
+              allowFullScreen
+              referrerPolicy="strict-origin-when-cross-origin"
+            />
+          </section>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section className="fount-section fount-fields-page-section" id="fields">
+      <header className="fount-fields-hero">
+        <div className="fount-fields-hero-copy">
+          <p className="fount-fields-eyebrow">{copy.fieldsEyebrow}</p>
+          <h1>{copy.fieldsTitle}</h1>
+          <p>{copy.fieldsLead}</p>
+        </div>
+        <div
+          className="fount-fields-count"
+          aria-label={`${FOUNT_FIELDS.length} ${copy.fieldsCount}`}
+        >
+          <strong>{String(FOUNT_FIELDS.length).padStart(2, "0")}</strong>
+          <span>{copy.fieldsCount}</span>
+        </div>
+      </header>
+
+      <div
+        className="fount-fields-list"
+        role="list"
+        aria-label={copy.fieldsListAria}
+      >
+        {FOUNT_FIELDS.map((field, index) => {
+          return (
+            <article className="fount-field-row" role="listitem" key={field.key}>
+              <a
+                href={withSiteParams(field.href, { lang })}
+                aria-label={`${copy.fieldsOpen}: ${field.name}`}
+                onClick={(event) => selectField(event, field.key)}
+              >
+                <div className="fount-field-index">
+                  <span>{String(index + 1).padStart(2, "0")}</span>
+                  <small>{field.kind[lang]}</small>
+                </div>
+
+                <figure className="fount-field-cover">
+                  <img
+                    src={field.coverUrl}
+                    alt={field.coverAlt[lang]}
+                    loading={index > 1 ? "lazy" : "eager"}
+                  />
+                </figure>
+
+                <div className="fount-field-copy">
+                  <div className="fount-field-heading">
+                    <h2>{field.name}</h2>
+                    <span className="fount-field-status">{field.status[lang]}</span>
+                  </div>
+                  <p>{field.summary[lang]}</p>
+                  <div className="fount-field-entry">
+                    <code>{field.previewUrl}</code>
+                    <span>
+                      {copy.fieldsOpen}
+                      <b aria-hidden="true">↗</b>
+                    </span>
+                  </div>
+                </div>
+              </a>
+            </article>
+          );
+        })}
+      </div>
+    </section>
   );
 }
 
@@ -2862,13 +3231,26 @@ function resolvePartnerApplyHref() {
   return `mailto:${contactEmail}?subject=${encodeURIComponent("Fount Partner Program Application")}`;
 }
 
-function FountFooter({ lang }: { lang: Lang }) {
+function FountFooter({
+  lang,
+  onTabChange,
+}: {
+  lang: Lang;
+  onTabChange?: (tab: FountPrimaryTab) => void;
+}) {
   const langParam = `lang=${lang}`;
 
   return (
     <footer className="fount-footer" id="fount-footer">
       <div className="fount-footer-brand">
-        <a className="fount-logo" href={`/?${langParam}`} aria-label="Fount home">
+        <a
+          className="fount-logo"
+          href={`/?${langParam}`}
+          aria-label="Fount home"
+          onClick={(event) =>
+            handleFountTabClick(event, "home", onTabChange)
+          }
+        >
           <span className="fount-logo-mark" aria-hidden="true">
             <img src="/fount/fount-logo-source.png" alt="" />
           </span>
@@ -2879,9 +3261,22 @@ function FountFooter({ lang }: { lang: Lang }) {
       <nav className="fount-footer-grid" aria-label="Fount footer">
         <div>
           <strong>Product</strong>
+          <a
+            href={`/fields?${langParam}`}
+            onClick={(event) =>
+              handleFountTabClick(event, "fields", onTabChange)
+            }
+          >
+            Fields
+          </a>
           <a href={`/?view=pricing&${langParam}`}>Pricing</a>
           <a href="/Fount.dmg">Download</a>
-          <a href={SYSTEM_DOCS_URL} target="_blank" rel="noreferrer">
+          <a
+            href={`/docs?${langParam}`}
+            onClick={(event) =>
+              handleFountTabClick(event, "docs", onTabChange)
+            }
+          >
             Docs
           </a>
         </div>

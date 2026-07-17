@@ -12,6 +12,11 @@ npm install
 script = "echo \"no cleanup needed\""
 
 [[actions]]
+name = "打开体验"
+icon = "run"
+command = '''exec bash "${CODEX_WORKTREE_PATH:-$PWD}/scripts/open-experience.sh"'''
+
+[[actions]]
 name = "开发"
 icon = "tool"
 command = "npm run dev"
