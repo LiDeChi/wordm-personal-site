@@ -25,10 +25,30 @@ jobs:
           node-version: "20"
           cache: npm
 
+      - name: Check production deployment configuration
+        id: deploy-config
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+        run: |
+          if [[ -n "$CLOUDFLARE_API_TOKEN" &&
+                -n "$CLOUDFLARE_ACCOUNT_ID" &&
+                -n "$VITE_SUPABASE_URL" &&
+                -n "$VITE_SUPABASE_ANON_KEY" ]]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=Pages deployment skipped::Add the four deployment secrets documented in README.md to enable automatic production deploys."
+          fi
+
       - name: Install dependencies
+        if: steps.deploy-config.outputs.ready == 'true'
         run: npm ci
 
       - name: Validate deployment configuration
+        if: steps.deploy-config.outputs.ready == 'true'
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -41,26 +61,31 @@ jobs:
           test -n "$VITE_SUPABASE_ANON_KEY"
 
       - name: Lint
+        if: steps.deploy-config.outputs.ready == 'true'
         run: npm run lint
 
       - name: Build production site
+        if: steps.deploy-config.outputs.ready == 'true'
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
         run: npm run build
 
       - name: Deploy to Cloudflare Pages
+        if: steps.deploy-config.outputs.ready == 'true'
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: npx --no-install wrangler pages deploy dist --project-name=my-blog --branch=main
 
       - name: Ensure WanJuan production domain
+        if: steps.deploy-config.outputs.ready == 'true'
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: npm run ensure:wanjuan-domain
 
       - name: Audit domain ownership
+        if: steps.deploy-config.outputs.ready == 'true'
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: npm run audit:domains

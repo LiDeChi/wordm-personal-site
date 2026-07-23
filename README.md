@@ -301,6 +301,10 @@ npm run deploy:pages
 - Pages 分支优先读取 `CF_PAGES_BRANCH`；未设置时默认使用当前 git 分支
 - 当分支为 `main` 时会更新生产域名 `wordm.us`；其他分支会生成对应的 Pages 预览部署
 
+GitHub Actions 自动部署需要在仓库的 Actions secrets 中配置
+`CLOUDFLARE_API_TOKEN`、`CLOUDFLARE_ACCOUNT_ID`、`VITE_SUPABASE_URL` 和
+`VITE_SUPABASE_ANON_KEY`。任一项缺失时工作流会明确跳过部署，避免覆盖当前可用的生产站。
+
 3. 部署共享登录 Worker：
 
 ```bash
