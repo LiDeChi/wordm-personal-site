@@ -1,8 +1,6 @@
 # wordm.us 根域名由 my-blog 项目统一管理（原 wordm-personal-home 职责已合并）
 # 产品相关路径全部重定向到对应子域名
 
-/login /?view=login 301
-/login/ /?view=login 301
 /jian-yongjie-resume.pdf / 302
 /resume / 302
 /resume/* / 302
