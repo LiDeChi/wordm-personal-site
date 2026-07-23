@@ -1,4 +1,6 @@
 import { Suspense, lazy, useEffect, useMemo, useRef, useState } from "react";
+import katex from "katex";
+import "katex/dist/katex.min.css";
 import type {
   KeyboardEvent as ReactKeyboardEvent,
   MouseEvent as ReactMouseEvent,
@@ -18,7 +20,11 @@ import { SiteAiChat } from "./components/SiteAiChat";
 import { SocialLinks } from "./components/SocialLinks";
 import { SubdomainProjectView } from "./components/SubdomainProjectView";
 import { ThemeModeIcon } from "./components/ThemeModeIcon";
-import { BLOG_ARTICLES, type BlogContentBlock } from "./data/blogArticles";
+import {
+  BLOG_ARTICLES,
+  loadPublishedBlogArticles,
+  type BlogContentBlock,
+} from "./data/blogArticles";
 import {
   FEATURED_PROJECT_SLUGS,
   getProjectPresentation,
@@ -257,7 +263,7 @@ function renderBlogContentBlock(
   if (block.type === "heading") {
     return (
       <h4 key={key} className="blog-block-heading">
-        {block.text[lang]}
+        <MathText text={block.text[lang]} />
       </h4>
     );
   }
@@ -265,7 +271,7 @@ function renderBlogContentBlock(
   if (block.type === "callout") {
     return (
       <p key={key} className="blog-block-callout">
-        {block.text[lang]}
+        <MathText text={block.text[lang]} />
       </p>
     );
   }
@@ -274,7 +280,9 @@ function renderBlogContentBlock(
     return (
       <ul key={key} className="blog-article-list-block">
         {block.items.map((item, itemIndex) => (
-          <li key={`${key}-${itemIndex}`}>{item[lang]}</li>
+          <li key={`${key}-${itemIndex}`}>
+            <MathText text={item[lang]} />
+          </li>
         ))}
       </ul>
     );
@@ -291,7 +299,40 @@ function renderBlogContentBlock(
     );
   }
 
-  return <p key={key}>{block.text[lang]}</p>;
+  return (
+    <p key={key}>
+      <MathText text={block.text[lang]} />
+    </p>
+  );
+}
+
+function MathText({ text }: { text: string }) {
+  const segments = text.split(/(\$\$[\s\S]+?\$\$|\$(?:\\.|[^$\n])+\$)/g);
+
+  return segments.map((segment, index) => {
+    const displayMode = segment.startsWith("$$") && segment.endsWith("$$");
+    const inlineMode =
+      !displayMode && segment.startsWith("$") && segment.endsWith("$");
+
+    if (!displayMode && !inlineMode) {
+      return segment;
+    }
+
+    const expression = displayMode ? segment.slice(2, -2) : segment.slice(1, -1);
+    const html = katex.renderToString(expression, {
+      displayMode,
+      throwOnError: false,
+      trust: false,
+    });
+
+    return (
+      <span
+        key={`math-${index}`}
+        className={`blog-math ${displayMode ? "blog-math-display" : "blog-math-inline"}`}
+        dangerouslySetInnerHTML={{ __html: html }}
+      />
+    );
+  });
 }
 
 function readGoogleOAuthPendingAt() {
@@ -1001,9 +1042,7 @@ function normalizeBlogArticleId(raw: string | null): string | null {
     return null;
   }
 
-  return BLOG_ARTICLES.some((article) => article.id === articleId)
-    ? articleId
-    : null;
+  return articleId;
 }
 
 function withDetail(prefix: string, detail: string) {
@@ -1284,7 +1323,7 @@ function App() {
 
     return defaultSelection(initialProjects, FEATURED_PROJECT_SLUGS);
   });
-  const blogArticles = useMemo(() => BLOG_ARTICLES, []);
+  const [blogArticles, setBlogArticles] = useState(BLOG_ARTICLES);
   const renderedBlogArticles = useMemo(
     () =>
       blogArticles.slice(0, Math.min(visibleBlogCount, blogArticles.length)),
@@ -1328,6 +1367,23 @@ function App() {
   const primaryUpdatedAt =
     snapshot.centerControlGeneratedAt || snapshot.generatedAt;
   const lastUpdated = formatDate(primaryUpdatedAt);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    void loadPublishedBlogArticles(controller.signal)
+      .then((articles) => {
+        setBlogArticles(articles);
+      })
+      .catch((error) => {
+        if (error instanceof DOMException && error.name === "AbortError") {
+          return;
+        }
+        console.warn("Using the bundled article snapshot.", error);
+      });
+
+    return () => controller.abort();
+  }, []);
 
   useEffect(() => {
     document.documentElement.dataset.theme = themeMode;
@@ -1576,12 +1632,12 @@ function App() {
       return;
     }
 
-    const articleIndex = BLOG_ARTICLES.findIndex(
+    const articleIndex = blogArticles.findIndex(
       (article) => article.id === initialBlogArticleId,
     );
     if (articleIndex >= BLOG_INITIAL_RENDER_COUNT) {
       setVisibleBlogCount(
-        Math.min(BLOG_ARTICLES.length, articleIndex + BLOG_RENDER_BATCH_SIZE),
+        Math.min(blogArticles.length, articleIndex + BLOG_RENDER_BATCH_SIZE),
       );
     }
 
@@ -1595,24 +1651,24 @@ function App() {
     });
 
     return () => window.cancelAnimationFrame(frame);
-  }, [initialBlogArticleId, rootView]);
+  }, [blogArticles, initialBlogArticleId, rootView]);
 
   useEffect(() => {
     if (rootView !== "blog") {
       return;
     }
 
-    if (!BLOG_ARTICLES.length) {
+    if (!blogArticles.length) {
       setActiveBlogArticleId(null);
       return;
     }
 
     setActiveBlogArticleId((current) =>
-      current && BLOG_ARTICLES.some((article) => article.id === current)
+      current && blogArticles.some((article) => article.id === current)
         ? current
-        : BLOG_ARTICLES[0].id,
+        : blogArticles[0].id,
     );
-  }, [rootView]);
+  }, [blogArticles, rootView]);
 
   useEffect(() => {
     if (rootView === "blog") {
@@ -4003,6 +4059,17 @@ function App() {
                               {paragraph[lang]}
                             </p>
                           ))}
+                      {article.sourceUrl ? (
+                        <p className="blog-article-source">
+                          <a
+                            href={article.sourceUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            {copy.blogReadSource} ↗
+                          </a>
+                        </p>
+                      ) : null}
                     </article>
                   ))}
                   {hasMoreBlogArticles ? (

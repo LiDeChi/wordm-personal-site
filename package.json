@@ -9,7 +9,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "import:frome": "node scripts/import-frome-tweets.mjs",
+    "sync:articles": "node scripts/sync-articles.mjs",
     "sync:projects": "node scripts/sync-center-control.mjs",
     "sync:deploy-kits": "node scripts/export-deploy-kits.mjs",
     "list:subdomain-retention": "node scripts/resolve-domain-retention-set.mjs",
@@ -27,6 +27,7 @@
   "dependencies": {
     "@remotion/player": "^4.0.436",
     "@supabase/supabase-js": "^2.57.4",
+    "katex": "^0.18.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "remotion": "^4.0.436"
