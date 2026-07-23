@@ -77,6 +77,7 @@ const PASS_THROUGH_SUBDOMAINS = new Set([
   'inote',
   'latti',
   'museum',
+  'ringbook',
   'supportdualpart',
   'system',
   'wifenglish',

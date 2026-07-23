@@ -38,6 +38,11 @@
       "owner": "product"
     },
     {
+      "domain": "ringbook.wordm.us",
+      "project": "ringbook",
+      "owner": "product"
+    },
+    {
       "domain": "wifenglish.wordm.us",
       "project": "wifenglish",
       "owner": "product"
@@ -134,6 +139,7 @@
     "inote",
     "latti",
     "museum",
+    "ringbook",
     "supportdualpart",
     "wifenglish"
   ],
