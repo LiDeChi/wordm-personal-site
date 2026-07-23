@@ -10,9 +10,11 @@ type ShareScope = {
   allowedProjectSlugs: string[];
 };
 
-const ADMIN_USERNAME = "parson";
-const ADMIN_PASSWORD = "050966jzl";
 const env = (key: string, fallback = "") => Deno.env.get(key) ?? fallback;
+const ADMIN_AUTH_CHECK_URL = env(
+  "ADMIN_AUTH_CHECK_URL",
+  "https://admin.wordm.us/__admin_api/auth-check",
+);
 
 function clampDays(rawValue: unknown) {
   const parsed = Number(rawValue);
@@ -83,12 +85,22 @@ function parseBasicAuth(value: string | null): { username: string; password: str
   }
 }
 
-function isAuthorized(headerValue: string | null) {
+async function isAuthorized(headerValue: string | null) {
   const parsed = parseBasicAuth(headerValue);
   if (!parsed) {
     return false;
   }
-  return parsed.username === ADMIN_USERNAME && parsed.password === ADMIN_PASSWORD;
+
+  try {
+    const response = await fetch(ADMIN_AUTH_CHECK_URL, {
+      method: "GET",
+      headers: { Authorization: headerValue! },
+      redirect: "error",
+    });
+    return response.status === 204;
+  } catch {
+    return false;
+  }
 }
 
 function toLinkPayload(row: Record<string, unknown>) {
@@ -128,7 +140,8 @@ const handler = async (req: Request): Promise<Response> => {
     });
   }
 
-  if (!isAuthorized(req.headers.get("x-admin-basic-auth"))) {
+  const adminAuthorization = req.headers.get("x-admin-basic-auth");
+  if (!(await isAuthorized(adminAuthorization))) {
     return respond(JSON.stringify({ error: "ADMIN_AUTH_REQUIRED" }), {
       status: 401,
       headers: { "Content-Type": "application/json" },
@@ -199,7 +212,7 @@ const handler = async (req: Request): Promise<Response> => {
         visit_count: 0,
         last_accessed_at: null,
         issued_by: "admin",
-        issued_by_label: ADMIN_USERNAME,
+        issued_by_label: parseBasicAuth(adminAuthorization)?.username || "admin",
         allow_portfolio: scope.allowPortfolio,
         allow_blog: scope.allowBlog,
         allow_deploy: scope.allowDeploy,

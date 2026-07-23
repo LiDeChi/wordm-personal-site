@@ -1,9 +1,10 @@
 const ROOT_ORIGIN = 'https://wordm.us'
 const ADMIN_SUPABASE_API_ORIGIN = 'https://uswackifoqjxfitesflz.supabase.co'
 
-
-const ADMIN_USERNAME = 'parson'
-const ADMIN_PASSWORD = '050966jzl'
+type Env = {
+  ADMIN_USERNAME: string
+  ADMIN_PASSWORD: string
+}
 
 function unauthorizedAdminResponse() {
   return new Response('Authentication required.', {
@@ -53,13 +54,13 @@ function proxyAdminApi(request: Request): Promise<Response> {
   }))
 }
 
-function isAdminAuthorized(request: Request) {
+function isAdminAuthorized(request: Request, env: Env) {
   const parsed = parseBasicAuth(request.headers.get('authorization'))
-  if (!parsed) {
+  if (!parsed || !env.ADMIN_USERNAME || !env.ADMIN_PASSWORD) {
     return false
   }
 
-  return parsed.username === ADMIN_USERNAME && parsed.password === ADMIN_PASSWORD
+  return parsed.username === env.ADMIN_USERNAME && parsed.password === env.ADMIN_PASSWORD
 }
 
 const STATIC_SUBDOMAINS = new Set(['resume', 'cv', 'admin', 'eye-translation', 'support'])
@@ -80,6 +81,7 @@ const PASS_THROUGH_SUBDOMAINS = new Set([
   'ringbook',
   'supportdualpart',
   'system',
+  'wanjuan',
   'wifenglish',
 ])
 
@@ -172,7 +174,7 @@ function supportResponse(request: Request): Response {
 }
 
 export default {
-  async fetch(request: Request): Promise<Response> {
+  async fetch(request: Request, env: Env): Promise<Response> {
     const incomingUrl = new URL(request.url)
     const subdomain = extractSubdomain(incomingUrl.hostname)
 
@@ -187,8 +189,17 @@ export default {
       })
     }
 
-    if (subdomain === 'admin' && !isAdminAuthorized(request)) {
+    if (subdomain === 'admin' && !isAdminAuthorized(request, env)) {
       return unauthorizedAdminResponse()
+    }
+
+    if (subdomain === 'admin' && incomingUrl.pathname === '/__admin_api/auth-check') {
+      return new Response(null, {
+        status: 204,
+        headers: {
+          'cache-control': 'no-store',
+        },
+      })
     }
 
     if (subdomain === 'admin' && incomingUrl.pathname.startsWith('/__admin_api/')) {

@@ -1,6 +1,6 @@
 # wordm.us Domain Ownership
 
-Last checked: 2026-06-29.
+Last checked: 2026-07-23.
 
 This file is the source-aware ownership map for `wordm.us`. It records what
 currently manages each public entry point, and the target rule for keeping the
@@ -38,6 +38,7 @@ These bindings were observed with `npx wrangler pages project list`:
 | `inote.wordm.us` | `inote` | Keep in the iNote/product project. |
 | `agent.wordm.us` | `orchard-agent` | Keep in the Agent/product project; verify whether old `agent` Pages project is still needed. |
 | `bookplain.wordm.us` | `bookplain` | Keep in the Bookplain product project. |
+| `wanjuan.wordm.us` | `wanjuan` | Pages binding created; DNS/TLS pending. Keep in the WanJuan/product project. |
 | `foundry.wordm.us` | `foundry-agent-studio` | Keep in the Foundry Agent Studio product project. |
 | `ringbook.wordm.us` | `ringbook` | Keep in the RingBook product project. |
 | `wifenglish.wordm.us` | `wifenglish` | Keep in the Wifenglish/product project. |
@@ -73,6 +74,11 @@ These bindings were observed from the Cloudflare Workers API and
   `bookplain.wordm.us` Pages experience. The root Fields page catalogs and links
   to it; Bookplain reuses the root site's Supabase project and cross-subdomain
   `wordm-auth-v1` session storage.
+- `/Users/lidechi/Documents/Github/wanjuan` owns the standalone
+  `wanjuan.wordm.us` Pages experience. The root Fields page catalogs and embeds
+  it; guest reading remains available while account identity is obtained through
+  the shared authentication broker rather than copying Supabase tokens into the
+  product origin.
 - `/Users/lidechi/Documents/Github/MuseumBook` owns the standalone
   `museum.wordm.us` Vercel experience. The root Fields page catalogs and links
   to it; MuseumBook reuses the root site's Supabase project and cross-subdomain
@@ -108,7 +114,7 @@ These bindings were observed from the Cloudflare Workers API and
 
 1. Keep `wordm.us` bound only to `my-blog`.
 2. Keep product primary domains bound to their product projects:
-   `inote`, `gridnote`, `latti`, `agent`, `foundry`, `ringbook`, `wifenglish`, `arc3`, and similar.
+   `inote`, `gridnote`, `latti`, `agent`, `foundry`, `ringbook`, `wanjuan`, `wifenglish`, `arc3`, and similar.
 3. Keep shared infrastructure domains in one central owner:
    `auth.wordm.us`, `support.wordm.us`, and any future account/admin/billing
    entry points.
@@ -122,6 +128,7 @@ These bindings were observed from the Cloudflare Workers API and
 
 ## Open checks
 
+- Finish the `wanjuan.wordm.us` CNAME and wait for Pages TLS to become active.
 - DNS records could not be listed with the current Wrangler OAuth token during
   this check, so this file relies on Pages bindings, Worker custom domains, and
   Worker routes.

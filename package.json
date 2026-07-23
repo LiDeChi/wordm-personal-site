@@ -19,6 +19,8 @@
     "deploy:auth": "./scripts/deploy-auth-worker.sh",
     "deploy:subdomains": "./scripts/deploy-subdomain-worker.sh",
     "deploy:subdomains:routes": "./scripts/deploy-subdomain-worker-routes.sh",
+    "ensure:worker-exclusions": "node scripts/ensure-worker-exclusion-routes.mjs",
+    "ensure:wanjuan-domain": "node scripts/ensure-wanjuan-domain.mjs",
     "audit:domains": "node scripts/audit-domain-ownership.mjs",
     "audit:subdomains": "node scripts/audit-subdomain-worker-domains.mjs"
   },
@@ -41,6 +43,7 @@
     "globals": "^16.5.0",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.48.0",
-    "vite": "^7.3.1"
+    "vite": "^7.3.1",
+    "wrangler": "4.113.0"
   }
 }

@@ -13,6 +13,10 @@ export type FountField = {
   kind: LocalizedText;
   status: LocalizedText;
   summary: LocalizedText;
+  readingShift?: {
+    from: LocalizedText;
+    to: LocalizedText;
+  };
 };
 
 export const FOUNT_FIELDS: FountField[] = [
@@ -58,8 +62,18 @@ export const FOUNT_FIELDS: FountField[] = [
       en: "Available",
     },
     summary: {
-      zh: "把 EPUB 建成可漫游的文学分馆，在展厅、展品与连续原文阅读之间往返。",
-      en: "Builds an EPUB into a walkable literary museum spanning galleries, exhibits, and continuous full-text reading.",
+      zh: "章节成为展厅，人物、地点与意象成为展品；从任一展品都能回到对应原文，用空间关系重访整本书。",
+      en: "Chapters become galleries while characters, places, and motifs become exhibits; every exhibit leads back to its source passage, so the whole book can be revisited through space.",
+    },
+    readingShift: {
+      from: {
+        zh: "沿目录和页码推进",
+        en: "Follow chapters and page numbers",
+      },
+      to: {
+        zh: "逛展厅、看展品，再回到原句",
+        en: "Walk galleries, inspect exhibits, return to the exact line",
+      },
     },
   },
   {
@@ -81,8 +95,51 @@ export const FOUNT_FIELDS: FountField[] = [
       en: "Available",
     },
     summary: {
-      zh: "把整本 EPUB 或文本展开成可阅读、可探索、可从原文定位理解物件的立体世界。",
-      en: "Turns a complete EPUB or text into a readable world where source passages connect directly to explorable understanding objects.",
+      zh: "把地点、人物与关系展开成可探索的立体世界；点击任何理解物件，都能定位支撑它的原文证据。",
+      en: "Places, characters, and relationships unfold into an explorable world; every understanding object points back to the passage that supports it.",
+    },
+    readingShift: {
+      from: {
+        zh: "读文字，在脑中拼世界",
+        en: "Read text and assemble the world in your head",
+      },
+      to: {
+        zh: "走进世界，点物件核对原文",
+        en: "Enter the world and inspect objects against the source",
+      },
+    },
+  },
+  {
+    key: "wanjuan",
+    name: "万卷 WanJuan",
+    href: "https://wanjuan.wordm.us",
+    previewUrl: "wanjuan.wordm.us",
+    coverUrl: "/home/wanjuan-library.jpg",
+    coverAlt: {
+      zh: "万卷按时间与地域展开的 3D 书场与三层场景",
+      en: "WanJuan 3D book field arranged by time and region with aligned scene layers",
+    },
+    kind: {
+      zh: "立体文学地图 Field",
+      en: "Spatial Literary Atlas Field",
+    },
+    status: {
+      zh: "可进入",
+      en: "Available",
+    },
+    summary: {
+      zh: "162 部世界与中国经典沿时间和地域铺成一张立体书场；从全局走到正文，再看示范场景从书页上分层升起。",
+      en: "Arranges 162 world and Chinese classics into a spatial field across time and region, connecting the global map, source reading, and aligned scene layers.",
+    },
+    readingShift: {
+      from: {
+        zh: "在书单里找作品，在脑中拼场景",
+        en: "Find a title in a list and imagine its world",
+      },
+      to: {
+        zh: "沿时间与地域走到书前，让场景从书页升起",
+        en: "Walk through time and region, then let a scene rise from the page",
+      },
     },
   },
   {
@@ -104,8 +161,18 @@ export const FOUNT_FIELDS: FountField[] = [
       en: "Available",
     },
     summary: {
-      zh: "把本地 EPUB 收进私人 3D 园区，以连续墨晶书环阅读全文，并把原文段落连接到可探索的书中物件。",
-      en: "Collects local EPUBs in a private 3D park, preserves continuous full-text reading on a crystal book ring, and links source paragraphs to explorable literary objects.",
+      zh: "本地 EPUB 留在设备上并汇成私人 3D 园区；全文沿墨晶书环连续铺开，读到的段落也能通向书中物件。",
+      en: "Local EPUBs stay on-device and gather in a private 3D park; the full text flows around a crystal reading ring, with passages opening into objects from the book.",
+    },
+    readingShift: {
+      from: {
+        zh: "在书架、章节与页面间切换",
+        en: "Switch between shelf, chapters, and pages",
+      },
+      to: {
+        zh: "沿连续书环读完整部长篇",
+        en: "Read the entire long-form work along one continuous ring",
+      },
     },
   },
   {

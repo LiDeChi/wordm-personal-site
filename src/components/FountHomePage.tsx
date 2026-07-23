@@ -349,6 +349,8 @@ const COPY = {
     fieldsSwitchAria: "切换 Field",
     fieldsEmbedHint: "若页面无法内嵌，请单独打开。",
     fieldsVideoHint: "可在此直接播放完整视频。",
+    fieldsTraditionalReading: "传统阅读",
+    fieldsReadingHere: "在这里",
     heroTitle: "Fount",
     heroDeck: "像玩游戏一样构建产品。",
     heroSub: "想法变成卡片，现场铺成白板，agent 参与执行、检查和发布。",
@@ -478,6 +480,8 @@ const COPY = {
     fieldsSwitchAria: "Switch Field",
     fieldsEmbedHint: "If embedding is blocked, open it separately.",
     fieldsVideoHint: "Play the full video here.",
+    fieldsTraditionalReading: "Conventional reading",
+    fieldsReadingHere: "Here",
     heroTitle: "Fount",
     heroDeck: "Build products like a game.",
     heroSub: "Ideas become cards, the work opens on a whiteboard, and agents execute, review, and ship.",
@@ -3217,6 +3221,21 @@ function FountFieldsSection({ lang }: { lang: Lang }) {
                     <h2>{field.name}</h2>
                     <span className="fount-field-status">{field.status[lang]}</span>
                   </div>
+                  {field.readingShift ? (
+                    <div className="fount-field-reading-shift">
+                      <span>
+                        <small>{copy.fieldsTraditionalReading}</small>
+                        <s>{field.readingShift.from[lang]}</s>
+                      </span>
+                      <svg viewBox="0 0 36 12" aria-hidden="true">
+                        <path d="M1 6h32M28.5 1.5 33 6l-4.5 4.5" />
+                      </svg>
+                      <span>
+                        <small>{copy.fieldsReadingHere}</small>
+                        <strong>{field.readingShift.to[lang]}</strong>
+                      </span>
+                    </div>
+                  ) : null}
                   <p>{field.summary[lang]}</p>
                   <div className="fount-field-entry">
                     <code>{field.previewUrl}</code>

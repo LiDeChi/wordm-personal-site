@@ -33,6 +33,11 @@
       "owner": "product"
     },
     {
+      "domain": "wanjuan.wordm.us",
+      "project": "wanjuan",
+      "owner": "product"
+    },
+    {
       "domain": "foundry.wordm.us",
       "project": "foundry-agent-studio",
       "owner": "product"
@@ -125,6 +130,11 @@
       "pattern": "wifenglish.wordm.us/*",
       "worker": null,
       "owner": "product-pages"
+    },
+    {
+      "pattern": "wanjuan.wordm.us/*",
+      "worker": null,
+      "owner": "product-pages"
     }
   ],
   "wildcardPassThroughSubdomains": [
@@ -141,6 +151,7 @@
     "museum",
     "ringbook",
     "supportdualpart",
+    "wanjuan",
     "wifenglish"
   ],
   "wildcardHandledSubdomains": [
