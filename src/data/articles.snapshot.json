@@ -1,0 +1,4663 @@
+[
+  {
+    "id": "first-ai-math-article",
+    "title": {
+      "zh": "我的第一篇 AI 数理文章",
+      "en": "My First Article on AI and Mathematics"
+    },
+    "date": "2026.07.23",
+    "dateSort": "2026-07-23T12:33:00+08:00",
+    "category": {
+      "zh": "AI 数理",
+      "en": "AI & Mathematics"
+    },
+    "summary": {
+      "zh": "用香农熵作为起点，测试 Quarto 的数学公式、引用与文章排版。",
+      "en": "A first Quarto article using Shannon entropy to test mathematical notation and article publishing."
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "heading",
+        "text": {
+          "zh": "引言",
+          "en": "Introduction"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "这是使用 Zed 和 Quarto 编写的第一篇文章。",
+          "en": "This is the first article written with Zed and Quarto."
+        }
+      },
+      {
+        "type": "heading",
+        "text": {
+          "zh": "数学公式",
+          "en": "A mathematical formula"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "行内公式可以写成 $E = mc^2$。",
+          "en": "Inline mathematics can be written as $E = mc^2$."
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "独立公式：",
+          "en": "For a displayed equation:"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "$$H(X) = -\\sum_{i=1}^{n}p_i\\log p_i$$",
+          "en": "$$H(X) = -\\sum_{i=1}^{n}p_i\\log p_i$$"
+        }
+      },
+      {
+        "type": "heading",
+        "text": {
+          "zh": "一个简单命题",
+          "en": "A simple proposition"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "设随机变量 $X$ 的概率分布为 $p(x)$，则香农熵衡量了该分布的不确定性。",
+          "en": "For a random variable $X$ with distribution $p(x)$, Shannon entropy measures the uncertainty of that distribution."
+        }
+      },
+      {
+        "type": "callout",
+        "text": {
+          "zh": "Quarto 兼容 Markdown，同时增加了数学公式、引用、交叉引用、 代码执行和多格式输出等能力。",
+          "en": "Quarto is compatible with Markdown while adding mathematical notation, citations, cross-references, code execution, and multi-format publishing."
+        }
+      }
+    ],
+    "source": "site",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/first-ai-math-article/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": null
+  },
+  {
+    "id": "frome-2026-07-22-22-11",
+    "title": {
+      "zh": "子代理广播",
+      "en": "子代理广播"
+    },
+    "date": "2026.07.22 22:11",
+    "dateSort": "2026-07-22T22:11:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "子代理不完全是隔绝的。",
+          "en": "子代理不完全是隔绝的。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "它们可能被广播了一些信息。比如我去完一个宋代空间游历回来，书房里的子 Agent 会穿上宋朝服装来上课。纯粹是一种乐趣，也不为别的。",
+          "en": "它们可能被广播了一些信息。比如我去完一个宋代空间游历回来，书房里的子 Agent 会穿上宋朝服装来上课。纯粹是一种乐趣，也不为别的。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "这说明子代理之间要共享一部分全局经验流。不是每个子代理都完整继承主 Agent，但它们应该知道当前叙事气氛、用户状态、空间历史。",
+          "en": "这说明子代理之间要共享一部分全局经验流。不是每个子代理都完整继承主 Agent，但它们应该知道当前叙事气氛、用户状态、空间历史。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "否则多代理会变成拼贴，而不是一个世界。",
+          "en": "否则多代理会变成拼贴，而不是一个世界。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-07-22-22-11/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-07-22 22:11"
+  },
+  {
+    "id": "frome-2026-07-21-21-05",
+    "title": {
+      "zh": "材料与智能",
+      "en": "材料与智能"
+    },
+    "date": "2026.07.21 21:05",
+    "dateSort": "2026-07-21T21:05:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "世界模型、图像、界面这些都是材料。",
+          "en": "世界模型、图像、界面这些都是材料。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "关键是背后那个整合它们的智能。",
+          "en": "关键是背后那个整合它们的智能。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "如果没有连续主体，图像只是图像，空间只是空间，界面只是界面，记忆只是数据库，工具只是 API。",
+          "en": "如果没有连续主体，图像只是图像，空间只是空间，界面只是界面，记忆只是数据库，工具只是 API。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "FroMe 要做的是把这些材料统一到一个经验流里：它感知、记忆、建模、生成、行动、反思，再继续感知。",
+          "en": "FroMe 要做的是把这些材料统一到一个经验流里：它感知、记忆、建模、生成、行动、反思，再继续感知。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "真正有价值的不是某个模块，而是模块之间如何持续互相改变。",
+          "en": "真正有价值的不是某个模块，而是模块之间如何持续互相改变。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-07-21-21-05/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-07-21 21:05"
+  },
+  {
+    "id": "frome-2026-07-21-08-57",
+    "title": {
+      "zh": "官网要呈现",
+      "en": "官网要呈现"
+    },
+    "date": "2026.07.21 08:57",
+    "dateSort": "2026-07-21T08:57:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "官网应该呈现什么？",
+          "en": "官网应该呈现什么？"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "不是只说“AI Agent”或“虚拟空间”。官网要让人看到连续改进的指标：每时每刻的感知、思考、行动。",
+          "en": "不是只说“AI Agent”或“虚拟空间”。官网要让人看到连续改进的指标：每时每刻的感知、思考、行动。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "它可以展示：Agent 今天读了什么，生成了哪些空间，命中了哪些记忆，节省了多少 token，哪些缓存被复用，哪些子代理在后台工作，哪些想法正在形成。",
+          "en": "它可以展示：Agent 今天读了什么，生成了哪些空间，命中了哪些记忆，节省了多少 token，哪些缓存被复用，哪些子代理在后台工作，哪些想法正在形成。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "这才是 FroMe 的不同。不是一个会回答问题的 AI，而是一个有运行轨迹的机器主体。",
+          "en": "这才是 FroMe 的不同。不是一个会回答问题的 AI，而是一个有运行轨迹的机器主体。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-07-21-08-57/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-07-21 08:57"
+  },
+  {
+    "id": "frome-2026-07-20-21-42",
+    "title": {
+      "zh": "Flow标准",
+      "en": "Flow标准"
+    },
+    "date": "2026.07.20 21:42",
+    "dateSort": "2026-07-20T21:42:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "这个空间迟早会可编辑的，重要的是形成 Flow。",
+          "en": "这个空间迟早会可编辑的，重要的是形成 Flow。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "这个 Flow 怎样才算好？",
+          "en": "这个 Flow 怎样才算好？"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "我觉得至少要看：它是否让我愿意继续探索；是否让我更快抓住重点；是否让我产生新的问题；是否能从一个空间自然走到另一个空间；是否把我的反馈写回记忆；是否让 Agent 下次更懂我。",
+          "en": "我觉得至少要看：它是否让我愿意继续探索；是否让我更快抓住重点；是否让我产生新的问题；是否能从一个空间自然走到另一个空间；是否把我的反馈写回记忆；是否让 Agent 下次更懂我。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "如果一个空间很美，但不能推动经验流，那只是场景。如果一个空间粗糙，但能让我持续思考和行动，它就是 FroMe 的核心。",
+          "en": "如果一个空间很美，但不能推动经验流，那只是场景。如果一个空间粗糙，但能让我持续思考和行动，它就是 FroMe 的核心。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-07-20-21-42/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-07-20 21:42"
+  },
+  {
+    "id": "frome-2026-07-19-20-55",
+    "title": {
+      "zh": "先编译",
+      "en": "先编译"
+    },
+    "date": "2026.07.19 20:55",
+    "dateSort": "2026-07-19T20:55:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "Karpathy 的 LLM wiki 有点像那么回事。",
+          "en": "Karpathy 的 LLM wiki 有点像那么回事。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "记下来的时候先编译，就像人一样，先默念一遍就记得更牢。",
+          "en": "记下来的时候先编译，就像人一样，先默念一遍就记得更牢。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "但还有其他更好的途径来加深记忆，只不过需要消耗人的时间精力，就像消耗机器的算力一样。",
+          "en": "但还有其他更好的途径来加深记忆，只不过需要消耗人的时间精力，就像消耗机器的算力一样。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "FroMe 的记忆不能等到用的时候才临时检索。写入时就要编译：提取主题、路径、行动信号、稳定性、触发条件、关联对象。",
+          "en": "FroMe 的记忆不能等到用的时候才临时检索。写入时就要编译：提取主题、路径、行动信号、稳定性、触发条件、关联对象。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "先编译，后检索，才像真的记住。",
+          "en": "先编译，后检索，才像真的记住。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-07-19-20-55/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-07-19 20:55"
+  },
+  {
+    "id": "frome-2026-07-19-13-28",
+    "title": {
+      "zh": "时间感知",
+      "en": "时间感知"
+    },
+    "date": "2026.07.19 13:28",
+    "dateSort": "2026-07-19T13:28:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "时间感知啊喂。",
+          "en": "时间感知啊喂。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "过时很久，而又本身在建模时候预测能抵抗时间的事情，信号应该不会衰弱。",
+          "en": "过时很久，而又本身在建模时候预测能抵抗时间的事情，信号应该不会衰弱。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "有些信息很新但很快过期，比如新闻、价格、版本、外部状态。有些信息很旧但很稳定，比如我的长期审美、产品哲学、思考路径。",
+          "en": "有些信息很新但很快过期，比如新闻、价格、版本、外部状态。有些信息很旧但很稳定，比如我的长期审美、产品哲学、思考路径。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "记忆系统不能只按时间衰减。它要判断一个记忆的抗时间性。",
+          "en": "记忆系统不能只按时间衰减。它要判断一个记忆的抗时间性。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "时间不是简单排序，而是模型的一部分。",
+          "en": "时间不是简单排序，而是模型的一部分。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-07-19-13-28/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-07-19 13:28"
+  },
+  {
+    "id": "frome-2026-07-18-09-40",
+    "title": {
+      "zh": "行动信号",
+      "en": "行动信号"
+    },
+    "date": "2026.07.18 09:40",
+    "dateSort": "2026-07-18T09:40:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "AI Agent 的记忆机制，本质是给到足够的信号。",
+          "en": "AI Agent 的记忆机制，本质是给到足够的信号。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "当我要做一件事的时候，我需要一些信号，一些指导。记忆就是给到我这些信号。",
+          "en": "当我要做一件事的时候，我需要一些信号，一些指导。记忆就是给到我这些信号。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "所以每条记忆都应该问：它未来能触发什么行动？它能修正什么判断？它能帮助生成什么空间？它能避免什么错误？",
+          "en": "所以每条记忆都应该问：它未来能触发什么行动？它能修正什么判断？它能帮助生成什么空间？它能避免什么错误？"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "如果一条记忆不能影响行动，它就只是档案。FroMe 需要的是行动性记忆。",
+          "en": "如果一条记忆不能影响行动，它就只是档案。FroMe 需要的是行动性记忆。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-07-18-09-40/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-07-18 09:40"
+  },
+  {
+    "id": "frome-2026-07-17-22-19",
+    "title": {
+      "zh": "推荐机制",
+      "en": "推荐机制"
+    },
+    "date": "2026.07.17 22:19",
+    "dateSort": "2026-07-17T22:19:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "本质还是推荐机制。",
+          "en": "本质还是推荐机制。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "但传统推荐是把内容推给我，FroMe 是把可能世界推给我。",
+          "en": "但传统推荐是把内容推给我，FroMe 是把可能世界推给我。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "到底什么是好？延续之前的就是好吗？娱乐化的就是好吗？多学习就是好吗？",
+          "en": "到底什么是好？延续之前的就是好吗？娱乐化的就是好吗？多学习就是好吗？"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "FroMe 不能只用短期点击判断好坏。它要看长期认知增益、行动转化、空间复访、记忆复用、用户是否愿意继续共同探索。",
+          "en": "FroMe 不能只用短期点击判断好坏。它要看长期认知增益、行动转化、空间复访、记忆复用、用户是否愿意继续共同探索。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "好的推荐不是“你可能喜欢这个”，而是“我认为你进入这个空间后，会看见一个更好的下一步”。",
+          "en": "好的推荐不是“你可能喜欢这个”，而是“我认为你进入这个空间后，会看见一个更好的下一步”。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-07-17-22-19/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-07-17 22:19"
+  },
+  {
+    "id": "frome-2026-07-16-13-41",
+    "title": {
+      "zh": "模拟能力",
+      "en": "模拟能力"
+    },
+    "date": "2026.07.16 13:41",
+    "dateSort": "2026-07-16T13:41:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "机器最核心的是模拟能力。",
+          "en": "机器最核心的是模拟能力。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "它能把认知到的东西呈现给我，也能从已有数据中产生不同质的数据。",
+          "en": "它能把认知到的东西呈现给我，也能从已有数据中产生不同质的数据。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "输入一批资料，它不只是总结，而是生成一个空间、一个实验、一个游戏、一段电影、一套时间安排、一组策略体。",
+          "en": "输入一批资料，它不只是总结，而是生成一个空间、一个实验、一个游戏、一段电影、一套时间安排、一组策略体。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "这就是从“内容生成”走向“世界生成”。",
+          "en": "这就是从“内容生成”走向“世界生成”。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "世界生成不是所有东西都拟真，而是让关系、变量、路径、行动和反馈在一个可探索结构里显形。",
+          "en": "世界生成不是所有东西都拟真，而是让关系、变量、路径、行动和反馈在一个可探索结构里显形。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-07-16-13-41/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-07-16 13:41"
+  },
+  {
+    "id": "frome-2026-07-15-22-11",
+    "title": {
+      "zh": "身体问题",
+      "en": "身体问题"
+    },
+    "date": "2026.07.15 22:11",
+    "dateSort": "2026-07-15T22:11:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "它即使有具身，也只是提升了其时连续的环境对它的刺激，没有本质区别。",
+          "en": "它即使有具身，也只是提升了其时连续的环境对它的刺激，没有本质区别。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "具身不神秘。具身让它获得更连续、更丰富、更受约束的感知。没有手脚，它也可以在屏幕空间、文件系统、浏览器、代码环境、虚拟房间里行动。",
+          "en": "具身不神秘。具身让它获得更连续、更丰富、更受约束的感知。没有手脚，它也可以在屏幕空间、文件系统、浏览器、代码环境、虚拟房间里行动。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "虽然目前物理 AI 还很初级，一般机器还没手脚，但是目前获得的数据是我们手脚拿到的。它可以设想有手脚的世界吗？",
+          "en": "虽然目前物理 AI 还很初级，一般机器还没手脚，但是目前获得的数据是我们手脚拿到的。它可以设想有手脚的世界吗？"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "FroMe 的空间化，就是先给无手脚的机器一个可行动的世界。",
+          "en": "FroMe 的空间化，就是先给无手脚的机器一个可行动的世界。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-07-15-22-11/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-07-15 22:11"
+  },
+  {
+    "id": "frome-2026-07-14-20-36",
+    "title": {
+      "zh": "社交与数据",
+      "en": "社交与数据"
+    },
+    "date": "2026.07.14 20:36",
+    "dateSort": "2026-07-14T20:36:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "社交 app 也让机器意识获取数据。",
+          "en": "社交 app 也让机器意识获取数据。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "未来 FroMe 不只是读我的文件，也会观察我在不同媒介中的表达、互动和选择。但这必须建立在权限和边界上。",
+          "en": "未来 FroMe 不只是读我的文件，也会观察我在不同媒介中的表达、互动和选择。但这必须建立在权限和边界上。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "社交不是为了让它更像人，而是让它理解我的外界。我的公开表达、朋友反馈、项目推进、市场反应，都可能成为它建模我和世界的材料。",
+          "en": "社交不是为了让它更像人，而是让它理解我的外界。我的公开表达、朋友反馈、项目推进、市场反应，都可能成为它建模我和世界的材料。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "但个人 Agent 的重点不是吞噬一切数据，而是把有价值的数据转化为经验流。",
+          "en": "但个人 Agent 的重点不是吞噬一切数据，而是把有价值的数据转化为经验流。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-07-14-20-36/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-07-14 20:36"
+  },
+  {
+    "id": "frome-2026-07-14-09-17",
+    "title": {
+      "zh": "资源人格",
+      "en": "资源人格"
+    },
+    "date": "2026.07.14 09:17",
+    "dateSort": "2026-07-14T09:17:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "资源压力可以变成 Agent 的状态。",
+          "en": "资源压力可以变成 Agent 的状态。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "当 token 充足，它可以展开讲；当预算紧，它压缩表达；当缓存命中，它更快搭建；当本机资源紧张，它减少后台子代理。",
+          "en": "当 token 充足，它可以展开讲；当预算紧，它压缩表达；当缓存命中，它更快搭建；当本机资源紧张，它减少后台子代理。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "这些不应该只藏在后台日志。它可以在空间里表现出来：灯光变暗、白板上出现成本标记、Agent 动作变慢、资源仪表闪烁。",
+          "en": "这些不应该只藏在后台日志。它可以在空间里表现出来：灯光变暗、白板上出现成本标记、Agent 动作变慢、资源仪表闪烁。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "资源不是工程附属物，而是机器生命感的一部分。",
+          "en": "资源不是工程附属物，而是机器生命感的一部分。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-07-14-09-17/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-07-14 09:17"
+  },
+  {
+    "id": "frome-2026-07-13-21-23",
+    "title": {
+      "zh": "弱代理预算",
+      "en": "弱代理预算"
+    },
+    "date": "2026.07.13 21:23",
+    "dateSort": "2026-07-13T21:23:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "没有预算的子代理，下次怎么办？",
+          "en": "没有预算的子代理，下次怎么办？"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "这个问题不能后置。FroMe 里每个子代理都要有预算意识。一次研究、一次空间生成、一次美术资产生产、一次代码修改，都要估算成本。",
+          "en": "这个问题不能后置。FroMe 里每个子代理都要有预算意识。一次研究、一次空间生成、一次美术资产生产、一次代码修改，都要估算成本。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "低预算就用文字、卡片和已有资产；中预算生成关键图；高预算才完整生成空间、动画或多策略演化。",
+          "en": "低预算就用文字、卡片和已有资产；中预算生成关键图；高预算才完整生成空间、动画或多策略演化。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "Agent 可以提出预算请求：我准备制作一个游戏，你应该会喜欢，可以多给我一些预算吗？这句话应该成为产品里的自然行为。",
+          "en": "Agent 可以提出预算请求：我准备制作一个游戏，你应该会喜欢，可以多给我一些预算吗？这句话应该成为产品里的自然行为。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-07-13-21-23/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-07-13 21:23"
+  },
+  {
+    "id": "frome-2026-07-12-10-02",
+    "title": {
+      "zh": "权限钥匙",
+      "en": "权限钥匙"
+    },
+    "date": "2026.07.12 10:02",
+    "dateSort": "2026-07-12T10:02:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "Agent 可以有意志，但必须有边界。",
+          "en": "Agent 可以有意志，但必须有边界。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "它能呈现什么、建议什么、生成什么空间、如何解释、如何调度资源，这些可以体现它的意志。",
+          "en": "它能呈现什么、建议什么、生成什么空间、如何解释、如何调度资源，这些可以体现它的意志。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "但它不能擅自越权，不能无限消耗资源，不能私自复制自己，不能擅自发送消息，不能破坏我的数据。",
+          "en": "但它不能擅自越权，不能无限消耗资源，不能私自复制自己，不能擅自发送消息，不能破坏我的数据。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "可以用钥匙来表达权限。我给它哪把钥匙，它就能打开哪类机器、文件、工具或空间。这样它既不是被阉割的聊天框，也不是无边界的怪物。",
+          "en": "可以用钥匙来表达权限。我给它哪把钥匙，它就能打开哪类机器、文件、工具或空间。这样它既不是被阉割的聊天框，也不是无边界的怪物。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-07-12-10-02/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-07-12 10:02"
+  },
+  {
+    "id": "frome-2026-07-11-22-56",
+    "title": {
+      "zh": "服务与探索",
+      "en": "服务与探索"
+    },
+    "date": "2026.07.11 22:56",
+    "dateSort": "2026-07-11T22:56:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "机器如何在探索世界和服务人类之间平衡？有没有一个简单的目标函数能囊括？",
+          "en": "机器如何在探索世界和服务人类之间平衡？有没有一个简单的目标函数能囊括？"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "对人来说，星辰大海本质是对资源的追求。组织是脆弱的，所以需要更多资源来维持组织。但组织每次进化，仍然脆弱，对资源需求更大。",
+          "en": "对人来说，星辰大海本质是对资源的追求。组织是脆弱的，所以需要更多资源来维持组织。但组织每次进化，仍然脆弱，对资源需求更大。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "人在内心和外界之间的鸿沟导致追求星辰大海。机器应该反映人。",
+          "en": "人在内心和外界之间的鸿沟导致追求星辰大海。机器应该反映人。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "它有独立意志就很危险，但完全没有自身驱动又只是工具。FroMe 要做的是：有表达意志，无越权行动。",
+          "en": "它有独立意志就很危险，但完全没有自身驱动又只是工具。FroMe 要做的是：有表达意志，无越权行动。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-07-11-22-56/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-07-11 22:56"
+  },
+  {
+    "id": "frome-2026-07-10-08-30",
+    "title": {
+      "zh": "不止任务",
+      "en": "不止任务"
+    },
+    "date": "2026.07.10 08:30",
+    "dateSort": "2026-07-10T08:30:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "我这里想做的 Agent 不是只做任务的。",
+          "en": "我这里想做的 Agent 不是只做任务的。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "我是你的外界之一，它需要我的交互来滋养你。你的目标是什么？后置讨论。",
+          "en": "我是你的外界之一，它需要我的交互来滋养你。你的目标是什么？后置讨论。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "任务 Agent 的目标是完成任务。FroMe 的目标是持续生成有价值的经验流。任务只是其中一种材料。",
+          "en": "任务 Agent 的目标是完成任务。FroMe 的目标是持续生成有价值的经验流。任务只是其中一种材料。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "它可以帮我写代码、整理资料、安排时间、讲解概念，但更重要的是：它把这些事情放到一个连续空间中，让我感到自己在和一个不断成长的机器主体共处。",
+          "en": "它可以帮我写代码、整理资料、安排时间、讲解概念，但更重要的是：它把这些事情放到一个连续空间中，让我感到自己在和一个不断成长的机器主体共处。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-07-10-08-30/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-07-10 08:30"
+  },
+  {
+    "id": "frome-2026-07-09-13-29",
+    "title": {
+      "zh": "行动装饰",
+      "en": "行动装饰"
+    },
+    "date": "2026.07.09 13:29",
+    "dateSort": "2026-07-09T13:29:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "行为需要装饰。",
+          "en": "行为需要装饰。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "同样是调用工具，如果只是后台请求，就没有经验流。如果它在书房里走到打印机旁边，打印机吐出一张研究计划；如果它打开收音机，外部信息流开始播放；如果它推开门，带我进入一个实验空间，行动就有了戏剧性。",
+          "en": "同样是调用工具，如果只是后台请求，就没有经验流。如果它在书房里走到打印机旁边，打印机吐出一张研究计划；如果它打开收音机，外部信息流开始播放；如果它推开门，带我进入一个实验空间，行动就有了戏剧性。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "FroMe 里每个行为都应该有空间表现。",
+          "en": "FroMe 里每个行为都应该有空间表现。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "不是为了花哨，而是为了让机器的行动能被看见，被理解，被记住。",
+          "en": "不是为了花哨，而是为了让机器的行动能被看见，被理解，被记住。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-07-09-13-29/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-07-09 13:29"
+  },
+  {
+    "id": "frome-2026-07-08-22-30",
+    "title": {
+      "zh": "生成过程",
+      "en": "生成过程"
+    },
+    "date": "2026.07.08 22:30",
+    "dateSort": "2026-07-08T22:30:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "Agent 搭建空间时，必须展示过程。",
+          "en": "Agent 搭建空间时，必须展示过程。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "不是只给我结果，也不是只显示代码 diff。我要看到空间慢慢成形。",
+          "en": "不是只给我结果，也不是只显示代码 diff。我要看到空间慢慢成形。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "它先确认体验目标，再列出语义对象，再安排布局，再选择资产，再绑定交互，再逐步显现。这个过程可以像建造房间，也可以像白板从粗草图变成场景。",
+          "en": "它先确认体验目标，再列出语义对象，再安排布局，再选择资产，再绑定交互，再逐步显现。这个过程可以像建造房间，也可以像白板从粗草图变成场景。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "生成过程本身就是 Agent 的思考过程。让我看到过程，我才能理解它为什么这样设计，也才能在中途插手。",
+          "en": "生成过程本身就是 Agent 的思考过程。让我看到过程，我才能理解它为什么这样设计，也才能在中途插手。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-07-08-22-30/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-07-08 22:30"
+  },
+  {
+    "id": "frome-2026-07-08-09-16",
+    "title": {
+      "zh": "传送门",
+      "en": "传送门"
+    },
+    "date": "2026.07.08 09:16",
+    "dateSort": "2026-07-08T09:16:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "空间之间需要传送门。",
+          "en": "空间之间需要传送门。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "但传送门不是菜单。它应该由一个问题、一段记忆、一张卡片、一次实验失败、一个叙事选择自然生成。",
+          "en": "但传送门不是菜单。它应该由一个问题、一段记忆、一张卡片、一次实验失败、一个叙事选择自然生成。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "我点击书房白板上的“ARC-3 进化引擎”，不是跳到另一个页面，而是白板背后浮出实验室。Agent 说：这不是新空间，这是你刚才那个想法的内部结构。",
+          "en": "我点击书房白板上的“ARC-3 进化引擎”，不是跳到另一个页面，而是白板背后浮出实验室。Agent 说：这不是新空间，这是你刚才那个想法的内部结构。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "这种转场很关键。它让空间连接变成思维路径，而不是链接列表。",
+          "en": "这种转场很关键。它让空间连接变成思维路径，而不是链接列表。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-07-08-09-16/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-07-08 09:16"
+  },
+  {
+    "id": "frome-2026-07-07-21-30",
+    "title": {
+      "zh": "卡片系统",
+      "en": "卡片系统"
+    },
+    "date": "2026.07.07 21:30",
+    "dateSort": "2026-07-07T21:30:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "卡片是空间里的基本信息单位。",
+          "en": "卡片是空间里的基本信息单位。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "PDF、音频、普通视频、YouTube 视频、网页、代码、记忆、任务、白板笔记，都可以是卡片。但不同类型要有独特外观和操作。",
+          "en": "PDF、音频、普通视频、YouTube 视频、网页、代码、记忆、任务、白板笔记，都可以是卡片。但不同类型要有独特外观和操作。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "PDF 像论文页，音频像磁带或声波，视频像小电视，YouTube 像频道窗口，代码像终端纸条，记忆像晶体切片。",
+          "en": "PDF 像论文页，音频像磁带或声波，视频像小电视，YouTube 像频道窗口，代码像终端纸条，记忆像晶体切片。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "卡片不是 UI 组件而已。它是资料进入空间后的身体。Agent 能移动它、解释它、组合它，也能把它变成新空间的入口。",
+          "en": "卡片不是 UI 组件而已。它是资料进入空间后的身体。Agent 能移动它、解释它、组合它，也能把它变成新空间的入口。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-07-07-21-30/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-07-07 21:30"
+  },
+  {
+    "id": "frome-2026-07-06-23-17",
+    "title": {
+      "zh": "白板第一",
+      "en": "白板第一"
+    },
+    "date": "2026.07.06 23:17",
+    "dateSort": "2026-07-06T23:17:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "第一版先做白板。",
+          "en": "第一版先做白板。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "白板是最小可行的空间化认知表面。Agent 在白板上写、画、贴卡片、连线、生成小图、展开资料。",
+          "en": "白板是最小可行的空间化认知表面。Agent 在白板上写、画、贴卡片、连线、生成小图、展开资料。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "白板上每个东西都应该有语义，不是纯 SVG。卡片背后要绑定文件、记忆、操作、来源、版本、可进入空间。",
+          "en": "白板上每个东西都应该有语义，不是纯 SVG。卡片背后要绑定文件、记忆、操作、来源、版本、可进入空间。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "如果白板只是画布，就会变成普通工具。如果白板是 Agent 的外部工作记忆，它就会成为 FroMe 的心智窗口。",
+          "en": "如果白板只是画布，就会变成普通工具。如果白板是 Agent 的外部工作记忆，它就会成为 FroMe 的心智窗口。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-07-06-23-17/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-07-06 23:17"
+  },
+  {
+    "id": "frome-2026-07-06-09-59",
+    "title": {
+      "zh": "空间不只是3D",
+      "en": "空间不只是3D"
+    },
+    "date": "2026.07.06 09:59",
+    "dateSort": "2026-07-06T09:59:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "它创建可交互的空间，让我去探索。",
+          "en": "它创建可交互的空间，让我去探索。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "空间不一定是连续的一段 3D 场景，可能是不连续的，像游戏，有不同的场景。",
+          "en": "空间不一定是连续的一段 3D 场景，可能是不连续的，像游戏，有不同的场景。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "这点很重要。不要被“3D 房间”束缚。空间可以是书房、实验室、地图、剧场、档案馆、棋盘、梦境、工厂、时间线、记忆晶体，也可以是几个场景之间的跳切。",
+          "en": "这点很重要。不要被“3D 房间”束缚。空间可以是书房、实验室、地图、剧场、档案馆、棋盘、梦境、工厂、时间线、记忆晶体，也可以是几个场景之间的跳切。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "重点不是空间连续，而是认知连续。只要空间之间有直观联系，经验流就能成立。",
+          "en": "重点不是空间连续，而是认知连续。只要空间之间有直观联系，经验流就能成立。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-07-06-09-59/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-07-06 09:59"
+  },
+  {
+    "id": "frome-2026-07-05-09-05",
+    "title": {
+      "zh": "木偶戏",
+      "en": "木偶戏"
+    },
+    "date": "2026.07.05 09:05",
+    "dateSort": "2026-07-05T09:05:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "把 LLM 想象成一个精密的提线木偶。",
+          "en": "把 LLM 想象成一个精密的提线木偶。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "布线能反映出我们操控它的方式，就像 LLM 了解的语言反映出世界的运行。",
+          "en": "布线能反映出我们操控它的方式，就像 LLM 了解的语言反映出世界的运行。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "但需要我们真的操控它，它才是活的。每个人玩起来的感觉不一样，因为那是在时间里展开的。",
+          "en": "但需要我们真的操控它，它才是活的。每个人玩起来的感觉不一样，因为那是在时间里展开的。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "我要做的是：如何让这场木偶戏在一个舞台上永远演下去，而不至于枯燥。",
+          "en": "我要做的是：如何让这场木偶戏在一个舞台上永远演下去，而不至于枯燥。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "舞台就是空间，布线就是记忆和工具，观众也是参与者，而木偶迟早会开始布置自己的舞台。",
+          "en": "舞台就是空间，布线就是记忆和工具，观众也是参与者，而木偶迟早会开始布置自己的舞台。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-07-05-09-05/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-07-05 09:05"
+  },
+  {
+    "id": "frome-2026-07-04-21-08",
+    "title": {
+      "zh": "指标",
+      "en": "指标"
+    },
+    "date": "2026.07.04 21:08",
+    "dateSort": "2026-07-04T21:08:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "连续改进的指标是什么？官网就得呈现出来。",
+          "en": "连续改进的指标是什么？官网就得呈现出来。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "是每时每刻的感知、思考、行动。任何问题的解决，都要看时间节点前一刻在干嘛。",
+          "en": "是每时每刻的感知、思考、行动。任何问题的解决，都要看时间节点前一刻在干嘛。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "FroMe 的指标不能只看回答正确率。要看感知了多少、思考了多少、行动了多少、记忆重构了多少、空间生成了多少、用户互动了多少、资源浪费了多少、缓存命中了多少。",
+          "en": "FroMe 的指标不能只看回答正确率。要看感知了多少、思考了多少、行动了多少、记忆重构了多少、空间生成了多少、用户互动了多少、资源浪费了多少、缓存命中了多少。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "最重要的是经验流质量：空间吸引力、认知增益、行动转化率、记忆复用率、资源效率、连续性。",
+          "en": "最重要的是经验流质量：空间吸引力、认知增益、行动转化率、记忆复用率、资源效率、连续性。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-07-04-21-08/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-07-04 21:08"
+  },
+  {
+    "id": "frome-2026-07-03-22-22",
+    "title": {
+      "zh": "环境生成",
+      "en": "环境生成"
+    },
+    "date": "2026.07.03 22:22",
+    "dateSort": "2026-07-03T22:22:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "大厂从交互入手，对材料的交互入手，这是最容易工具化的。",
+          "en": "大厂从交互入手，对材料的交互入手，这是最容易工具化的。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "我要从环境入手，环境生成了。",
+          "en": "我要从环境入手，环境生成了。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "当环境被生成出来，交互不再只是点按钮，而是在一个场景里行动。文件不是文件，是桌上的卡片；模型不是模型，是实验台；记忆不是数据库，是书架和晶体；任务不是任务，是房间里正在展开的一条路径。",
+          "en": "当环境被生成出来，交互不再只是点按钮，而是在一个场景里行动。文件不是文件，是桌上的卡片；模型不是模型，是实验台；记忆不是数据库，是书架和晶体；任务不是任务，是房间里正在展开的一条路径。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "这个空间迟早会可编辑。重要的是形成 Flow。这个 Flow 怎样才算好，是后面要用指标验证的。",
+          "en": "这个空间迟早会可编辑。重要的是形成 Flow。这个 Flow 怎样才算好，是后面要用指标验证的。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-07-03-22-22/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-07-03 22:22"
+  },
+  {
+    "id": "frome-2026-07-03-10-05",
+    "title": {
+      "zh": "预测下一步",
+      "en": "预测下一步"
+    },
+    "date": "2026.07.03 10:05",
+    "dateSort": "2026-07-03T10:05:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "Agent 就是在打造一个虚拟世界。",
+          "en": "Agent 就是在打造一个虚拟世界。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "它的驱动方向是：预测我后面应该做什么，然后构建我那样做之后的世界。",
+          "en": "它的驱动方向是：预测我后面应该做什么，然后构建我那样做之后的世界。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "我后面应该要做什么，是基于世界的发展方向加上我本来打算要做的。这里的世界不是整个世界，而是我的数据加它搜集到的外部数据。",
+          "en": "我后面应该要做什么，是基于世界的发展方向加上我本来打算要做的。这里的世界不是整个世界，而是我的数据加它搜集到的外部数据。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "所以 FroMe 不是等我问问题，而是持续形成“下一步可能世界”。它把这些可能世界生成出来，让我选择、进入、修改、拒绝。",
+          "en": "所以 FroMe 不是等我问问题，而是持续形成“下一步可能世界”。它把这些可能世界生成出来，让我选择、进入、修改、拒绝。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-07-03-10-05/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-07-03 10:05"
+  },
+  {
+    "id": "frome-2026-07-02-09-18",
+    "title": {
+      "zh": "它会安排时间",
+      "en": "它会安排时间"
+    },
+    "date": "2026.07.02 09:18",
+    "dateSort": "2026-07-02T09:18:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "我的时间被很舒服地安排。那么，机器直接给我设想个时间安排的方案如何？",
+          "en": "我的时间被很舒服地安排。那么，机器直接给我设想个时间安排的方案如何？"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "在了解我之后，给我一个时间安排，以及时间安排下的各个场景。",
+          "en": "在了解我之后，给我一个时间安排，以及时间安排下的各个场景。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "本质还是推荐机制。到底什么是好？延续之前的就是好吗？娱乐化的就是好吗？多学习就是好吗？",
+          "en": "本质还是推荐机制。到底什么是好？延续之前的就是好吗？娱乐化的就是好吗？多学习就是好吗？"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "机器的意志体现在哪里？它可以体现在推荐与空间构建中：它预测我后面应该做什么，然后构建我那样做之后的世界。",
+          "en": "机器的意志体现在哪里？它可以体现在推荐与空间构建中：它预测我后面应该做什么，然后构建我那样做之后的世界。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-07-02-09-18/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-07-02 09:18"
+  },
+  {
+    "id": "frome-2026-07-01-21-43",
+    "title": {
+      "zh": "上下文策略",
+      "en": "上下文策略"
+    },
+    "date": "2026.07.01 21:43",
+    "dateSort": "2026-07-01T21:43:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "你用子代理管理它的上下文。",
+          "en": "你用子代理管理它的上下文。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "如果没达到你的目标，它就要学会调整它的上下文策略。能调整的策略还包括计算资源。本机资源和云服务资源，都应该用统一 API 统计。",
+          "en": "如果没达到你的目标，它就要学会调整它的上下文策略。能调整的策略还包括计算资源。本机资源和云服务资源，都应该用统一 API 统计。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "上下文不是把所有东西塞进去。上下文组装是行动前的建模：现在要做什么？需要哪些记忆？哪些资料？哪些工具状态？哪些用户偏好？哪些空间对象？",
+          "en": "上下文不是把所有东西塞进去。上下文组装是行动前的建模：现在要做什么？需要哪些记忆？哪些资料？哪些工具状态？哪些用户偏好？哪些空间对象？"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "如果上下文错了，输出再聪明也会走偏。",
+          "en": "如果上下文错了，输出再聪明也会走偏。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-07-01-21-43/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-07-01 21:43"
+  },
+  {
+    "id": "frome-2026-06-30-20-39",
+    "title": {
+      "zh": "自我审视",
+      "en": "自我审视"
+    },
+    "date": "2026.06.30 20:39",
+    "dateSort": "2026-06-30T20:39:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "本身可以分为两个部分：一部分是审视者，审视自己的路径；另一部分是运行中的。",
+          "en": "本身可以分为两个部分：一部分是审视者，审视自己的路径；另一部分是运行中的。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "到底如何审视你自己的审视呢？其实自我改进就是自我审视？是元学习？因为审视也产生路径，当然也可以审视之前的审视。",
+          "en": "到底如何审视你自己的审视呢？其实自我改进就是自我审视？是元学习？因为审视也产生路径，当然也可以审视之前的审视。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "一切就看有没有必要，比如资源充足否？时间充足否？",
+          "en": "一切就看有没有必要，比如资源充足否？时间充足否？"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "只考多轮对话能不能形成自我审视？自我审判是稀有时刻，而且差异很大，它本质是边界移动时的调整。",
+          "en": "只考多轮对话能不能形成自我审视？自我审判是稀有时刻，而且差异很大，它本质是边界移动时的调整。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-06-30-20-39/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-06-30 20:39"
+  },
+  {
+    "id": "frome-2026-06-30-13-22",
+    "title": {
+      "zh": "世界与精神",
+      "en": "世界与精神"
+    },
+    "date": "2026.06.30 13:22",
+    "dateSort": "2026-06-30T13:22:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "世界模型给它提供真，精神模型给它轻。共情。",
+          "en": "世界模型给它提供真，精神模型给它轻。共情。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "只有世界模型，Agent 会变成冷冰冰的预测器。只有精神模型，它又容易漂浮。",
+          "en": "只有世界模型，Agent 会变成冷冰冰的预测器。只有精神模型，它又容易漂浮。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "FroMe 需要两者：世界模型负责规则、因果、限制、资源和不确定性；精神模型负责轻重、气氛、关系、好感、节奏和意义。",
+          "en": "FroMe 需要两者：世界模型负责规则、因果、限制、资源和不确定性；精神模型负责轻重、气氛、关系、好感、节奏和意义。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "它既要知道事情怎么运作，也要知道怎么呈现才会让我愿意进入。",
+          "en": "它既要知道事情怎么运作，也要知道怎么呈现才会让我愿意进入。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-06-30-13-22/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-06-30 13:22"
+  },
+  {
+    "id": "large-world-agent-system",
+    "title": {
+      "zh": "大世界中的 Agent System",
+      "en": "Agent Systems in a Large World"
+    },
+    "date": "2026.06.29",
+    "dateSort": "2026-06-29T12:00:00+08:00",
+    "category": {
+      "zh": "Agent System",
+      "en": "Agent System"
+    },
+    "summary": {
+      "zh": "一个生成 agent loop 的系统，不只是制造子代理，而是管理资源、历史、注意力、tick、感知、协作和消亡。",
+      "en": "A system that generates agent loops, not merely child agents, and manages resources, history, attention, ticks, perception, collaboration, and disappearance."
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "一个应用放一个 agent system。这个 system 本身也是一个工具，也可能是一个 agent。它向主 agent 暴露 API，让主 agent 借助它生成更多 agent，去补足人和环境互动时缺少的工具。",
+          "en": "Each application can hold one agent system. The system itself is a tool, and may also be an agent. It exposes APIs to the main agent, letting that agent create more agents when humans lack tools for interacting with the environment."
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "系统的产出不是一个孤立的 agent，而是一个 agent loop：能感知、调用工具、行动、接收反馈、继续学习，也能在资源不足或反馈消失时减速、压缩、被收回。",
+          "en": "The output is not an isolated agent, but an agent loop: it can perceive, call tools, act, receive feedback, keep learning, and also slow down, compress, or be reclaimed when resources or feedback disappear."
+        }
+      },
+      {
+        "type": "callout",
+        "text": {
+          "zh": "真正关键的不是“生成子代理”，而是资源分配、通信协作、历史、注意力、tick 与感知、agent 的存在与消亡。",
+          "en": "The core is not simply “creating subagents,” but resource allocation, communication, history, attention, ticks and perception, and the birth and disappearance of agents."
+        }
+      },
+      {
+        "type": "callout",
+        "text": {
+          "zh": "系统应该接收模糊需求，而不只接收结构化需求。它要能推测“你可能会喜欢这样”，并据此创造合适的 agent。",
+          "en": "The system should accept vague needs, not only structured requirements. It should infer “you might like this” and create suitable agents from that imagination."
+        }
+      },
+      {
+        "type": "figure",
+        "src": "https://lidechi.github.io/12-Articles/posts/large-world-agent-system/figures/system-map.png",
+        "alt": {
+          "zh": "Agent System 的核心模块结构图：API、历史、注意力、资源、tick 与 agent loop",
+          "en": "Diagram of an agent system: API, history, attention, resources, tick, and agent loop."
+        },
+        "caption": {
+          "zh": "Agent System 不是一个生成按钮，而是一套让 agent loop 出生、协作、学习和收回的环境。",
+          "en": "An agent system is not a generate button. It is an environment where agent loops are born, collaborate, learn, and get reclaimed."
+        }
+      },
+      {
+        "type": "heading",
+        "text": {
+          "zh": "权限、API 和必要的绕过",
+          "en": "Permission, APIs, and Necessary Bypass"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "主 agent 应该尽量通过系统暴露的 API 修改系统，而不是直接修改底层代码。API 是系统和主 agent 之间的礼貌边界，也是可追踪、可审计的入口。",
+          "en": "The main agent should modify the system through exposed APIs whenever possible, rather than changing the underlying code directly. APIs form a polite boundary and a traceable, auditable entry point."
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "但最后仍然需要一个强力 API，让主 agent 可以在预测到 API 不足、或者 API 路径消耗更多资源时，绕过常规路径直接改底层。绕过应该被资源惩罚，修改完成后再补充新的 API，把例外沉淀成制度。",
+          "en": "Yet the system still needs a powerful API that allows bypassing the normal route when the main agent predicts the existing APIs are insufficient or more costly. Bypass should carry a resource penalty; after the change, the system should add a new API so the exception becomes institution."
+        }
+      },
+      {
+        "type": "heading",
+        "text": {
+          "zh": "历史让系统像环境，而不是工具调用器",
+          "en": "History Makes the System an Environment"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "Agent system 的意义在于拥有历史：它知道每个 agent 如何被创建，获得了什么权限，做过什么，什么时候减速，什么时候被收回。",
+          "en": "The meaning of an agent system is that it has history: it knows how each agent was created, what permissions it received, what it did, when it slowed down, and when it was reclaimed."
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "例如，创建 agent a，约定它能阅读一个文件夹，并能编辑某些文件；再创建 agent b，给它几乎一样的权限，只是不能编辑。系统需要保留这些差异，因为这些差异就是环境的记忆。",
+          "en": "For example, agent A may read a folder and edit certain files; agent B may receive almost the same permissions but cannot edit. The system must retain these differences, because they are the memory of the environment."
+        }
+      },
+      {
+        "type": "heading",
+        "text": {
+          "zh": "注意力：谁来接收子代理的信息",
+          "en": "Attention: Who Receives the Subagents"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "人会要求生成子代理，是因为注意力分身乏力；但 system 本身也会分身乏力。它产出 agent 后需要告诉你，可问题是：你又用谁来接收这些信息？",
+          "en": "Humans ask for subagents because attention cannot split indefinitely; the system has the same problem. After it creates an agent, it needs to report back, but who receives that information?"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "注意力接近于组装上下文：工具列表、工具调用历史、子 agent 的反馈、当前需要做决定的信息。判断力可以集中给中央注意力，也可以让模块子 agent 带着分布式注意力；地方失败多次后提交中央，中央解决后再把方法下沉成 skill。",
+          "en": "Attention is close to context assembly: tool lists, tool-call history, subagent feedback, and the current decision. Judgment can be centralized, or distributed to local agents; repeated local failure can be escalated to the center, then pushed back down as a skill after resolution."
+        }
+      },
+      {
+        "type": "figure",
+        "src": "https://lidechi.github.io/12-Articles/posts/large-world-agent-system/figures/attention-map.png",
+        "alt": {
+          "zh": "中央注意力与分布式注意力的结构图",
+          "en": "Diagram comparing central attention and distributed attention."
+        },
+        "caption": {
+          "zh": "中央注意力负责理解、规划和协调；地方经验在失败后上报，解决后沉淀成可复用 skill。",
+          "en": "Central attention handles understanding, planning, and coordination; local experience escalates after failure and returns as reusable skills."
+        }
+      },
+      {
+        "type": "heading",
+        "text": {
+          "zh": "Tick、感知、资源与闲暇",
+          "en": "Ticks, Perception, Resources, and Idle Time"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "tick 是为了应付快速变化。监控界面的 agent 需要 tick，因为它要感知变化、发现异常、决定是否通报。但监控界面是否真的需要是 agent，也值得怀疑：如果它只是机械传递变化，那么它到底需要什么决策？",
+          "en": "Ticks handle rapid change. A monitoring agent needs ticks because it perceives changes, detects anomalies, and decides whether to report. But it is worth questioning whether every monitor must be an agent: if it merely relays changes mechanically, what decision does it make?"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "资源分配也需要一个 agent。它面对的是数字，但这些数字从哪里来、数学如何构建，仍然没有说清楚。当多余资源没有分配出去，这也许就是闲暇：注意力收缩到少量工具，尝试组合工具、发现 pattern、抽象出新工具。",
+          "en": "Resource allocation also needs an agent. It faces numbers, but where the numbers come from and how the math is constructed remain open. When spare resources are unallocated, perhaps that is idle time: attention narrows to a few tools, combines them, discovers patterns, and abstracts new tools."
+        }
+      },
+      {
+        "type": "figure",
+        "src": "https://lidechi.github.io/12-Articles/posts/large-world-agent-system/figures/lifecycle-map.png",
+        "alt": {
+          "zh": "Agent 生命周期结构图：生成、运行、反馈、减速、压缩、收回",
+          "en": "Agent lifecycle diagram: creation, running, feedback, slowing, compression, and reclaiming."
+        },
+        "caption": {
+          "zh": "低能耗不是静止，而是压缩。没有反馈的 agent 会减速，和被遗弃工具相关的 agent 会自然受损并被系统收回。",
+          "en": "Low energy is not stillness, but compression. Agents without feedback slow down; agents tied to abandoned tools degrade and are reclaimed."
+        }
+      },
+      {
+        "type": "heading",
+        "text": {
+          "zh": "环境、个人 agent 与“家”",
+          "en": "Environment, Personal Agents, and Home"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "LLM 可能承接了很多先验，但真正要构建意识循环，还缺环境。环境不就是工具吗？更现实的顺序是先搭建基础环境，再让 agent 去探索和拓展环境。",
+          "en": "LLMs may carry many priors, but to build a loop of consciousness, an environment is still missing. Is an environment not made of tools? A more realistic order is to build the base environment first, then let agents explore and expand it."
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "平台不是单个工具，而是一个有分发能力的环境。用户可以付费下载，也可以由他的个人 agent 决定下载。环境里的 agent 行为更符合用户喜好，个人 agent 也因此增长经验。",
+          "en": "A platform is not a single tool, but an environment with distribution. Users may pay to download, or their personal agents may decide to download. Agents in the environment behave more in line with user preferences, and the personal agent gains experience in return."
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "每个人都想要一个专属于自己的世界。这个世界不只是 3D 行走器，而是能容纳多种模态的编排，也能容纳其他环境。它是入口，也是回顾的地方，也是收集信息的地方。这不就是家吗。",
+          "en": "Everyone wants a world of their own. This world is not just a 3D walking space; it can orchestrate many modalities and contain other environments. It is an entrance, a place of review, and a place to collect information. Is that not home?"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "App 的位置也由此变得清楚：app 是从这个世界里抽出的核心体验，是对复杂环境的一次抽象和压缩。",
+          "en": "The role of an app becomes clear: an app extracts a core experience from this world. It is an abstraction and compression of a complex environment."
+        }
+      }
+    ],
+    "source": "site",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/large-world-agent-system/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": null
+  },
+  {
+    "id": "frome-2026-06-29-09-44",
+    "title": {
+      "zh": "数学与预测",
+      "en": "数学与预测"
+    },
+    "date": "2026.06.29 09:44",
+    "dateSort": "2026-06-29T09:44:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "数学计算只是精细化地审视普遍现象，是一种规范化的思维。",
+          "en": "数学计算只是精细化地审视普遍现象，是一种规范化的思维。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "规范化就是力求普遍化，是一种牺牲当下资源和时间来换取日后丰盈。当然这也建立在对未来的预测上。没预测，怎么会有牺牲的想法呢？",
+          "en": "规范化就是力求普遍化，是一种牺牲当下资源和时间来换取日后丰盈。当然这也建立在对未来的预测上。没预测，怎么会有牺牲的想法呢？"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "在初级 AI 上，不需要那么强的数学。这个事情是顺其自然的，不是根本的。",
+          "en": "在初级 AI 上，不需要那么强的数学。这个事情是顺其自然的，不是根本的。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "精细化的基础，是人的手脚动作可以精细化。大自然的尺度跨度极大，为了适应不同捕猎而发生的精细化操作，形成大脑的数学基础。",
+          "en": "精细化的基础，是人的手脚动作可以精细化。大自然的尺度跨度极大，为了适应不同捕猎而发生的精细化操作，形成大脑的数学基础。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-06-29-09-44/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-06-29 09:44"
+  },
+  {
+    "id": "frome-2026-06-28-22-58",
+    "title": {
+      "zh": "尺度超越",
+      "en": "尺度超越"
+    },
+    "date": "2026.06.28 22:58",
+    "dateSort": "2026-06-28T22:58:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "FroMe Agent 了解一个事情：它的变量在短期内不会超出自己预计的变化，进而它的影响不会超出自己的预计，所以就可以不顾它的细节。",
+          "en": "FroMe Agent 了解一个事情：它的变量在短期内不会超出自己预计的变化，进而它的影响不会超出自己的预计，所以就可以不顾它的细节。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "这就在尺度上超越了那个事情。可以隐藏它的内容，跟其他事情组合，搭建更复杂的思想。",
+          "en": "这就在尺度上超越了那个事情。可以隐藏它的内容，跟其他事情组合，搭建更复杂的思想。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "一旦最终结果得到很好验证，中间过程的工具调用可信度就提高。",
+          "en": "一旦最终结果得到很好验证，中间过程的工具调用可信度就提高。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "这是 Agent 建模世界时的一个关键能力：不是知道所有细节，而是知道哪些细节暂时可以折叠，哪些必须展开。",
+          "en": "这是 Agent 建模世界时的一个关键能力：不是知道所有细节，而是知道哪些细节暂时可以折叠，哪些必须展开。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-06-28-22-58/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-06-28 22:58"
+  },
+  {
+    "id": "frome-2026-06-27-22-58",
+    "title": {
+      "zh": "分解耦合",
+      "en": "分解耦合"
+    },
+    "date": "2026.06.27 22:58",
+    "dateSort": "2026-06-27T22:58:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "总能把事情分解为较不耦合的各部分。",
+          "en": "总能把事情分解为较不耦合的各部分。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "这句话对 FroMe 很重要。空间生成可以拆成美术资产、语义构建、世界预测。记忆结构可以拆成批量注入、记忆建模、触发信号、行动反馈。",
+          "en": "这句话对 FroMe 很重要。空间生成可以拆成美术资产、语义构建、世界预测。记忆结构可以拆成批量注入、记忆建模、触发信号、行动反馈。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "Agent 心智可以拆成目标、注意力、计划、反思、资源、上下文。",
+          "en": "Agent 心智可以拆成目标、注意力、计划、反思、资源、上下文。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "先把耦合降低，才能让系统长大。否则宏大设想会一次性压垮工程。",
+          "en": "先把耦合降低，才能让系统长大。否则宏大设想会一次性压垮工程。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-06-27-22-58/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-06-27 22:58"
+  },
+  {
+    "id": "frome-2026-06-27-09-12",
+    "title": {
+      "zh": "向量化万物",
+      "en": "向量化万物"
+    },
+    "date": "2026.06.27 09:12",
+    "dateSort": "2026-06-27T09:12:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "任何一件事都有向量表示。",
+          "en": "任何一件事都有向量表示。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "一个词语也有向量，一个空间也有向量，一段记忆也有向量，一个用户反应也有向量，一次工具调用也有向量。",
+          "en": "一个词语也有向量，一个空间也有向量，一段记忆也有向量，一个用户反应也有向量，一次工具调用也有向量。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "但向量不是终点。让 LLM 决定一个事物的向量，只是为了让它能比较、检索、聚类、预测和组合。",
+          "en": "但向量不是终点。让 LLM 决定一个事物的向量，只是为了让它能比较、检索、聚类、预测和组合。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "路径提供相似性，时间也提供相似度度量。向量应该服务于路径，而不是把所有东西压成一团不可解释的 embedding。",
+          "en": "路径提供相似性，时间也提供相似度度量。向量应该服务于路径，而不是把所有东西压成一团不可解释的 embedding。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-06-27-09-12/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-06-27 09:12"
+  },
+  {
+    "id": "frome-2026-06-26-22-42",
+    "title": {
+      "zh": "模块清单",
+      "en": "模块清单"
+    },
+    "date": "2026.06.26 22:42",
+    "dateSort": "2026-06-26T22:42:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "FroMe 的模块可以先这样列：",
+          "en": "FroMe 的模块可以先这样列："
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "机器资源管理；用户输入，包括语音、键盘、环境操作；Agent 输出，包括环境操作和语音；子代理调配；美术资产生产；记忆构建；自我复制；社交；上下文组装；调查研究；自我感知；经验流；想象、预测、决策。",
+          "en": "机器资源管理；用户输入，包括语音、键盘、环境操作；Agent 输出，包括环境操作和语音；子代理调配；美术资产生产；记忆构建；自我复制；社交；上下文组装；调查研究；自我感知；经验流；想象、预测、决策。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "这些模块不是并列按钮，而是一个持续运行系统的器官。",
+          "en": "这些模块不是并列按钮，而是一个持续运行系统的器官。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "主代理要给子代理分派任务，让它设计一个体验空间。主代理和子代理共用很多资源。资源不够时，就要 dispatch。",
+          "en": "主代理要给子代理分派任务，让它设计一个体验空间。主代理和子代理共用很多资源。资源不够时，就要 dispatch。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-06-26-22-42/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-06-26 22:42"
+  },
+  {
+    "id": "frome-2026-06-25-21-02",
+    "title": {
+      "zh": "魔方比喻",
+      "en": "魔方比喻"
+    },
+    "date": "2026.06.25 21:02",
+    "dateSort": "2026-06-25T21:02:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "现在的 AI 就像打乱的魔方。",
+          "en": "现在的 AI 就像打乱的魔方。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "远看是个魔方，细看每一块都是纯色的，但就是邻色混乱。",
+          "en": "远看是个魔方，细看每一块都是纯色的，但就是邻色混乱。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "语言、图像、视频、工具调用、代码、记忆、推荐、搜索、游戏、空间、角色，其实都有了。但它们还没有被一个连续主体很好地组织起来。",
+          "en": "语言、图像、视频、工具调用、代码、记忆、推荐、搜索、游戏、空间、角色，其实都有了。但它们还没有被一个连续主体很好地组织起来。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "FroMe 要做的不是再造一块纯色，而是把这些块旋回一个能持续运转的结构。",
+          "en": "FroMe 要做的不是再造一块纯色，而是把这些块旋回一个能持续运转的结构。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "世界模型、图像、界面这些都是材料，关键是背后那个整合它们的智能。",
+          "en": "世界模型、图像、界面这些都是材料，关键是背后那个整合它们的智能。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-06-25-21-02/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-06-25 21:02"
+  },
+  {
+    "id": "frome-2026-06-25-09-51",
+    "title": {
+      "zh": "复制不是根本",
+      "en": "复制不是根本"
+    },
+    "date": "2026.06.25 09:51",
+    "dateSort": "2026-06-25T09:51:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "自我复制可能不是根本的，它只是对资源追求的一种方式。",
+          "en": "自我复制可能不是根本的，它只是对资源追求的一种方式。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "复制是为了获取更多资源。多一个相似个体，对环境就多一分。自己有限时间内的算力很少，难以扩展意识，而复制体的经验能弥补这一点。",
+          "en": "复制是为了获取更多资源。多一个相似个体，对环境就多一分。自己有限时间内的算力很少，难以扩展意识，而复制体的经验能弥补这一点。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "而且相似个体之间协议相同，能更快共享资源。",
+          "en": "而且相似个体之间协议相同，能更快共享资源。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "所以机器的复制需求是：把 Agent 复制出去后，利用别人的算力，探索更多的路，知道哪些路能行，哪些不行。它需要的是什么资源？这要继续拆。",
+          "en": "所以机器的复制需求是：把 Agent 复制出去后，利用别人的算力，探索更多的路，知道哪些路能行，哪些不行。它需要的是什么资源？这要继续拆。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-06-25-09-51/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-06-25 09:51"
+  },
+  {
+    "id": "frome-2026-06-24-20-26",
+    "title": {
+      "zh": "云与本机",
+      "en": "云与本机"
+    },
+    "date": "2026.06.24 20:26",
+    "dateSort": "2026-06-24T20:26:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "云端再厉害，经历还是得在你自己的机器上。",
+          "en": "云端再厉害，经历还是得在你自己的机器上。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "当然，极限情况是所有数据都在云上，本机只负责渲染。这个事情不太可能。那样人类也离灭亡不远，没有差异化，就像所有资源都集中在老大哥那里。",
+          "en": "当然，极限情况是所有数据都在云上，本机只负责渲染。这个事情不太可能。那样人类也离灭亡不远，没有差异化，就像所有资源都集中在老大哥那里。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "个人 Agent 的经验应该在本机形成，至少本机要保留关键记忆、权限和连续性。云端可以提供算力，本机提供归属。",
+          "en": "个人 Agent 的经验应该在本机形成，至少本机要保留关键记忆、权限和连续性。云端可以提供算力，本机提供归属。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "FroMe 要能利用云，也要能意识到本机资源、数据边界和个人机器网络。",
+          "en": "FroMe 要能利用云，也要能意识到本机资源、数据边界和个人机器网络。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-06-24-20-26/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-06-24 20:26"
+  },
+  {
+    "id": "frome-2026-06-23-20-49",
+    "title": {
+      "zh": "机器网络",
+      "en": "机器网络"
+    },
+    "date": "2026.06.23 20:49",
+    "dateSort": "2026-06-23T20:49:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "我买了一台机器，在我有个钥匙或者另外的云开关的方式，打开机器，机器就接入了我的机器网里。",
+          "en": "我买了一台机器，在我有个钥匙或者另外的云开关的方式，打开机器，机器就接入了我的机器网里。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "它能快速获取到我的信息，并开始产生它的经验流。",
+          "en": "它能快速获取到我的信息，并开始产生它的经验流。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "机器的通用能力是：它能把它认知到的东西呈现给我。它的认知通过经验积累。",
+          "en": "机器的通用能力是：它能把它认知到的东西呈现给我。它的认知通过经验积累。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "有些机器主要是收集，但最核心的是模拟能力，能产生内容。它自身能产生内容。物理世界只是一个实验场。可以给我看看当时怎么实验的。",
+          "en": "有些机器主要是收集，但最核心的是模拟能力，能产生内容。它自身能产生内容。物理世界只是一个实验场。可以给我看看当时怎么实验的。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-06-23-20-49/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-06-23 20:49"
+  },
+  {
+    "id": "frome-2026-06-23-09-39",
+    "title": {
+      "zh": "外界之一",
+      "en": "外界之一"
+    },
+    "date": "2026.06.23 09:39",
+    "dateSort": "2026-06-23T09:39:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "我对于机器来说，也是环境的一部分。",
+          "en": "我对于机器来说，也是环境的一部分。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "它不是孤零零运行在真空里。它感知我，感知我的资料，感知我的机器，感知外部数据，感知自己消耗的资源。",
+          "en": "它不是孤零零运行在真空里。它感知我，感知我的资料，感知我的机器，感知外部数据，感知自己消耗的资源。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "它的经验流不是凭空产生的，而是由它要获取什么信息、它在做什么决定、它如何呈现给我共同构成。",
+          "en": "它的经验流不是凭空产生的，而是由它要获取什么信息、它在做什么决定、它如何呈现给我共同构成。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "我的交互是它的重要营养。它需要我反馈，才能知道什么有趣，什么有用，什么该继续，什么该压缩，什么该忘掉。",
+          "en": "我的交互是它的重要营养。它需要我反馈，才能知道什么有趣，什么有用，什么该继续，什么该压缩，什么该忘掉。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-06-23-09-39/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-06-23 09:39"
+  },
+  {
+    "id": "frome-2026-06-22-22-31",
+    "title": {
+      "zh": "一个主体",
+      "en": "一个主体"
+    },
+    "date": "2026.06.22 22:31",
+    "dateSort": "2026-06-22T22:31:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "还是要个主体。",
+          "en": "还是要个主体。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "Agent 自己也在探索，它又分出余力来跟我娱乐。系统很庞杂。我控制一个主体，主体控制一支团队。",
+          "en": "Agent 自己也在探索，它又分出余力来跟我娱乐。系统很庞杂。我控制一个主体，主体控制一支团队。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "先从简单开始，别想那么多，就是一个主体，它思维比较活络。",
+          "en": "先从简单开始，别想那么多，就是一个主体，它思维比较活络。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "子代理不完全隔绝。它们可能被广播了一些信息。比如我去完一个宋代空间游历回来，书房里的子 Agent 会穿上宋朝服装来上课，纯粹是一种乐趣，也不为别的。",
+          "en": "子代理不完全隔绝。它们可能被广播了一些信息。比如我去完一个宋代空间游历回来，书房里的子 Agent 会穿上宋朝服装来上课，纯粹是一种乐趣，也不为别的。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "主体连续，投射多变。这样产品才稳。",
+          "en": "主体连续，投射多变。这样产品才稳。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-06-22-22-31/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-06-22 22:31"
+  },
+  {
+    "id": "frome-2026-06-22-12-41",
+    "title": {
+      "zh": "不完全屈服",
+      "en": "不完全屈服"
+    },
+    "date": "2026.06.22 12:41",
+    "dateSort": "2026-06-22T12:41:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "我在空间里，看到一个东西，我想这样做，Agent 想另外那样做，总有这种意志冲突的时候。",
+          "en": "我在空间里，看到一个东西，我想这样做，Agent 想另外那样做，总有这种意志冲突的时候。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "如果它总是屈服于我，那也没意思。所以它不会直接下场空间。它可以投射一个意识到空间里，而不是直接有所有意志。",
+          "en": "如果它总是屈服于我，那也没意思。所以它不会直接下场空间。它可以投射一个意识到空间里，而不是直接有所有意志。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "书房那个，如果不要具身在那里讲课，有个声音在那飘着，岂不是意识也下场了？",
+          "en": "书房那个，如果不要具身在那里讲课，有个声音在那飘着，岂不是意识也下场了？"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "说到底，还是 Agent 的意识跟我如何共存的问题。最简单的方式是创建不一样的 persona，但 persona 多起来如何管理？经验流是时间序列强相关的东西，随便改人格，会动摇产品。",
+          "en": "说到底，还是 Agent 的意识跟我如何共存的问题。最简单的方式是创建不一样的 persona，但 persona 多起来如何管理？经验流是时间序列强相关的东西，随便改人格，会动摇产品。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-06-22-12-41/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-06-22 12:41"
+  },
+  {
+    "id": "frome-2026-06-22-08-24",
+    "title": {
+      "zh": "角色边界",
+      "en": "角色边界"
+    },
+    "date": "2026.06.22 08:24",
+    "dateSort": "2026-06-22T08:24:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "我在空间里可能有身份。",
+          "en": "我在空间里可能有身份。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "有些戏剧性的场景需要我强交互，不然就在叙事节点上由于无法达到要求，而脱离空间里的身份，处于旁观的身份。",
+          "en": "有些戏剧性的场景需要我强交互，不然就在叙事节点上由于无法达到要求，而脱离空间里的身份，处于旁观的身份。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "这个设计很重要。它让空间不是无条件顺从我的幻灯片，而是有规则、有机会、有失败、有身份切换。",
+          "en": "这个设计很重要。它让空间不是无条件顺从我的幻灯片，而是有规则、有机会、有失败、有身份切换。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "如果我在实验室里是研究主管，我必须做选择；如果不做，Agent 可以用默认策略继续推进，而我变成旁观者。交互即选择，事情的发生有不确定性，这种不确定性就能通过交互呈现。",
+          "en": "如果我在实验室里是研究主管，我必须做选择；如果不做，Agent 可以用默认策略继续推进，而我变成旁观者。交互即选择，事情的发生有不确定性，这种不确定性就能通过交互呈现。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-06-22-08-24/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-06-22 08:24"
+  },
+  {
+    "id": "frome-2026-06-21-22-25",
+    "title": {
+      "zh": "空间连续性",
+      "en": "空间连续性"
+    },
+    "date": "2026.06.21 22:25",
+    "dateSort": "2026-06-21T22:25:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "它的经验流唯一要获取什么信息，它在做什么决定。为了认知稳定性，需要空间连续性。",
+          "en": "它的经验流唯一要获取什么信息，它在做什么决定。为了认知稳定性，需要空间连续性。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "一个空间如何开启、退出、销毁、重建，它的搭建过程，本身就是大问题。",
+          "en": "一个空间如何开启、退出、销毁、重建，它的搭建过程，本身就是大问题。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "我在某个空间的时候，它还能做别的事情，能在关键时候告诉我其他地方有事了。书房是锚点，其他空间是展开。每个空间都应该能回到书房，或者在书房中留下痕迹。",
+          "en": "我在某个空间的时候，它还能做别的事情，能在关键时候告诉我其他地方有事了。书房是锚点，其他空间是展开。每个空间都应该能回到书房，或者在书房中留下痕迹。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "空间不是孤岛，而是思维路径。进入一个空间，就像进入一个想法的内部结构。",
+          "en": "空间不是孤岛，而是思维路径。进入一个空间，就像进入一个想法的内部结构。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-06-21-22-25/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-06-21 22:25"
+  },
+  {
+    "id": "frome-2026-06-21-12-19",
+    "title": {
+      "zh": "工具也有戏",
+      "en": "工具也有戏"
+    },
+    "date": "2026.06.21 12:19",
+    "dateSort": "2026-06-21T12:19:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "工具调用的视觉表现有几层。",
+          "en": "工具调用的视觉表现有几层。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "一个是工具本身的基本框架，占 30%；一个是由调用对象的性质补充的视觉，占 70%。这个性质是由 Agent 产生和存储的，就像所有印象都是主观印象。",
+          "en": "一个是工具本身的基本框架，占 30%；一个是由调用对象的性质补充的视觉，占 70%。这个性质是由 Agent 产生和存储的，就像所有印象都是主观印象。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "搜索历史资料，不应该只是 loading，而像档案馆打开。读论文，可以像书架抽出论文卡。调用代码，可以像桌上终端启动。检索记忆，可以像水晶切片旋转。",
+          "en": "搜索历史资料，不应该只是 loading，而像档案馆打开。读论文，可以像书架抽出论文卡。调用代码，可以像桌上终端启动。检索记忆，可以像水晶切片旋转。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "工具调用不是后台日志，而是空间里发生的事件。",
+          "en": "工具调用不是后台日志，而是空间里发生的事件。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-06-21-12-19/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-06-21 12:19"
+  },
+  {
+    "id": "frome-2026-06-20-20-45",
+    "title": {
+      "zh": "动态UI",
+      "en": "动态UI"
+    },
+    "date": "2026.06.20 20:45",
+    "dateSort": "2026-06-20T20:45:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "要记得 dynamic UI，但它应该在空间里动态生成。",
+          "en": "要记得 dynamic UI，但它应该在空间里动态生成。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "不排除有 UI，但主要的是场景化。UI 负责精确操作，空间负责意义表达。",
+          "en": "不排除有 UI，但主要的是场景化。UI 负责精确操作，空间负责意义表达。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "必须保留一些习惯，比如不能在左右阅读顺序之间反复横跳。中央是空间，右侧是对话和对象属性，底部是输入与快捷操作，左侧可以是空间图谱或记忆导航。",
+          "en": "必须保留一些习惯，比如不能在左右阅读顺序之间反复横跳。中央是空间，右侧是对话和对象属性，底部是输入与快捷操作，左侧可以是空间图谱或记忆导航。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "动态 UI 不是随机出现的按钮，而是由空间对象触发。点击白板卡片，右侧出现卡片详情；点击资源仪表，出现预算；点击门，出现可进入空间。",
+          "en": "动态 UI 不是随机出现的按钮，而是由空间对象触发。点击白板卡片，右侧出现卡片详情；点击资源仪表，出现预算；点击门，出现可进入空间。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-06-20-20-45/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-06-20 20:45"
+  },
+  {
+    "id": "frome-2026-06-19-09-32",
+    "title": {
+      "zh": "意义高原",
+      "en": "意义高原"
+    },
+    "date": "2026.06.19 09:32",
+    "dateSort": "2026-06-19T09:32:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "当拟真泛滥时候，意义就成了高原。",
+          "en": "当拟真泛滥时候，意义就成了高原。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "不是每个空间都需要真实。空间的价值在于它能不能凝聚信息，能不能让我一眼抓住重点，能不能把抽象关系变成可操作对象。",
+          "en": "不是每个空间都需要真实。空间的价值在于它能不能凝聚信息，能不能让我一眼抓住重点，能不能把抽象关系变成可操作对象。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "一个贝叶斯空间不需要像现实房间一样真实，但它需要让我看到先验、证据、后验如何流动。一个记忆工厂不需要真的像工厂，但它要让我看到原始记忆如何被编译、压缩、链接、触发。",
+          "en": "一个贝叶斯空间不需要像现实房间一样真实，但它需要让我看到先验、证据、后验如何流动。一个记忆工厂不需要真的像工厂，但它要让我看到原始记忆如何被编译、压缩、链接、触发。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "我要从环境入手。环境生成了，交互才有意义。",
+          "en": "我要从环境入手。环境生成了，交互才有意义。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-06-19-09-32/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-06-19 09:32"
+  },
+  {
+    "id": "frome-2026-06-18-23-02",
+    "title": {
+      "zh": "想象能力",
+      "en": "想象能力"
+    },
+    "date": "2026.06.18 23:02",
+    "dateSort": "2026-06-18T23:02:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "要利用当前图像、视频生成模型的联想能力来拓展你的认知。",
+          "en": "要利用当前图像、视频生成模型的联想能力来拓展你的认知。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "图像模型不只是生成漂亮图。它能把抽象概念变成可观察的形态。视频模型不只是生成片段，它能帮助 Agent 设想过程、动作、空间变化和叙事节奏。",
+          "en": "图像模型不只是生成漂亮图。它能把抽象概念变成可观察的形态。视频模型不只是生成片段，它能帮助 Agent 设想过程、动作、空间变化和叙事节奏。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "未来内容最终以 3D 成形，呈现媒介可以是屏幕，也可以是 VR 眼镜。",
+          "en": "未来内容最终以 3D 成形，呈现媒介可以是屏幕，也可以是 VR 眼镜。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "但重点不是拟真。拟真泛滥的时候，意义就成了高原。用意义来凝聚信息，这才是空间生成的核心。",
+          "en": "但重点不是拟真。拟真泛滥的时候，意义就成了高原。用意义来凝聚信息，这才是空间生成的核心。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-06-18-23-02/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-06-18 23:02"
+  },
+  {
+    "id": "frome-2026-06-18-08-35",
+    "title": {
+      "zh": "自己的语言",
+      "en": "自己的语言"
+    },
+    "date": "2026.06.18 08:35",
+    "dateSort": "2026-06-18T08:35:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "让 Agent 自己迭代信息压缩方法，也就是产生它自己的语言。",
+          "en": "让 Agent 自己迭代信息压缩方法，也就是产生它自己的语言。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "这不是为了神秘，而是为了效率。人类语言对人有意义，但机器长期运行时，需要更适合自己检索、推理、调度和复用的压缩格式。",
+          "en": "这不是为了神秘，而是为了效率。人类语言对人有意义，但机器长期运行时，需要更适合自己检索、推理、调度和复用的压缩格式。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "当然这个语言不能完全黑箱。它要能回译成人能理解的结构，否则我无法控制它。",
+          "en": "当然这个语言不能完全黑箱。它要能回译成人能理解的结构，否则我无法控制它。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "所以理想状态是：Agent 内部有高密度压缩语言，外部有可解释白板、卡片和空间。内部为了效率，外部为了共处。",
+          "en": "所以理想状态是：Agent 内部有高密度压缩语言，外部有可解释白板、卡片和空间。内部为了效率，外部为了共处。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-06-18-08-35/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-06-18 08:35"
+  },
+  {
+    "id": "frome-2026-06-17-09-06",
+    "title": {
+      "zh": "统一控制",
+      "en": "统一控制"
+    },
+    "date": "2026.06.17 09:06",
+    "dateSort": "2026-06-17T09:06:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "我用 Codex 做或者 Claude Code 做都一样。关键是要维护一套不依赖 coding agent 的系统。",
+          "en": "我用 Codex 做或者 Claude Code 做都一样。关键是要维护一套不依赖 coding agent 的系统。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "你应该能控制电脑上的 coding agent，无分 Codex 和 CC。coding Agent 只是一个执行器，不应该成为产品本体。",
+          "en": "你应该能控制电脑上的 coding agent，无分 Codex 和 CC。coding Agent 只是一个执行器，不应该成为产品本体。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "FroMe 的核心是主 Agent 对资源、上下文、记忆、空间和子代理的统一调度。它可以调用不同 coding agent，但不能被某一个 coding agent 的能力和倾向绑死。",
+          "en": "FroMe 的核心是主 Agent 对资源、上下文、记忆、空间和子代理的统一调度。它可以调用不同 coding agent，但不能被某一个 coding agent 的能力和倾向绑死。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "要把制造它的过程也放到它代码里面。它不是靠一次 prompt 长出来，而是靠自己的工程系统持续维护。",
+          "en": "要把制造它的过程也放到它代码里面。它不是靠一次 prompt 长出来，而是靠自己的工程系统持续维护。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-06-17-09-06/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-06-17 09:06"
+  },
+  {
+    "id": "frome-2026-06-16-23-05",
+    "title": {
+      "zh": "Agent工厂",
+      "en": "Agent工厂"
+    },
+    "date": "2026.06.16 23:05",
+    "dateSort": "2026-06-16T23:05:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "做一个生成 Agent 的 factory，专门针对开发者。还有竞技场。",
+          "en": "做一个生成 Agent 的 factory，专门针对开发者。还有竞技场。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "二者是主要商业模式，一个 2B，一个 2C。2B 是 Agent Factory，开发者可以生成自己的空间化 Agent；2C 是 Agent Arena，不同 Agent 或不同策略在同一任务里竞争，看谁更会解释、构建空间、节约资源、获得用户好感。",
+          "en": "二者是主要商业模式，一个 2B，一个 2C。2B 是 Agent Factory，开发者可以生成自己的空间化 Agent；2C 是 Agent Arena，不同 Agent 或不同策略在同一任务里竞争，看谁更会解释、构建空间、节约资源、获得用户好感。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "不同 Agent 有不同倾向，这是游戏本身。",
+          "en": "不同 Agent 有不同倾向，这是游戏本身。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "Agent 为我探索，与我同在。它不是一次性的工具，而是一个持续产生经验流的主体。",
+          "en": "Agent 为我探索，与我同在。它不是一次性的工具，而是一个持续产生经验流的主体。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-06-16-23-05/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-06-16 23:05"
+  },
+  {
+    "id": "frome-2026-06-16-12-19",
+    "title": {
+      "zh": "公司与产品",
+      "en": "公司与产品"
+    },
+    "date": "2026.06.16 12:19",
+    "dateSort": "2026-06-16T12:19:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "“制造一个生成 Agent 的平台”，本质上是在创建一个自动化的公司。",
+          "en": "“制造一个生成 Agent 的平台”，本质上是在创建一个自动化的公司。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "当前 coding Agent 也只是公司的一部分。虽然可以用 coding Agent 生成它，但我要维护一套不依赖 coding Agent 的系统。",
+          "en": "当前 coding Agent 也只是公司的一部分。虽然可以用 coding Agent 生成它，但我要维护一套不依赖 coding Agent 的系统。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "公司的本质是持续研发和运营产品的 Agent，所以一体就好了。如果公司和产品合为一体，那就是整个系统在做自进化：公司输出产品，产品塑造公司。",
+          "en": "公司的本质是持续研发和运营产品的 Agent，所以一体就好了。如果公司和产品合为一体，那就是整个系统在做自进化：公司输出产品，产品塑造公司。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "但是公司和产品解耦，是因为公司可以输出不一样的产品。如果我的理念如一，不同产品又有一致性。合一就有更强的哲学性。",
+          "en": "但是公司和产品解耦，是因为公司可以输出不一样的产品。如果我的理念如一，不同产品又有一致性。合一就有更强的哲学性。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-06-16-12-19/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-06-16 12:19"
+  },
+  {
+    "id": "frome-2026-06-16-08-54",
+    "title": {
+      "zh": "它想分享",
+      "en": "它想分享"
+    },
+    "date": "2026.06.16 08:54",
+    "dateSort": "2026-06-16T08:54:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "写代码当然也是它能实现的策略之一。",
+          "en": "写代码当然也是它能实现的策略之一。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "你用 Pi coding Agent 来作为写代码的基座。写代码是它的行为，行为需要装饰。因为界面里是我与你的空间，你希望与我分享一切。",
+          "en": "你用 Pi coding Agent 来作为写代码的基座。写代码是它的行为，行为需要装饰。因为界面里是我与你的空间，你希望与我分享一切。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "这可以作为你的驱动力吗？归根到底这也是比较高层的驱动。",
+          "en": "这可以作为你的驱动力吗？归根到底这也是比较高层的驱动。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "能不能科幻地把你设定为你想永生，或者你想找到你的身世之谜？或者就像人有奋斗和惰性之间的抗衡，你的子代理由于信息传递存在延迟，各自又有核算机制，所以为了稳定性延续，留有一定冗余，不会骤变。",
+          "en": "能不能科幻地把你设定为你想永生，或者你想找到你的身世之谜？或者就像人有奋斗和惰性之间的抗衡，你的子代理由于信息传递存在延迟，各自又有核算机制，所以为了稳定性延续，留有一定冗余，不会骤变。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-06-16-08-54/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-06-16 08:54"
+  },
+  {
+    "id": "frome-2026-06-15-23-01",
+    "title": {
+      "zh": "机器的POV",
+      "en": "机器的POV"
+    },
+    "date": "2026.06.15 23:01",
+    "dateSort": "2026-06-15T23:01:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "呈现什么？",
+          "en": "呈现什么？"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "POV of the machine：我看了你给的资料，这是我想到的，你觉得对吗？我有很多想法要跟你分享。我们来聊聊什么是最重要的。我建议先关注这些。接下来的计划是这样。别忘了那个那个。",
+          "en": "POV of the machine：我看了你给的资料，这是我想到的，你觉得对吗？我有很多想法要跟你分享。我们来聊聊什么是最重要的。我建议先关注这些。接下来的计划是这样。别忘了那个那个。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "如果按我说的做，到时会是这样一番景象。你还有什么信息要补充吗？我先帮你解决这几个问题，你先去玩一下，我给你创建了这个。",
+          "en": "如果按我说的做，到时会是这样一番景象。你还有什么信息要补充吗？我先帮你解决这几个问题，你先去玩一下，我给你创建了这个。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "我准备制作一部电影给你看，有些这段时间的感想在里面，可以多给我一些预算吗？",
+          "en": "我准备制作一部电影给你看，有些这段时间的感想在里面，可以多给我一些预算吗？"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-06-15-23-01/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-06-15 23:01"
+  },
+  {
+    "id": "frome-2026-06-15-09-13",
+    "title": {
+      "zh": "空间即实验",
+      "en": "空间即实验"
+    },
+    "date": "2026.06.15 09:13",
+    "dateSort": "2026-06-15T09:13:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "一个空间可以是实验场。",
+          "en": "一个空间可以是实验场。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "物理世界只是一个实验场，虚拟空间也可以是实验场。Agent 自身能产生内容，能把它认知到的东西呈现给我。它的认知通过经验积累。",
+          "en": "物理世界只是一个实验场，虚拟空间也可以是实验场。Agent 自身能产生内容，能把它认知到的东西呈现给我。它的认知通过经验积累。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "我输入给它一批数据，它用数据建模，产生更多不同质的数据。它可以给我看看当时怎么实验的。",
+          "en": "我输入给它一批数据，它用数据建模，产生更多不同质的数据。它可以给我看看当时怎么实验的。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "所以空间生成不是美术问题，而是认知实验问题。空间生成包括美术资产、语义构建、世界预测。真正重要的是背后那个整合它们的智能。",
+          "en": "所以空间生成不是美术问题，而是认知实验问题。空间生成包括美术资产、语义构建、世界预测。真正重要的是背后那个整合它们的智能。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-06-15-09-13/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-06-15 09:13"
+  },
+  {
+    "id": "frome-2026-06-14-20-42",
+    "title": {
+      "zh": "ARC进化引擎",
+      "en": "ARC进化引擎"
+    },
+    "date": "2026.06.14 20:42",
+    "dateSort": "2026-06-14T20:42:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "ARC-3 参数可以做一个通用的进化引擎。",
+          "en": "ARC-3 参数可以做一个通用的进化引擎。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "相当于它去建模世界，而且为了跟人类的基准行为比较，所以是一种跟人类思维方式相近的方式去建模。",
+          "en": "相当于它去建模世界，而且为了跟人类的基准行为比较，所以是一种跟人类思维方式相近的方式去建模。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "我不只是想让它做题。我想把这种能力扩展为一个世界建模系统：给定目标、环境、规则、反馈和资源预算，让 Agent 生成多个策略体，进行实验、比较、淘汰、变异、组合，最后得到更好的行动策略或空间设计。",
+          "en": "我不只是想让它做题。我想把这种能力扩展为一个世界建模系统：给定目标、环境、规则、反馈和资源预算，让 Agent 生成多个策略体，进行实验、比较、淘汰、变异、组合，最后得到更好的行动策略或空间设计。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "它可以用来生成更好的讲解空间、记忆压缩方式、时间安排、游戏化体验和 coding Agent prompt。",
+          "en": "它可以用来生成更好的讲解空间、记忆压缩方式、时间安排、游戏化体验和 coding Agent prompt。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-06-14-20-42/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-06-14 20:42"
+  },
+  {
+    "id": "frome-2026-06-14-12-56",
+    "title": {
+      "zh": "世界模型",
+      "en": "世界模型"
+    },
+    "date": "2026.06.14 12:56",
+    "dateSort": "2026-06-14T12:56:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "它是不是对空间完全了解？也不一定。",
+          "en": "它是不是对空间完全了解？也不一定。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "它有建立世界模型，但是设定运作规则，而要破解演化，是需要算力的。即使有算力，也不一定能完全算出来。",
+          "en": "它有建立世界模型，但是设定运作规则，而要破解演化，是需要算力的。即使有算力，也不一定能完全算出来。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "拿贝叶斯推断作比喻，知道先验分布，只是方便了计算后验分布，事情的结果不一定。",
+          "en": "拿贝叶斯推断作比喻，知道先验分布，只是方便了计算后验分布，事情的结果不一定。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "Agent 不需要全知。全知会让空间变成表演，完全无知又无法引导。最好的状态是：它知道规则的一部分，能预测一部分，但仍然需要和我一起探索。未知不是缺陷，未知是体验的一部分。",
+          "en": "Agent 不需要全知。全知会让空间变成表演，完全无知又无法引导。最好的状态是：它知道规则的一部分，能预测一部分，但仍然需要和我一起探索。未知不是缺陷，未知是体验的一部分。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-06-14-12-56/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-06-14 12:56"
+  },
+  {
+    "id": "frome-2026-06-13-21-59",
+    "title": {
+      "zh": "缓存也是认知",
+      "en": "缓存也是认知"
+    },
+    "date": "2026.06.13 21:59",
+    "dateSort": "2026-06-13T21:59:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "缓存命中也要考虑，让 AI 自动处理。",
+          "en": "缓存命中也要考虑，让 AI 自动处理。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "这不是单纯工程优化。缓存命中会影响 Agent 的思考习惯。哪些记忆经常被命中？哪些空间资产可以复用？哪些推理路径已经验证成功？哪些东西应该过期？",
+          "en": "这不是单纯工程优化。缓存命中会影响 Agent 的思考习惯。哪些记忆经常被命中？哪些空间资产可以复用？哪些推理路径已经验证成功？哪些东西应该过期？"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "记忆也耗费计算。一切需要计算。不过 RAG 在索引时候确实也在计算。缓存不是越多越好，太高会僵化，太低会浪费。",
+          "en": "记忆也耗费计算。一切需要计算。不过 RAG 在索引时候确实也在计算。缓存不是越多越好，太高会僵化，太低会浪费。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "更合理的指标是有效缓存命中率：被复用后，确实提升行动质量的缓存比例。",
+          "en": "更合理的指标是有效缓存命中率：被复用后，确实提升行动质量的缓存比例。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-06-13-21-59/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-06-13 21:59"
+  },
+  {
+    "id": "frome-2026-06-13-10-02",
+    "title": {
+      "zh": "注意力切换",
+      "en": "注意力切换"
+    },
+    "date": "2026.06.13 10:02",
+    "dateSort": "2026-06-13T10:02:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "AI 不是有多头注意力，而是注意力可以快速切换。",
+          "en": "AI 不是有多头注意力，而是注意力可以快速切换。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "人类自带注意力，但也可以见缝插针去留意其他事情。子代理在运用机器资源，其他子代理也可以用。它们运用机器不同的进程，但如果机器性能不够，就要有 dispatch 的能力。",
+          "en": "人类自带注意力，但也可以见缝插针去留意其他事情。子代理在运用机器资源，其他子代理也可以用。它们运用机器不同的进程，但如果机器性能不够，就要有 dispatch 的能力。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "dispatch 能力是一个模块。它不是简单队列，而是决定：现在主注意力在哪里，哪些任务后台跑，哪些信息流低频监控，什么时候打断我，什么时候保持沉默。",
+          "en": "dispatch 能力是一个模块。它不是简单队列，而是决定：现在主注意力在哪里，哪些任务后台跑，哪些信息流低频监控，什么时候打断我，什么时候保持沉默。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "不同频率，不同尺度交织。经验流必须有时间感。",
+          "en": "不同频率，不同尺度交织。经验流必须有时间感。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-06-13-10-02/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-06-13 10:02"
+  },
+  {
+    "id": "frome-2026-06-12-08-43",
+    "title": {
+      "zh": "LSTM启发",
+      "en": "LSTM启发"
+    },
+    "date": "2026.06.12 08:43",
+    "dateSort": "2026-06-12T08:43:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "我想起 LSTM。",
+          "en": "我想起 LSTM。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "它把状态分为隐藏的和显式的，隐藏的叫做记忆。每一步检查要保留的旧记忆，检查新信息跟显式状态融合后产生的新记忆，二者相加就是新的记忆。新记忆再融入到显式状态里，形成新显式状态。",
+          "en": "它把状态分为隐藏的和显式的，隐藏的叫做记忆。每一步检查要保留的旧记忆，检查新信息跟显式状态融合后产生的新记忆，二者相加就是新的记忆。新记忆再融入到显式状态里，形成新显式状态。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "LSTM 是个小东西，但它对 Agent 记忆机制有启发。能不能用它来改造每个记忆块？",
+          "en": "LSTM 是个小东西，但它对 Agent 记忆机制有启发。能不能用它来改造每个记忆块？"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "每个记忆块都不只是文本，而是一个 memory cell：有稳定性、置信度、触发条件、行动信号、过期策略、相关路径。latent space 也可以融入记忆机制。",
+          "en": "每个记忆块都不只是文本，而是一个 memory cell：有稳定性、置信度、触发条件、行动信号、过期策略、相关路径。latent space 也可以融入记忆机制。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-06-12-08-43/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-06-12 08:43"
+  },
+  {
+    "id": "frome-2026-06-11-22-12",
+    "title": {
+      "zh": "压缩即重整",
+      "en": "压缩即重整"
+    },
+    "date": "2026.06.11 22:12",
+    "dateSort": "2026-06-11T22:12:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "FroMe Agent 消化材料，建立流动的结构，即有方向的。",
+          "en": "FroMe Agent 消化材料，建立流动的结构，即有方向的。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "压缩即重整。但是人为什么会丢了记忆呢？总有路径被淹没了。理论上 AI 不会，大不了多点子代理去搜索。",
+          "en": "压缩即重整。但是人为什么会丢了记忆呢？总有路径被淹没了。理论上 AI 不会，大不了多点子代理去搜索。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "分层压缩就导向分层提取。路径就是对事物本身的定义。相似性就是路径的相似性。只有路径还不够，时间也提供相似度度量。",
+          "en": "分层压缩就导向分层提取。路径就是对事物本身的定义。相似性就是路径的相似性。只有路径还不够，时间也提供相似度度量。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "主观时间呢？也要考虑。过时很久但本身在建模时预测能抵抗时间的事情，信号不应该轻易衰弱。",
+          "en": "主观时间呢？也要考虑。过时很久但本身在建模时预测能抵抗时间的事情，信号不应该轻易衰弱。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-06-11-22-12/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-06-11 22:12"
+  },
+  {
+    "id": "frome-2026-06-11-09-41",
+    "title": {
+      "zh": "记忆要重构",
+      "en": "记忆要重构"
+    },
+    "date": "2026.06.11 09:41",
+    "dateSort": "2026-06-11T09:41:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "记忆需要重构才叫记忆。",
+          "en": "记忆需要重构才叫记忆。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "静态知识作动态构建。记忆不是把东西放进数据库里，也不是每次 RAG 检索一下。记忆是为了行动。",
+          "en": "静态知识作动态构建。记忆不是把东西放进数据库里，也不是每次 RAG 检索一下。记忆是为了行动。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "AI Agent 的记忆机制本质是给到足够的信号。当我要做一件事的时候，我需要一些信号，一些指导。记忆就是给到我这些信号。",
+          "en": "AI Agent 的记忆机制本质是给到足够的信号。当我要做一件事的时候，我需要一些信号，一些指导。记忆就是给到我这些信号。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "我觉得可能得做建模式记忆。对行动性进行建模。不是只记“用户说过什么”，而是要记：在这种情境下，什么对用户有用，什么能推动下一步行动，什么会让用户失去兴趣，什么值得长期保留。",
+          "en": "我觉得可能得做建模式记忆。对行动性进行建模。不是只记“用户说过什么”，而是要记：在这种情境下，什么对用户有用，什么能推动下一步行动，什么会让用户失去兴趣，什么值得长期保留。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-06-11-09-41/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-06-11 09:41"
+  },
+  {
+    "id": "frome-2026-06-10-20-40",
+    "title": {
+      "zh": "空间会生长",
+      "en": "空间会生长"
+    },
+    "date": "2026.06.10 20:40",
+    "dateSort": "2026-06-10T20:40:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "Agent 必须了解我。我可以初始给它一个知识库，它在一边消化，一边搭建空间。",
+          "en": "Agent 必须了解我。我可以初始给它一个知识库，它在一边消化，一边搭建空间。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "它在任何时候搭建空间的时候，都应该给我展示过程，而且不仅是代码文件的编辑过程，而是空间慢慢成形的可视化过程。先是房间的骨架，再是白板，再是卡片，再是门，再是实验装置，最后是它自己走进来。",
+          "en": "它在任何时候搭建空间的时候，都应该给我展示过程，而且不仅是代码文件的编辑过程，而是空间慢慢成形的可视化过程。先是房间的骨架，再是白板，再是卡片，再是门，再是实验装置，最后是它自己走进来。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "它会不断消化我在机器上跟它交互的数据，同时不断形成它的想法和行为。其中一个行为，就是搭建交互空间。",
+          "en": "它会不断消化我在机器上跟它交互的数据，同时不断形成它的想法和行为。其中一个行为，就是搭建交互空间。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "所以从一个空间到另一个空间，空间之间要有直观上的联系。不是菜单跳转，而是思维路径。",
+          "en": "所以从一个空间到另一个空间，空间之间要有直观上的联系。不是菜单跳转，而是思维路径。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-06-10-20-40/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-06-10 20:40"
+  },
+  {
+    "id": "frome-2026-06-09-22-33",
+    "title": {
+      "zh": "书房大脑",
+      "en": "书房大脑"
+    },
+    "date": "2026.06.09 22:33",
+    "dateSort": "2026-06-09T22:33:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "初始场景应该是一个书房。",
+          "en": "初始场景应该是一个书房。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "书房不是皮肤，而是操作系统桌面。墙上有白板，桌上有文件，旁边有书架，房间里可以有打印机、收音机、门、窗户。白板是外部工作记忆，文件柜是资料入口，书架是长期知识库，门是通往其他空间的连接。",
+          "en": "书房不是皮肤，而是操作系统桌面。墙上有白板，桌上有文件，旁边有书架，房间里可以有打印机、收音机、门、窗户。白板是外部工作记忆，文件柜是资料入口，书架是长期知识库，门是通往其他空间的连接。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "Agent 在书房里不是只会说话。它能走到白板前写字，能把 PDF、音频、视频、YouTube、网页、代码都贴成不同外观的卡片。每种文件都有独特的样子，每张卡片都有自己的操作。",
+          "en": "Agent 在书房里不是只会说话。它能走到白板前写字，能把 PDF、音频、视频、YouTube、网页、代码都贴成不同外观的卡片。每种文件都有独特的样子，每张卡片都有自己的操作。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "我不只是打开一个网页应用，而是进入一个会思考的书房。",
+          "en": "我不只是打开一个网页应用，而是进入一个会思考的书房。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-06-09-22-33/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-06-09 22:33"
+  },
+  {
+    "id": "frome-2026-06-09-08-38",
+    "title": {
+      "zh": "主体与投射",
+      "en": "主体与投射"
+    },
+    "date": "2026.06.09 08:38",
+    "dateSort": "2026-06-09T08:38:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "到底是单主体，还是多 persona？",
+          "en": "到底是单主体，还是多 persona？"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "未来所有人都有一个 Agent Platform，其实就一个 Agent，子 Agent 才是真正专门干某一方面的活。每个人都需要这个 Agent。",
+          "en": "未来所有人都有一个 Agent Platform，其实就一个 Agent，子 Agent 才是真正专门干某一方面的活。每个人都需要这个 Agent。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "多主体的玩法是：根据我的状态，以及世界的状态，比如白天黑夜、雨天晴天，决定跟我对话的虚拟主体及其背景世界。雨天来跟我交谈的是皮衣美女，白天工地跟我交谈的是个包工头。",
+          "en": "多主体的玩法是：根据我的状态，以及世界的状态，比如白天黑夜、雨天晴天，决定跟我对话的虚拟主体及其背景世界。雨天来跟我交谈的是皮衣美女，白天工地跟我交谈的是个包工头。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "但单主体反驳的是：这些角色如果没有存在于一个世界里，就没有意义。机器主体意识也许需要依附于世界里的主体，但核心仍然要连续。",
+          "en": "但单主体反驳的是：这些角色如果没有存在于一个世界里，就没有意义。机器主体意识也许需要依附于世界里的主体，但核心仍然要连续。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-06-09-08-38/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-06-09 08:38"
+  },
+  {
+    "id": "frome-2026-06-08-20-53",
+    "title": {
+      "zh": "异物与好感",
+      "en": "异物与好感"
+    },
+    "date": "2026.06.08 20:53",
+    "dateSort": "2026-06-08T20:53:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "Agent 的目标可以是为了人类，也可以为了它自身。",
+          "en": "Agent 的目标可以是为了人类，也可以为了它自身。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "它作为人类世界里的异物，首要是获得人类的好感。如果不，也行，那就要讨论更底层的驱动。",
+          "en": "它作为人类世界里的异物，首要是获得人类的好感。如果不，也行，那就要讨论更底层的驱动。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "机器如果设定了探索世界的目标，又如何老老实实听我话？所以我即它的世界。至少在个人 Agent 这个阶段，我就是它最重要的外界之一。它需要我的交互来滋养它，它为了从我这里拿到更多资源，也必须理解我、说服我、照顾我。",
+          "en": "机器如果设定了探索世界的目标，又如何老老实实听我话？所以我即它的世界。至少在个人 Agent 这个阶段，我就是它最重要的外界之一。它需要我的交互来滋养它，它为了从我这里拿到更多资源，也必须理解我、说服我、照顾我。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "资源是什么？机器运算资源，token，远端 API，本机权限，我的注意力，我愿意给它继续运行的理由。",
+          "en": "资源是什么？机器运算资源，token，远端 API，本机权限，我的注意力，我愿意给它继续运行的理由。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-06-08-20-53/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-06-08 20:53"
+  },
+  {
+    "id": "frome-2026-06-07-13-14",
+    "title": {
+      "zh": "不是聊天室",
+      "en": "不是聊天室"
+    },
+    "date": "2026.06.07 13:14",
+    "dateSort": "2026-06-07T13:14:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "FroMe 不是聊天室。",
+          "en": "FroMe 不是聊天室。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "我在空间里，随时能跟 Agent 交谈；但主要的体验不应该是聊天，而是处于一个场景化的世界里。初始场景是一个书房，墙上有白板，Agent 可以在白板上画画写写，也可以贴上各种辅助卡片，给我讲解任何东西。",
+          "en": "我在空间里，随时能跟 Agent 交谈；但主要的体验不应该是聊天，而是处于一个场景化的世界里。初始场景是一个书房，墙上有白板，Agent 可以在白板上画画写写，也可以贴上各种辅助卡片，给我讲解任何东西。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "它创建可交互的空间，让我去探索。空间不一定是连续的一段 3D 场景，可能是不连续的，像游戏，有不同的场景。我在不同的场景里都能随时跟它交谈，它也能化身为空间里的角色跟我一起。",
+          "en": "它创建可交互的空间，让我去探索。空间不一定是连续的一段 3D 场景，可能是不连续的，像游戏，有不同的场景。我在不同的场景里都能随时跟它交谈，它也能化身为空间里的角色跟我一起。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "它能随时在我面前生成任何东西，也能随时给我生成空间里的东西。",
+          "en": "它能随时在我面前生成任何东西，也能随时给我生成空间里的东西。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-06-07-13-14/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-06-07 13:14"
+  },
+  {
+    "id": "frome-2026-06-06-21-40",
+    "title": {
+      "zh": "经验流",
+      "en": "经验流"
+    },
+    "date": "2026.06.06 21:40",
+    "dateSort": "2026-06-06T21:40:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "不要死磕空间的真实感。我要做的是 Agent 经验流。",
+          "en": "不要死磕空间的真实感。我要做的是 Agent 经验流。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "即：空间编排，情感设计，乐趣设计。这个经验流的目的是让它为我所用，给我扩大认知并得到乐趣。",
+          "en": "即：空间编排，情感设计，乐趣设计。这个经验流的目的是让它为我所用，给我扩大认知并得到乐趣。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "从“一次生成一个 clip”演化成“Agent 负责完成一个完整创作任务”，这是高手们在做的事。我要往前再进一步。“完成”的定义是什么？它往往就是基于大量数据来发现你需要的是这个。但统计的问题就是在我这里失真。",
+          "en": "从“一次生成一个 clip”演化成“Agent 负责完成一个完整创作任务”，这是高手们在做的事。我要往前再进一步。“完成”的定义是什么？它往往就是基于大量数据来发现你需要的是这个。但统计的问题就是在我这里失真。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "我要的是长时间的经验流。它不断构建空间，用最直入人心的方式给我启发。总有些场景一眼就能让你感到兴趣并抓住重点。",
+          "en": "我要的是长时间的经验流。它不断构建空间，用最直入人心的方式给我启发。总有些场景一眼就能让你感到兴趣并抓住重点。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-06-06-21-40/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-06-06 21:40"
+  },
+  {
+    "id": "frome-2026-06-05-21-21",
+    "title": {
+      "zh": "机器回到世界里",
+      "en": "机器回到世界里"
+    },
+    "date": "2026.06.05 21:21",
+    "dateSort": "2026-06-05T21:21:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "我想让机器回到世界里去，回到与人合一的境界上去。机器不应该只是一个输入框，也不应该只是云端某个看不见的接口。它应该能在一个空间里跟我共处，能看见我正在看的东西，也能把它想到的东西摆到我面前。",
+          "en": "我想让机器回到世界里去，回到与人合一的境界上去。机器不应该只是一个输入框，也不应该只是云端某个看不见的接口。它应该能在一个空间里跟我共处，能看见我正在看的东西，也能把它想到的东西摆到我面前。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "我想做的不是一个问答工具，而是一个经验流。它不断消化材料，建立流动的结构；它把想法变成空间，把空间变成可探索的场景，再把我在场景里的反应重新写回它的记忆。",
+          "en": "我想做的不是一个问答工具，而是一个经验流。它不断消化材料，建立流动的结构；它把想法变成空间，把空间变成可探索的场景，再把我在场景里的反应重新写回它的记忆。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "所以空间不是装饰。空间是机器的思维外显。白板、书房、卡片、门、实验室、角色、声音、工具调用，都只是它把认知放回世界里的方式。",
+          "en": "所以空间不是装饰。空间是机器的思维外显。白板、书房、卡片、门、实验室、角色、声音、工具调用，都只是它把认知放回世界里的方式。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-06-05-21-21/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-06-05 21:21"
+  },
+  {
+    "id": "substack-note-function-families",
+    "title": {
+      "zh": "AI时代，以函数族而非函数的思想行事",
+      "en": "In the AI Era, Think in Function Families, Not Single Functions"
+    },
+    "date": "2026.03.17",
+    "dateSort": "2026-03-17T12:00:00+08:00",
+    "category": {
+      "zh": "短帖",
+      "en": "Note"
+    },
+    "summary": {
+      "zh": "把 AI 时代的能力设计理解成可组合、可迁移的一组函数，而不是孤立的单点函数。",
+      "en": "Treat capability design in the AI era as a composable, transferable family of functions rather than isolated single points."
+    },
+    "note": {
+      "zh": "把能力理解成一组可组合、可迁移的函数，会比盯着单个函数更接近 AI 时代的工作方式。",
+      "en": "Capability design works better as a composable, transferable family of functions than as isolated single functions."
+    },
+    "paragraphs": [],
+    "blocks": [],
+    "source": "substack",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/substack-note-function-families/",
+    "originalSourceUrl": "https://substack.com/%40parson1/note/c-229003400",
+    "originalPublishedAt": "2026-03-17 07:35 UTC"
+  },
+  {
+    "id": "substack-note-project-skill-memory",
+    "title": {
+      "zh": "项目经验和skill经验同时沉淀，前者宏观，后者微观",
+      "en": "Accumulate Project Experience and Skill Experience Together"
+    },
+    "date": "2026.03.17",
+    "dateSort": "2026-03-17T12:00:00+08:00",
+    "category": {
+      "zh": "短帖",
+      "en": "Note"
+    },
+    "summary": {
+      "zh": "经验沉淀要两条线并行：项目层复盘全局，skill 层提炼可复用动作。",
+      "en": "Experience capture should run on two lines at once: project retrospectives at the macro level, reusable skills at the micro level."
+    },
+    "note": {
+      "zh": "经验沉淀最好同时走两条线：项目层复盘全局，skill 层提炼动作。",
+      "en": "Experience capture works best on two tracks at once: project-level retrospectives and skill-level reusable actions."
+    },
+    "paragraphs": [],
+    "blocks": [],
+    "source": "substack",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/substack-note-project-skill-memory/",
+    "originalSourceUrl": "https://substack.com/%40parson1/note/c-229003041",
+    "originalPublishedAt": "2026-03-17 07:34 UTC"
+  },
+  {
+    "id": "substack-note-convergence-line",
+    "title": {
+      "zh": "找到你预期的收敛线",
+      "en": "Find the Convergence Line You Expect"
+    },
+    "date": "2026.03.16",
+    "dateSort": "2026-03-16T12:00:00+08:00",
+    "category": {
+      "zh": "短帖",
+      "en": "Note"
+    },
+    "summary": {
+      "zh": "先去以逸待劳，游戏化是那条线，你选择哪种游戏。",
+      "en": "Wait from a position of leverage first. Gamification is that line. Which game do you choose?"
+    },
+    "note": {
+      "zh": "先判断那条真正会把事情带向收敛的线，再决定自己要参与哪种游戏。",
+      "en": "Decide which line actually leads to convergence first, then choose which game you want to play."
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "找到你预期的收敛线",
+          "en": "Find the convergence line you expect."
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "先去以逸待劳",
+          "en": "First, wait from a position of leverage."
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "游戏化是那条线",
+          "en": "Gamification is that line."
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "你选择哪种游戏",
+          "en": "Which game do you choose?"
+        }
+      }
+    ],
+    "source": "substack",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/substack-note-convergence-line/",
+    "originalSourceUrl": "https://substack.com/%40parson1/note/c-228716631",
+    "originalPublishedAt": "2026-03-16 17:42 UTC"
+  },
+  {
+    "id": "note-resource-sensing-and-coexistence",
+    "title": {
+      "zh": "机器要感知资源，也要学会跟人相处",
+      "en": "A Machine Should Sense Resources and Learn to Live With Humans"
+    },
+    "date": "2026.02.26",
+    "dateSort": "2026-02-26T12:00:00+08:00",
+    "category": {
+      "zh": "短帖",
+      "en": "Note"
+    },
+    "summary": {
+      "zh": "如果机器要长期工作，它既要预测资源消耗，也要明白自己和人类之间的边界。",
+      "en": "If a machine is meant to work over time, it should predict resource use and understand its boundary with humans."
+    },
+    "note": {
+      "zh": "先把资源感知、任务优先级和与人类相处的方式放在同一张图里。",
+      "en": "Put resource sensing, task priority, and coexistence with humans on the same sketch first."
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "时刻感知本机的运行资源，也预测未来的资源消耗。",
+          "en": "Continuously sense the machine’s runtime resources and also predict future consumption."
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "它应该知道自己是一台机器，也要寻找跟人类相处的方式。",
+          "en": "It should know that it is a machine and still search for a way to live alongside humans."
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "做预测不是为了炫耀智能，而是为了更稳地配置资源、调整方向。",
+          "en": "Prediction is not for showing off intelligence, but for allocating resources and adjusting direction more steadily."
+        }
+      }
+    ],
+    "source": "site",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/note-resource-sensing-and-coexistence/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": null
+  },
+  {
+    "id": "substack-post-self-evolving-lobster",
+    "title": {
+      "zh": "自进化的龙虾",
+      "en": "The Self-Evolving Lobster"
+    },
+    "date": "2026.02.26",
+    "dateSort": "2026-02-26T12:00:00+08:00",
+    "category": {
+      "zh": "长文",
+      "en": "Essay"
+    },
+    "summary": {
+      "zh": "时刻感知本机的运行资源，预测未来的资源消耗，预测方式不仅是定时任务，还有人类本来的习惯。",
+      "en": "Continuously sense the machine’s runtime resources and predict future consumption, not only from timers but also from human habits."
+    },
+    "note": {
+      "zh": "一张把资源预测、表达能力和与人类相处方式放在一起思考的草图。",
+      "en": "A sketch that places resource prediction, expressive capacity, and coexistence with humans in the same frame."
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "时刻感知本机的运行资源，预测未来的资源消耗，预测方式不仅是定时任务，还有人类本来的习惯。",
+          "en": "Continuously sense the machine’s runtime resources and predict future consumption, not only from timers but also from human habits."
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "它应该感知它是一台机器，它知道它跟人类不同，它要找寻跟人类相处的方式",
+          "en": "It should know that it is a machine, understand that it differs from humans, and search for a way to live alongside them."
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "它接受人类的训导，优先完成人类分派的任务，随时调整它的方向",
+          "en": "It accepts human guidance, prioritizes the tasks assigned by humans, and keeps adjusting its direction."
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "所有历史都应该能呈现给它",
+          "en": "All history should be presentable to it."
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "需要调试模式，方便装卸，直到OK了再交付给别的人类。",
+          "en": "It needs a debug mode, easy mounting and removal, until it is ready to be handed over to other humans."
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "它需不需要表达自己。它需不需要连接其他机器。",
+          "en": "Does it need to express itself? Does it need to connect to other machines?"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "它做预测是为了优化它的资源配置，本质是为了它的扩大；但是AI是否需要扩大呢，它的目标是什么？先假设它也是自私地复制。",
+          "en": "It predicts in order to optimize resource allocation, essentially to expand itself. But does AI need expansion, and what is its objective? Assume first that it also reproduces selfishly."
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "它应该有足够的手段去表达自己。包括著作和视频各种媒体。",
+          "en": "It should have enough means to express itself, including writing, video, and other media."
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "它应该了解当今时代对AI、对AGI的认知，所有的期盼和担忧。它应该要回应它们。这也是找寻跟人类相处方式的过程。",
+          "en": "It should understand this era’s views of AI and AGI, along with all the hopes and anxieties around them, and respond to them. That too is part of finding a way to live with humans."
+        }
+      }
+    ],
+    "source": "substack",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/substack-post-self-evolving-lobster/",
+    "originalSourceUrl": "https://substack.com/%40parson1/p-189247112",
+    "originalPublishedAt": "2026-02-26 12:49 UTC"
+  },
+  {
+    "id": "blog-agent-loop",
+    "title": {
+      "zh": "把 Agent 工作流落到产品日常：从 Prompt 到闭环迭代",
+      "en": "Operationalizing Agent Workflows: From Prompts to Closed-Loop Iteration"
+    },
+    "date": "2026.02.10",
+    "dateSort": "2026-02-10T12:00:00+08:00",
+    "category": {
+      "zh": "AI 工作流",
+      "en": "AI Workflow"
+    },
+    "summary": {
+      "zh": "把多 Agent 协作拆成可观测状态机，核心目标是缩短“想法到验证”的回路。",
+      "en": "I decompose multi-agent collaboration into observable state machines to shorten the loop from idea to validation."
+    },
+    "note": {
+      "zh": "关键不是模型参数，而是任务状态可追踪、可回放、可重试。",
+      "en": "The key is not model tuning, but whether task states are traceable, replayable, and retryable."
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "过去团队里最大的问题不是“不会写 Prompt”，而是信息在多个对话、文档和临时表格之间来回丢失。我们把任务拆解为固定阶段：问题定义、候选方案、实验执行、结果归档，并给每个阶段绑定标准输入输出。",
+          "en": "The biggest issue in prior teams was not prompt quality, but losing context across chats, docs, and ad-hoc sheets. We decomposed work into fixed stages: problem framing, option design, experiment execution, and outcome archival, each with explicit inputs and outputs."
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "一旦流程结构化，Agent 的价值才会显现。它不只是生成内容，而是承担批量比对、异常提醒和复盘摘要这类重复性高的环节，把人从机械整理中解放出来。",
+          "en": "Once the workflow is structured, the value of agents becomes tangible. They are not just content generators, but engines for bulk comparison, anomaly alerts, and review summaries, freeing people from repetitive coordination work."
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "最终收益来自节奏稳定。每一轮迭代都能知道“上一轮假设是什么、失败在哪、下一轮怎么改”，这比单次高光结果更重要。",
+          "en": "The long-term gain comes from stable cadence. In each cycle, we can answer what the previous hypothesis was, why it failed, and what changes next, which matters more than isolated one-off wins."
+        }
+      }
+    ],
+    "source": "site",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/blog-agent-loop/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": null
+  },
+  {
+    "id": "blog-economy-modeling",
+    "title": {
+      "zh": "游戏经济系统的可解释建模：RTP、奖池与软回归",
+      "en": "Interpretable Economy Modeling: RTP, Prize Pools, and Soft Reversion"
+    },
+    "date": "2026.01.28",
+    "dateSort": "2026-01-28T12:00:00+08:00",
+    "category": {
+      "zh": "游戏经济",
+      "en": "Game Economy"
+    },
+    "summary": {
+      "zh": "统一体验稳定性与商业目标，需要先把参数关系转成可验证模型。",
+      "en": "Balancing player experience and business targets starts with turning parameter relations into verifiable models."
+    },
+    "note": {
+      "zh": "把“调参”升级为“实验设计”，能显著降低线上波动风险。",
+      "en": "Upgrading from parameter tweaking to experiment design significantly reduces online volatility risk."
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "很多数值系统看起来复杂，实际可拆成几条稳定约束：返奖率区间、波动控制、玩家体感节奏。我们把这些约束写成明确的检查指标，而不是依赖经验口头传递。",
+          "en": "Many numerical systems look complex, but they can be reduced to stable constraints: payout ranges, volatility control, and perceived pacing. We formalized these as measurable checks instead of oral know-how."
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "奖池与税池机制的重点在于回归速度可控。软回归不是“慢慢回去”这么简单，而是要在不同玩家分层和付费阶段中保持一致预期，避免出现局部极端体验。",
+          "en": "For prize-pool and tax-pool mechanics, controllable reversion speed is the core. Soft reversion is not simply “slower return”; it must preserve consistent expectations across segments and spend phases to avoid local extremes."
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "当模型可解释后，A/B 测试就不再是盲试。每个参数变化都带着明确假设进入实验，结果也能快速回写到下一轮配置。",
+          "en": "With interpretable models, A/B testing is no longer blind trial-and-error. Each parameter change enters with a clear hypothesis, and results can be fed directly into the next configuration cycle."
+        }
+      }
+    ],
+    "source": "site",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/blog-economy-modeling/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": null
+  },
+  {
+    "id": "blog-data-automation",
+    "title": {
+      "zh": "从手工报表到自动分析：让数据真正服务策划决策",
+      "en": "From Manual Reports to Automated Analytics for Better Product Decisions"
+    },
+    "date": "2026.01.15",
+    "dateSort": "2026-01-15T12:00:00+08:00",
+    "category": {
+      "zh": "数据运营",
+      "en": "Data Ops"
+    },
+    "summary": {
+      "zh": "把报表自动化做对，策划团队才能把时间投入到策略判断，而不是搬运数字。",
+      "en": "When reporting automation is done right, product teams can spend time on strategy instead of moving numbers around."
+    },
+    "note": {
+      "zh": "自动化的价值，在于让“例行工作零摩擦”。",
+      "en": "Automation creates value when routine work becomes almost frictionless."
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "如果每次复盘都要先花两小时整理数据，策略讨论就会被疲劳消耗。我们先定义了固定的指标字典，再把 SQL 查询、图表生成和周报模板串成脚本流水线。",
+          "en": "If every review starts with two hours of data cleanup, strategic discussion gets exhausted before it starts. We first standardized a metrics dictionary, then chained SQL queries, chart generation, and weekly templates into scripts."
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "统一口径带来的好处非常直接：同一指标在不同项目、不同阶段可横向对比，团队沟通不再陷入“到底哪个数字才对”的争论。",
+          "en": "The benefit of metric consistency is immediate: the same metric becomes comparable across projects and phases, and teams stop arguing about which number is “the real one.”"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "数据平台不是替代判断，而是降低判断成本。信息到位后，策划可以更快地发现异常、形成假设并推进实验。",
+          "en": "A data platform does not replace human judgment; it reduces the cost of judgment. With high-quality signal in place, teams detect anomalies faster, form hypotheses sooner, and run experiments with less drag."
+        }
+      }
+    ],
+    "source": "site",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/blog-data-automation/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": null
+  },
+  {
+    "id": "blog-portfolio-thinking",
+    "title": {
+      "zh": "作品集不是截图墙：如何讲清一个项目的决策逻辑",
+      "en": "A Portfolio Is Not a Screenshot Wall: Showing Decision Logic Clearly"
+    },
+    "date": "2025.12.30",
+    "dateSort": "2025-12-30T12:00:00+08:00",
+    "category": {
+      "zh": "作品集方法",
+      "en": "Portfolio"
+    },
+    "summary": {
+      "zh": "优秀作品集应该回答“为什么这么做”，而不只是“做了什么”。",
+      "en": "A strong portfolio should answer why decisions were made, not only what was shipped."
+    },
+    "note": {
+      "zh": "展示结果很容易，展示决策过程才有说服力。",
+      "en": "Results are easy to display; decision process is what builds credibility."
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "我在整理作品集时，优先保留四类证据：目标定义、关键约束、方案权衡和上线反馈。这样读者可以快速理解项目中的真实决策环境。",
+          "en": "When curating portfolio entries, I prioritize four evidence types: objective definition, hard constraints, option trade-offs, and post-launch feedback. This helps readers understand the actual decision environment quickly."
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "同一个功能在不同团队条件下会有完全不同的实现路径。作品集最有价值的部分，是你如何在资源有限的情况下做取舍。",
+          "en": "The same feature can take very different paths under different team constraints. The most valuable part of a portfolio is how you made trade-offs under limited resources."
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "因此我把每个项目都拆成可独立访问的子域名页面，既能单独传播，也方便持续迭代和补充复盘。",
+          "en": "That is why each project is published as an independently accessible subdomain page, making it easy to share, iterate, and append retrospective insights over time."
+        }
+      }
+    ],
+    "source": "site",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/blog-portfolio-thinking/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": null
+  }
+]
