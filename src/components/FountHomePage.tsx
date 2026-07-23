@@ -12,9 +12,18 @@ import { FountDocsSection } from "./FountDocsSection";
 import { SocialLinks } from "./SocialLinks";
 import { ThemeModeIcon } from "./ThemeModeIcon";
 
+type FountPage =
+  | "home"
+  | "pricing"
+  | "partners"
+  | "updates"
+  | "blog"
+  | "fields"
+  | "docs";
+
 type FountHomePageProps = {
   lang: Lang;
-  page?: "home" | "pricing" | "partners" | "updates" | "blog" | "fields" | "docs";
+  page?: FountPage;
   onTabChange?: (tab: FountPrimaryTab) => void;
   onLangChange: (lang: Lang) => void;
   themeMode: "day" | "night";
@@ -22,6 +31,13 @@ type FountHomePageProps = {
 };
 
 type FountPrimaryTab = "home" | "fields" | "docs";
+
+type FountPrimaryNavProps = {
+  activePage: FountPage;
+  hrefs: Record<"home" | "fields" | "docs" | "updates" | "blog" | "pricing", string>;
+  lang: Lang;
+  onTabChange?: (tab: FountPrimaryTab) => void;
+};
 
 function handleFountTabClick(
   event: ReactMouseEvent<HTMLAnchorElement>,
@@ -530,6 +546,71 @@ const COPY = {
     faqLead: "The questions that usually block a first read: what Fount is, what comes inside it, how permissions work, and why the Field ecosystem exists.",
   },
 } as const;
+
+export function FountPrimaryNav({
+  activePage,
+  hrefs,
+  lang,
+  onTabChange,
+}: FountPrimaryNavProps) {
+  const copy = COPY[lang];
+
+  return (
+    <nav className="fount-site-nav" aria-label="Site links">
+      <a
+        href={hrefs.home}
+        className={activePage === "home" ? "active" : ""}
+        aria-current={activePage === "home" ? "page" : undefined}
+        onClick={(event) =>
+          handleFountTabClick(event, "home", onTabChange)
+        }
+      >
+        Fount
+      </a>
+      <a
+        href={hrefs.fields}
+        className={activePage === "fields" ? "active" : ""}
+        aria-current={activePage === "fields" ? "page" : undefined}
+        onClick={(event) =>
+          handleFountTabClick(event, "fields", onTabChange)
+        }
+      >
+        {copy.navFields}
+      </a>
+      <a
+        href={hrefs.docs}
+        className={activePage === "docs" ? "active" : ""}
+        aria-current={activePage === "docs" ? "page" : undefined}
+        onClick={(event) =>
+          handleFountTabClick(event, "docs", onTabChange)
+        }
+      >
+        {copy.navDocs}
+      </a>
+      <a
+        href={hrefs.updates}
+        className={activePage === "updates" ? "active" : ""}
+        aria-current={activePage === "updates" ? "page" : undefined}
+      >
+        {copy.navUpdates}
+      </a>
+      <a
+        href={hrefs.blog}
+        className={activePage === "blog" ? "active" : ""}
+        aria-current={activePage === "blog" ? "page" : undefined}
+      >
+        {copy.navBlog}
+      </a>
+      <a
+        href={hrefs.pricing}
+        className={activePage === "pricing" ? "active" : ""}
+        aria-current={activePage === "pricing" ? "page" : undefined}
+      >
+        {copy.navPricing}
+      </a>
+    </nav>
+  );
+}
 
 const CORE_CONCEPTS: ConceptItem[] = [
   {
@@ -2279,59 +2360,19 @@ export function FountHomePage({
         ) : null}
 
         <div className="fount-header-actions">
-          <nav className="fount-site-nav" aria-label="Site links">
-            <a
-              href={homeHref}
-              className={isHomePage ? "active" : ""}
-              aria-current={isHomePage ? "page" : undefined}
-              onClick={(event) =>
-                handleFountTabClick(event, "home", onTabChange)
-              }
-            >
-              Fount
-            </a>
-            <a
-              href={fieldsHref}
-              className={isFieldsPage ? "active" : ""}
-              aria-current={isFieldsPage ? "page" : undefined}
-              onClick={(event) =>
-                handleFountTabClick(event, "fields", onTabChange)
-              }
-            >
-              {copy.navFields}
-            </a>
-            <a
-              href={docsHref}
-              className={isDocsPage ? "active" : ""}
-              aria-current={isDocsPage ? "page" : undefined}
-              onClick={(event) =>
-                handleFountTabClick(event, "docs", onTabChange)
-              }
-            >
-              {copy.navDocs}
-            </a>
-            <a
-              href={updatesHref}
-              className={isUpdatesPage ? "active" : ""}
-              aria-current={isUpdatesPage ? "page" : undefined}
-            >
-              {copy.navUpdates}
-            </a>
-            <a
-              href={blogHref}
-              className={isBlogPage ? "active" : ""}
-              aria-current={isBlogPage ? "page" : undefined}
-            >
-              {copy.navBlog}
-            </a>
-            <a
-              href={pricingHref}
-              className={isPricingPage ? "active" : ""}
-              aria-current={isPricingPage ? "page" : undefined}
-            >
-              {copy.navPricing}
-            </a>
-          </nav>
+          <FountPrimaryNav
+            activePage={page}
+            hrefs={{
+              home: homeHref,
+              fields: fieldsHref,
+              docs: docsHref,
+              updates: updatesHref,
+              blog: blogHref,
+              pricing: pricingHref,
+            }}
+            lang={lang}
+            onTabChange={onTabChange}
+          />
           <div className="fount-header-utils">
             <div className="fount-lang-switch" aria-label="Language switcher">
               <button

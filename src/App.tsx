@@ -6,7 +6,10 @@ import type {
 import { AccountEntryCard } from "./components/AccountEntryCard";
 import { LoginPage, type AccountTier } from "./components/LoginPage";
 import { AdminPage } from "./components/AdminPage";
-import { FountHomePage } from "./components/FountHomePage";
+import {
+  FountHomePage,
+  FountPrimaryNav,
+} from "./components/FountHomePage";
 import { OneAgentProductPage } from "./components/OneAgentProductPage";
 import { ProjectDetailModal } from "./components/ProjectDetailModal";
 import { ProjectEntry } from "./components/ProjectEntry";
@@ -3774,21 +3777,18 @@ function App() {
             </nav>
 
             <div className="fount-header-actions">
-              <nav className="fount-site-nav" aria-label="Site links">
-                <a href={relativeRootHref("fields", lang)}>Fields</a>
-                <a href={relativeRootHref("docs", lang)}>
-                  {lang === "zh" ? "文档" : "Docs"}
-                </a>
-                <a href={relativeRootHref("updates", lang)}>
-                  {lang === "zh" ? "更新" : "Updates"}
-                </a>
-                <a className="active" href={relativeRootHref("blog", lang)} aria-current="page">
-                  {lang === "zh" ? "博客" : "Blog"}
-                </a>
-                <a href={relativeRootHref("pricing", lang)}>
-                  {lang === "zh" ? "定价" : "Pricing"}
-                </a>
-              </nav>
+              <FountPrimaryNav
+                activePage="blog"
+                hrefs={{
+                  home: relativeRootHref("home", lang),
+                  fields: relativeRootHref("fields", lang),
+                  docs: relativeRootHref("docs", lang),
+                  updates: relativeRootHref("updates", lang),
+                  blog: relativeRootHref("blog", lang),
+                  pricing: relativeRootHref("pricing", lang),
+                }}
+                lang={lang}
+              />
               <div className="fount-header-utils">
                 <div className="fount-lang-switch" aria-label="Language switcher">
                   <button
@@ -4301,33 +4301,6 @@ function App() {
           </div>
         </footer>
       </main>
-      {rootView === "blog" ? (
-        nextBlogArticle ? (
-          <div className="blog-next-fixed-wrap">
-            <button
-              type="button"
-              className="blog-next-fixed-btn"
-              onClick={() => scrollToBlogArticle(nextBlogArticle.id)}
-            >
-              <span className="blog-next-fixed-label">
-                {copy.blogNextLabel}
-              </span>
-              <span className="blog-next-fixed-text">
-                {nextBlogArticle.title[lang]}
-              </span>
-            </button>
-          </div>
-        ) : (
-          <div className="blog-next-fixed-wrap">
-            <button type="button" className="blog-next-fixed-btn" disabled>
-              <span className="blog-next-fixed-label">
-                {copy.blogNextLabel}
-              </span>
-              <span className="blog-next-fixed-text">{copy.blogEndOfList}</span>
-            </button>
-          </div>
-        )
-      ) : null}
       {showScrollTop ? (
         <button
           type="button"
@@ -4337,7 +4310,51 @@ function App() {
           TOP
         </button>
       ) : null}
-      <SiteAiChat lang={lang} projects={projects} lastUpdated={lastUpdated} />
+      {rootView === "blog" ? (
+        <div
+          className="blog-reading-dock"
+          aria-label={lang === "zh" ? "博客阅读快捷操作" : "Blog reading shortcuts"}
+        >
+          {nextBlogArticle ? (
+            <div className="blog-next-fixed-wrap">
+              <button
+                type="button"
+                className="blog-next-fixed-btn"
+                onClick={() => scrollToBlogArticle(nextBlogArticle.id)}
+              >
+                <span className="blog-next-fixed-label">
+                  {copy.blogNextLabel}
+                </span>
+                <span className="blog-next-fixed-text">
+                  {nextBlogArticle.title[lang]}
+                </span>
+              </button>
+            </div>
+          ) : (
+            <div className="blog-next-fixed-wrap">
+              <button type="button" className="blog-next-fixed-btn" disabled>
+                <span className="blog-next-fixed-label">
+                  {copy.blogNextLabel}
+                </span>
+                <span className="blog-next-fixed-text">
+                  {copy.blogEndOfList}
+                </span>
+              </button>
+            </div>
+          )}
+          <SiteAiChat
+            lang={lang}
+            projects={projects}
+            lastUpdated={lastUpdated}
+          />
+        </div>
+      ) : (
+        <SiteAiChat
+          lang={lang}
+          projects={projects}
+          lastUpdated={lastUpdated}
+        />
+      )}
     </div>
   );
 }

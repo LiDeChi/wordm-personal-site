@@ -74,8 +74,10 @@ These bindings were observed from the Cloudflare Workers API and
   to it; Bookplain reuses the root site's Supabase project and cross-subdomain
   `wordm-auth-v1` session storage.
 - `/Users/lidechi/Documents/Github/MuseumBook` owns the standalone
-  `museum.wordm.us` experience. The root Fields page catalogs and links to it,
-  while the wildcard Worker passes the hostname through to that product origin.
+  `museum.wordm.us` Vercel experience. The root Fields page catalogs and links
+  to it; MuseumBook reuses the root site's Supabase project and cross-subdomain
+  `wordm-auth-v1` session storage, while the wildcard Worker passes the hostname
+  through to that product origin.
 - `/Users/lidechi/Documents/Github/foundry-agent-studio` owns the standalone
   `foundry.wordm.us` Pages experience. The root Fields page catalogs and embeds
   it, while the wildcard Worker passes requests through to that Pages origin.
