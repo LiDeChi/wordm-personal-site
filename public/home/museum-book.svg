@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="title description">
+  <title id="title">MuseumBook 文学分馆</title>
+  <desc id="description">深色背景上的文学博物馆建筑剖面，书页形成屋顶，展厅在内部发光。</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#171410"/>
+      <stop offset="0.55" stop-color="#0c0c0b"/>
+      <stop offset="1" stop-color="#21160f"/>
+    </linearGradient>
+    <linearGradient id="light" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#d6a161"/>
+      <stop offset="1" stop-color="#7d3528"/>
+    </linearGradient>
+    <pattern id="grid" width="64" height="64" patternUnits="userSpaceOnUse">
+      <path d="M64 0H0V64" fill="none" stroke="#b58a50" stroke-opacity=".055"/>
+    </pattern>
+    <filter id="glow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="20"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="900" fill="url(#background)"/>
+  <rect width="1600" height="900" fill="url(#grid)"/>
+  <path d="M0 690C320 620 520 760 800 685s520-25 800 35v180H0Z" fill="#090908"/>
+  <g transform="translate(205 140)">
+    <ellipse cx="595" cy="585" rx="450" ry="45" fill="#a85b34" opacity=".14" filter="url(#glow)"/>
+    <g fill="#15130f" stroke="#9b7448" stroke-width="3">
+      <path d="M40 600h1110"/>
+      <path d="M115 600V355h240v245M355 600V225h360v375M715 600V325h360v275"/>
+      <path d="M75 355h320l-44-59H122Z"/>
+      <path d="M310 225h450l-58-78H369Z"/>
+      <path d="M672 325h449l-50-68H724Z"/>
+      <path d="M165 600V420h140v180M425 600V310h220v290M790 600V410h210v190"/>
+    </g>
+    <g fill="url(#light)" opacity=".74">
+      <rect x="184" y="444" width="102" height="153"/>
+      <rect x="457" y="342" width="156" height="255"/>
+      <rect x="825" y="441" width="142" height="156"/>
+    </g>
+    <g fill="none" stroke="#c19a68" stroke-width="2" opacity=".6">
+      <path d="M172 393h126M172 414h126M416 278h238M416 300h238M782 376h225M782 398h225"/>
+      <path d="M200 476h71M200 504h71M475 390h120M475 426h120M838 482h116M838 518h116"/>
+      <circle cx="535" cy="270" r="14"/>
+      <path d="M535 225v-91m-34 34h68"/>
+    </g>
+    <g fill="#2b241a" stroke="#c39458" stroke-width="3">
+      <path d="M386 148c50-43 100-53 149-20v108c-49-33-99-23-149 20Z"/>
+      <path d="M684 148c-50-43-100-53-149-20v108c49-33 99-23 149 20Z"/>
+      <path d="M535 128v108"/>
+    </g>
+    <g fill="#bd8f55">
+      <circle cx="128" cy="602" r="6"/>
+      <circle cx="1070" cy="602" r="6"/>
+      <circle cx="535" cy="602" r="6"/>
+    </g>
+  </g>
+  <g transform="translate(96 86)">
+    <path d="M0 0h115v2H0Z" fill="#9b7448"/>
+    <text x="0" y="42" fill="#b58a50" font-family="ui-monospace, monospace" font-size="19" letter-spacing="5">LITERARY FIELD</text>
+  </g>
+  <g transform="translate(98 730)">
+    <text fill="#eadbc3" font-family="Georgia, 'Noto Serif SC', serif" font-size="78" letter-spacing="1">MuseumBook</text>
+    <text y="55" fill="#8f816d" font-family="'Noto Serif SC', serif" font-size="22" letter-spacing="4">把一本书，建成一座分馆</text>
+  </g>
+  <g transform="translate(1340 740)">
+    <circle cx="42" cy="42" r="41" fill="none" stroke="#9b7448" stroke-width="2"/>
+    <path d="M22 57h40M26 57V37m32 20V37M22 37h40L42 23 22 37Zm12 20V43h16v14" fill="none" stroke="#c89a5e" stroke-width="2"/>
+  </g>
+</svg>

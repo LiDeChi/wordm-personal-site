@@ -28,6 +28,11 @@
       "owner": "product"
     },
     {
+      "domain": "bookplain.wordm.us",
+      "project": "bookplain",
+      "owner": "product"
+    },
+    {
       "domain": "wifenglish.wordm.us",
       "project": "wifenglish",
       "owner": "product"
@@ -116,11 +121,13 @@
     "agent",
     "arc3",
     "auth",
+    "bookplain",
     "flipook",
     "flipook-updates",
     "gridnote",
     "inote",
     "latti",
+    "museum",
     "supportdualpart",
     "wifenglish"
   ],

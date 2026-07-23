@@ -63,6 +63,29 @@ export const FOUNT_FIELDS: FountField[] = [
     },
   },
   {
+    key: "bookplain",
+    name: "Bookplain",
+    href: "https://bookplain.wordm.us",
+    previewUrl: "bookplain.wordm.us",
+    coverUrl: "/home/bookplain-gallery.png",
+    coverAlt: {
+      zh: "Bookplain 真实书架与空间阅读界面",
+      en: "Bookplain spatial reading gallery with a realistic bookshelf",
+    },
+    kind: {
+      zh: "空间理解 Field",
+      en: "Spatial Understanding Field",
+    },
+    status: {
+      zh: "可进入",
+      en: "Available",
+    },
+    summary: {
+      zh: "把整本 EPUB 或文本展开成可阅读、可探索、可从原文定位理解物件的立体世界。",
+      en: "Turns a complete EPUB or text into a readable world where source passages connect directly to explorable understanding objects.",
+    },
+  },
+  {
     key: "arc3",
     name: "ARC3",
     href: "https://arc3.wordm.us",

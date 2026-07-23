@@ -37,6 +37,7 @@ These bindings were observed with `npx wrangler pages project list`:
 | `latti.wordm.us` | `latti` | Keep in the Latti/product project. |
 | `inote.wordm.us` | `inote` | Keep in the iNote/product project. |
 | `agent.wordm.us` | `orchard-agent` | Keep in the Agent/product project; verify whether old `agent` Pages project is still needed. |
+| `bookplain.wordm.us` | `bookplain` | Keep in the Bookplain product project. |
 | `wifenglish.wordm.us` | `wifenglish` | Keep in the Wifenglish/product project. |
 | `supportdualpart.wordm.us` | `supportdualpart` | Keep with that product/project if still active. |
 | none | `wordm-personal-home` | Deleted from Cloudflare Pages after root-domain duties moved here. |
@@ -66,6 +67,13 @@ These bindings were observed from the Cloudflare Workers API and
 - `workers/subdomain-proxy.ts` in this project explicitly passes through known
   standalone Pages/Workers subdomains because the `*.wordm.us/*` wildcard route
   exists and should not intercept product-owned or separately routed hosts.
+- `/Users/lidechi/Documents/Github/bookplain` owns the standalone
+  `bookplain.wordm.us` Pages experience. The root Fields page catalogs and links
+  to it; Bookplain reuses the root site's Supabase project and cross-subdomain
+  `wordm-auth-v1` session storage.
+- `/Users/lidechi/Documents/Github/MuseumBook` owns the standalone
+  `museum.wordm.us` experience. The root Fields page catalogs and links to it,
+  while the wildcard Worker passes the hostname through to that product origin.
 - `workers/wordm-auth.ts` in this project owns the shared `auth.wordm.us`
   Worker source. It is deployed with `npm run deploy:auth`, preserving
   Cloudflare-side variables with `--keep-vars`.
