@@ -253,6 +253,27 @@ npm run sync:projects
 
 脚本：`scripts/sync-center-control.mjs`
 
+### 文章同步
+
+公开文章的唯一源目录是独立仓库
+[`LiDeChi/12-Articles`](https://github.com/LiDeChi/12-Articles)，本机工作目录位于
+Obsidian 仓库的 `12-Articles/`。每篇文章使用
+`posts/<slug>/index.qmd`，由 Quarto 发布到 GitHub Pages。
+
+主页在运行时读取：
+
+```text
+https://lidechi.github.io/12-Articles/articles.json
+```
+
+`src/data/articles.snapshot.json` 是离线与构建回退，不是编辑源。文章站发布后，可用本机 Quarto 构建结果刷新快照：
+
+```bash
+npm run sync:articles -- --source "/path/to/12-Articles"
+```
+
+若省略 `--source`，脚本会从已发布的 GitHub Pages 清单同步。不要直接编辑快照或在 TypeScript 中新增正文。
+
 ## Cloudflare Pages 部署
 
 1. 登录 Cloudflare：
