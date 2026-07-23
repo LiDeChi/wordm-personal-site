@@ -114,7 +114,7 @@ export const FOUNT_FIELDS: FountField[] = [
     name: "万卷 WanJuan",
     href: "https://wanjuan.wordm.us",
     previewUrl: "wanjuan.wordm.us",
-    coverUrl: "/home/wanjuan-library.jpg",
+    coverUrl: "/home/wanjuan-library-scenes.jpg",
     coverAlt: {
       zh: "万卷按时间与地域展开的 3D 书场与三层场景",
       en: "WanJuan 3D book field arranged by time and region with aligned scene layers",
