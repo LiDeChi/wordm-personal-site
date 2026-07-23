@@ -71,6 +71,7 @@ const PASS_THROUGH_SUBDOMAINS = new Set([
   'auth',
   'flipook',
   'flipook-updates',
+  'foundry',
   'gridnote',
   'inote',
   'latti',

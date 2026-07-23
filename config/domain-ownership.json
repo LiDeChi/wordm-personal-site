@@ -28,6 +28,11 @@
       "owner": "product"
     },
     {
+      "domain": "foundry.wordm.us",
+      "project": "foundry-agent-studio",
+      "owner": "product"
+    },
+    {
       "domain": "wifenglish.wordm.us",
       "project": "wifenglish",
       "owner": "product"
@@ -118,6 +123,7 @@
     "auth",
     "flipook",
     "flipook-updates",
+    "foundry",
     "gridnote",
     "inote",
     "latti",

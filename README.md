@@ -6,6 +6,7 @@
 基于你提供的学术极简版式实现的个人网站，包含：
 
 - 根域 `wordm.us`：个人博客 + 作品集
+- `Fields` 中的 Foundry Agent Studio 入口：独立站 `foundry.wordm.us`
 - 子域 `resume.wordm.us`：独立简历页（含 PDF 下载，仅管理员/测试账号可访问）
 - 子域 `admin.wordm.us`：后台系统入口（HTTP Basic Auth 保护）
 - 子域 `support.wordm.us`：所有产品/App Store 上架共用的支持入口
@@ -62,6 +63,7 @@ NEXT_PUBLIC_FOUNT_EARLY_BIRD_CLAIMED=0
 - `NEXT_PUBLIC_FOUNT_EARLY_BIRD_LIMIT` / `NEXT_PUBLIC_FOUNT_EARLY_BIRD_CLAIMED` 是早鸟进度的构建时回退值；线上会优先通过 `/api/fount-early-bird-status` 从 Creem 交易统计当前进度。
 - 若不配置，会使用 `latti` 当前公开计划商品作为默认值。
 - 站点会将 Supabase 会话同步到 `.wordm.us` 域级 cookie，因此 `wordm.us`、`resume.wordm.us`、`p-*.wordm.us` 会共享登录态。
+- `foundry.wordm.us` 使用同一 Supabase 项目与 `wordm-auth-v1` 存储键；从 `/fields` 进入独立站后会继续使用当前账号。
 - 账号角色共四类：`admin`（管理员）、`tester`（测试账号）、`user`（普通账号）、`guest`（游客）。
 - 角色判定顺序：Supabase 用户 metadata 的 `role` 字段 > `public/auth-role-rules.json` 邮箱名单（与环境变量合并）> 默认 `user`。
 - 简历页权限：仅 `admin` / `tester` 可访问，`user` / `guest` 会显示受限提示页。
