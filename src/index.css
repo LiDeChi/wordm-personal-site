@@ -21758,3 +21758,27 @@ body:has(.fount-page-focused[data-page="docs"]) {
         max-height: calc(100svh - 82px);
     }
 }
+
+@media (max-width: 860px) {
+    .fount-blog-container .blog-sidebar {
+        overflow: hidden;
+        padding: 8px;
+    }
+
+    .fount-blog-container .blog-sidebar .nav-list {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 8px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding-bottom: 4px;
+        scroll-snap-type: x proximity;
+        scrollbar-width: thin;
+    }
+
+    .fount-blog-container .blog-sidebar .nav-item {
+        flex: 0 0 min(74vw, 260px);
+        min-width: 0;
+        scroll-snap-align: start;
+    }
+}
