@@ -33,6 +33,13 @@ jobs:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
         run: |
+          if [[ -n "$CLOUDFLARE_API_TOKEN" ]]; then
+            echo "cloudflare_ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "cloudflare_ready=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=Domain automation skipped::Add CLOUDFLARE_API_TOKEN to enable DNS reconciliation."
+          fi
+
           if [[ -n "$CLOUDFLARE_API_TOKEN" &&
                 -n "$CLOUDFLARE_ACCOUNT_ID" &&
                 -n "$VITE_SUPABASE_URL" &&
@@ -79,7 +86,7 @@ jobs:
         run: npx --no-install wrangler pages deploy dist --project-name=my-blog --branch=main
 
       - name: Ensure WanJuan production domain
-        if: steps.deploy-config.outputs.ready == 'true'
+        if: always() && steps.deploy-config.outputs.cloudflare_ready == 'true'
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: npm run ensure:wanjuan-domain
