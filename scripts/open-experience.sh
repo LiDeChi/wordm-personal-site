@@ -6,9 +6,6 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 WORKTREE_INPUT="${CODEX_WORKTREE_PATH:-$PROJECT_ROOT}"
 HOST="127.0.0.1"
-PORT="44014"
-ROOT_URL="http://${HOST}:${PORT}/"
-EXPERIENCE_URL="http://${HOST}:${PORT}/?lang=zh"
 SERVER_PID=""
 
 if [[ ! -d "$WORKTREE_INPUT" ]]; then
@@ -22,6 +19,24 @@ if [[ ! -f "$WORKTREE_PATH/package.json" ]] || [[ ! -f "$WORKTREE_PATH/src/main.
   printf '无法定位 my-blog 工作树：%s\n' "$WORKTREE_PATH" >&2
   exit 1
 fi
+
+GIT_COMMON_DIR="$(git -C "$WORKTREE_PATH" rev-parse --git-common-dir 2>/dev/null || true)"
+if [[ -n "$GIT_COMMON_DIR" ]] && [[ "$GIT_COMMON_DIR" != /* ]]; then
+  GIT_COMMON_DIR="$(cd "$WORKTREE_PATH/$GIT_COMMON_DIR" && pwd -P)"
+fi
+PRIMARY_WORKTREE_PATH="$(dirname "$GIT_COMMON_DIR")"
+
+if [[ -n "${OPEN_EXPERIENCE_PORT:-}" ]]; then
+  PORT="$OPEN_EXPERIENCE_PORT"
+elif [[ "$WORKTREE_PATH" == "$PRIMARY_WORKTREE_PATH" ]]; then
+  PORT="44014"
+else
+  WORKTREE_CHECKSUM="$(printf '%s' "$WORKTREE_PATH" | cksum | awk '{print $1}')"
+  PORT="$((44100 + WORKTREE_CHECKSUM % 800))"
+fi
+
+ROOT_URL="http://${HOST}:${PORT}/"
+EXPERIENCE_URL="${ROOT_URL}?lang=zh"
 
 cd "$WORKTREE_PATH"
 

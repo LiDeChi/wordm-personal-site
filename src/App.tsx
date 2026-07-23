@@ -4378,43 +4378,45 @@ function App() {
         </button>
       ) : null}
       {rootView === "blog" ? (
-        <div
-          className="blog-reading-dock"
-          aria-label={lang === "zh" ? "博客阅读快捷操作" : "Blog reading shortcuts"}
-        >
-          {nextBlogArticle ? (
-            <div className="blog-next-fixed-wrap">
-              <button
-                type="button"
-                className="blog-next-fixed-btn"
-                onClick={() => scrollToBlogArticle(nextBlogArticle.id)}
-              >
-                <span className="blog-next-fixed-label">
-                  {copy.blogNextLabel}
-                </span>
-                <span className="blog-next-fixed-text">
-                  {nextBlogArticle.title[lang]}
-                </span>
-              </button>
-            </div>
-          ) : (
-            <div className="blog-next-fixed-wrap">
-              <button type="button" className="blog-next-fixed-btn" disabled>
-                <span className="blog-next-fixed-label">
-                  {copy.blogNextLabel}
-                </span>
-                <span className="blog-next-fixed-text">
-                  {copy.blogEndOfList}
-                </span>
-              </button>
-            </div>
-          )}
+        <>
+          <div
+            className="blog-reading-dock"
+            aria-label={lang === "zh" ? "博客下一篇" : "Next blog article"}
+          >
+            {nextBlogArticle ? (
+              <div className="blog-next-fixed-wrap">
+                <button
+                  type="button"
+                  className="blog-next-fixed-btn"
+                  onClick={() => scrollToBlogArticle(nextBlogArticle.id)}
+                >
+                  <span className="blog-next-fixed-label">
+                    {copy.blogNextLabel}
+                  </span>
+                  <span className="blog-next-fixed-text">
+                    {nextBlogArticle.title[lang]}
+                  </span>
+                </button>
+              </div>
+            ) : (
+              <div className="blog-next-fixed-wrap">
+                <button type="button" className="blog-next-fixed-btn" disabled>
+                  <span className="blog-next-fixed-label">
+                    {copy.blogNextLabel}
+                  </span>
+                  <span className="blog-next-fixed-text">
+                    {copy.blogEndOfList}
+                  </span>
+                </button>
+              </div>
+            )}
+          </div>
           <SiteAiChat
             lang={lang}
             projects={projects}
             lastUpdated={lastUpdated}
           />
-        </div>
+        </>
       ) : (
         <SiteAiChat
           lang={lang}
