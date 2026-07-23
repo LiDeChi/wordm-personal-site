@@ -104,22 +104,19 @@ type PermissionItem = {
   level: string;
 };
 
-type BillingMode = "monthly" | "yearly" | "lifetime";
-
 type PricingPlan = {
   id: "player" | "builder" | "master";
   name: string;
   badge: string;
   sticker?: string;
   description: string;
-  prices: Record<BillingMode, string>;
-  priceSubtexts: Record<BillingMode, string>;
+  price: string;
   earlyBirdLifetimePrice?: string;
   earlyBirdLifetimeHref?: string;
   earlyBirdNextPrice?: string;
   futureAnchor?: string;
   cta: string;
-  hrefs: Record<BillingMode, string>;
+  href: string;
   features: string[];
   note: string;
   featured?: boolean;
@@ -157,7 +154,6 @@ type PartnerCard = {
 type CommissionTier = {
   title: string;
   body: string;
-  subscription: string;
   lifetime: string;
   bestFor: string;
 };
@@ -327,11 +323,16 @@ const COPY = {
     fieldsCount: "个 Field",
     fieldsOpen: "进入 Field",
     fieldsListAria: "我创建的 Field 列表",
+    fieldsViewSwitchAria: "切换 Fields 展示方式",
+    fieldsViewList: "列表",
+    fieldsViewGallery: "画廊",
     fieldsBackToList: "返回完整列表",
     fieldsOpenSeparate: "单独打开",
     fieldsProductPage: "产品页",
+    fieldsVideoPage: "讲解视频",
     fieldsSwitchAria: "切换 Field",
     fieldsEmbedHint: "若页面无法内嵌，请单独打开。",
+    fieldsVideoHint: "可在此直接播放完整视频。",
     heroTitle: "Fount",
     heroDeck: "像玩游戏一样构建产品。",
     heroSub: "想法变成卡片，现场铺成白板，agent 参与执行、检查和发布。",
@@ -451,11 +452,16 @@ const COPY = {
     fieldsCount: "Fields",
     fieldsOpen: "Enter Field",
     fieldsListAria: "Fields I created",
+    fieldsViewSwitchAria: "Switch Fields view",
+    fieldsViewList: "List",
+    fieldsViewGallery: "Gallery",
     fieldsBackToList: "Back to full list",
     fieldsOpenSeparate: "Open separately",
     fieldsProductPage: "Product page",
+    fieldsVideoPage: "Explainer video",
     fieldsSwitchAria: "Switch Field",
     fieldsEmbedHint: "If embedding is blocked, open it separately.",
+    fieldsVideoHint: "Play the full video here.",
     heroTitle: "Fount",
     heroDeck: "Build products like a game.",
     heroSub: "Ideas become cards, the work opens on a whiteboard, and agents execute, review, and ship.",
@@ -1311,34 +1317,15 @@ const BUSINESS_MODELS: ConceptItem[] = [
   },
 ];
 
-const BILLING_MODES: Array<{ id: BillingMode; label: LocalizedText }> = [
-  { id: "monthly", label: { zh: "月付", en: "Monthly" } },
-  { id: "yearly", label: { zh: "年付", en: "Yearly" } },
-  { id: "lifetime", label: { zh: "买断", en: "Lifetime" } },
-];
-
 const FOUNT_PRICING_PLANS: PricingPlan[] = [
   {
     id: "player",
     name: "Player",
     badge: "Free forever",
     description: "For anyone who wants to experience Fount and connect with basic sub-agents.",
-    prices: {
-      monthly: "$0",
-      yearly: "$0",
-      lifetime: "$0",
-    },
-    priceSubtexts: {
-      monthly: "Free forever",
-      yearly: "Free forever",
-      lifetime: "Free forever",
-    },
+    price: "$0",
     cta: "Start Free",
-    hrefs: {
-      monthly: "/Fount.dmg",
-      yearly: "/Fount.dmg",
-      lifetime: "/Fount.dmg",
-    },
+    href: "/Fount.dmg",
     features: [
       "Connect with Fount",
       "Basic sub-agent experience",
@@ -1355,16 +1342,7 @@ const FOUNT_PRICING_PLANS: PricingPlan[] = [
     badge: "Best for Field creators",
     sticker: "Best starting point",
     description: "For creators who want to build Fields with Forge.",
-    prices: {
-      monthly: "$7",
-      yearly: "$63",
-      lifetime: "$49",
-    },
-    priceSubtexts: {
-      monthly: "/ month",
-      yearly: "/ year",
-      lifetime: "Founding Lifetime Access",
-    },
+    price: "$49",
     earlyBirdLifetimePrice: "$29",
     earlyBirdLifetimeHref: resolvePublicHref(
       "NEXT_PUBLIC_FOUNT_BUILDER_EARLY_BIRD_URL",
@@ -1373,11 +1351,7 @@ const FOUNT_PRICING_PLANS: PricingPlan[] = [
     earlyBirdNextPrice: "$49",
     futureAnchor: "Future price: $99+",
     cta: "Get Builder",
-    hrefs: {
-      monthly: resolvePublicHref("NEXT_PUBLIC_FOUNT_BUILDER_MONTHLY_URL", "/checkout/builder-monthly"),
-      yearly: resolvePublicHref("NEXT_PUBLIC_FOUNT_BUILDER_YEARLY_URL", "/checkout/builder-yearly"),
-      lifetime: resolvePublicHref("NEXT_PUBLIC_FOUNT_BUILDER_LIFETIME_URL", "/checkout/builder-lifetime"),
-    },
+    href: resolvePublicHref("NEXT_PUBLIC_FOUNT_BUILDER_LIFETIME_URL", "/checkout/builder-lifetime"),
     features: [
       "Forge toolkit for building Fields",
       "Local Field creation workflow",
@@ -1395,16 +1369,7 @@ const FOUNT_PRICING_PLANS: PricingPlan[] = [
     badge: "Founding ecosystem member",
     sticker: "Founding",
     description: "For founding creators who want to publish, operate, and shape the Field ecosystem.",
-    prices: {
-      monthly: "$14",
-      yearly: "$126",
-      lifetime: "$99",
-    },
-    priceSubtexts: {
-      monthly: "/ month",
-      yearly: "/ year",
-      lifetime: "Founding Lifetime Access",
-    },
+    price: "$99",
     earlyBirdLifetimePrice: "$49",
     earlyBirdLifetimeHref: resolvePublicHref(
       "NEXT_PUBLIC_FOUNT_MASTER_EARLY_BIRD_URL",
@@ -1413,11 +1378,7 @@ const FOUNT_PRICING_PLANS: PricingPlan[] = [
     earlyBirdNextPrice: "$99",
     futureAnchor: "Future price: $199+",
     cta: "Get Master",
-    hrefs: {
-      monthly: resolvePublicHref("NEXT_PUBLIC_FOUNT_MASTER_MONTHLY_URL", "/checkout/master-monthly"),
-      yearly: resolvePublicHref("NEXT_PUBLIC_FOUNT_MASTER_YEARLY_URL", "/checkout/master-yearly"),
-      lifetime: resolvePublicHref("NEXT_PUBLIC_FOUNT_MASTER_LIFETIME_URL", "/checkout/master-lifetime"),
-    },
+    href: resolvePublicHref("NEXT_PUBLIC_FOUNT_MASTER_LIFETIME_URL", "/checkout/master-lifetime"),
     features: [
       "Everything in Builder",
       "Full local publishing and operation workflow",
@@ -1438,8 +1399,7 @@ const FOUNT_PRICING_PAGE_COPY: Record<
     label: string;
     title: string;
     lead: string;
-    billingAria: string;
-    billingNotes: Record<BillingMode, string>;
+    purchaseNote: string;
     earlyBirdNote: (nextPrice: string) => string;
   }
 > = {
@@ -1447,24 +1407,14 @@ const FOUNT_PRICING_PAGE_COPY: Record<
     label: "定价",
     title: "买的是 Forge，Fount 免费。",
     lead: "Fount 本体永久免费。这里的价格是 Forge 创作能力：Builder 用来构建 Field，Master 面向发布、运营和生态参与。",
-    billingAria: "购买方式",
-    billingNotes: {
-      monthly: "按月购买 Forge，Fount 免费使用。",
-      yearly: "年付购买 Forge，更适合持续创作；Fount 仍永久免费。",
-      lifetime: "早期买断的是本地 Forge 能力，不是 Fount 本体；未来高成本云服务可能单独计费。",
-    },
+    purchaseNote: "一次买断本地 Forge 能力；Fount 本体永久免费，未来高成本云服务可能单独计费。",
     earlyBirdNote: (nextPrice) => `Forge 早鸟买断 · 下一档 ${nextPrice}`,
   },
   en: {
     label: "Pricing",
     title: "Buy Forge. Fount stays free.",
     lead: "Fount itself is free forever. These prices are for Forge creation: Builder builds Fields, while Master adds publishing, operations, and ecosystem participation.",
-    billingAria: "Purchase mode",
-    billingNotes: {
-      monthly: "Monthly buys Forge. Fount remains free.",
-      yearly: "Yearly buys Forge for ongoing creation. Fount remains free forever.",
-      lifetime: "Early lifetime pricing is for local Forge capability, not Fount itself; future high-cost cloud services may be separate.",
-    },
+    purchaseNote: "Pay once for local Forge capability. Fount remains free forever; future high-cost cloud services may be separate.",
     earlyBirdNote: (nextPrice) => `Forge Early Bird lifetime · Next tier ${nextPrice}`,
   },
 };
@@ -1477,7 +1427,7 @@ const FOUNT_PRICING_PLAN_COPY: Record<
       badge: string;
       sticker?: string;
       description: string;
-      priceSubtexts: Record<BillingMode, string>;
+      priceSubtext: string;
       cta: string;
       features: string[];
       note: string;
@@ -1489,11 +1439,7 @@ const FOUNT_PRICING_PLAN_COPY: Record<
     player: {
       badge: "Fount 永久免费",
       description: "Fount 本体免费开放；先体验基础 sub-agent、卡片和白板。",
-      priceSubtexts: {
-        monthly: "Fount 免费",
-        yearly: "Fount 免费",
-        lifetime: "Fount 免费",
-      },
+      priceSubtext: "Fount 免费",
       cta: "免费开始",
       features: [
         "连接 Fount",
@@ -1509,11 +1455,7 @@ const FOUNT_PRICING_PLAN_COPY: Record<
       badge: "Forge 创作能力",
       sticker: "推荐起点",
       description: "适合用 Forge 构建 Field；Fount 本体仍永久免费。",
-      priceSubtexts: {
-        monthly: "Forge / 月",
-        yearly: "Forge / 年",
-        lifetime: "Forge 买断",
-      },
+      priceSubtext: "Forge 买断",
       cta: "获取 Builder",
       features: [
         "Forge Field 创作工具",
@@ -1531,11 +1473,7 @@ const FOUNT_PRICING_PLAN_COPY: Record<
       badge: "生态创始成员",
       sticker: "Founding",
       description: "适合购买 Forge Master，用于发布、运营和参与 Field 生态。",
-      priceSubtexts: {
-        monthly: "Forge / 月",
-        yearly: "Forge / 年",
-        lifetime: "Forge 买断",
-      },
+      priceSubtext: "Forge 买断",
       cta: "获取 Master",
       features: [
         "包含 Builder 全部能力",
@@ -1554,11 +1492,7 @@ const FOUNT_PRICING_PLAN_COPY: Record<
     player: {
       badge: "Fount free forever",
       description: "Fount itself is free; start with basic sub-agents, cards, and whiteboards.",
-      priceSubtexts: {
-        monthly: "Fount free",
-        yearly: "Fount free",
-        lifetime: "Fount free",
-      },
+      priceSubtext: "Fount free",
       cta: "Start Free",
       features: [
         "Connect with Fount",
@@ -1574,11 +1508,7 @@ const FOUNT_PRICING_PLAN_COPY: Record<
       badge: "Forge creation",
       sticker: "Best starting point",
       description: "For building Fields with Forge. Fount itself stays free forever.",
-      priceSubtexts: {
-        monthly: "Forge / month",
-        yearly: "Forge / year",
-        lifetime: "Forge Lifetime",
-      },
+      priceSubtext: "Forge Lifetime",
       cta: "Get Builder",
       features: [
         "Forge toolkit for building Fields",
@@ -1596,11 +1526,7 @@ const FOUNT_PRICING_PLAN_COPY: Record<
       badge: "Founding ecosystem member",
       sticker: "Founding",
       description: "For Forge Master: publishing, operations, and shaping the Field ecosystem.",
-      priceSubtexts: {
-        monthly: "Forge / month",
-        yearly: "Forge / year",
-        lifetime: "Forge Lifetime",
-      },
+      priceSubtext: "Forge Lifetime",
       cta: "Get Master",
       features: [
         "Everything in Builder",
@@ -1761,14 +1687,12 @@ const COMMISSION_TIERS: CommissionTier[] = [
   {
     title: "Public Affiliate",
     body: "For people who want to share Fount with their audience using a referral link.",
-    subscription: "25% recurring commission for the first 12 months.",
     lifetime: "20% one-time commission.",
     bestFor: "Newsletter mentions, blog posts, resource lists, tool directories, and light recommendations.",
   },
   {
     title: "Invited Ecosystem Partner",
     body: "For creators, educators, builders, and community owners who create meaningful tutorials, demos, workflows, templates, or Field examples.",
-    subscription: "30% recurring commission for the first 12 months.",
     lifetime: "25% one-time commission.",
     bestFor: "Video tutorials, launch reviews, courses, community workshops, Field templates, and serious product walkthroughs.",
   },
@@ -1790,22 +1714,6 @@ const EARNINGS_EXAMPLES: EarningsExample[] = [
     publicEstimate: "$19.80 before platform adjustments",
     invitedPartner: "25%",
     invitedEstimate: "$24.75 before platform adjustments",
-  },
-  {
-    title: "Builder Subscription",
-    price: "$7/month",
-    publicAffiliate: "25% for 12 months",
-    publicEstimate: "up to $21 per customer before platform adjustments",
-    invitedPartner: "30% for 12 months",
-    invitedEstimate: "up to $25.20 per customer before platform adjustments",
-  },
-  {
-    title: "Master Subscription",
-    price: "$14/month",
-    publicAffiliate: "25% for 12 months",
-    publicEstimate: "up to $42 per customer before platform adjustments",
-    invitedPartner: "30% for 12 months",
-    invitedEstimate: "up to $50.40 per customer before platform adjustments",
   },
 ];
 
@@ -1872,8 +1780,8 @@ const PARTNER_FAQ: PartnerFaqItem[] = [
   {
     question: "How much commission do partners earn?",
     answer: [
-      "Public affiliates can earn 25% recurring commission for subscription plans during the first 12 months, and 20% one-time commission for Founding Lifetime plans.",
-      "Invited ecosystem partners can earn 30% recurring commission for subscription plans during the first 12 months, and 25% one-time commission for Founding Lifetime plans.",
+      "Public affiliates can earn 20% one-time commission for Founding Lifetime purchases.",
+      "Invited ecosystem partners can earn 25% one-time commission for Founding Lifetime purchases.",
     ],
   },
   {
@@ -2994,9 +2902,12 @@ export function FountHomePage({
   );
 }
 
+type FountFieldsView = "list" | "gallery";
+
 function FountFieldsSection({ lang }: { lang: Lang }) {
   const copy = COPY[lang];
   const [selectedFieldKey, setSelectedFieldKey] = useState<string | null>(null);
+  const [fieldsView, setFieldsView] = useState<FountFieldsView>("list");
   const selectedField =
     FOUNT_FIELDS.find((field) => field.key === selectedFieldKey) ?? null;
 
@@ -3041,7 +2952,10 @@ function FountFieldsSection({ lang }: { lang: Lang }) {
   };
 
   if (selectedField) {
-    const selectedHref = withSiteParams(selectedField.href, { lang });
+    const isVideoField = selectedField.embedType === "video";
+    const selectedHref = isVideoField
+      ? selectedField.href
+      : withSiteParams(selectedField.href, { lang });
 
     return (
       <section
@@ -3073,7 +2987,11 @@ function FountFieldsSection({ lang }: { lang: Lang }) {
                 return (
                   <a
                     className={isActive ? "is-active" : undefined}
-                    href={withSiteParams(field.href, { lang })}
+                    href={
+                      field.embedType === "video"
+                        ? field.href
+                        : withSiteParams(field.href, { lang })
+                    }
                     aria-current={isActive ? "page" : undefined}
                     aria-label={`${copy.fieldsSwitchAria}: ${field.name}`}
                     key={field.key}
@@ -3100,7 +3018,9 @@ function FountFieldsSection({ lang }: { lang: Lang }) {
 
           <section
             className="fount-field-product-pane"
-            aria-label={`${selectedField.name} ${copy.fieldsProductPage}`}
+            aria-label={`${selectedField.name} ${
+              isVideoField ? copy.fieldsVideoPage : copy.fieldsProductPage
+            }`}
           >
             <header className="fount-field-product-toolbar">
               <div>
@@ -3109,7 +3029,9 @@ function FountFieldsSection({ lang }: { lang: Lang }) {
                 <code>{selectedField.previewUrl}</code>
               </div>
               <div className="fount-field-product-actions">
-                <span className="fount-field-embed-hint">{copy.fieldsEmbedHint}</span>
+                <span className="fount-field-embed-hint">
+                  {isVideoField ? copy.fieldsVideoHint : copy.fieldsEmbedHint}
+                </span>
                 <a href={selectedHref} target="_blank" rel="noreferrer">
                   <span>{copy.fieldsOpenSeparate}</span>
                   <svg viewBox="0 0 20 20" aria-hidden="true">
@@ -3130,15 +3052,28 @@ function FountFieldsSection({ lang }: { lang: Lang }) {
               </div>
             </header>
 
-            <iframe
-              key={`${selectedField.key}-${lang}`}
-              className="fount-field-product-frame"
-              src={selectedHref}
-              title={`${selectedField.name} ${copy.fieldsProductPage}`}
-              allow="clipboard-read; clipboard-write; fullscreen"
-              allowFullScreen
-              referrerPolicy="strict-origin-when-cross-origin"
-            />
+            {isVideoField ? (
+              <video
+                key={`${selectedField.key}-${lang}`}
+                className="fount-field-product-frame fount-field-product-video"
+                controls
+                playsInline
+                preload="metadata"
+                poster={selectedField.coverUrl}
+              >
+                <source src={selectedHref} type="video/mp4" />
+              </video>
+            ) : (
+              <iframe
+                key={`${selectedField.key}-${lang}`}
+                className="fount-field-product-frame"
+                src={selectedHref}
+                title={`${selectedField.name} ${copy.fieldsProductPage}`}
+                allow="clipboard-read; clipboard-write; fullscreen"
+                allowFullScreen
+                referrerPolicy="strict-origin-when-cross-origin"
+              />
+            )}
           </section>
         </div>
       </section>
@@ -3146,19 +3081,58 @@ function FountFieldsSection({ lang }: { lang: Lang }) {
   }
 
   return (
-    <section className="fount-section fount-fields-page-section" id="fields">
+    <section
+      className={`fount-section fount-fields-page-section${
+        fieldsView === "gallery" ? " is-gallery-view" : ""
+      }`}
+      data-fields-view={fieldsView}
+      id="fields"
+    >
       <header className="fount-fields-hero">
         <div className="fount-fields-hero-copy">
           <p className="fount-fields-eyebrow">{copy.fieldsEyebrow}</p>
           <h1>{copy.fieldsTitle}</h1>
           <p>{copy.fieldsLead}</p>
         </div>
-        <div
-          className="fount-fields-count"
-          aria-label={`${FOUNT_FIELDS.length} ${copy.fieldsCount}`}
-        >
-          <strong>{String(FOUNT_FIELDS.length).padStart(2, "0")}</strong>
-          <span>{copy.fieldsCount}</span>
+        <div className="fount-fields-hero-tools">
+          <div
+            className="fount-fields-count"
+            aria-label={`${FOUNT_FIELDS.length} ${copy.fieldsCount}`}
+          >
+            <strong>{String(FOUNT_FIELDS.length).padStart(2, "0")}</strong>
+            <span>{copy.fieldsCount}</span>
+          </div>
+          <div
+            className="fount-fields-view-switch"
+            role="group"
+            aria-label={copy.fieldsViewSwitchAria}
+          >
+            <button
+              className={fieldsView === "list" ? "is-active" : undefined}
+              type="button"
+              aria-pressed={fieldsView === "list"}
+              onClick={() => setFieldsView("list")}
+            >
+              <svg viewBox="0 0 20 20" aria-hidden="true">
+                <path d="M4 5.5h2M9 5.5h7M4 10h2M9 10h7M4 14.5h2M9 14.5h7" />
+              </svg>
+              <span>{copy.fieldsViewList}</span>
+            </button>
+            <button
+              className={fieldsView === "gallery" ? "is-active" : undefined}
+              type="button"
+              aria-pressed={fieldsView === "gallery"}
+              onClick={() => setFieldsView("gallery")}
+            >
+              <svg viewBox="0 0 20 20" aria-hidden="true">
+                <rect x="3.75" y="3.75" width="5" height="5" rx="1" />
+                <rect x="11.25" y="3.75" width="5" height="5" rx="1" />
+                <rect x="3.75" y="11.25" width="5" height="5" rx="1" />
+                <rect x="11.25" y="11.25" width="5" height="5" rx="1" />
+              </svg>
+              <span>{copy.fieldsViewGallery}</span>
+            </button>
+          </div>
         </div>
       </header>
 
@@ -3169,9 +3143,18 @@ function FountFieldsSection({ lang }: { lang: Lang }) {
       >
         {FOUNT_FIELDS.map((field, index) => {
           return (
-            <article className="fount-field-row" role="listitem" key={field.key}>
+            <article
+              className="fount-field-row"
+              role="listitem"
+              key={field.key}
+              style={{ "--field-order": index } as CSSProperties}
+            >
               <a
-                href={withSiteParams(field.href, { lang })}
+                href={
+                  field.embedType === "video"
+                    ? field.href
+                    : withSiteParams(field.href, { lang })
+                }
                 aria-label={`${copy.fieldsOpen}: ${field.name}`}
                 onClick={(event) => selectField(event, field.key)}
               >
@@ -3423,10 +3406,6 @@ function PartnerCommissionSection() {
             <p>{tier.body}</p>
             <dl>
               <div>
-                <dt>Subscriptions</dt>
-                <dd>{tier.subscription}</dd>
-              </div>
-              <div>
                 <dt>Founding Lifetime</dt>
                 <dd>{tier.lifetime}</dd>
               </div>
@@ -3551,7 +3530,7 @@ function PartnerCloudBoundary() {
           compute, team collaboration feature, or marketplace promotion service forever.
         </p>
         <p>
-          Future cloud services may require separate subscriptions, usage-based pricing, or new partner terms.
+          Future cloud services may require separate pricing, usage-based pricing, or new partner terms.
         </p>
       </div>
     </div>
@@ -3617,18 +3596,15 @@ function FountPricingSection({
   lang: Lang;
   standalone?: boolean;
 }) {
-  const [billingMode, setBillingMode] = useState<BillingMode>("lifetime");
   const [earlyBirdStatus, setEarlyBirdStatus] = useState<EarlyBirdStatus>(
     FOUNT_EARLY_BIRD_INITIAL_STATUS,
   );
   const pricingCopy = FOUNT_PRICING_PAGE_COPY[lang];
-  const activeBillingIndex = BILLING_MODES.findIndex((mode) => mode.id === billingMode);
   const earlyBirdLimit = Math.max(1, earlyBirdStatus.limit);
   const earlyBirdClaimed = Math.min(earlyBirdLimit, Math.max(0, earlyBirdStatus.claimed));
   const earlyBirdActive = earlyBirdStatus.active && earlyBirdClaimed < earlyBirdLimit;
-  const billingNote = pricingCopy.billingNotes[billingMode];
-  const foundingHref = FOUNT_PRICING_PLANS.find((plan) => plan.id === "master")?.hrefs.lifetime ?? "#pricing-cards";
-  const playerHref = FOUNT_PRICING_PLANS[0]?.hrefs.lifetime ?? "/Fount.dmg";
+  const foundingHref = FOUNT_PRICING_PLANS.find((plan) => plan.id === "master")?.href ?? "#pricing-cards";
+  const playerHref = FOUNT_PRICING_PLANS[0]?.href ?? "/Fount.dmg";
 
   useEffect(() => {
     let cancelled = false;
@@ -3663,19 +3639,19 @@ function FountPricingSection({
   }, []);
 
   const getPlanPrice = (plan: PricingPlan) =>
-    billingMode === "lifetime" && earlyBirdActive && plan.earlyBirdLifetimePrice
+    earlyBirdActive && plan.earlyBirdLifetimePrice
       ? plan.earlyBirdLifetimePrice
-      : plan.prices[billingMode];
+      : plan.price;
 
   const getPlanHref = (plan: PricingPlan) =>
-    billingMode === "lifetime" && earlyBirdActive && plan.earlyBirdLifetimeHref
+    earlyBirdActive && plan.earlyBirdLifetimeHref
       ? plan.earlyBirdLifetimeHref
-      : plan.hrefs[billingMode];
+      : plan.href;
 
   const getPlanCopy = (plan: PricingPlan) => FOUNT_PRICING_PLAN_COPY[lang][plan.id];
 
   const getPlanPriceNote = (plan: PricingPlan) => {
-    if (billingMode === "lifetime" && earlyBirdActive && plan.earlyBirdNextPrice) {
+    if (earlyBirdActive && plan.earlyBirdNextPrice) {
       return pricingCopy.earlyBirdNote(plan.earlyBirdNextPrice);
     }
 
@@ -3694,28 +3670,7 @@ function FountPricingSection({
           <h1>{pricingCopy.title}</h1>
           <p className="fount-pricing-hero-lead">{pricingCopy.lead}</p>
         </div>
-        <div className="fount-billing-tabs" aria-label={pricingCopy.billingAria}>
-          <div
-            className="fount-billing-tab-list"
-            role="tablist"
-            aria-label={pricingCopy.billingAria}
-            style={{ "--billing-index": Math.max(0, activeBillingIndex) } as CSSProperties}
-          >
-          {BILLING_MODES.map((mode) => (
-            <button
-              type="button"
-              role="tab"
-              aria-selected={billingMode === mode.id}
-              className={billingMode === mode.id ? "active" : ""}
-              key={mode.id}
-              onClick={() => setBillingMode(mode.id)}
-            >
-              {mode.label[lang]}
-            </button>
-          ))}
-          </div>
-          <p>{billingNote}</p>
-        </div>
+        <p className="fount-pricing-purchase-note">{pricingCopy.purchaseNote}</p>
       </div>
 
       <div className="fount-pricing-grid fount-pricing-grid-focused" id="pricing-cards">
@@ -3729,6 +3684,15 @@ function FountPricingSection({
               id={`pricing-${plan.id}`}
               key={plan.id}
             >
+              <div className="fount-tier-decoration" aria-hidden="true">
+                <span className="fount-tier-deco-grid" />
+                <span className="fount-tier-deco-scan" />
+                <span className="fount-tier-deco-orbit fount-tier-deco-orbit-outer" />
+                <span className="fount-tier-deco-orbit fount-tier-deco-orbit-inner" />
+                <span className="fount-tier-deco-particle fount-tier-deco-particle-one" />
+                <span className="fount-tier-deco-particle fount-tier-deco-particle-two" />
+                <span className="fount-tier-deco-particle fount-tier-deco-particle-three" />
+              </div>
               <div className="fount-pricing-tier-head">
                 <div>
                   <span className="fount-plan-badge">{planCopy.badge}</span>
@@ -3739,11 +3703,8 @@ function FountPricingSection({
               <p className="fount-plan-description">{planCopy.description}</p>
               <div className="fount-pricing-price" aria-label={`${plan.name} ${getPlanPrice(plan)}`}>
                 <strong className="fount-pricing-amount">{getPlanPrice(plan)}</strong>
-                <span className="fount-pricing-unit">{planCopy.priceSubtexts[billingMode]}</span>
+                <span className="fount-pricing-unit">{planCopy.priceSubtext}</span>
               </div>
-              {billingMode === "yearly" && plan.id !== "player" ? (
-                <span className="fount-save-badge">{lang === "zh" ? "省 25%" : "Save 25%"}</span>
-              ) : null}
               <p className="fount-pricing-price-note">{priceNote ?? "\u00a0"}</p>
               <a className={plan.featured ? "fount-pricing-primary-action" : "fount-pricing-secondary-action"} href={getPlanHref(plan)}>
                 {planCopy.cta}
