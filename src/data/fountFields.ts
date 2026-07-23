@@ -132,6 +132,29 @@ export const FOUNT_FIELDS: FountField[] = [
     },
   },
   {
+    key: "foundry-agent-studio",
+    name: "Foundry Agent Studio",
+    href: "https://foundry.wordm.us",
+    previewUrl: "foundry.wordm.us",
+    coverUrl: "/home/foundry-agent-studio.png",
+    coverAlt: {
+      zh: "Foundry Agent Studio 可追溯构建流界面",
+      en: "Foundry Agent Studio traceable build stream interface",
+    },
+    kind: {
+      zh: "AI 产品构建 Field",
+      en: "AI Product Building Field",
+    },
+    status: {
+      zh: "可进入",
+      en: "Available",
+    },
+    summary: {
+      zh: "把 AI 的计划、并行代理、执行前决策、代码、资产、验证和分支历史放进一条可介入的构建流。",
+      en: "Turns AI planning, parallel agents, pre-execution decisions, code, assets, verification, and branch history into one steerable build stream.",
+    },
+  },
+  {
     key: "town",
     name: "Town Agents",
     href: "/?view=about&show=town&project=town",

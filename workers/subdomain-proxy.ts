@@ -72,6 +72,7 @@ const PASS_THROUGH_SUBDOMAINS = new Set([
   'bookplain',
   'flipook',
   'flipook-updates',
+  'foundry',
   'gridnote',
   'inote',
   'latti',

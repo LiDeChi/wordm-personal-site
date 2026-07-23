@@ -38,6 +38,7 @@ These bindings were observed with `npx wrangler pages project list`:
 | `inote.wordm.us` | `inote` | Keep in the iNote/product project. |
 | `agent.wordm.us` | `orchard-agent` | Keep in the Agent/product project; verify whether old `agent` Pages project is still needed. |
 | `bookplain.wordm.us` | `bookplain` | Keep in the Bookplain product project. |
+| `foundry.wordm.us` | `foundry-agent-studio` | Keep in the Foundry Agent Studio product project. |
 | `wifenglish.wordm.us` | `wifenglish` | Keep in the Wifenglish/product project. |
 | `supportdualpart.wordm.us` | `supportdualpart` | Keep with that product/project if still active. |
 | none | `wordm-personal-home` | Deleted from Cloudflare Pages after root-domain duties moved here. |
@@ -74,6 +75,9 @@ These bindings were observed from the Cloudflare Workers API and
 - `/Users/lidechi/Documents/Github/MuseumBook` owns the standalone
   `museum.wordm.us` experience. The root Fields page catalogs and links to it,
   while the wildcard Worker passes the hostname through to that product origin.
+- `/Users/lidechi/Documents/Github/foundry-agent-studio` owns the standalone
+  `foundry.wordm.us` Pages experience. The root Fields page catalogs and embeds
+  it, while the wildcard Worker passes requests through to that Pages origin.
 - `workers/wordm-auth.ts` in this project owns the shared `auth.wordm.us`
   Worker source. It is deployed with `npm run deploy:auth`, preserving
   Cloudflare-side variables with `--keep-vars`.
@@ -97,7 +101,7 @@ These bindings were observed from the Cloudflare Workers API and
 
 1. Keep `wordm.us` bound only to `my-blog`.
 2. Keep product primary domains bound to their product projects:
-   `inote`, `gridnote`, `latti`, `agent`, `wifenglish`, `arc3`, and similar.
+   `inote`, `gridnote`, `latti`, `agent`, `foundry`, `wifenglish`, `arc3`, and similar.
 3. Keep shared infrastructure domains in one central owner:
    `auth.wordm.us`, `support.wordm.us`, and any future account/admin/billing
    entry points.
