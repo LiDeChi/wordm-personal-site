@@ -18611,7 +18611,7 @@ body:has(.fount-blog-container) {
     width: min(1160px, 100%);
     min-height: calc(100svh - 65px);
     align-content: start;
-    gap: clamp(28px, 3vw, 38px);
+    gap: clamp(24px, 2.5vw, 32px);
     overflow-anchor: none;
     border-top: 0;
     padding-top: clamp(92px, 8vw, 116px);
@@ -18627,7 +18627,7 @@ body:has(.fount-blog-container) {
 
 .fount-page-focused .fount-fields-hero-copy {
     display: grid;
-    gap: 10px;
+    gap: 8px;
 }
 
 .fount-page-focused .fount-fields-eyebrow {
@@ -18641,23 +18641,24 @@ body:has(.fount-blog-container) {
 }
 
 .fount-page-focused .fount-fields-hero h1 {
-    max-width: 12ch;
+    max-width: 14ch;
     margin: 0;
     color: var(--warm-ink);
     font-family: var(--font-main);
-    font-size: clamp(2.8rem, 5vw, 5rem);
-    font-weight: 690;
-    line-height: 0.92;
-    letter-spacing: -0.05em;
+    font-size: clamp(2.35rem, 3vw, 3.25rem);
+    font-weight: 670;
+    line-height: 0.98;
+    letter-spacing: -0.038em;
+    text-wrap: balance;
 }
 
 .fount-page-focused .fount-fields-hero-copy > p:last-child {
-    max-width: 680px;
+    max-width: 640px;
     margin: 0;
     color: rgb(43 35 29 / 66%);
     font-family: var(--font-main);
-    font-size: clamp(0.92rem, 1.08vw, 1.04rem);
-    line-height: 1.6;
+    font-size: clamp(0.92rem, 0.96vw, 1rem);
+    line-height: 1.56;
 }
 
 .fount-page-focused .fount-fields-hero-tools {
@@ -18864,10 +18865,11 @@ body:has(.fount-blog-container) {
     margin: 0;
     color: var(--warm-ink);
     font-family: var(--font-main);
-    font-size: clamp(2rem, 3.5vw, 4.2rem);
-    font-weight: 650;
-    line-height: 0.96;
-    letter-spacing: -0.045em;
+    font-size: clamp(1.7rem, 2.2vw, 2.75rem);
+    font-weight: 640;
+    line-height: 1;
+    letter-spacing: -0.036em;
+    text-wrap: balance;
 }
 
 .fount-page-focused .fount-field-heading h2::before {
@@ -19019,7 +19021,7 @@ body:has(.fount-blog-container) {
     }
 
     .fount-page-focused .fount-fields-hero h1 {
-        font-size: clamp(2.5rem, 10.5vw, 3.5rem);
+        font-size: clamp(2.2rem, 8.6vw, 2.8rem);
     }
 
     .fount-page-focused .fount-fields-hero-copy > p:last-child {
@@ -19053,7 +19055,7 @@ body:has(.fount-blog-container) {
     }
 
     .fount-page-focused .fount-field-heading h2 {
-        font-size: clamp(2rem, 10vw, 3rem);
+        font-size: clamp(1.65rem, 7.4vw, 2rem);
         overflow-wrap: anywhere;
     }
 
@@ -21201,13 +21203,13 @@ body:has(.fount-page-focused[data-page="docs"]) {
 
 /* Fields: optional editorial gallery view */
 .fount-page-focused .fount-fields-page-section.is-gallery-view {
-    width: min(1280px, 100%);
+    width: min(1160px, 100%);
 }
 
 .fount-page-focused .is-gallery-view .fount-fields-list {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: clamp(44px, 5vw, 72px) clamp(20px, 2.8vw, 38px);
+    gap: clamp(36px, 4vw, 56px) clamp(22px, 2.4vw, 32px);
     border-top: 0;
 }
 
@@ -21319,8 +21321,8 @@ body:has(.fount-page-focused[data-page="docs"]) {
     min-width: 0;
     display: grid;
     grid-column: auto;
-    gap: 12px;
-    padding: 18px 4px 0;
+    gap: 10px;
+    padding: 14px 3px 0;
 }
 
 .fount-page-focused .is-gallery-view .fount-field-heading {
@@ -21329,8 +21331,8 @@ body:has(.fount-page-focused[data-page="docs"]) {
 }
 
 .fount-page-focused .is-gallery-view .fount-field-heading h2 {
-    font-size: clamp(2rem, 3.2vw, 3.35rem);
-    line-height: 0.94;
+    font-size: clamp(1.7rem, 1.75vw, 2.15rem);
+    line-height: 1;
 }
 
 .fount-page-focused .is-gallery-view .fount-field-status {
@@ -21403,7 +21405,7 @@ body:has(.fount-page-focused[data-page="docs"]) {
     }
 
     .fount-page-focused .is-gallery-view .fount-field-heading h2 {
-        font-size: clamp(2rem, 10vw, 3rem);
+        font-size: clamp(1.65rem, 7.2vw, 2rem);
     }
 
     .fount-page-focused .is-gallery-view .fount-field-entry code {

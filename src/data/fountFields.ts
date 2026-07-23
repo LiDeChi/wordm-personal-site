@@ -7,6 +7,7 @@ export type FountField = {
   name: string;
   href: string;
   previewUrl: string;
+  embedType?: "video";
   coverUrl: string;
   coverAlt: LocalizedText;
   kind: LocalizedText;
@@ -36,6 +37,29 @@ export const FOUNT_FIELDS: FountField[] = [
     summary: {
       zh: "把一本书变成可以进入、回看和继续生长的空间化阅读世界。",
       en: "Turns a book into a spatial reading world you can enter, revisit, and keep growing.",
+    },
+  },
+  {
+    key: "museum-book",
+    name: "MuseumBook",
+    href: "https://museum.wordm.us",
+    previewUrl: "museum.wordm.us",
+    coverUrl: "/home/museum-book.svg",
+    coverAlt: {
+      zh: "MuseumBook 文学分馆建筑剖面",
+      en: "MuseumBook literary museum cutaway",
+    },
+    kind: {
+      zh: "文学博物馆 Field",
+      en: "Literary Museum Field",
+    },
+    status: {
+      zh: "可进入",
+      en: "Available",
+    },
+    summary: {
+      zh: "把 EPUB 建成可漫游的文学分馆，在展厅、展品与连续原文阅读之间往返。",
+      en: "Builds an EPUB into a walkable literary museum spanning galleries, exhibits, and continuous full-text reading.",
     },
   },
   {
@@ -105,6 +129,54 @@ export const FOUNT_FIELDS: FountField[] = [
     summary: {
       zh: "为可运行的居民、任务、关系和 debug 体验搭建一座持续生长的程序化城镇。",
       en: "A growing procedural town for playable residents, tasks, relationships, and debugging experiences.",
+    },
+  },
+  {
+    key: "world-models-v3",
+    name: "World Models V3",
+    href: "/fields/explainers/world-models-v3.mp4",
+    previewUrl: "wordm.us/fields/explainers/world-models-v3.mp4",
+    embedType: "video",
+    coverUrl: "/fields/explainers/world-models-v3-cover.png",
+    coverAlt: {
+      zh: "World Models V3 混合密度循环网络讲解画面",
+      en: "World Models V3 explainer frame showing a mixture-density recurrent network",
+    },
+    kind: {
+      zh: "论文讲解 Field",
+      en: "Paper Explainer Field",
+    },
+    status: {
+      zh: "可观看",
+      en: "Watch now",
+    },
+    summary: {
+      zh: "一个会出错的梦，为什么还能教会智能体在现实中活下来？用八章串起 V、M、C、两个实验与现实鸿沟。",
+      en: "Why can an imperfect dream still teach an agent to survive reality? Eight chapters connect V, M, C, two experiments, and the reality gap.",
+    },
+  },
+  {
+    key: "genie-explainer",
+    name: "Genie",
+    href: "/fields/explainers/genie.mp4",
+    previewUrl: "wordm.us/fields/explainers/genie.mp4",
+    embedType: "video",
+    coverUrl: "/fields/explainers/genie-cover.jpg",
+    coverAlt: {
+      zh: "Genie 生成式交互环境论文讲解画面",
+      en: "Genie generative interactive environments explainer frame",
+    },
+    kind: {
+      zh: "论文讲解 Field",
+      en: "Paper Explainer Field",
+    },
+    status: {
+      zh: "可观看",
+      en: "Watch now",
+    },
+    summary: {
+      zh: "从没有动作标签的视频中反推潜在动作，再逐帧生成可交互环境的十二章论文讲解。",
+      en: "A twelve-chapter explanation of inferring latent actions from unlabeled video and generating an interactive environment frame by frame.",
     },
   },
 ];
