@@ -4,12 +4,19 @@ set -eu
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-WORKTREE_PATH="${CODEX_WORKTREE_PATH:-$PROJECT_ROOT}"
+WORKTREE_INPUT="${CODEX_WORKTREE_PATH:-$PROJECT_ROOT}"
 HOST="127.0.0.1"
 PORT="44014"
 ROOT_URL="http://${HOST}:${PORT}/"
 EXPERIENCE_URL="http://${HOST}:${PORT}/?lang=zh"
 SERVER_PID=""
+
+if [[ ! -d "$WORKTREE_INPUT" ]]; then
+  printf '无法定位 my-blog 工作树：%s\n' "$WORKTREE_INPUT" >&2
+  exit 1
+fi
+
+WORKTREE_PATH="$(cd "$WORKTREE_INPUT" && pwd -P)"
 
 if [[ ! -f "$WORKTREE_PATH/package.json" ]] || [[ ! -f "$WORKTREE_PATH/src/main.tsx" ]]; then
   printf '无法定位 my-blog 工作树：%s\n' "$WORKTREE_PATH" >&2
@@ -18,8 +25,31 @@ fi
 
 cd "$WORKTREE_PATH"
 
+is_worktree_listener() {
+  local listener_pids
+  local listener_pid
+  local listener_cwd
+
+  listener_pids="$(lsof -t -nP -iTCP:"$PORT" -sTCP:LISTEN 2>/dev/null || true)"
+  while IFS= read -r listener_pid; do
+    [[ -n "$listener_pid" ]] || continue
+    listener_cwd="$(
+      lsof -a -p "$listener_pid" -d cwd -Fn 2>/dev/null |
+        sed -n 's/^n//p' |
+        head -n 1
+    )"
+    if [[ "$listener_cwd" == "$WORKTREE_PATH" ]]; then
+      return 0
+    fi
+  done <<< "$listener_pids"
+
+  return 1
+}
+
 is_project_server() {
   local response
+
+  is_worktree_listener || return 1
   response="$(curl --silent --show-error --max-time 2 "$ROOT_URL" 2>/dev/null || true)"
   [[ "$response" == *"Jian Yongjie | Personal Systems & Projects"* ]] &&
     [[ "$response" == *"/src/main.tsx"* ]]
