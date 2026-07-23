@@ -89,6 +89,7 @@ import {
   mergeRoleRules,
   normalizeAuthError,
   parseRoleEmailSet,
+  resolveSafeAuthRedirectUrl,
   signupWithPassword,
   subscribeAuthState,
   toAuthUserSummary,
@@ -1154,6 +1155,9 @@ function App() {
   const initialUnlockSlug = normalizeSlug(params.get("unlock"));
   const initialCheckoutSlug = normalizeSlug(params.get("checkout_slug"));
   const initialShareToken = params.get("share")?.trim() || null;
+  const initialAuthReturnTo = resolveSafeAuthRedirectUrl(
+    params.get("returnTo") ?? params.get("return_to"),
+  );
   const initialPurchaseSuccess = params.get("purchase_success") === "1";
   const initialPurchaseCanceled = params.get("purchase_cancel") === "1";
   const initialLang = resolveInitialLang(window.location);
@@ -1410,6 +1414,11 @@ function App() {
     }
 
     next.searchParams.delete("return_to");
+    if (rootView === "login" && initialAuthReturnTo) {
+      next.searchParams.set("returnTo", initialAuthReturnTo);
+    } else {
+      next.searchParams.delete("returnTo");
+    }
 
     window.history.replaceState({}, "", next);
   }, [
@@ -1420,6 +1429,7 @@ function App() {
     unlockTargetSlug,
     shareToken,
     isOneAgentProductPage,
+    initialAuthReturnTo,
   ]);
 
   useEffect(() => {
@@ -2514,7 +2524,9 @@ function App() {
         userRole: normalizedUser?.role ?? "user",
         metadata: analyticsContext({ method: "password", outcome: "success" }),
       });
-
+      if (initialAuthReturnTo) {
+        window.location.assign(initialAuthReturnTo);
+      }
     } catch (loginError) {
       const detail = normalizeAuthError(loginError, copy.loginFallback);
       setAuthStatusMessage(withDetail(copy.loginFailed, detail));
@@ -2567,7 +2579,9 @@ function App() {
         userRole: normalizedUser?.role ?? "user",
         metadata: analyticsContext({ method: "password", outcome: "session" }),
       });
-
+      if (initialAuthReturnTo) {
+        window.location.assign(initialAuthReturnTo);
+      }
     } catch (signupError) {
       const detail = normalizeAuthError(signupError, copy.signupFallback);
       setAuthStatusMessage(withDetail(copy.signupFailed, detail));
@@ -3654,7 +3668,7 @@ function App() {
         userEmail={authUser?.email ?? null}
         userRole={authRole}
         statusMessage={authStatusMessage}
-        homeHref={homeHref}
+        homeHref={initialAuthReturnTo ?? homeHref}
         accountTier={accountPlanSummary.tier}
         unlockedProjectCount={accountPlanSummary.unlockedProjectCount}
         singleUpgradeHref={relativeRootHref("portfolio", lang)}
@@ -3667,7 +3681,7 @@ function App() {
         onLangChange={setLang}
         onLogin={handleAuthLogin}
         onSignup={handleAuthSignup}
-        onGoogleLogin={() => handleGoogleLogin(accountHref)}
+        onGoogleLogin={() => handleGoogleLogin(initialAuthReturnTo ?? accountHref)}
         onLogout={handleLogout}
         onUpgradeAllAccess={() => void handleUnlockAllAccess()}
       />

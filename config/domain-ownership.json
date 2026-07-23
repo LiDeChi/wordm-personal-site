@@ -33,6 +33,11 @@
       "owner": "product"
     },
     {
+      "domain": "ringbook.wordm.us",
+      "project": "ringbook",
+      "owner": "product"
+    },
+    {
       "domain": "wifenglish.wordm.us",
       "project": "wifenglish",
       "owner": "product"
@@ -127,6 +132,7 @@
     "gridnote",
     "inote",
     "latti",
+    "ringbook",
     "supportdualpart",
     "wifenglish"
   ],

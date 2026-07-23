@@ -63,6 +63,29 @@ export const FOUNT_FIELDS: FountField[] = [
     },
   },
   {
+    key: "ringbook",
+    name: "RingBook",
+    href: "https://ringbook.wordm.us",
+    previewUrl: "ringbook.wordm.us",
+    coverUrl: "/home/ringbook-park.png",
+    coverAlt: {
+      zh: "RingBook 私人 3D 书籍游乐园",
+      en: "RingBook private 3D book amusement park",
+    },
+    kind: {
+      zh: "3D 长篇阅读 Field",
+      en: "3D Long-form Reading Field",
+    },
+    status: {
+      zh: "可进入",
+      en: "Available",
+    },
+    summary: {
+      zh: "把本地 EPUB 收进私人 3D 园区，以连续墨晶书环阅读全文，并把原文段落连接到可探索的书中物件。",
+      en: "Collects local EPUBs in a private 3D park, preserves continuous full-text reading on a crystal book ring, and links source paragraphs to explorable literary objects.",
+    },
+  },
+  {
     key: "arc3",
     name: "ARC3",
     href: "https://arc3.wordm.us",

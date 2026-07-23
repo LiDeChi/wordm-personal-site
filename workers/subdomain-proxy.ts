@@ -75,6 +75,7 @@ const PASS_THROUGH_SUBDOMAINS = new Set([
   'gridnote',
   'inote',
   'latti',
+  'ringbook',
   'supportdualpart',
   'system',
   'wifenglish',
