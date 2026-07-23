@@ -1,5 +1,1196 @@
 [
   {
+    "id": "frome-2026-08-03-21-29",
+    "title": {
+      "zh": "永远的舞台",
+      "en": "永远的舞台"
+    },
+    "date": "2026.08.03 21:29",
+    "dateSort": "2026-08-03T21:29:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "我要做的是如何让这场木偶戏在一个舞台上永远演下去，而不至于枯燥。",
+          "en": "我要做的是如何让这场木偶戏在一个舞台上永远演下去，而不至于枯燥。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "这句话可以作为 FroMe 的精神内核。",
+          "en": "这句话可以作为 FroMe 的精神内核。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "LLM 是精密木偶，工具是布线，空间是舞台，记忆是剧本和后台档案，用户是观众也是演员，Agent 是操偶者也是被操纵者。",
+          "en": "LLM 是精密木偶，工具是布线，空间是舞台，记忆是剧本和后台档案，用户是观众也是演员，Agent 是操偶者也是被操纵者。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "每个人玩起来的感觉不一样，因为那是在时间里展开的。",
+          "en": "每个人玩起来的感觉不一样，因为那是在时间里展开的。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "FroMe 的问题不是能不能回答，而是能不能持续展开。",
+          "en": "FroMe 的问题不是能不能回答，而是能不能持续展开。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-08-03-21-29/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-08-03 21:29"
+  },
+  {
+    "id": "frome-2026-08-02-20-44",
+    "title": {
+      "zh": "历史感",
+      "en": "历史感"
+    },
+    "date": "2026.08.02 20:44",
+    "dateSort": "2026-08-02T20:44:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "官网首页可以有历史感。",
+          "en": "官网首页可以有历史感。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "不是复古装饰，而是让人感觉：这件事接在很长的人类技术史后面。火、文字、书房、地图、印刷机、电影、游戏、互联网、AI。",
+          "en": "不是复古装饰，而是让人感觉：这件事接在很长的人类技术史后面。火、文字、书房、地图、印刷机、电影、游戏、互联网、AI。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "FroMe 不是凭空出现的酷炫产品，而是机器第一次开始把它自己的经验流放回人的空间里。",
+          "en": "FroMe 不是凭空出现的酷炫产品，而是机器第一次开始把它自己的经验流放回人的空间里。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "发现新物种的喜悦也要有。用户第一次打开它，应该感觉自己不是安装了软件，而是见到了一个正在形成的生命样式。",
+          "en": "发现新物种的喜悦也要有。用户第一次打开它，应该感觉自己不是安装了软件，而是见到了一个正在形成的生命样式。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-08-02-20-44/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-08-02 20:44"
+  },
+  {
+    "id": "frome-2026-08-02-10-07",
+    "title": {
+      "zh": "不要低劣科幻",
+      "en": "不要低劣科幻"
+    },
+    "date": "2026.08.02 10:07",
+    "dateSort": "2026-08-02T10:07:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "FroMe 的视觉不要低劣科幻感。",
+          "en": "FroMe 的视觉不要低劣科幻感。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "可以有神秘感，可以有历史感，可以有发现新物种的喜悦，但不要满屏蓝光、线条、廉价赛博。",
+          "en": "可以有神秘感，可以有历史感，可以有发现新物种的喜悦，但不要满屏蓝光、线条、廉价赛博。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "我更想要一种机器回到世界里的感觉：森林的光照在机器背后，人和机器尺寸差不多，在机器旁边快乐露营。",
+          "en": "我更想要一种机器回到世界里的感觉：森林的光照在机器背后，人和机器尺寸差不多，在机器旁边快乐露营。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "不是太空漫游 2001 里的 HAL 那种反面形象，而是相反的正面形象：机器不是监视者，而是同行者。",
+          "en": "不是太空漫游 2001 里的 HAL 那种反面形象，而是相反的正面形象：机器不是监视者，而是同行者。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-08-02-10-07/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-08-02 10:07"
+  },
+  {
+    "id": "frome-2026-08-01-21-15",
+    "title": {
+      "zh": "自我感知室",
+      "en": "自我感知室"
+    },
+    "date": "2026.08.01 21:15",
+    "dateSort": "2026-08-01T21:15:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "FroMe 应该有自我感知空间。",
+          "en": "FroMe 应该有自我感知空间。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "它能看到自己最近在想什么、做了什么、失败了什么、命中了哪些记忆、生成了哪些空间、哪些策略被淘汰。",
+          "en": "它能看到自己最近在想什么、做了什么、失败了什么、命中了哪些记忆、生成了哪些空间、哪些策略被淘汰。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "这个空间不是为了装神秘，而是为了可解释。",
+          "en": "这个空间不是为了装神秘，而是为了可解释。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "Agent 的自我审视要能被我看到。它不一定完全透明，但至少要能把关键路径投影出来：我为什么这样回答，为什么生成这个空间，为什么调用这个工具，为什么建议你下一步这么做。",
+          "en": "Agent 的自我审视要能被我看到。它不一定完全透明，但至少要能把关键路径投影出来：我为什么这样回答，为什么生成这个空间，为什么调用这个工具，为什么建议你下一步这么做。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-08-01-21-15/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-08-01 21:15"
+  },
+  {
+    "id": "frome-2026-07-31-20-58",
+    "title": {
+      "zh": "资源控制室",
+      "en": "资源控制室"
+    },
+    "date": "2026.07.31 20:58",
+    "dateSort": "2026-07-31T20:58:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "资源控制室也应该存在。",
+          "en": "资源控制室也应该存在。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "token、缓存、GPU、API、进程、子代理、图像生成额度，都可以在一个空间里可视化。",
+          "en": "token、缓存、GPU、API、进程、子代理、图像生成额度，都可以在一个空间里可视化。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "Agent 想生成一个大空间时，可以把预算方案放到控制台上：低预算、中预算、高预算。",
+          "en": "Agent 想生成一个大空间时，可以把预算方案放到控制台上：低预算、中预算、高预算。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "我不是看一个账单，而是在一个机器控制室里决定给它多少火力。",
+          "en": "我不是看一个账单，而是在一个机器控制室里决定给它多少火力。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "资源管理如果场景化，就不再是产品后台，而是经验流的一部分。",
+          "en": "资源管理如果场景化，就不再是产品后台，而是经验流的一部分。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-07-31-20-58/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-07-31 20:58"
+  },
+  {
+    "id": "frome-2026-07-30-12-18",
+    "title": {
+      "zh": "记忆工厂样例",
+      "en": "记忆工厂样例"
+    },
+    "date": "2026.07.30 12:18",
+    "dateSort": "2026-07-30T12:18:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "记忆工厂可以作为第二个子空间。",
+          "en": "记忆工厂可以作为第二个子空间。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "资料进入工厂后，不是直接存储，而是经历几道工序：原始记忆、编译记忆、建模式记忆、行动信号、空间绑定。",
+          "en": "资料进入工厂后，不是直接存储，而是经历几道工序：原始记忆、编译记忆、建模式记忆、行动信号、空间绑定。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "一些记忆被贴上“短期有效”，一些被贴上“抗时间衰减”，一些被放进冷存储，一些被频繁命中，变成核心模型。",
+          "en": "一些记忆被贴上“短期有效”，一些被贴上“抗时间衰减”，一些被放进冷存储，一些被频繁命中，变成核心模型。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "这个空间能把抽象的记忆机制变成可观察过程。",
+          "en": "这个空间能把抽象的记忆机制变成可观察过程。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "用户也可以亲手调整一条记忆的权重，看到它如何影响 Agent 的下一步行为。",
+          "en": "用户也可以亲手调整一条记忆的权重，看到它如何影响 Agent 的下一步行为。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-07-30-12-18/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-07-30 12:18"
+  },
+  {
+    "id": "frome-2026-07-29-20-44",
+    "title": {
+      "zh": "实验室样例",
+      "en": "实验室样例"
+    },
+    "date": "2026.07.29 20:44",
+    "dateSort": "2026-07-29T20:44:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "ARC-3 进化实验室可以作为第一个子空间。",
+          "en": "ARC-3 进化实验室可以作为第一个子空间。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "书房白板上有一张“通用进化引擎”卡片。点击后，进入实验室。里面有演化池、策略体、规则面板、用户基准、资源仪表、失败档案。",
+          "en": "书房白板上有一张“通用进化引擎”卡片。点击后，进入实验室。里面有演化池、策略体、规则面板、用户基准、资源仪表、失败档案。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "Agent 不是直接讲“ARC-3 很重要”，而是让几个策略体尝试建模世界。它们失败、变异、比较、复盘。",
+          "en": "Agent 不是直接讲“ARC-3 很重要”，而是让几个策略体尝试建模世界。它们失败、变异、比较、复盘。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "我作为研究主管，可以调整参数。如果不操作，就切到旁观模式。",
+          "en": "我作为研究主管，可以调整参数。如果不操作，就切到旁观模式。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-07-29-20-44/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-07-29 20:44"
+  },
+  {
+    "id": "frome-2026-07-28-21-40",
+    "title": {
+      "zh": "白板到空间",
+      "en": "白板到空间"
+    },
+    "date": "2026.07.28 21:40",
+    "dateSort": "2026-07-28T21:40:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "白板上的一张卡片，应该可以长成一个空间。",
+          "en": "白板上的一张卡片，应该可以长成一个空间。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "例如白板上有“记忆机制”卡片。点击后，进入一个记忆工厂：原始资料从传送带进入，编译器压缩成记忆块，记忆块进入书架和晶体库，触发信号像光线一样连接到行动面板。",
+          "en": "例如白板上有“记忆机制”卡片。点击后，进入一个记忆工厂：原始资料从传送带进入，编译器压缩成记忆块，记忆块进入书架和晶体库，触发信号像光线一样连接到行动面板。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "这就是空间化解释。",
+          "en": "这就是空间化解释。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "它比普通文章更直观，也比普通视频更可交互。用户不是看完，而是进入一个概念内部。",
+          "en": "它比普通文章更直观，也比普通视频更可交互。用户不是看完，而是进入一个概念内部。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-07-28-21-40/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-07-28 21:40"
+  },
+  {
+    "id": "frome-2026-07-27-22-51",
+    "title": {
+      "zh": "验收标准",
+      "en": "验收标准"
+    },
+    "date": "2026.07.27 22:51",
+    "dateSort": "2026-07-27T22:51:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "每个模块都要有验收标准。",
+          "en": "每个模块都要有验收标准。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "白板验收：能新增、移动、编辑、连接卡片；每张卡片有类型和操作。",
+          "en": "白板验收：能新增、移动、编辑、连接卡片；每张卡片有类型和操作。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "记忆验收：导入资料后能生成编译记忆和行动信号。",
+          "en": "记忆验收：导入资料后能生成编译记忆和行动信号。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "空间验收：给定语义 JSON 能生成可点击场景。",
+          "en": "空间验收：给定语义 JSON 能生成可点击场景。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "Agent 验收：能解释自己为什么这么布置空间。",
+          "en": "Agent 验收：能解释自己为什么这么布置空间。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "资源验收：能记录 token、缓存命中和工具调用成本。",
+          "en": "资源验收：能记录 token、缓存命中和工具调用成本。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "FroMe 不能靠感觉开发，要用 harness engineering 保证产出可控。",
+          "en": "FroMe 不能靠感觉开发，要用 harness engineering 保证产出可控。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-07-27-22-51/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-07-27 22:51"
+  },
+  {
+    "id": "frome-2026-07-26-12-13",
+    "title": {
+      "zh": "别做静态图",
+      "en": "别做静态图"
+    },
+    "date": "2026.07.26 12:13",
+    "dateSort": "2026-07-26T12:13:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "给 coding Agent 的要求一定要明确：不要把白板和空间做成自作主张的 SVG 静态图。",
+          "en": "给 coding Agent 的要求一定要明确：不要把白板和空间做成自作主张的 SVG 静态图。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "对象必须有语义。卡片必须有类型、来源、操作、状态和记忆绑定。空间必须由 JSON 描述。布局可以程序化，但资产和交互要绑定到语义对象。",
+          "en": "对象必须有语义。卡片必须有类型、来源、操作、状态和记忆绑定。空间必须由 JSON 描述。布局可以程序化，但资产和交互要绑定到语义对象。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "视觉可以先简单，但结构不能错。",
+          "en": "视觉可以先简单，但结构不能错。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "如果第一版做成一张漂亮但不可行动的图，就偏离了 FroMe。我要的是可交互空间，不是视觉稿。",
+          "en": "如果第一版做成一张漂亮但不可行动的图，就偏离了 FroMe。我要的是可交互空间，不是视觉稿。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-07-26-12-13/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-07-26 12:13"
+  },
+  {
+    "id": "frome-2026-07-25-22-07",
+    "title": {
+      "zh": "MVP闭环",
+      "en": "MVP闭环"
+    },
+    "date": "2026.07.25 22:07",
+    "dateSort": "2026-07-25T22:07:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "第一版最小闭环：",
+          "en": "第一版最小闭环："
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "用户进入书房，导入一批资料。Agent 消化资料，生成记忆块。它走到白板前，把结构画出来，贴上几张卡片。用户点击其中一张，进入一个由语义 JSON 生成的子空间。",
+          "en": "用户进入书房，导入一批资料。Agent 消化资料，生成记忆块。它走到白板前，把结构画出来，贴上几张卡片。用户点击其中一张，进入一个由语义 JSON 生成的子空间。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "在子空间里，用户和 Agent 对话、点击、选择、观察。交互结束后，系统把这段经验压缩成记忆，回到书房留下痕迹。",
+          "en": "在子空间里，用户和 Agent 对话、点击、选择、观察。交互结束后，系统把这段经验压缩成记忆，回到书房留下痕迹。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "这就是 FroMe 的灵魂：记忆驱动空间，空间产生交互，交互更新记忆。",
+          "en": "这就是 FroMe 的灵魂：记忆驱动空间，空间产生交互，交互更新记忆。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-07-25-22-07/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-07-25 22:07"
+  },
+  {
+    "id": "frome-2026-07-24-23-11",
+    "title": {
+      "zh": "从单空间开始",
+      "en": "从单空间开始"
+    },
+    "date": "2026.07.24 23:11",
+    "dateSort": "2026-07-24T23:11:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "单空间铺好给 Agent 调用的结构，同时做 Agent 的意图、记忆、学习机制，然后做多空间的编排。",
+          "en": "单空间铺好给 Agent 调用的结构，同时做 Agent 的意图、记忆、学习机制，然后做多空间的编排。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "这是正确路线。",
+          "en": "这是正确路线。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "第一步不要做完整宇宙。先做书房。书房里能导入资料，Agent 能消化，能在白板上讲，能贴卡片，能生成一个子空间入口。用户进去互动，结果再回到书房。",
+          "en": "第一步不要做完整宇宙。先做书房。书房里能导入资料，Agent 能消化，能在白板上讲，能贴卡片，能生成一个子空间入口。用户进去互动，结果再回到书房。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "一个闭环跑通，再加多空间。否则所有概念都会变成空中楼阁。",
+          "en": "一个闭环跑通，再加多空间。否则所有概念都会变成空中楼阁。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-07-24-23-11/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-07-24 23:11"
+  },
+  {
+    "id": "frome-2026-07-24-12-53",
+    "title": {
+      "zh": "开发者平台",
+      "en": "开发者平台"
+    },
+    "date": "2026.07.24 12:53",
+    "dateSort": "2026-07-24T12:53:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "Agent Factory 是 FroMe 的 2B 方向。",
+          "en": "Agent Factory 是 FroMe 的 2B 方向。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "开发者不是只写 prompt，而是配置一个 Agent 的目标、记忆结构、空间语法、工具权限、角色投射、资源策略和演化机制。",
+          "en": "开发者不是只写 prompt，而是配置一个 Agent 的目标、记忆结构、空间语法、工具权限、角色投射、资源策略和演化机制。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "FroMe 可以让开发者生成教学 Agent、研究 Agent、产品演示 Agent、游戏化 Agent、个人知识 Agent。",
+          "en": "FroMe 可以让开发者生成教学 Agent、研究 Agent、产品演示 Agent、游戏化 Agent、个人知识 Agent。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "但底层系统要统一：主体、记忆、空间、工具、资源、反馈、评估。",
+          "en": "但底层系统要统一：主体、记忆、空间、工具、资源、反馈、评估。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "这样每个 Agent 都不是一次性 bot，而是可成长的空间化经验流系统。",
+          "en": "这样每个 Agent 都不是一次性 bot，而是可成长的空间化经验流系统。"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-07-24-12-53/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-07-24 12:53"
+  },
+  {
+    "id": "frome-2026-07-23-21-05",
+    "title": {
+      "zh": "竞技场",
+      "en": "竞技场"
+    },
+    "date": "2026.07.23 21:05",
+    "dateSort": "2026-07-23T21:05:00+08:00",
+    "category": {
+      "zh": "FroMe",
+      "en": "FroMe"
+    },
+    "summary": {
+      "zh": "",
+      "en": ""
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "Agent Arena 可以成为 FroMe 的 2C 玩法。",
+          "en": "Agent Arena 可以成为 FroMe 的 2C 玩法。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "不同 Agent 有不同倾向，这是游戏本身。",
+          "en": "不同 Agent 有不同倾向，这是游戏本身。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "一个 Agent 擅长做研究，一个擅长讲故事，一个擅长生成空间，一个擅长帮你安排时间，一个擅长激励你行动。它们可以在同一个任务里竞争，也可以合作。",
+          "en": "一个 Agent 擅长做研究，一个擅长讲故事，一个擅长生成空间，一个擅长帮你安排时间，一个擅长激励你行动。它们可以在同一个任务里竞争，也可以合作。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "竞技场不是为了热闹，而是为了让策略可比较。谁更会理解我？谁更节约资源？谁生成的空间更让我愿意探索？谁的记忆压缩更有效？",
+          "en": "竞技场不是为了热闹，而是为了让策略可比较。谁更会理解我？谁更节约资源？谁生成的空间更让我愿意探索？谁的记忆压缩更有效？"
+        }
+      }
+    ],
+    "source": "x",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/frome-2026-07-23-21-05/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": "2026-07-23 21:05"
+  },
+  {
+    "id": "reward-functions-01",
+    "title": {
+      "zh": "奖励函数（一）：从期望效用到前景理论",
+      "en": "Reward Functions I: From Expected Utility to Prospect Theory"
+    },
+    "date": "2026.07.23",
+    "dateSort": "2026-07-23T12:41:00+08:00",
+    "category": {
+      "zh": "强化学习",
+      "en": "Reinforcement Learning"
+    },
+    "summary": {
+      "zh": "奖励函数的思想源头并不只在强化学习，也在效用理论、博弈论与行为经济学。",
+      "en": "The conceptual roots of reward functions run through utility theory, game theory, and behavioral economics."
+    },
+    "note": {
+      "zh": "",
+      "en": ""
+    },
+    "paragraphs": [],
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "在看强化学习，几乎围绕着奖励函数做文章，构建了大名鼎鼎的贝尔曼方程，围绕着贝尔曼方程设计动态规划方法，包括策略和价值迭代，TD- Learning，Q-Learning等等。",
+          "en": "在看强化学习，几乎围绕着奖励函数做文章，构建了大名鼎鼎的贝尔曼方程，围绕着贝尔曼方程设计动态规划方法，包括策略和价值迭代，TD- Learning，Q-Learning等等。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "但是奖励函数为什么设计呢？事情追溯到30年代一代数学大师冯诺伊曼参与的博弈论。",
+          "en": "但是奖励函数为什么设计呢？事情追溯到30年代一代数学大师冯诺伊曼参与的博弈论。"
+        }
+      },
+      {
+        "type": "heading",
+        "text": {
+          "zh": "期望效用",
+          "en": "期望效用"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "早在18世纪，伯努利就用圣彼得堡悖论表明数学期望是无法表达人们的真实决策的。",
+          "en": "早在18世纪，伯努利就用圣彼得堡悖论表明数学期望是无法表达人们的真实决策的。"
+        }
+      },
+      {
+        "type": "figure",
+        "src": "https://lidechi.github.io/12-Articles/posts/reward-functions-01/figures/figure-01.jpeg",
+        "alt": {
+          "zh": "圣彼得堡悖论的收益分布",
+          "en": "圣彼得堡悖论的收益分布"
+        },
+        "caption": {
+          "zh": "",
+          "en": ""
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "所以提出了以效用代替收益，效用是经过心理处理的概念。",
+          "en": "所以提出了以效用代替收益，效用是经过心理处理的概念。"
+        }
+      },
+      {
+        "type": "figure",
+        "src": "https://lidechi.github.io/12-Articles/posts/reward-functions-01/figures/figure-02.jpeg",
+        "alt": {
+          "zh": "以效用替代直接收益",
+          "en": "以效用替代直接收益"
+        },
+        "caption": {
+          "zh": "",
+          "en": ""
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "伯努利的做法是以对数函数 $u(x)=\\ln(x)$ 代替直接的收益，",
+          "en": "伯努利的做法是以对数函数 $u(x)=\\ln(x)$ 代替直接的收益，"
+        }
+      },
+      {
+        "type": "figure",
+        "src": "https://lidechi.github.io/12-Articles/posts/reward-functions-01/figures/figure-03.jpeg",
+        "alt": {
+          "zh": "伯努利对数效用计算",
+          "en": "伯努利对数效用计算"
+        },
+        "caption": {
+          "zh": "",
+          "en": ""
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "最后结果是有限的 $2\\ln 2$ 约等于 1.38，刚好等于第二次投掷的直接效用。",
+          "en": "最后结果是有限的 $2\\ln 2$ 约等于 1.38，刚好等于第二次投掷的直接效用。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "这个理论是基于心理学假设和期望求和而改造出来的，在20世纪初，微观经济学家们摒弃这种做法，认为人们没有一个标量去衡量所有事物的效用，更不会按概率求和去求出期望效用。",
+          "en": "这个理论是基于心理学假设和期望求和而改造出来的，在20世纪初，微观经济学家们摒弃这种做法，认为人们没有一个标量去衡量所有事物的效用，更不会按概率求和去求出期望效用。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "直到冯诺伊曼和他的博弈论横空出世。",
+          "en": "直到冯诺伊曼和他的博弈论横空出世。"
+        }
+      },
+      {
+        "type": "figure",
+        "src": "https://lidechi.github.io/12-Articles/posts/reward-functions-01/figures/figure-04.jpeg",
+        "alt": {
+          "zh": "冯·诺伊曼与博弈论",
+          "en": "冯·诺伊曼与博弈论"
+        },
+        "caption": {
+          "zh": "",
+          "en": ""
+        }
+      },
+      {
+        "type": "figure",
+        "src": "https://lidechi.github.io/12-Articles/posts/reward-functions-01/figures/figure-05.jpeg",
+        "alt": {
+          "zh": "冯·诺伊曼肖像",
+          "en": "冯·诺伊曼肖像"
+        },
+        "caption": {
+          "zh": "",
+          "en": ""
+        }
+      },
+      {
+        "type": "heading",
+        "text": {
+          "zh": "vNM效用理论",
+          "en": "vNM效用理论"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "博弈论需要定义可比较的量，才能设计策略。但是人们只会比较事物，哪里有一个数值来衡量他的感受呢？冯诺伊曼证明，只要满足一组公理，就能把偏好之间的比较转换为期望效用之间的比较，所以选择最偏好的选项，就变为选择期望效用最大的选项。",
+          "en": "博弈论需要定义可比较的量，才能设计策略。但是人们只会比较事物，哪里有一个数值来衡量他的感受呢？冯诺伊曼证明，只要满足一组公理，就能把偏好之间的比较转换为期望效用之间的比较，所以选择最偏好的选项，就变为选择期望效用最大的选项。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "vNM四大公理（冯诺伊曼-摩根斯坦）",
+          "en": "vNM四大公理（冯诺伊曼-摩根斯坦）"
+        }
+      },
+      {
+        "type": "list",
+        "items": [
+          {
+            "zh": "完备性：任何事物可比较",
+            "en": "完备性：任何事物可比较"
+          },
+          {
+            "zh": "传递性：不存在三角克制关系",
+            "en": "传递性：不存在三角克制关系"
+          },
+          {
+            "zh": "连续性：支持线性插值，三个事物有偏好顺序的时候，中间事物等于另外两个的某个比例的中和",
+            "en": "连续性：支持线性插值，三个事物有偏好顺序的时候，中间事物等于另外两个的某个比例的中和"
+          },
+          {
+            "zh": "独立性：事物之间互不影响，两个事物在比较的时候，双方各自加入同一个事物也不影响比较结果",
+            "en": "独立性：事物之间互不影响，两个事物在比较的时候，双方各自加入同一个事物也不影响比较结果"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "text": {
+          "zh": "期望效用的缺陷",
+          "en": "期望效用的缺陷"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "阿莱悖论 讲了期望、效用和主观感受的差异。比如，给你二选一，两个选择的结果是金钱，数额都很大，二者差了数倍，但是确定性也差了很多，一个钱少但（几乎）百分比确定，一个钱多但只有1/10可能。那么你怎么选？",
+          "en": "阿莱悖论 讲了期望、效用和主观感受的差异。比如，给你二选一，两个选择的结果是金钱，数额都很大，二者差了数倍，但是确定性也差了很多，一个钱少但（几乎）百分比确定，一个钱多但只有1/10可能。那么你怎么选？"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "假如按照传统经济学理论，纯粹是风险厌恶在调节二者的效用，就选钱多的。",
+          "en": "假如按照传统经济学理论，纯粹是风险厌恶在调节二者的效用，就选钱多的。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "那么继续做实验，还是二选一，一个金钱多得多，但是风险也大一点，测试者反而会选择风险更大的。",
+          "en": "那么继续做实验，还是二选一，一个金钱多得多，但是风险也大一点，测试者反而会选择风险更大的。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "风险厌恶理论无法解释这个现象。",
+          "en": "风险厌恶理论无法解释这个现象。"
+        }
+      },
+      {
+        "type": "heading",
+        "text": {
+          "zh": "前景理论",
+          "en": "前景理论"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "有一种建模方式是前景理论（Prospect Theory），由丹尼尔·卡尼曼（Daniel Kahneman，《思考，快与慢》作者）和阿莫斯·特沃斯基（Amos Tversky）于 1979 年提出的行为经济学核心理论，有四个机制颠覆传统经济学理论：",
+          "en": "有一种建模方式是前景理论（Prospect Theory），由丹尼尔·卡尼曼（Daniel Kahneman，《思考，快与慢》作者）和阿莫斯·特沃斯基（Amos Tversky）于 1979 年提出的行为经济学核心理论，有四个机制颠覆传统经济学理论："
+        }
+      },
+      {
+        "type": "list",
+        "items": [
+          {
+            "zh": "参照点依赖（Reference Dependence）：人们评估一件事情是好是坏，看的不是最终财富的绝对值，而是相对于“参照点”是赚了（Gain）还是亏了（Loss）。",
+            "en": "参照点依赖（Reference Dependence）：人们评估一件事情是好是坏，看的不是最终财富的绝对值，而是相对于“参照点”是赚了（Gain）还是亏了（Loss）。"
+          },
+          {
+            "zh": "损失厌恶（Loss Aversion）：损失带来的痛苦感，远大于等额收益带来的快乐感。 实验表明，丢掉 100 块钱的痛苦程度，大约需要捡到 225 块钱的快乐才能平复（损失厌恶系数约为 2.25）。",
+            "en": "损失厌恶（Loss Aversion）：损失带来的痛苦感，远大于等额收益带来的快乐感。 实验表明，丢掉 100 块钱的痛苦程度，大约需要捡到 225 块钱的快乐才能平复（损失厌恶系数约为 2.25）。"
+          },
+          {
+            "zh": "敏感度递减（Diminishing Sensitivity）：财富变动的边际心理感知是递减的。从 0 变成 100 块感受极其明显，但从 10,000 变成 10,100 块，心理波澜就很小了。",
+            "en": "敏感度递减（Diminishing Sensitivity）：财富变动的边际心理感知是递减的。从 0 变成 100 块感受极其明显，但从 10,000 变成 10,100 块，心理波澜就很小了。"
+          },
+          {
+            "zh": "非理性概率加权（Probability Weighting）：人们在心理上会高估极小概率事件（例如买彩票、买航空险），同时低估中高概率事件。",
+            "en": "非理性概率加权（Probability Weighting）：人们在心理上会高估极小概率事件（例如买彩票、买航空险），同时低估中高概率事件。"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "具体到这个阿莱悖论，心理上的价值是",
+          "en": "具体到这个阿莱悖论，心理上的价值是"
+        }
+      },
+      {
+        "type": "figure",
+        "src": "https://lidechi.github.io/12-Articles/posts/reward-functions-01/figures/figure-06.jpeg",
+        "alt": {
+          "zh": "前景理论的主观价值表达式",
+          "en": "前景理论的主观价值表达式"
+        },
+        "caption": {
+          "zh": "",
+          "en": ""
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "其中，$w(p)$ 是人们对概率的主观感受，$v$ 是对效用的主观感受",
+          "en": "其中，$w(p)$ 是人们对概率的主观感受，$v$ 是对效用的主观感受"
+        }
+      },
+      {
+        "type": "figure",
+        "src": "https://lidechi.github.io/12-Articles/posts/reward-functions-01/figures/figure-07.jpeg",
+        "alt": {
+          "zh": "概率加权函数",
+          "en": "概率加权函数"
+        },
+        "caption": {
+          "zh": "",
+          "en": ""
+        }
+      },
+      {
+        "type": "figure",
+        "src": "https://lidechi.github.io/12-Articles/posts/reward-functions-01/figures/figure-08.png",
+        "alt": {
+          "zh": "概率加权函数曲线",
+          "en": "概率加权函数曲线"
+        },
+        "caption": {
+          "zh": "",
+          "en": ""
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "这是 $\\gamma=0.5$ 的时候的 $w(p)$，可以看到在首尾的斜率很高，加速趋近。",
+          "en": "这是 $\\gamma=0.5$ 的时候的 $w(p)$，可以看到在首尾的斜率很高，加速趋近。"
+        }
+      },
+      {
+        "type": "paragraph",
+        "text": {
+          "zh": "$v(x)$ 取一个边际递减的函数比如",
+          "en": "$v(x)$ 取一个边际递减的函数比如"
+        }
+      },
+      {
+        "type": "figure",
+        "src": "https://lidechi.github.io/12-Articles/posts/reward-functions-01/figures/figure-09.jpeg",
+        "alt": {
+          "zh": "前景理论价值函数",
+          "en": "前景理论价值函数"
+        },
+        "caption": {
+          "zh": "",
+          "en": ""
+        }
+      },
+      {
+        "type": "figure",
+        "src": "https://lidechi.github.io/12-Articles/posts/reward-functions-01/figures/figure-10.png",
+        "alt": {
+          "zh": "损失厌恶与敏感度递减曲线",
+          "en": "损失厌恶与敏感度递减曲线"
+        },
+        "caption": {
+          "zh": "",
+          "en": ""
+        }
+      },
+      {
+        "type": "heading",
+        "text": {
+          "zh": "未完待续",
+          "en": "未完待续"
+        }
+      }
+    ],
+    "source": "site",
+    "sourceUrl": "https://lidechi.github.io/12-Articles/posts/reward-functions-01/",
+    "originalSourceUrl": null,
+    "originalPublishedAt": null
+  },
+  {
     "id": "first-ai-math-article",
     "title": {
       "zh": "我的第一篇 AI 数理文章",
