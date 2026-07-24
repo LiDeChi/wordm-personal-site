@@ -10,6 +10,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "sync:articles": "node scripts/sync-articles.mjs",
+    "check:articles": "node scripts/check-article-navigation.mjs",
     "sync:projects": "node scripts/sync-center-control.mjs",
     "sync:deploy-kits": "node scripts/export-deploy-kits.mjs",
     "list:subdomain-retention": "node scripts/resolve-domain-retention-set.mjs",

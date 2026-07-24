@@ -88,6 +88,12 @@ export const BLOG_ARTICLES = parseArticleManifest(articlesSnapshotRaw);
 export async function loadPublishedBlogArticles(
   signal?: AbortSignal,
 ): Promise<BlogArticle[]> {
+  // Local development must reflect the snapshot produced by scripts/sync-articles.mjs.
+  // Otherwise an older GitHub Pages manifest can silently replace the code under test.
+  if (import.meta.env.DEV) {
+    return BLOG_ARTICLES;
+  }
+
   const response = await fetch(ARTICLES_MANIFEST_URL, {
     signal,
     cache: "no-cache",
