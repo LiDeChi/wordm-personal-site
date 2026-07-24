@@ -25,6 +25,7 @@ import {
   loadPublishedBlogArticles,
   type BlogContentBlock,
 } from "./data/blogArticles";
+import { getNextArticleInSource } from "./data/articleNavigation";
 import {
   FEATURED_PROJECT_SLUGS,
   getProjectPresentation,
@@ -1337,19 +1338,9 @@ function App() {
       null,
     [activeBlogArticleId, blogArticles],
   );
-  const activeBlogIndex = useMemo(
-    () =>
-      activeBlogArticle
-        ? blogArticles.findIndex(
-            (article) => article.id === activeBlogArticle.id,
-          )
-        : -1,
-    [activeBlogArticle, blogArticles],
-  );
-  const nextBlogArticle =
-    activeBlogIndex >= 0 && activeBlogIndex + 1 < blogArticles.length
-      ? blogArticles[activeBlogIndex + 1]
-      : null;
+  const nextBlogArticle = activeBlogArticle
+    ? getNextArticleInSource(blogArticles, activeBlogArticle.id)
+    : null;
   const isOneAgentProductPage =
     window.location.hostname === "oneagent.wordm.us" ||
     window.location.pathname === "/oneagent" ||
