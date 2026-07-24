@@ -292,7 +292,14 @@ function renderBlogContentBlock(
   if (block.type === "figure") {
     return (
       <figure key={key} className="blog-article-figure">
-        <img src={block.src} alt={block.alt[lang]} loading="lazy" />
+        <img
+          src={block.src}
+          alt={block.alt[lang]}
+          width={block.width}
+          height={block.height}
+          loading="lazy"
+          decoding="async"
+        />
         {block.caption[lang].trim() ? (
           <figcaption>{block.caption[lang]}</figcaption>
         ) : null}
@@ -1206,6 +1213,8 @@ function App() {
   const initialLang = resolveInitialLang(window.location);
   const initialThemeMode = readInitialThemeMode();
   const blogLoadMoreRef = useRef<HTMLDivElement | null>(null);
+  const blogNavigationFrameRef = useRef<number | null>(null);
+  const blogNavigationLockRef = useRef(false);
 
   const [lang, setLang] = useState<Lang>(initialLang);
   const [themeMode, setThemeMode] = useState<ThemeMode>(initialThemeMode);
@@ -1685,7 +1694,7 @@ function App() {
 
     let frameId = 0;
     const updateActiveArticle = () => {
-      if (frameId) {
+      if (frameId || blogNavigationLockRef.current) {
         return;
       }
 
@@ -3385,10 +3394,7 @@ function App() {
     setHomeDownloadStatusMessage(copy.homeProjectsDownloadStatus);
   }
 
-  function scrollToBlogArticle(
-    articleId: string,
-    behavior: ScrollBehavior = "smooth",
-  ) {
+  function scrollToBlogArticle(articleId: string) {
     const articleIndex = blogArticles.findIndex(
       (article) => article.id === articleId,
     );
@@ -3396,21 +3402,53 @@ function App() {
       return;
     }
 
-    setActiveBlogArticleId(articleId);
+    if (blogNavigationFrameRef.current) {
+      window.cancelAnimationFrame(blogNavigationFrameRef.current);
+    }
+    blogNavigationLockRef.current = true;
+
     if (articleIndex >= visibleBlogCount) {
       setVisibleBlogCount(
         Math.min(blogArticles.length, articleIndex + BLOG_RENDER_BATCH_SIZE),
       );
     }
 
-    window.requestAnimationFrame(() => {
-      window.requestAnimationFrame(() => {
-        const target = document.getElementById(`blog-article-${articleId}`);
-        if (target) {
-          target.scrollIntoView({ behavior, block: "start" });
-        }
+    let attemptsRemaining = 4;
+    const positionArticle = () => {
+      const target = document.getElementById(`blog-article-${articleId}`);
+      if (!target && attemptsRemaining > 0) {
+        attemptsRemaining -= 1;
+        blogNavigationFrameRef.current =
+          window.requestAnimationFrame(positionArticle);
+        return;
+      }
+
+      if (!target) {
+        blogNavigationFrameRef.current = null;
+        blogNavigationLockRef.current = false;
+        return;
+      }
+
+      const scrollMarginTop =
+        Number.parseFloat(window.getComputedStyle(target).scrollMarginTop) || 0;
+      const targetTop =
+        window.scrollY + target.getBoundingClientRect().top - scrollMarginTop;
+
+      window.scrollTo({
+        top: Math.max(0, targetTop),
+        left: 0,
+        behavior: "auto",
       });
-    });
+      setActiveBlogArticleId(articleId);
+
+      blogNavigationFrameRef.current = window.requestAnimationFrame(() => {
+        blogNavigationFrameRef.current = null;
+        blogNavigationLockRef.current = false;
+      });
+    };
+
+    blogNavigationFrameRef.current =
+      window.requestAnimationFrame(positionArticle);
   }
 
   function getProjectNameBySlug(slug: string) {
