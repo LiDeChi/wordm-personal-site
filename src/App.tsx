@@ -23,6 +23,7 @@ import { ThemeModeIcon } from "./components/ThemeModeIcon";
 import {
   BLOG_ARTICLES,
   loadPublishedBlogArticles,
+  type BlogArticle,
   type BlogContentBlock,
 } from "./data/blogArticles";
 import { getNextArticleInSource } from "./data/articleNavigation";
@@ -1051,6 +1052,19 @@ function normalizeBlogArticleId(raw: string | null): string | null {
   }
 
   return articleId;
+}
+
+function formatBlogSidebarMeta(article: BlogArticle, lang: Lang) {
+  const dateOnly =
+    article.date.match(/\d{4}[./-]\d{2}[./-]\d{2}/u)?.[0] ??
+    article.date.trim();
+  const category = article.category[lang].trim();
+
+  if (!category || category.toLocaleLowerCase() === "frome") {
+    return dateOnly;
+  }
+
+  return `${dateOnly} · ${category}`;
 }
 
 function withDetail(prefix: string, detail: string) {
@@ -4041,7 +4055,7 @@ function App() {
                         >
                           {article.title[lang]}
                           <span className="toc-meta">
-                            {article.date} · {article.category[lang]}
+                            {formatBlogSidebarMeta(article, lang)}
                           </span>
                         </button>
                       </li>

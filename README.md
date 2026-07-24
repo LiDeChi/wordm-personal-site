@@ -258,7 +258,12 @@ npm run sync:projects
 公开文章的唯一源目录是独立仓库
 [`LiDeChi/12-Articles`](https://github.com/LiDeChi/12-Articles)，本机工作目录位于
 Obsidian 仓库的 `12-Articles/`。每篇文章使用
-`posts/<slug>/index.qmd`，由 Quarto 发布到 GitHub Pages。
+`posts/三位序号 标题.md` 这一份扁平 Markdown 笔记，由 Quarto 发布到 GitHub Pages。
+Obsidian 文件名中的序号不会进入网页标题；公开标题来自文章 front matter 的
+`title`，稳定网址来自 `article-id` 和 `output-file`。
+
+在 `12-Articles` 根目录双击 `发布文章.command`，即可自动编号、检查、构建、
+提交并推送文章。GitHub Pages 更新后，主页博客会在运行时读取同一份文章清单。
 
 主页在运行时读取：
 
