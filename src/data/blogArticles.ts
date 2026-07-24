@@ -25,6 +25,8 @@ export type BlogContentBlock =
       src: string;
       alt: BilingualText;
       caption: BilingualText;
+      width?: number;
+      height?: number;
     };
 
 export type BlogArticle = {
