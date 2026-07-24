@@ -26,6 +26,7 @@ type ChatResponse = {
 const CHAT_COPY = {
   zh: {
     open: "AI",
+    launcher: "咨询",
     close: "关闭",
     title: "问 wordm.us",
     subtitle: "Kimi · 基于站点内容",
@@ -44,6 +45,7 @@ const CHAT_COPY = {
   },
   en: {
     open: "AI",
+    launcher: "Ask",
     close: "Close",
     title: "Ask wordm.us",
     subtitle: "Kimi · grounded in the site",
@@ -336,12 +338,10 @@ export function SiteAiChat({ lang, projects, lastUpdated }: SiteAiChatProps) {
         aria-expanded={open}
         aria-haspopup="dialog"
         aria-label={copy.title}
-        onFocus={openChat}
-        onMouseEnter={openChat}
         onClick={openChat}
       >
         <span className="site-ai-fab-mark">{copy.open}</span>
-        <span className="site-ai-fab-text">{copy.placeholder}</span>
+        <span className="site-ai-fab-text">{copy.launcher}</span>
       </button>
     </div>
   );
