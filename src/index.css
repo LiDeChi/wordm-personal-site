@@ -6869,6 +6869,10 @@ a:hover {
 .blog-article-figure img {
     display: block;
     width: 100%;
+    max-width: 100%;
+    height: auto;
+    margin-inline: auto;
+    object-fit: contain;
     border-radius: 14px;
     border: 1px solid rgb(75 55 35 / 12%);
     background: var(--paper-surface);
