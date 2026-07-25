@@ -298,6 +298,7 @@ function renderBlogContentBlock(
           alt={block.alt[lang]}
           width={block.width}
           height={block.height}
+          style={block.width ? { maxWidth: block.width } : undefined}
           loading="lazy"
           decoding="async"
         />
