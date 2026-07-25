@@ -565,7 +565,6 @@ const APP_COPY = {
     blogSourceX: "归档自 X",
     blogSourceSubstack: "归档自 Substack",
     blogOriginalPrefix: "原始发布时间",
-    blogReadSource: "查看原文",
     blogNextLabel: "下一篇",
     blogEndOfList: "已经到最后一篇博客。",
     blogLoadMore: "继续加载博客",
@@ -762,7 +761,6 @@ const APP_COPY = {
     blogSourceX: "Archived from X",
     blogSourceSubstack: "Archived from Substack",
     blogOriginalPrefix: "Originally posted",
-    blogReadSource: "Open source",
     blogNextLabel: "Next",
     blogEndOfList: "You are at the last blog post.",
     blogLoadMore: "Load more posts",
@@ -4103,17 +4101,6 @@ function App() {
                               {paragraph[lang]}
                             </p>
                           ))}
-                      {article.sourceUrl ? (
-                        <p className="blog-article-source">
-                          <a
-                            href={article.sourceUrl}
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            {copy.blogReadSource} ↗
-                          </a>
-                        </p>
-                      ) : null}
                     </article>
                   ))}
                   {hasMoreBlogArticles ? (
