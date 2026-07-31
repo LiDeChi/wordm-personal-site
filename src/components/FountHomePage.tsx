@@ -4,7 +4,11 @@ import type {
   MouseEvent as ReactMouseEvent,
   ReactNode,
 } from "react";
-import { BLOG_ARTICLES } from "../data/blogArticles";
+import {
+  ARTICLES_SITE_URL,
+  BLOG_ARTICLES,
+  IN_SITE_BLOG_ENABLED,
+} from "../data/blogArticles";
 import { FOUNT_FIELDS } from "../data/fountFields";
 import type { Lang } from "../i18n/lang";
 import { withSiteParams } from "../lib/lang-url";
@@ -2150,7 +2154,9 @@ export function FountHomePage({
   const homeHref = `/?${langParam}`;
   const updatesHref = `/?view=updates&${langParam}`;
   const pricingHref = `/?view=pricing&${langParam}`;
-  const blogHref = `/blog?${langParam}`;
+  const blogHref = IN_SITE_BLOG_ENABLED
+    ? `/blog?${langParam}`
+    : ARTICLES_SITE_URL;
   const fieldsHref = `/fields?${langParam}`;
   const docsHref = `/docs?${langParam}`;
   const accountHref = `/?view=login&${langParam}`;
@@ -3282,6 +3288,9 @@ function FountFooter({
   onTabChange?: (tab: FountPrimaryTab) => void;
 }) {
   const langParam = `lang=${lang}`;
+  const blogHref = IN_SITE_BLOG_ENABLED
+    ? `/blog?${langParam}`
+    : ARTICLES_SITE_URL;
 
   return (
     <footer className="fount-footer" id="fount-footer">
@@ -3331,7 +3340,7 @@ function FountFooter({
         </div>
         <div>
           <strong>Resources</strong>
-          <a href={`/blog?${langParam}`}>Blog</a>
+          <a href={blogHref}>Blog</a>
           <a href={`/?${langParam}#open`}>Foundry</a>
           <a href={resolvePartnerApplyHref()}>Community</a>
         </div>
