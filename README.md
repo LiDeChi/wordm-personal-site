@@ -256,7 +256,7 @@ npm run sync:projects
 ### 文章同步
 
 公开文章的唯一源目录是独立仓库
-[`LiDeChi/12-Articles`](https://github.com/LiDeChi/12-Articles)，本机工作目录位于
+[`LiDeChi/blog`](https://github.com/LiDeChi/blog)，本机工作目录位于
 Obsidian 仓库的 `12-Articles/`。每篇文章使用
 `posts/三位序号 标题.md` 这一份扁平 Markdown 笔记，由 Quarto 发布到 GitHub Pages。
 Obsidian 文件名中的序号不会进入网页标题；公开标题来自文章 front matter 的
@@ -268,7 +268,7 @@ Obsidian 文件名中的序号不会进入网页标题；公开标题来自文�
 主页在运行时读取：
 
 ```text
-https://lidechi.github.io/12-Articles/articles.json
+https://lidechi.github.io/blog/articles.json
 ```
 
 `src/data/articles.snapshot.json` 是离线与构建回退，不是编辑源。文章站发布后，可用本机 Quarto 构建结果刷新快照：
