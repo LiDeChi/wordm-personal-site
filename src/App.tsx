@@ -21,7 +21,9 @@ import { SocialLinks } from "./components/SocialLinks";
 import { SubdomainProjectView } from "./components/SubdomainProjectView";
 import { ThemeModeIcon } from "./components/ThemeModeIcon";
 import {
+  ARTICLES_SITE_URL,
   BLOG_ARTICLES,
+  IN_SITE_BLOG_ENABLED,
   loadPublishedBlogArticles,
   type BlogArticle,
   type BlogContentBlock,
@@ -1079,6 +1081,10 @@ function withDone(text: string, lang: Lang) {
 }
 
 function relativeRootHref(view: RootView, lang: Lang) {
+  if (view === "blog" && !IN_SITE_BLOG_ENABLED) {
+    return ARTICLES_SITE_URL;
+  }
+
   const url = new URL("/", "https://wordm.us");
 
   if (view === "login") {
@@ -1415,6 +1421,11 @@ function App() {
   }, [lang]);
 
   useEffect(() => {
+    if (rootView === "blog" && !IN_SITE_BLOG_ENABLED) {
+      window.location.replace(ARTICLES_SITE_URL);
+      return;
+    }
+
     if (rootView === "blog") {
       document.title = lang === "zh" ? "Fount 博客 | Notes" : "Fount Blog | Notes";
     }
@@ -1422,6 +1433,11 @@ function App() {
 
   useEffect(() => {
     if (isOneAgentProductPage) {
+      return;
+    }
+
+    // In-site blog is temporarily disabled; do not rewrite the URL to /blog.
+    if (rootView === "blog" && !IN_SITE_BLOG_ENABLED) {
       return;
     }
 
@@ -3354,6 +3370,11 @@ function App() {
   }
 
   function switchRootView(nextRootView: RootView) {
+    if (nextRootView === "blog" && !IN_SITE_BLOG_ENABLED) {
+      window.location.assign(ARTICLES_SITE_URL);
+      return;
+    }
+
     setRootView(nextRootView);
 
     window.requestAnimationFrame(() => {
@@ -3820,6 +3841,25 @@ function App() {
           setThemeMode((current) => (current === "night" ? "day" : "night"))
         }
       />
+    );
+  }
+
+  if (rootView === "blog" && !IN_SITE_BLOG_ENABLED) {
+    return (
+      <div className="page-container" data-page="blog-redirect">
+        <main className="main-content">
+          <p className="visual-intro">
+            {lang === "zh"
+              ? "正在跳转到个人博客…"
+              : "Redirecting to the personal blog…"}
+          </p>
+          <p>
+            <a href={ARTICLES_SITE_URL}>
+              {lang === "zh" ? "如果没有自动跳转，请点这里" : "Continue if you are not redirected"}
+            </a>
+          </p>
+        </main>
+      </div>
     );
   }
 
