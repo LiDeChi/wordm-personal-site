@@ -45,7 +45,7 @@ export type BlogArticle = {
   originalPublishedAt?: string | null;
 };
 
-export const ARTICLES_SITE_URL = "https://lidechi.github.io/blog/";
+export const ARTICLES_SITE_URL = "https://lidechi.github.io/";
 export const ARTICLES_MANIFEST_URL = `${ARTICLES_SITE_URL}articles.json`;
 
 /**

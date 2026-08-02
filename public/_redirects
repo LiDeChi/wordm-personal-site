@@ -9,10 +9,10 @@
 /oneagent /oneagent/ 301
 /oneagent/* /index.html 200
 
-# 站内博客暂时屏蔽：直达 GitHub Pages 个人博客
-/blog         https://lidechi.github.io/blog/ 302
-/blog/        https://lidechi.github.io/blog/ 302
-/blog/*       https://lidechi.github.io/blog/ 302
+# 站内博客暂时屏蔽：永久跳转到 GitHub Pages 个人博客
+/blog         https://lidechi.github.io/        301
+/blog/        https://lidechi.github.io/        301
+/blog/*       https://lidechi.github.io/:splat  301
 
 # 产品路径 → 子域名
 /zh*          https://inote.wordm.us/:splat     301

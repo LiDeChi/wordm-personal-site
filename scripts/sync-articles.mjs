@@ -12,7 +12,7 @@ const sourceInput =
   sourceIndex >= 0 && args[sourceIndex + 1]
     ? resolve(args[sourceIndex + 1])
     : null;
-const manifestUrl = "https://lidechi.github.io/blog/articles.json";
+const manifestUrl = "https://lidechi.github.io/articles.json";
 const targetPath = join(projectRoot, "src/data/articles.snapshot.json");
 
 async function readManifest() {
