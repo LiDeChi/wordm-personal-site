@@ -51,7 +51,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-07-23-21-05.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-07-23-21-05.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-07-23 21:05"
   },
@@ -107,7 +107,7 @@
       },
       {
         "type": "figure",
-        "src": "https://lidechi.github.io/blog/assets/articles/large-world-agent-system/figures/system-map.png",
+        "src": "https://lidechi.github.io/assets/articles/large-world-agent-system/figures/system-map.png",
         "alt": {
           "zh": "Agent System 的核心模块结构图：API、历史、注意力、资源、tick 与 agent loop",
           "en": "Diagram of an agent system: API, history, attention, resources, tick, and agent loop."
@@ -123,7 +123,7 @@
         "type": "heading",
         "text": {
           "zh": "权限、API 和必要的绕过",
-          "en": "Permission, APIs, and Necessary Bypass"
+          "en": "权限、API 和必要的绕过"
         }
       },
       {
@@ -144,7 +144,7 @@
         "type": "heading",
         "text": {
           "zh": "历史让系统像环境，而不是工具调用器",
-          "en": "History Makes the System an Environment"
+          "en": "历史让系统像环境，而不是工具调用器"
         }
       },
       {
@@ -165,7 +165,7 @@
         "type": "heading",
         "text": {
           "zh": "注意力：谁来接收子代理的信息",
-          "en": "Attention: Who Receives the Subagents"
+          "en": "注意力：谁来接收子代理的信息"
         }
       },
       {
@@ -184,7 +184,7 @@
       },
       {
         "type": "figure",
-        "src": "https://lidechi.github.io/blog/assets/articles/large-world-agent-system/figures/attention-map.png",
+        "src": "https://lidechi.github.io/assets/articles/large-world-agent-system/figures/attention-map.png",
         "alt": {
           "zh": "中央注意力与分布式注意力的结构图",
           "en": "Diagram comparing central attention and distributed attention."
@@ -200,7 +200,7 @@
         "type": "heading",
         "text": {
           "zh": "Tick、感知、资源与闲暇",
-          "en": "Ticks, Perception, Resources, and Idle Time"
+          "en": "Tick、感知、资源与闲暇"
         }
       },
       {
@@ -219,7 +219,7 @@
       },
       {
         "type": "figure",
-        "src": "https://lidechi.github.io/blog/assets/articles/large-world-agent-system/figures/lifecycle-map.png",
+        "src": "https://lidechi.github.io/assets/articles/large-world-agent-system/figures/lifecycle-map.png",
         "alt": {
           "zh": "Agent 生命周期结构图：生成、运行、反馈、减速、压缩、收回",
           "en": "Agent lifecycle diagram: creation, running, feedback, slowing, compression, and reclaiming."
@@ -235,7 +235,7 @@
         "type": "heading",
         "text": {
           "zh": "环境、个人 agent 与“家”",
-          "en": "Environment, Personal Agents, and Home"
+          "en": "环境、个人 agent 与“家”"
         }
       },
       {
@@ -268,7 +268,7 @@
       }
     ],
     "source": "site",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/large-world-agent-system.html",
+    "sourceUrl": "https://lidechi.github.io/posts/large-world-agent-system.html",
     "originalSourceUrl": null,
     "originalPublishedAt": null
   },
@@ -324,7 +324,7 @@
       },
       {
         "type": "figure",
-        "src": "https://lidechi.github.io/blog/assets/articles/reward-functions-01/figures/figure-01.jpeg",
+        "src": "https://lidechi.github.io/assets/articles/reward-functions-01/figures/figure-01.jpeg",
         "alt": {
           "zh": "圣彼得堡悖论的收益分布",
           "en": "圣彼得堡悖论的收益分布"
@@ -345,7 +345,7 @@
       },
       {
         "type": "figure",
-        "src": "https://lidechi.github.io/blog/assets/articles/reward-functions-01/figures/figure-02.jpeg",
+        "src": "https://lidechi.github.io/assets/articles/reward-functions-01/figures/figure-02.jpeg",
         "alt": {
           "zh": "以效用替代直接收益",
           "en": "以效用替代直接收益"
@@ -366,7 +366,7 @@
       },
       {
         "type": "figure",
-        "src": "https://lidechi.github.io/blog/assets/articles/reward-functions-01/figures/figure-03.jpeg",
+        "src": "https://lidechi.github.io/assets/articles/reward-functions-01/figures/figure-03.jpeg",
         "alt": {
           "zh": "伯努利对数效用计算",
           "en": "伯努利对数效用计算"
@@ -401,7 +401,7 @@
       },
       {
         "type": "figure",
-        "src": "https://lidechi.github.io/blog/assets/articles/reward-functions-01/figures/figure-04.jpeg",
+        "src": "https://lidechi.github.io/assets/articles/reward-functions-01/figures/figure-04.jpeg",
         "alt": {
           "zh": "冯·诺伊曼与博弈论",
           "en": "冯·诺伊曼与博弈论"
@@ -415,7 +415,7 @@
       },
       {
         "type": "figure",
-        "src": "https://lidechi.github.io/blog/assets/articles/reward-functions-01/figures/figure-05.jpeg",
+        "src": "https://lidechi.github.io/assets/articles/reward-functions-01/figures/figure-05.jpeg",
         "alt": {
           "zh": "冯·诺伊曼肖像",
           "en": "冯·诺伊曼肖像"
@@ -548,7 +548,7 @@
       },
       {
         "type": "figure",
-        "src": "https://lidechi.github.io/blog/assets/articles/reward-functions-01/figures/figure-06.jpeg",
+        "src": "https://lidechi.github.io/assets/articles/reward-functions-01/figures/figure-06.jpeg",
         "alt": {
           "zh": "前景理论的主观价值表达式",
           "en": "前景理论的主观价值表达式"
@@ -569,7 +569,7 @@
       },
       {
         "type": "figure",
-        "src": "https://lidechi.github.io/blog/assets/articles/reward-functions-01/figures/figure-07.jpeg",
+        "src": "https://lidechi.github.io/assets/articles/reward-functions-01/figures/figure-07.jpeg",
         "alt": {
           "zh": "概率加权函数",
           "en": "概率加权函数"
@@ -583,7 +583,7 @@
       },
       {
         "type": "figure",
-        "src": "https://lidechi.github.io/blog/assets/articles/reward-functions-01/figures/figure-08.png",
+        "src": "https://lidechi.github.io/assets/articles/reward-functions-01/figures/figure-08.png",
         "alt": {
           "zh": "概率加权函数曲线",
           "en": "概率加权函数曲线"
@@ -611,7 +611,7 @@
       },
       {
         "type": "figure",
-        "src": "https://lidechi.github.io/blog/assets/articles/reward-functions-01/figures/figure-09.jpeg",
+        "src": "https://lidechi.github.io/assets/articles/reward-functions-01/figures/figure-09.jpeg",
         "alt": {
           "zh": "前景理论价值函数",
           "en": "前景理论价值函数"
@@ -625,7 +625,7 @@
       },
       {
         "type": "figure",
-        "src": "https://lidechi.github.io/blog/assets/articles/reward-functions-01/figures/figure-10.png",
+        "src": "https://lidechi.github.io/assets/articles/reward-functions-01/figures/figure-10.png",
         "alt": {
           "zh": "损失厌恶与敏感度递减曲线",
           "en": "损失厌恶与敏感度递减曲线"
@@ -646,7 +646,7 @@
       }
     ],
     "source": "site",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/reward-functions-01.html",
+    "sourceUrl": "https://lidechi.github.io/posts/reward-functions-01.html",
     "originalSourceUrl": null,
     "originalPublishedAt": null
   },
@@ -702,7 +702,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-07-22-22-11.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-07-22-22-11.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-07-22 22:11"
   },
@@ -765,7 +765,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-07-21-21-05.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-07-21-21-05.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-07-21 21:05"
   },
@@ -821,7 +821,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-07-21-08-57.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-07-21-08-57.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-07-21 08:57"
   },
@@ -877,7 +877,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-07-20-21-42.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-07-20-21-42.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-07-20 21:42"
   },
@@ -940,7 +940,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-07-19-20-55.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-07-19-20-55.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-07-19 20:55"
   },
@@ -1003,7 +1003,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-07-19-13-28.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-07-19-13-28.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-07-19 13:28"
   },
@@ -1059,7 +1059,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-07-18-09-40.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-07-18-09-40.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-07-18 09:40"
   },
@@ -1122,7 +1122,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-07-17-22-19.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-07-17-22-19.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-07-17 22:19"
   },
@@ -1185,7 +1185,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-07-16-13-41.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-07-16-13-41.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-07-16 13:41"
   },
@@ -1241,7 +1241,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-07-15-22-11.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-07-15-22-11.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-07-15 22:11"
   },
@@ -1297,7 +1297,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-07-14-20-36.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-07-14-20-36.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-07-14 20:36"
   },
@@ -1353,7 +1353,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-07-14-09-17.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-07-14-09-17.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-07-14 09:17"
   },
@@ -1409,7 +1409,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-07-13-21-23.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-07-13-21-23.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-07-13 21:23"
   },
@@ -1465,7 +1465,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-07-12-10-02.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-07-12-10-02.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-07-12 10:02"
   },
@@ -1521,7 +1521,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-07-11-22-56.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-07-11-22-56.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-07-11 22:56"
   },
@@ -1577,7 +1577,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-07-10-08-30.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-07-10-08-30.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-07-10 08:30"
   },
@@ -1633,7 +1633,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-07-09-13-29.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-07-09-13-29.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-07-09 13:29"
   },
@@ -1689,7 +1689,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-07-08-22-30.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-07-08-22-30.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-07-08 22:30"
   },
@@ -1745,7 +1745,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-07-08-09-16.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-07-08-09-16.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-07-08 09:16"
   },
@@ -1801,7 +1801,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-07-07-21-30.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-07-07-21-30.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-07-07 21:30"
   },
@@ -1857,7 +1857,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-07-06-23-17.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-07-06-23-17.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-07-06 23:17"
   },
@@ -1913,7 +1913,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-07-06-09-59.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-07-06-09-59.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-07-06 09:59"
   },
@@ -1976,7 +1976,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-07-05-09-05.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-07-05-09-05.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-07-05 09:05"
   },
@@ -2032,7 +2032,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-07-04-21-08.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-07-04-21-08.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-07-04 21:08"
   },
@@ -2088,7 +2088,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-07-03-22-22.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-07-03-22-22.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-07-03 22:22"
   },
@@ -2144,7 +2144,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-07-03-10-05.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-07-03-10-05.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-07-03 10:05"
   },
@@ -2200,7 +2200,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-07-02-09-18.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-07-02-09-18.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-07-02 09:18"
   },
@@ -2256,7 +2256,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-07-01-21-43.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-07-01-21-43.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-07-01 21:43"
   },
@@ -2312,7 +2312,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-06-30-20-39.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-06-30-20-39.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-06-30 20:39"
   },
@@ -2368,7 +2368,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-06-30-13-22.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-06-30-13-22.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-06-30 13:22"
   },
@@ -2424,7 +2424,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-06-29-09-44.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-06-29-09-44.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-06-29 09:44"
   },
@@ -2480,7 +2480,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-06-28-22-58.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-06-28-22-58.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-06-28 22:58"
   },
@@ -2536,7 +2536,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-06-27-22-58.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-06-27-22-58.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-06-27 22:58"
   },
@@ -2592,7 +2592,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-06-27-09-12.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-06-27-09-12.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-06-27 09:12"
   },
@@ -2648,7 +2648,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-06-26-22-42.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-06-26-22-42.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-06-26 22:42"
   },
@@ -2711,7 +2711,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-06-25-21-02.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-06-25-21-02.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-06-25 21:02"
   },
@@ -2767,7 +2767,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-06-25-09-51.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-06-25-09-51.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-06-25 09:51"
   },
@@ -2823,7 +2823,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-06-24-20-26.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-06-24-20-26.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-06-24 20:26"
   },
@@ -2879,7 +2879,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-06-23-20-49.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-06-23-20-49.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-06-23 20:49"
   },
@@ -2935,7 +2935,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-06-23-09-39.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-06-23-09-39.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-06-23 09:39"
   },
@@ -2998,7 +2998,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-06-22-22-31.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-06-22-22-31.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-06-22 22:31"
   },
@@ -3054,7 +3054,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-06-22-12-41.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-06-22-12-41.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-06-22 12:41"
   },
@@ -3110,7 +3110,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-06-22-08-24.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-06-22-08-24.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-06-22 08:24"
   },
@@ -3166,7 +3166,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-06-21-22-25.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-06-21-22-25.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-06-21 22:25"
   },
@@ -3222,7 +3222,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-06-21-12-19.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-06-21-12-19.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-06-21 12:19"
   },
@@ -3278,7 +3278,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-06-20-20-45.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-06-20-20-45.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-06-20 20:45"
   },
@@ -3334,7 +3334,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-06-19-09-32.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-06-19-09-32.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-06-19 09:32"
   },
@@ -3390,7 +3390,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-06-18-23-02.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-06-18-23-02.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-06-18 23:02"
   },
@@ -3446,7 +3446,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-06-18-08-35.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-06-18-08-35.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-06-18 08:35"
   },
@@ -3502,7 +3502,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-06-17-09-06.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-06-17-09-06.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-06-17 09:06"
   },
@@ -3558,7 +3558,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-06-16-23-05.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-06-16-23-05.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-06-16 23:05"
   },
@@ -3614,7 +3614,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-06-16-12-19.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-06-16-12-19.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-06-16 12:19"
   },
@@ -3670,7 +3670,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-06-16-08-54.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-06-16-08-54.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-06-16 08:54"
   },
@@ -3726,7 +3726,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-06-15-23-01.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-06-15-23-01.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-06-15 23:01"
   },
@@ -3782,7 +3782,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-06-15-09-13.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-06-15-09-13.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-06-15 09:13"
   },
@@ -3838,7 +3838,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-06-14-20-42.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-06-14-20-42.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-06-14 20:42"
   },
@@ -3894,7 +3894,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-06-14-12-56.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-06-14-12-56.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-06-14 12:56"
   },
@@ -3950,7 +3950,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-06-13-21-59.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-06-13-21-59.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-06-13 21:59"
   },
@@ -4006,7 +4006,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-06-13-10-02.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-06-13-10-02.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-06-13 10:02"
   },
@@ -4062,7 +4062,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-06-12-08-43.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-06-12-08-43.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-06-12 08:43"
   },
@@ -4118,7 +4118,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-06-11-22-12.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-06-11-22-12.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-06-11 22:12"
   },
@@ -4174,7 +4174,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-06-11-09-41.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-06-11-09-41.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-06-11 09:41"
   },
@@ -4230,7 +4230,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-06-10-20-40.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-06-10-20-40.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-06-10 20:40"
   },
@@ -4286,7 +4286,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-06-09-22-33.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-06-09-22-33.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-06-09 22:33"
   },
@@ -4342,7 +4342,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-06-09-08-38.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-06-09-08-38.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-06-09 08:38"
   },
@@ -4398,7 +4398,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-06-08-20-53.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-06-08-20-53.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-06-08 20:53"
   },
@@ -4454,7 +4454,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-06-07-13-14.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-06-07-13-14.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-06-07 13:14"
   },
@@ -4510,7 +4510,7 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-06-06-21-40.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-06-06-21-40.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-06-06 21:40"
   },
@@ -4559,36 +4559,9 @@
       }
     ],
     "source": "x",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/frome-2026-06-05-21-21.html",
+    "sourceUrl": "https://lidechi.github.io/posts/frome-2026-06-05-21-21.html",
     "originalSourceUrl": null,
     "originalPublishedAt": "2026-06-05 21:21"
-  },
-  {
-    "id": "substack-note-function-families",
-    "title": {
-      "zh": "AI时代，以函数族而非函数的思想行事",
-      "en": "In the AI Era, Think in Function Families, Not Single Functions"
-    },
-    "date": "2026.03.17",
-    "dateSort": "2026-03-17T12:00:00+08:00",
-    "category": {
-      "zh": "短帖",
-      "en": "Note"
-    },
-    "summary": {
-      "zh": "把 AI 时代的能力设计理解成可组合、可迁移的一组函数，而不是孤立的单点函数。",
-      "en": "Treat capability design in the AI era as a composable, transferable family of functions rather than isolated single points."
-    },
-    "note": {
-      "zh": "把能力理解成一组可组合、可迁移的函数，会比盯着单个函数更接近 AI 时代的工作方式。",
-      "en": "Capability design works better as a composable, transferable family of functions than as isolated single functions."
-    },
-    "paragraphs": [],
-    "blocks": [],
-    "source": "substack",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/substack-note-function-families.html",
-    "originalSourceUrl": "https://substack.com/%40parson1/note/c-229003400",
-    "originalPublishedAt": "2026-03-17 07:35 UTC"
   },
   {
     "id": "substack-note-project-skill-memory",
@@ -4613,9 +4586,36 @@
     "paragraphs": [],
     "blocks": [],
     "source": "substack",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/substack-note-project-skill-memory.html",
+    "sourceUrl": "https://lidechi.github.io/posts/substack-note-project-skill-memory.html",
     "originalSourceUrl": "https://substack.com/%40parson1/note/c-229003041",
     "originalPublishedAt": "2026-03-17 07:34 UTC"
+  },
+  {
+    "id": "substack-note-function-families",
+    "title": {
+      "zh": "AI时代，以函数族而非函数的思想行事",
+      "en": "In the AI Era, Think in Function Families, Not Single Functions"
+    },
+    "date": "2026.03.17",
+    "dateSort": "2026-03-17T12:00:00+08:00",
+    "category": {
+      "zh": "短帖",
+      "en": "Note"
+    },
+    "summary": {
+      "zh": "把 AI 时代的能力设计理解成可组合、可迁移的一组函数，而不是孤立的单点函数。",
+      "en": "Treat capability design in the AI era as a composable, transferable family of functions rather than isolated single points."
+    },
+    "note": {
+      "zh": "把能力理解成一组可组合、可迁移的函数，会比盯着单个函数更接近 AI 时代的工作方式。",
+      "en": "Capability design works better as a composable, transferable family of functions than as isolated single functions."
+    },
+    "paragraphs": [],
+    "blocks": [],
+    "source": "substack",
+    "sourceUrl": "https://lidechi.github.io/posts/substack-note-function-families.html",
+    "originalSourceUrl": "https://substack.com/%40parson1/note/c-229003400",
+    "originalPublishedAt": "2026-03-17 07:35 UTC"
   },
   {
     "id": "substack-note-convergence-line",
@@ -4669,7 +4669,7 @@
       }
     ],
     "source": "substack",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/substack-note-convergence-line.html",
+    "sourceUrl": "https://lidechi.github.io/posts/substack-note-convergence-line.html",
     "originalSourceUrl": "https://substack.com/%40parson1/note/c-228716631",
     "originalPublishedAt": "2026-03-16 17:42 UTC"
   },
@@ -4718,7 +4718,7 @@
       }
     ],
     "source": "site",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/note-resource-sensing-and-coexistence.html",
+    "sourceUrl": "https://lidechi.github.io/posts/note-resource-sensing-and-coexistence.html",
     "originalSourceUrl": null,
     "originalPublishedAt": null
   },
@@ -4809,7 +4809,7 @@
       }
     ],
     "source": "substack",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/substack-post-self-evolving-lobster.html",
+    "sourceUrl": "https://lidechi.github.io/posts/substack-post-self-evolving-lobster.html",
     "originalSourceUrl": "https://substack.com/%40parson1/p-189247112",
     "originalPublishedAt": "2026-02-26 12:49 UTC"
   },
@@ -4858,7 +4858,7 @@
       }
     ],
     "source": "site",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/blog-agent-loop.html",
+    "sourceUrl": "https://lidechi.github.io/posts/blog-agent-loop.html",
     "originalSourceUrl": null,
     "originalPublishedAt": null
   },
@@ -4907,7 +4907,7 @@
       }
     ],
     "source": "site",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/blog-economy-modeling.html",
+    "sourceUrl": "https://lidechi.github.io/posts/blog-economy-modeling.html",
     "originalSourceUrl": null,
     "originalPublishedAt": null
   },
@@ -4956,7 +4956,7 @@
       }
     ],
     "source": "site",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/blog-data-automation.html",
+    "sourceUrl": "https://lidechi.github.io/posts/blog-data-automation.html",
     "originalSourceUrl": null,
     "originalPublishedAt": null
   },
@@ -5005,7 +5005,7 @@
       }
     ],
     "source": "site",
-    "sourceUrl": "https://lidechi.github.io/blog/posts/blog-portfolio-thinking.html",
+    "sourceUrl": "https://lidechi.github.io/posts/blog-portfolio-thinking.html",
     "originalSourceUrl": null,
     "originalPublishedAt": null
   }
