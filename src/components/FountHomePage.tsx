@@ -13,6 +13,7 @@ import { FOUNT_FIELDS } from "../data/fountFields";
 import type { Lang } from "../i18n/lang";
 import { withSiteParams } from "../lib/lang-url";
 import { FountDocsSection } from "./FountDocsSection";
+import { MindSchoolsPage, MINDS_OUTLINE_ITEMS } from "./MindSchoolsPage";
 import { SocialLinks } from "./SocialLinks";
 import { ThemeModeIcon } from "./ThemeModeIcon";
 
@@ -23,7 +24,8 @@ type FountPage =
   | "updates"
   | "blog"
   | "fields"
-  | "docs";
+  | "docs"
+  | "minds";
 
 type FountHomePageProps = {
   lang: Lang;
@@ -34,11 +36,11 @@ type FountHomePageProps = {
   onThemeToggle: () => void;
 };
 
-type FountPrimaryTab = "home" | "fields" | "docs";
+type FountPrimaryTab = "home" | "fields" | "docs" | "minds";
 
 type FountPrimaryNavProps = {
   activePage: FountPage;
-  hrefs: Record<"home" | "fields" | "docs" | "updates" | "blog" | "pricing", string>;
+  hrefs: Record<"home" | "fields" | "docs" | "minds" | "updates" | "blog" | "pricing", string>;
   lang: Lang;
   onTabChange?: (tab: FountPrimaryTab) => void;
 };
@@ -299,6 +301,7 @@ const COPY = {
     blogDocumentTitle: "Fount 博客 | Notes",
     fieldsDocumentTitle: "我的 Fields | Fount",
     docsDocumentTitle: "Fount 文档 | 系统、Field 与 SDK",
+    mindsDocumentTitle: "机器构建心智 | 学派、人物与脑—身—环境",
     navHome: "首页",
     navConcepts: "概念",
     navArchitecture: "架构",
@@ -309,6 +312,7 @@ const COPY = {
     navBlog: "博客",
     navDocs: "文档",
     navFields: "Fields",
+    navMinds: "心智",
     navUpdates: "更新",
     navPricing: "定价",
     navAccount: "账号",
@@ -430,6 +434,7 @@ const COPY = {
     blogDocumentTitle: "Fount Blog | Notes",
     fieldsDocumentTitle: "My Fields | Fount",
     docsDocumentTitle: "Fount Docs | System, Fields, and SDK",
+    mindsDocumentTitle: "Building Machine Minds | Schools, People & Brain–Body–World",
     navHome: "Home",
     navConcepts: "Concepts",
     navArchitecture: "Architecture",
@@ -440,6 +445,7 @@ const COPY = {
     navBlog: "Blog",
     navDocs: "Docs",
     navFields: "Fields",
+    navMinds: "Minds",
     navUpdates: "Updates",
     navPricing: "Pricing",
     navAccount: "Account",
@@ -594,6 +600,16 @@ export function FountPrimaryNav({
         }
       >
         {copy.navDocs}
+      </a>
+      <a
+        href={hrefs.minds}
+        className={activePage === "minds" ? "active" : ""}
+        aria-current={activePage === "minds" ? "page" : undefined}
+        onClick={(event) =>
+          handleFountTabClick(event, "minds", onTabChange)
+        }
+      >
+        {copy.navMinds}
       </a>
       <a
         href={hrefs.updates}
@@ -2145,6 +2161,7 @@ export function FountHomePage({
   const isBlogPage = page === "blog";
   const isFieldsPage = page === "fields";
   const isDocsPage = page === "docs";
+  const isMindsPage = page === "minds";
   const isHomePage = page === "home";
   const [activeOutline, setActiveOutline] = useState<OutlineId>("vision");
   const [viewedHomeChapterIds, setViewedHomeChapterIds] = useState<HomeChapterId[]>([]);
@@ -2159,6 +2176,7 @@ export function FountHomePage({
     : ARTICLES_SITE_URL;
   const fieldsHref = `/fields?${langParam}`;
   const docsHref = `/docs?${langParam}`;
+  const mindsHref = `/minds?${langParam}`;
   const accountHref = `/?view=login&${langParam}`;
   const viewedHomeChapterIdSet = new Set(viewedHomeChapterIds);
   const viewedHomeCards = HOME_CHAPTERS.flatMap((chapter, chapterIndex) =>
@@ -2174,22 +2192,26 @@ export function FountHomePage({
           ? copy.fieldsDocumentTitle
           : isDocsPage
             ? copy.docsDocumentTitle
-            : isUpdatesPage
-              ? copy.updatesDocumentTitle
-              : isBlogPage
-                ? copy.blogDocumentTitle
-                : copy.documentTitle;
+            : isMindsPage
+              ? copy.mindsDocumentTitle
+              : isUpdatesPage
+                ? copy.updatesDocumentTitle
+                : isBlogPage
+                  ? copy.blogDocumentTitle
+                  : copy.documentTitle;
   }, [
     copy.blogDocumentTitle,
     copy.documentTitle,
     copy.docsDocumentTitle,
     copy.fieldsDocumentTitle,
+    copy.mindsDocumentTitle,
     copy.partnersDocumentTitle,
     copy.pricingDocumentTitle,
     copy.updatesDocumentTitle,
     isBlogPage,
     isDocsPage,
     isFieldsPage,
+    isMindsPage,
     isPartnersPage,
     isPricingPage,
     isUpdatesPage,
@@ -2367,6 +2389,17 @@ export function FountHomePage({
               </a>
             ))}
           </nav>
+        ) : isMindsPage ? (
+          <nav
+            className="fount-nav fount-outline-nav fount-docs-outline-nav"
+            aria-label={copy.navMinds}
+          >
+            {MINDS_OUTLINE_ITEMS.map((item) => (
+              <a href={`#${item.id}`} key={item.id}>
+                {text(item.label)}
+              </a>
+            ))}
+          </nav>
         ) : null}
 
         <div className="fount-header-actions">
@@ -2376,6 +2409,7 @@ export function FountHomePage({
               home: homeHref,
               fields: fieldsHref,
               docs: docsHref,
+              minds: mindsHref,
               updates: updatesHref,
               blog: blogHref,
               pricing: pricingHref,
@@ -2431,6 +2465,8 @@ export function FountHomePage({
 
       {isDocsPage ? (
         <FountDocsSection lang={lang} />
+      ) : isMindsPage ? (
+        <MindSchoolsPage lang={lang} />
       ) : isFieldsPage ? (
         <FountFieldsSection lang={lang} />
       ) : isPricingPage ? (
@@ -2958,7 +2994,7 @@ type FountFieldsView = "list" | "gallery";
 function FountFieldsSection({ lang }: { lang: Lang }) {
   const copy = COPY[lang];
   const [selectedFieldKey, setSelectedFieldKey] = useState<string | null>(null);
-  const [fieldsView, setFieldsView] = useState<FountFieldsView>("list");
+  const [fieldsView, setFieldsView] = useState<FountFieldsView>("gallery");
   const selectedField =
     FOUNT_FIELDS.find((field) => field.key === selectedFieldKey) ?? null;
 
@@ -3193,11 +3229,24 @@ function FountFieldsSection({ lang }: { lang: Lang }) {
         aria-label={copy.fieldsListAria}
       >
         {FOUNT_FIELDS.map((field, index) => {
+          const screenshots = [
+            {
+              url: field.coverUrl,
+              alt: field.coverAlt,
+              caption: field.coverCaption,
+            },
+            ...(field.screenshots ?? []),
+          ];
+
           return (
             <article
-              className="fount-field-row"
+              className={`fount-field-row has-${Math.min(
+                screenshots.length,
+                3,
+              )}-shots`}
               role="listitem"
               key={field.key}
+              data-field-key={field.key}
               style={{ "--field-order": index } as CSSProperties}
             >
               <a
@@ -3214,18 +3263,48 @@ function FountFieldsSection({ lang }: { lang: Lang }) {
                   <small>{field.kind[lang]}</small>
                 </div>
 
-                <figure className="fount-field-cover">
-                  <img
-                    src={field.coverUrl}
-                    alt={field.coverAlt[lang]}
-                    loading={index > 1 ? "lazy" : "eager"}
-                  />
-                </figure>
+                <div
+                  className="fount-field-media-stage"
+                  aria-label={`${field.name} ${copy.fieldsProductPage}`}
+                >
+                  {screenshots.map((screenshot, screenshotIndex) => (
+                    <figure
+                      className={`fount-field-cover fount-field-shot${
+                        screenshotIndex === 0 ? " is-primary" : ""
+                      }`}
+                      key={`${field.key}-${screenshot.url}-${screenshotIndex}`}
+                    >
+                      <img
+                        src={screenshot.url}
+                        alt={screenshot.alt[lang]}
+                        decoding="async"
+                        loading={
+                          index === 0 && screenshotIndex === 0
+                            ? "eager"
+                            : "lazy"
+                        }
+                        style={
+                          screenshot.objectPosition
+                            ? { objectPosition: screenshot.objectPosition }
+                            : undefined
+                        }
+                      />
+                      <figcaption>
+                        <span aria-hidden="true">
+                          {String(screenshotIndex + 1).padStart(2, "0")}
+                        </span>
+                        <strong>{screenshot.caption[lang]}</strong>
+                      </figcaption>
+                    </figure>
+                  ))}
+                </div>
 
                 <div className="fount-field-copy">
                   <div className="fount-field-heading">
                     <h2>{field.name}</h2>
-                    <span className="fount-field-status">{field.status[lang]}</span>
+                    {field.status ? (
+                      <span className="fount-field-status">{field.status[lang]}</span>
+                    ) : null}
                   </div>
                   {field.readingShift ? (
                     <div className="fount-field-reading-shift">

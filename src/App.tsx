@@ -127,7 +127,8 @@ type RootView =
   | "partners"
   | "updates"
   | "fields"
-  | "docs";
+  | "docs"
+  | "minds";
 type UnlockStorageMode = "remote" | "local" | "loading" | "idle";
 type ThemeMode = "day" | "night";
 type HomeProject = {
@@ -995,6 +996,9 @@ function toRootView(raw: string | null, pathname: string): RootView {
   if (pathname === "/docs" || pathname === "/docs/") {
     return "docs";
   }
+  if (pathname === "/minds" || pathname === "/minds/") {
+    return "minds";
+  }
 
   if (raw === "home") {
     return "home";
@@ -1007,6 +1011,9 @@ function toRootView(raw: string | null, pathname: string): RootView {
   }
   if (raw === "docs" || raw === "documentation") {
     return "docs";
+  }
+  if (raw === "minds" || raw === "mind" || raw === "theories") {
+    return "minds";
   }
   if (raw === "pricing") {
     return "pricing";
@@ -1105,6 +1112,8 @@ function relativeRootHref(view: RootView, lang: Lang) {
     url.pathname = "/fields";
   } else if (view === "docs") {
     url.pathname = "/docs";
+  } else if (view === "minds") {
+    url.pathname = "/minds";
   }
 
   url.searchParams.set("lang", lang);
@@ -1451,7 +1460,9 @@ function App() {
             ? "/fields"
             : rootView === "docs"
               ? "/docs"
-              : "/";
+              : rootView === "minds"
+                ? "/minds"
+                : "/";
 
     if (rootView === "login") {
       next.searchParams.set("view", "login");
@@ -1470,6 +1481,8 @@ function App() {
     } else if (rootView === "fields") {
       next.searchParams.delete("view");
     } else if (rootView === "docs") {
+      next.searchParams.delete("view");
+    } else if (rootView === "minds") {
       next.searchParams.delete("view");
     } else {
       next.searchParams.delete("view");
@@ -3816,7 +3829,8 @@ function App() {
     rootView === "partners" ||
     rootView === "updates" ||
     rootView === "fields" ||
-    rootView === "docs"
+    rootView === "docs" ||
+    rootView === "minds"
   ) {
     return (
       <FountHomePage
@@ -3832,7 +3846,9 @@ function App() {
                   ? "fields"
                   : rootView === "docs"
                     ? "docs"
-                    : "home"
+                    : rootView === "minds"
+                      ? "minds"
+                      : "home"
         }
         onTabChange={switchRootView}
         onLangChange={setLang}
@@ -3921,6 +3937,7 @@ function App() {
                   home: relativeRootHref("home", lang),
                   fields: relativeRootHref("fields", lang),
                   docs: relativeRootHref("docs", lang),
+                  minds: relativeRootHref("minds", lang),
                   updates: relativeRootHref("updates", lang),
                   blog: relativeRootHref("blog", lang),
                   pricing: relativeRootHref("pricing", lang),
