@@ -12315,6 +12315,51 @@ body::before {
     box-shadow: 0 10px 26px rgb(47 84 68 / 24%);
 }
 
+/* Temporarily closed public downloads */
+.fount-download-small.is-disabled,
+.fount-primary-action.is-disabled,
+.fount-body-download.is-disabled,
+.fount-pricing-primary-action.is-disabled,
+.fount-pricing-secondary-action.is-disabled,
+.fount-footer .is-disabled {
+    opacity: 0.48;
+    cursor: not-allowed;
+    pointer-events: none;
+    filter: grayscale(0.35);
+    box-shadow: none !important;
+    user-select: none;
+}
+
+.fount-page-focused .fount-download-small.is-disabled,
+.fount-page-focused .fount-primary-action.is-disabled,
+.fount-page-focused .fount-body-download.is-disabled {
+    color: rgb(70 62 55 / 55%) !important;
+    background: rgb(120 112 104 / 12%) !important;
+    border-color: rgb(70 62 55 / 14%) !important;
+    box-shadow: none !important;
+}
+
+.fount-page-focused .fount-download-small.is-disabled:hover,
+.fount-page-focused .fount-download-small.is-disabled:focus-visible,
+.fount-page-focused .fount-primary-action.is-disabled:hover,
+.fount-page-focused .fount-primary-action.is-disabled:focus-visible,
+.fount-page-focused .fount-body-download.is-disabled:hover,
+.fount-page-focused .fount-body-download.is-disabled:focus-visible {
+    color: rgb(70 62 55 / 55%) !important;
+    background: rgb(120 112 104 / 12%) !important;
+    border-color: rgb(70 62 55 / 14%) !important;
+    box-shadow: none !important;
+    opacity: 0.48;
+}
+
+:root[data-theme="night"] .fount-page-focused .fount-download-small.is-disabled,
+:root[data-theme="night"] .fount-page-focused .fount-primary-action.is-disabled,
+:root[data-theme="night"] .fount-page-focused .fount-body-download.is-disabled {
+    color: rgb(230 222 210 / 42%) !important;
+    background: rgb(255 255 255 / 6%) !important;
+    border-color: rgb(255 255 255 / 10%) !important;
+}
+
 .fount-page-focused .fount-download-actions {
     flex-direction: column;
     align-items: center;

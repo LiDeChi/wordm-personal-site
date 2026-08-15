@@ -14,6 +14,12 @@
 /blog/        https://lidechi.github.io/        301
 /blog/*       https://lidechi.github.io/:splat  301
 
+# Fount 暂不开放下载；旧下载地址统一引导到 Fields（! 强制覆盖静态安装包）
+/Fount.dmg                 /fields  302!
+/downloads/fount           /fields  302!
+/downloads/fount/          /fields  302!
+/downloads/fount/*         /fields  302!
+
 # 产品路径 → 子域名
 /zh*          https://inote.wordm.us/:splat     301
 /en*          https://inote.wordm.us/:splat     301

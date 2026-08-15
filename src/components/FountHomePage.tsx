@@ -279,6 +279,51 @@ const FOUNT_EARLY_BIRD_INITIAL_STATUS: EarlyBirdStatus = {
   active: FOUNT_EARLY_BIRD_CLAIMED < FOUNT_EARLY_BIRD_LIMIT,
 };
 
+/** Flip to true when public Mac downloads are ready again. */
+const FOUNT_DOWNLOAD_ENABLED = false;
+const FOUNT_DOWNLOAD_FALLBACK_HREF = "/Fount.dmg";
+
+function resolveFountDownloadUrl(release?: FountReleaseManifest | null) {
+  if (!FOUNT_DOWNLOAD_ENABLED) {
+    return null;
+  }
+
+  return release?.downloads?.websiteUrl ?? FOUNT_DOWNLOAD_FALLBACK_HREF;
+}
+
+function FountDownloadControl({
+  className,
+  label,
+  disabledLabel,
+  href,
+  title,
+}: {
+  className: string;
+  label: string;
+  disabledLabel: string;
+  href: string | null;
+  title?: string;
+}) {
+  if (FOUNT_DOWNLOAD_ENABLED && href) {
+    return (
+      <a className={className} href={href}>
+        <span>{label}</span>
+      </a>
+    );
+  }
+
+  return (
+    <span
+      className={`${className} is-disabled`}
+      role="link"
+      aria-disabled="true"
+      title={title}
+    >
+      <span>{disabledLabel}</span>
+    </span>
+  );
+}
+
 const OUTLINE_ITEMS: Array<{ id: OutlineId; label: LocalizedText }> = [
   { id: "vision", label: { zh: "愿景", en: "Vision" } },
   { id: "ecosystem", label: { zh: "生态", en: "Ecosystem" } },
@@ -323,7 +368,10 @@ const COPY = {
     themeToDayAria: "切换到日间模式",
     download: "下载 Mac app",
     macDownload: "下载 Mac app",
-    platformNote: "其他平台即将到来",
+    downloadDisabled: "下载已关闭",
+    downloadDisabledTitle: "Fount 当前不提供下载；请浏览 Fields",
+    platformNote: "Fount 当前不提供下载。先浏览已经在运行的 Fields。",
+    exploreFields: "浏览 Fields",
     releaseLabel: "最新版本",
     releaseFallbackTitle: "公开下载即将开放",
     releaseFallbackBody:
@@ -408,7 +456,7 @@ const COPY = {
       "路线图先把 Fount Core 和几个 starter Field 跑通，再进入 Forge Lite、Foundry alpha、SDK 生态和商业网络。",
     finalTitle: "从第一个 Field 开始。",
     finalBody: "先让 Fount 记住一次真实体验，再让它带着经验进入下一个现场。",
-    finalSecondary: "阅读文档",
+    finalSecondary: "浏览 Fields",
     visualTitle: "从一个个人大脑进入多个 Field。",
     visualLead:
       "Fount 记录你的偏好、目标和经验；Field 提供可进入的环境；Forge 与 Foundry 让这些环境被创造、发现、安装和改造。",
@@ -456,7 +504,10 @@ const COPY = {
     themeToDayAria: "Switch to day mode",
     download: "Download Mac app",
     macDownload: "Download Mac app",
-    platformNote: "Other platforms coming soon",
+    downloadDisabled: "Downloads closed",
+    downloadDisabledTitle: "Fount downloads are unavailable; explore Fields instead",
+    platformNote: "Fount downloads are unavailable. Explore the live Fields instead.",
+    exploreFields: "Explore Fields",
     releaseLabel: "Latest release",
     releaseFallbackTitle: "Public download is opening soon",
     releaseFallbackBody:
@@ -541,7 +592,7 @@ const COPY = {
       "The roadmap starts with Fount Core and starter Fields, then moves into Forge Lite, Foundry alpha, SDK adoption, and commercial network services.",
     finalTitle: "Start with one Field.",
     finalBody: "Let Fount remember one real experience, then carry that context into the next environment.",
-    finalSecondary: "Read docs",
+    finalSecondary: "Explore Fields",
     visualTitle: "From one personal brain into many Fields.",
     visualLead:
       "Fount keeps your preferences, goals, and experience. Fields provide enterable environments. Forge and Foundry let those environments be created, discovered, installed, and reshaped.",
@@ -1430,7 +1481,7 @@ const FOUNT_PRICING_PLANS: PricingPlan[] = [
     description: "For anyone who wants to experience Fount and connect with basic sub-agents.",
     price: "$0",
     cta: "Start Free",
-    href: "/Fount.dmg",
+    href: FOUNT_DOWNLOAD_ENABLED ? FOUNT_DOWNLOAD_FALLBACK_HREF : "#pricing-player",
     features: [
       "Connect with Fount",
       "Basic sub-agent experience",
@@ -2166,7 +2217,7 @@ export function FountHomePage({
   const [activeOutline, setActiveOutline] = useState<OutlineId>("vision");
   const [viewedHomeChapterIds, setViewedHomeChapterIds] = useState<HomeChapterId[]>([]);
   const [release, setRelease] = useState<FountReleaseManifest | null>(null);
-  const downloadUrl = release?.downloads?.websiteUrl ?? "/Fount.dmg";
+  const downloadUrl = resolveFountDownloadUrl(release);
   const langParam = `lang=${lang}`;
   const homeHref = `/?${langParam}`;
   const updatesHref = `/?view=updates&${langParam}`;
@@ -2447,9 +2498,13 @@ export function FountHomePage({
             >
               <ThemeModeIcon mode={themeMode} />
             </button>
-            <a className="fount-download-small" href={downloadUrl}>
-              <span>{copy.download}</span>
-            </a>
+            <FountDownloadControl
+              className="fount-download-small"
+              label={copy.download}
+              disabledLabel={copy.downloadDisabled}
+              href={downloadUrl}
+              title={copy.downloadDisabledTitle}
+            />
           </div>
           <a className="fount-account-link" href={accountHref}>
             {copy.navAccount}
@@ -2485,8 +2540,21 @@ export function FountHomePage({
           <p className="fount-hero-deck">{copy.heroDeck}</p>
           <p className="fount-hero-sub">{copy.heroSub}</p>
           <div className="fount-actions fount-download-actions">
-            <a className="fount-primary-action fount-body-download fount-hero-download" href={downloadUrl}>
-              <span>{copy.macDownload}</span>
+            <FountDownloadControl
+              className="fount-primary-action fount-body-download fount-hero-download"
+              label={copy.macDownload}
+              disabledLabel={copy.downloadDisabled}
+              href={downloadUrl}
+              title={copy.downloadDisabledTitle}
+            />
+            <a
+              className="fount-secondary-action fount-fields-action"
+              href={fieldsHref}
+              onClick={(event) =>
+                handleFountTabClick(event, "fields", onTabChange)
+              }
+            >
+              {copy.exploreFields}
             </a>
             <small className="fount-platform-note">{copy.platformNote}</small>
           </div>
@@ -2968,14 +3036,18 @@ export function FountHomePage({
           <p>{copy.finalBody}</p>
         </div>
         <div className="fount-actions">
-          <a className="fount-primary-action fount-body-download fount-final-download" href={downloadUrl}>
-            <span>{copy.macDownload}</span>
-          </a>
+          <FountDownloadControl
+            className="fount-primary-action fount-body-download fount-final-download"
+            label={copy.macDownload}
+            disabledLabel={copy.downloadDisabled}
+            href={downloadUrl}
+            title={copy.downloadDisabledTitle}
+          />
           <a
             className="fount-secondary-action"
-            href={docsHref}
+            href={fieldsHref}
             onClick={(event) =>
-              handleFountTabClick(event, "docs", onTabChange)
+              handleFountTabClick(event, "fields", onTabChange)
             }
           >
             {copy.finalSecondary}
@@ -3401,7 +3473,13 @@ function FountFooter({
             Fields
           </a>
           <a href={`/?view=pricing&${langParam}`}>Pricing</a>
-          <a href="/Fount.dmg">Download</a>
+          {FOUNT_DOWNLOAD_ENABLED ? (
+            <a href={FOUNT_DOWNLOAD_FALLBACK_HREF}>Download</a>
+          ) : (
+            <span className="is-disabled" aria-disabled="true" title="Public download is temporarily closed">
+              Download
+            </span>
+          )}
           <a
             href={`/docs?${langParam}`}
             onClick={(event) =>
@@ -3752,7 +3830,7 @@ function FountPricingSection({
   const earlyBirdClaimed = Math.min(earlyBirdLimit, Math.max(0, earlyBirdStatus.claimed));
   const earlyBirdActive = earlyBirdStatus.active && earlyBirdClaimed < earlyBirdLimit;
   const foundingHref = FOUNT_PRICING_PLANS.find((plan) => plan.id === "master")?.href ?? "#pricing-cards";
-  const playerHref = FOUNT_PRICING_PLANS[0]?.href ?? "/Fount.dmg";
+  const playerHref = FOUNT_PRICING_PLANS[0]?.href ?? "#pricing-player";
 
   useEffect(() => {
     let cancelled = false;
@@ -3795,6 +3873,9 @@ function FountPricingSection({
     earlyBirdActive && plan.earlyBirdLifetimeHref
       ? plan.earlyBirdLifetimeHref
       : plan.href;
+
+  const isPlanDownloadGated = (plan: PricingPlan) =>
+    !FOUNT_DOWNLOAD_ENABLED && plan.id === "player";
 
   const getPlanCopy = (plan: PricingPlan) => FOUNT_PRICING_PLAN_COPY[lang][plan.id];
 
@@ -3854,9 +3935,23 @@ function FountPricingSection({
                 <span className="fount-pricing-unit">{planCopy.priceSubtext}</span>
               </div>
               <p className="fount-pricing-price-note">{priceNote ?? "\u00a0"}</p>
-              <a className={plan.featured ? "fount-pricing-primary-action" : "fount-pricing-secondary-action"} href={getPlanHref(plan)}>
-                {planCopy.cta}
-              </a>
+              {isPlanDownloadGated(plan) ? (
+                <span
+                  className={`${plan.featured ? "fount-pricing-primary-action" : "fount-pricing-secondary-action"} is-disabled`}
+                  role="link"
+                  aria-disabled="true"
+                  title={lang === "zh" ? "公开下载暂时关闭" : "Public download is temporarily closed"}
+                >
+                  {lang === "zh" ? "下载即将开放" : "Coming soon"}
+                </span>
+              ) : (
+                <a
+                  className={plan.featured ? "fount-pricing-primary-action" : "fount-pricing-secondary-action"}
+                  href={getPlanHref(plan)}
+                >
+                  {planCopy.cta}
+                </a>
+              )}
               <div className="fount-plan-includes">
                 <span>{lang === "zh" ? "包含" : "Includes"}</span>
                 <ul>
@@ -4029,9 +4124,20 @@ function FountPricingSection({
             <a className="fount-pricing-primary-action" href={foundingHref}>
               Get Founding Access
             </a>
-            <a className="fount-pricing-secondary-action" href={playerHref}>
-              Start Free
-            </a>
+            {FOUNT_DOWNLOAD_ENABLED ? (
+              <a className="fount-pricing-secondary-action" href={playerHref}>
+                Start Free
+              </a>
+            ) : (
+              <span
+                className="fount-pricing-secondary-action is-disabled"
+                role="link"
+                aria-disabled="true"
+                title={lang === "zh" ? "公开下载暂时关闭" : "Public download is temporarily closed"}
+              >
+                {lang === "zh" ? "下载即将开放" : "Coming soon"}
+              </span>
+            )}
           </div>
           <small>Local-first early access. Future cloud services may require separate plans.</small>
         </div>

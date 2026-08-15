@@ -3978,9 +3978,20 @@ function App() {
                 >
                   <ThemeModeIcon mode={themeMode} />
                 </button>
-                <a className="fount-download-small" href="/Fount.dmg">
-                  <span>{lang === "zh" ? "下载 Mac app" : "Download Mac app"}</span>
-                </a>
+                <span
+                  className="fount-download-small is-disabled"
+                  role="link"
+                  aria-disabled="true"
+                  title={
+                    lang === "zh"
+                      ? "公开下载暂时关闭"
+                      : "Public download is temporarily closed"
+                  }
+                >
+                  <span>
+                    {lang === "zh" ? "下载即将开放" : "Coming soon"}
+                  </span>
+                </span>
               </div>
               <a className="fount-account-link" href={accountHref}>
                 {lang === "zh" ? "账号" : "Account"}
