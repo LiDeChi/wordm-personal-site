@@ -15446,6 +15446,168 @@ body::before {
     }
 }
 
+.fount-music-rail {
+    position: fixed;
+    top: 50%;
+    right: clamp(14px, 2vw, 32px);
+    z-index: 42;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    width: 56px;
+    padding: 12px 8px 16px;
+    border: 1px solid rgb(43 35 29 / 10%);
+    border-radius: 999px;
+    background: rgb(255 252 246 / 72%);
+    box-shadow:
+        0 14px 34px rgb(86 58 31 / 10%),
+        inset 0 0 0 1px rgb(255 255 255 / 32%);
+    backdrop-filter: blur(14px) saturate(108%);
+    transform: translateY(-50%);
+    color: rgb(43 35 29 / 72%);
+}
+
+.fount-music-host {
+    position: fixed;
+    left: -420px;
+    top: 0;
+    width: 320px;
+    height: 180px;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.fount-music-btn {
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 40px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    transition:
+        background 180ms ease,
+        color 180ms ease,
+        transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.fount-music-btn svg {
+    width: 16px;
+    height: 16px;
+    display: block;
+}
+
+.fount-music-btn:hover,
+.fount-music-btn:focus-visible {
+    background: rgb(49 79 67 / 8%);
+    color: var(--warm-green, #314f43);
+    outline: none;
+    transform: translateY(-1px);
+}
+
+.fount-music-btn:disabled {
+    cursor: default;
+    opacity: 0.38;
+    transform: none;
+}
+
+.fount-music-play {
+    background: rgb(49 79 67 / 8%);
+}
+
+.fount-music-rail.is-muted .fount-music-mute {
+    background: rgb(49 79 67 / 10%);
+    color: var(--warm-green, #314f43);
+    box-shadow: 0 0 0 1px rgb(49 79 67 / 18%);
+}
+
+.fount-music-copy {
+    display: grid;
+    justify-items: center;
+    min-height: 0;
+    padding-top: 8px;
+}
+
+.fount-music-title {
+    writing-mode: vertical-rl;
+    max-height: 168px;
+    overflow: hidden;
+    color: rgb(43 35 29 / 78%);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.fount-music-rail.is-muted .fount-music-title {
+    color: rgb(49 79 67 / 82%);
+}
+
+:root[data-theme="night"] .fount-music-rail {
+    border-color: rgb(255 241 217 / 10%);
+    background: rgb(31 25 19 / 62%);
+    box-shadow:
+        0 14px 34px rgb(0 0 0 / 24%),
+        inset 0 0 0 1px rgb(255 255 255 / 5%);
+    color: rgb(255 241 217 / 72%);
+}
+
+:root[data-theme="night"] .fount-music-btn:hover,
+:root[data-theme="night"] .fount-music-btn:focus-visible,
+:root[data-theme="night"] .fount-music-play {
+    background: rgb(242 195 123 / 10%);
+    color: rgb(242 195 123 / 88%);
+}
+
+:root[data-theme="night"] .fount-music-rail.is-muted .fount-music-mute {
+    background: rgb(242 195 123 / 12%);
+    color: rgb(242 195 123 / 88%);
+}
+
+:root[data-theme="night"] .fount-music-title {
+    color: rgb(255 241 217 / 78%);
+}
+
+:root[data-theme="night"] .fount-music-rail.is-muted .fount-music-title {
+    color: rgb(242 195 123 / 82%);
+}
+
+@media (max-width: 900px) {
+    .fount-music-rail {
+        top: auto;
+        right: 10px;
+        left: auto;
+        bottom: max(96px, calc(18svh + env(safe-area-inset-bottom)));
+        width: 48px;
+        padding: 8px 6px 10px;
+        transform: none;
+    }
+
+    .fount-music-btn {
+        width: 36px;
+        height: 36px;
+        flex-basis: 36px;
+    }
+
+    .fount-music-copy {
+        display: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .fount-music-btn {
+        transition: none;
+    }
+}
+
 /* Fount account page refresh. */
 .fount-login-page {
     min-height: 100vh;

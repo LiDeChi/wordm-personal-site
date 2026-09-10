@@ -13,6 +13,7 @@ import { FOUNT_FIELDS } from "../data/fountFields";
 import type { Lang } from "../i18n/lang";
 import { withSiteParams } from "../lib/lang-url";
 import { FountDocsSection } from "./FountDocsSection";
+import { FountMusicPlayer } from "./FountMusicPlayer";
 import { MindSchoolsPage, MINDS_OUTLINE_ITEMS } from "./MindSchoolsPage";
 import { SocialLinks } from "./SocialLinks";
 import { ThemeModeIcon } from "./ThemeModeIcon";
@@ -2517,6 +2518,8 @@ export function FountHomePage({
         className="fount-social-links fount-social-rail"
         linkClassName="fount-social-link"
       />
+
+      {isHomePage ? <FountMusicPlayer lang={lang} /> : null}
 
       {isDocsPage ? (
         <FountDocsSection lang={lang} />
