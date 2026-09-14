@@ -1,3 +1,4 @@
+import { InteractiveHomePage } from "./components/InteractiveHomePage";
 import { Suspense, lazy, useEffect, useMemo, useRef, useState } from "react";
 import katex from "katex";
 import "katex/dist/katex.min.css";
@@ -3823,8 +3824,16 @@ function App() {
     );
   }
 
+  if (rootView === "home") {
+    return <InteractiveHomePage
+      lang={lang}
+      onLangChange={setLang}
+      themeMode={themeMode}
+      onThemeToggle={() => setThemeMode(current => current === "night" ? "day" : "night")}
+    />;
+  }
+
   if (
-    rootView === "home" ||
     rootView === "pricing" ||
     rootView === "partners" ||
     rootView === "updates" ||

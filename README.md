@@ -3,7 +3,9 @@
 > **根域名管理说明**：本仓库已接管 `wordm.us` 根域名管理职责（原 `wordm-personal-home` 的 `_redirects` 和根域名配置已合并至此）。
 > 当前域名归属与迁移原则见 [`docs/domain-ownership.md`](docs/domain-ownership.md)，机器可审计清单见 [`config/domain-ownership.json`](config/domain-ownership.json)。
 
-基于你提供的学术极简版式实现的个人网站，包含：
+主页围绕「动态呈现与交互」组织：可操作的波形叠加示例、空间阅读作品和心智探索入口。支持中英文、明暗主题与窄屏布局；原 Fount 介绍不再出现在首页，既有子页面继续保留。
+
+个人网站包含：
 
 - 根域 `wordm.us`：个人博客 + 作品集
 - `Fields` 中的 Bookplain 入口：独立站 `bookplain.wordm.us`
