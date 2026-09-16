@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>诗经长卷 · 风雅颂</title>
+  <link rel="stylesheet" href="css/styles.css?v=30" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Ma+Shan+Zheng&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div id="app">
+    <header class="top-bar">
+      <div class="brand">
+        <span class="brand-seal">詩</span>
+        <div class="brand-text">
+          <h1>诗经长卷</h1>
+          <p>风 · 雅 · 颂 · 一卷观古今</p>
+        </div>
+      </div>
+      <div class="search-wrap">
+        <input id="search-input" type="search" placeholder="检索篇名或名句…" autocomplete="off" />
+        <div id="search-results" class="search-results" hidden></div>
+      </div>
+      <a class="icon-btn home-link" href="https://wordm.us/" title="返回主页">返回主页</a>
+      <button id="btn-list" class="icon-btn" title="诗篇目录">目录</button>
+      <button id="btn-mute" class="icon-btn" title="静音" aria-pressed="false">音效</button>
+      <button id="btn-help" class="icon-btn" title="操作说明">说明</button>
+    </header>
+
+    <main id="viewport" class="viewport">
+      <div id="world" class="world">
+        <div id="landscape" class="landscape"></div>
+        <div id="hotspots" class="hotspots"></div>
+      </div>
+    </main>
+
+    <aside id="minimap" class="minimap" aria-label="缩略图">
+      <canvas id="minimap-canvas" width="280" height="48"></canvas>
+      <div id="minimap-viewport" class="minimap-viewport"></div>
+    </aside>
+
+    <footer class="status-bar">
+      <span id="status-section">国风 · 周南</span>
+      <nav class="jump-rail" id="jump-rail" aria-label="快速定位">
+        <button type="button" data-section="国风" class="jump-btn">国风</button>
+        <button type="button" data-section="小雅" class="jump-btn">小雅</button>
+        <button type="button" data-section="大雅" class="jump-btn">大雅</button>
+        <button type="button" data-section="颂" class="jump-btn">颂</button>
+      </nav>
+      <span id="status-hint">拖拽浏览连续长卷 · 悬停金点听场景音效 · 点击展开全诗</span>
+      <span id="status-count">诗篇 0</span>
+    </footer>
+  </div>
+
+  <div id="modal" class="modal" hidden>
+    <div class="modal-backdrop" data-close></div>
+    <article class="modal-panel" role="dialog" aria-modal="true">
+      <button class="modal-close" data-close aria-label="关闭">×</button>
+      <header class="modal-header">
+        <p class="modal-path" id="modal-path"></p>
+        <h2 id="modal-title"></h2>
+        <p class="modal-famous" id="modal-famous"></p>
+      </header>
+      <div class="modal-body">
+        <img id="modal-scene" class="modal-scene" alt="" hidden />
+        <pre id="modal-text" class="poem-text"></pre>
+      </div>
+      <footer class="modal-footer">
+        <button id="modal-prev" class="text-btn">上一首</button>
+        <button id="modal-next" class="text-btn">下一首</button>
+      </footer>
+    </article>
+  </div>
+
+  <div id="list-drawer" class="drawer" hidden>
+    <div class="drawer-backdrop" data-close-drawer></div>
+    <aside class="drawer-panel">
+      <header class="drawer-header">
+        <h2>诗篇目录</h2>
+        <button data-close-drawer class="modal-close" aria-label="关闭">×</button>
+      </header>
+      <div class="drawer-filters">
+        <button data-filter="all" class="filter-btn active">全部</button>
+        <button data-filter="国风" class="filter-btn">国风</button>
+        <button data-filter="小雅" class="filter-btn">小雅</button>
+        <button data-filter="大雅" class="filter-btn">大雅</button>
+        <button data-filter="颂" class="filter-btn">颂</button>
+      </div>
+      <ul id="poem-list" class="poem-list"></ul>
+    </aside>
+  </div>
+
+  <div id="help-modal" class="modal" hidden>
+    <div class="modal-backdrop" data-close-help></div>
+    <article class="modal-panel help-panel">
+      <button class="modal-close" data-close-help aria-label="关闭">×</button>
+      <h2>操作说明</h2>
+      <ul class="help-list">
+        <li><strong>拖拽</strong>：按住鼠标或触屏滑动，左右浏览长卷</li>
+        <li><strong>滚轮 / 捏合</strong>：放大可看场景细节（最高约 5×）</li>
+        <li><strong>金点</strong>：悬停播放场景音效；点击展开全诗</li>
+        <li><strong>快速定位</strong>：底栏可跳到风 / 雅 / 颂起点（仍是同一条连续长卷）</li>
+        <li><strong>检索</strong>：按篇名或名句定位场景</li>
+        <li><strong>缩略图</strong>：点击小图可快速定位</li>
+      </ul>
+      <p class="help-note">本卷以《诗经》公版原文编排，写实长卷山水仅为示意，供品读吟咏。</p>
+    </article>
+  </div>
+
+  <script src="js/poems.js?v=30"></script>
+  <script src="js/landscape.js?v=30"></script>
+  <script src="js/app.js?v=30"></script>
+</body>
+</html>

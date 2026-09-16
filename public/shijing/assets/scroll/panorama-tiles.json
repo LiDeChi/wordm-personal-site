@@ -1,0 +1,22 @@
+{
+  "W": 46308,
+  "H": 941,
+  "tiles": [
+    {
+      "src": "assets/scroll/panorama-0.webp",
+      "x": 0,
+      "w": 15436
+    },
+    {
+      "src": "assets/scroll/panorama-1.webp",
+      "x": 15436,
+      "w": 15436
+    },
+    {
+      "src": "assets/scroll/panorama-2.webp",
+      "x": 30872,
+      "w": 15436
+    }
+  ],
+  "jpg": "assets/scroll/panorama.jpg"
+}
