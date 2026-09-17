@@ -8,7 +8,7 @@
   const meta = window.SHIJING_WORLD || {};
   const W = meta.W || 43257;
   const H = meta.H || 941;
-  const V = "43";
+  const V = "44";
   const FULL = "assets/scroll/panorama.jpg?v=" + V;
   const PREVIEW = "assets/scroll/panorama-preview.jpg?v=" + V;
   const MANIFEST = "assets/scroll/strips.json?v=" + V;

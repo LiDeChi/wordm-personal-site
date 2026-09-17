@@ -402,6 +402,7 @@
     updateStatusSection();
     updateJump();
     enqueueViewportReveals();
+    scheduleSaveProgress();
     if (window.SHIJING_LANDSCAPE && window.SHIJING_LANDSCAPE.updateVisible) {
       window.SHIJING_LANDSCAPE.updateVisible({
         x: cam.x,
@@ -428,6 +429,104 @@
       cam.y = Math.min(0, Math.max(vh - sh, cam.y));
     }
   }
+
+  const PROGRESS_KEY = "shijing-scroll-progress-v1";
+  let persistEnabled = false;
+  let persistTimer = null;
+  let resumeAnimating = false;
+
+  function currentCenterRatio() {
+    const vw = viewport.clientWidth || 1;
+    return Math.max(
+      0,
+      Math.min(1, (-cam.x + vw / 2) / cam.scale / WORLD_W)
+    );
+  }
+
+  function saveProgress() {
+    if (!persistEnabled || resumeAnimating) return;
+    try {
+      const payload = {
+        center: currentCenterRatio(),
+        scale: cam.scale,
+        at: Date.now(),
+      };
+      localStorage.setItem(PROGRESS_KEY, JSON.stringify(payload));
+    } catch (e) {}
+  }
+
+  function scheduleSaveProgress() {
+    if (!persistEnabled || resumeAnimating) return;
+    clearTimeout(persistTimer);
+    persistTimer = setTimeout(saveProgress, 250);
+  }
+
+  function loadProgress() {
+    try {
+      const raw = localStorage.getItem(PROGRESS_KEY);
+      if (!raw) return null;
+      const data = JSON.parse(raw);
+      if (!data || typeof data.center !== "number") return null;
+      if (data.center < 0.015) return null; // treat near-left as fresh
+      return data;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function animateCameraTo(targetX, targetY, targetScale, ms, done) {
+    resumeAnimating = true;
+    const startX = cam.x;
+    const startY = cam.y;
+    const startS = cam.scale;
+    const dur = Math.max(180, ms || 700);
+    const t0 = performance.now();
+    function easeOutCubic(t) {
+      return 1 - Math.pow(1 - t, 3);
+    }
+    function frame(now) {
+      const t = Math.min(1, (now - t0) / dur);
+      const e = easeOutCubic(t);
+      cam.scale = startS + (targetScale - startS) * e;
+      cam.x = startX + (targetX - startX) * e;
+      cam.y = startY + (targetY - startY) * e;
+      clampCamera();
+      applyTransform();
+      if (t < 1) {
+        requestAnimationFrame(frame);
+      } else {
+        resumeAnimating = false;
+        saveProgress();
+        if (done) done();
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+
+  function resumeFromSavedProgress() {
+    const saved = loadProgress();
+    if (!saved) {
+      persistEnabled = true;
+      return;
+    }
+    const vw = viewport.clientWidth;
+    const vh = viewport.clientHeight;
+    let scale = typeof saved.scale === "number" ? saved.scale : cam.scale;
+    scale = Math.max(cam.minScale, Math.min(cam.maxScale, scale));
+    // keep a readable overview if saved zoom was extreme
+    const fitScale = Math.min(vw / (WORLD_W * 0.18), vh / WORLD_H) * 0.95;
+    if (scale < fitScale * 0.6 || scale > fitScale * 3) scale = fitScale;
+    const center = Math.max(0, Math.min(1, saved.center));
+    const targetX = vw / 2 - center * WORLD_W * scale;
+    const targetY = (vh - WORLD_H * scale) / 2;
+    // brief beat at left, then quick jump
+    setTimeout(function () {
+      animateCameraTo(targetX, targetY, scale, 780, function () {
+        persistEnabled = true;
+      });
+    }, 380);
+  }
+
 
   function fitInitial() {
     const vw = viewport.clientWidth;
@@ -953,20 +1052,17 @@
   // ---------- Boot ----------
   renderHotspots();
   drawMinimap();
-  fitInitial();
+  fitInitial(); // always land on the far left first
+  resumeFromSavedProgress();
   window.addEventListener("resize", function () {
     clampCamera();
     applyTransform();
+    saveProgress();
   });
-
-  const guanju = poems.find(function (p) {
-    return p.title === "关雎" && p.subsection === "周南";
+  window.addEventListener("pagehide", saveProgress);
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "hidden") saveProgress();
   });
-  if (guanju) {
-    setTimeout(function () {
-      panToPoem(guanju, false);
-    }, 100);
-  }
 
   // Expose for debug
   window.SHIJING_APP = {
