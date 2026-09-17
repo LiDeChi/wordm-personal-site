@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>诗经长卷 · 风雅颂</title>
-  <link rel="stylesheet" href="css/styles.css?v=48" />
+  <link rel="stylesheet" href="css/styles.css?v=49" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Ma+Shan+Zheng&display=swap" rel="stylesheet" />
@@ -54,6 +54,15 @@
         <span id="status-section">国风 · 周南</span>
         <span class="scrubber-sep">·</span>
         <span id="status-count">诗篇 0</span>
+        <div id="zoom-bar" class="zoom-bar" aria-label="画卷缩放">
+          <button type="button" class="zoom-btn" data-zoom="fit" title="适配高度">适配</button>
+          <button type="button" class="zoom-btn" data-zoom="1.25" title="1.25 倍">1.25×</button>
+          <button type="button" class="zoom-btn" data-zoom="1.5" title="1.5 倍">1.5×</button>
+          <button type="button" class="zoom-btn" data-zoom="2" title="2 倍">2×</button>
+          <button type="button" class="zoom-btn" data-zoom="3" title="3 倍">3×</button>
+          <input id="zoom-slider" type="range" min="80" max="400" value="100" step="5" aria-label="缩放滑条" />
+          <span id="zoom-label" class="zoom-label">适配</span>
+        </div>
       </div>
     </div>
 
@@ -123,10 +132,10 @@
     </article>
   </div>
 
-  <script src="js/poems.js?v=48"></script>
-  <script src="js/landscape.js?v=48"></script>
-  <script src="js/translations.js?v=48"></script>
-  <script src="js/pinyin-map.js?v=48"></script>
-  <script src="js/app.js?v=48"></script>
+  <script src="js/poems.js?v=49"></script>
+  <script src="js/landscape.js?v=49"></script>
+  <script src="js/translations.js?v=49"></script>
+  <script src="js/pinyin-map.js?v=49"></script>
+  <script src="js/app.js?v=49"></script>
 </body>
 </html>

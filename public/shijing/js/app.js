@@ -30,8 +30,9 @@
     x: 0,
     y: 0,
     scale: 1,
-    minScale: 0.15,
+    minScale: 0.08,
     maxScale: 5.0,
+    fitScale: 1,
   };
 
   const viewport = document.getElementById("viewport");
@@ -503,40 +504,92 @@
     requestAnimationFrame(frame);
   }
 
+  function computeFitScale() {
+    const vh = viewport.clientHeight;
+    // Height-fit: panorama height fills the viewport (handscroll 适配).
+    const fit = (vh / WORLD_H) * 0.92;
+    cam.fitScale = fit;
+    cam.minScale = Math.max(0.04, fit * 0.5);
+    cam.maxScale = Math.max(fit * 5, 3);
+    return fit;
+  }
+
+  function setScaleAroundViewCenter(nextScale) {
+    const vw = viewport.clientWidth;
+    const vh = viewport.clientHeight;
+    const mx = vw / 2;
+    const my = vh / 2;
+    const wx = (mx - cam.x) / cam.scale;
+    const wy = (my - cam.y) / cam.scale;
+    cam.scale = Math.max(cam.minScale, Math.min(cam.maxScale, nextScale));
+    cam.x = mx - wx * cam.scale;
+    cam.y = my - wy * cam.scale;
+    clampCamera();
+    applyTransform();
+    syncZoomUi();
+    scheduleSaveProgress();
+  }
+
+  function zoomFactorFromFit() {
+    if (!cam.fitScale) return 1;
+    return cam.scale / cam.fitScale;
+  }
+
+  function syncZoomUi() {
+    const slider = document.getElementById("zoom-slider");
+    const label = document.getElementById("zoom-label");
+    const factor = zoomFactorFromFit();
+    const pct = Math.round(factor * 100);
+    if (slider) {
+      const lo = Math.round((cam.minScale / cam.fitScale) * 100);
+      const hi = Math.round((cam.maxScale / cam.fitScale) * 100);
+      slider.min = String(Math.max(50, lo));
+      slider.max = String(Math.min(500, hi));
+      slider.value = String(Math.max(Number(slider.min), Math.min(Number(slider.max), pct)));
+    }
+    if (label) {
+      label.textContent = Math.abs(factor - 1) < 0.03 ? "适配" : pct + "%";
+    }
+    document.querySelectorAll(".zoom-btn[data-zoom]").forEach(function (btn) {
+      const z = btn.getAttribute("data-zoom");
+      let active = false;
+      if (z === "fit") active = Math.abs(factor - 1) < 0.04;
+      else active = Math.abs(factor - Number(z)) < 0.06;
+      btn.classList.toggle("is-active", active);
+    });
+  }
+
   function resumeFromSavedProgress() {
     const saved = loadProgress();
     if (!saved) {
       persistEnabled = true;
+      syncZoomUi();
       return;
     }
     const vw = viewport.clientWidth;
     const vh = viewport.clientHeight;
-    let scale = typeof saved.scale === "number" ? saved.scale : cam.scale;
-    scale = Math.max(cam.minScale, Math.min(cam.maxScale, scale));
-    // keep a readable overview if saved zoom was extreme
-    const fitScale = Math.min(vw / (WORLD_W * 0.18), vh / WORLD_H) * 0.95;
-    if (scale < fitScale * 0.6 || scale > fitScale * 3) scale = fitScale;
+    // Always resume at height-fit (适配); only restore horizontal place.
+    const scale = computeFitScale();
     const center = Math.max(0, Math.min(1, saved.center));
     const targetX = vw / 2 - center * WORLD_W * scale;
     const targetY = (vh - WORLD_H * scale) / 2;
-    // brief beat at left, then quick jump
     setTimeout(function () {
       animateCameraTo(targetX, targetY, scale, 780, function () {
         persistEnabled = true;
+        syncZoomUi();
       });
     }, 380);
   }
 
-
   function fitInitial() {
     const vw = viewport.clientWidth;
     const vh = viewport.clientHeight;
-    cam.scale = Math.min(vw / (WORLD_W * 0.18), vh / WORLD_H) * 0.95;
-    cam.scale = Math.max(cam.minScale, Math.min(cam.maxScale, cam.scale));
+    cam.scale = computeFitScale();
     cam.x = 0;
     cam.y = (vh - WORLD_H * cam.scale) / 2;
     clampCamera();
     applyTransform();
+    syncZoomUi();
   }
 
   function zoomAt(clientX, clientY, factor) {
@@ -551,6 +604,7 @@
     cam.y = my - wy * cam.scale;
     clampCamera();
     applyTransform();
+    syncZoomUi();
   }
 
   function panToPoem(p, open) {
@@ -1081,14 +1135,40 @@
     scrubDrag = false;
   });
 
+  // ---------- Zoom bar ----------
+  (function bindZoomBar() {
+    const bar = document.getElementById("zoom-bar");
+    if (!bar) return;
+    bar.addEventListener("click", function (e) {
+      const btn = e.target.closest("[data-zoom]");
+      if (!btn) return;
+      const z = btn.getAttribute("data-zoom");
+      if (!cam.fitScale) computeFitScale();
+      if (z === "fit") setScaleAroundViewCenter(cam.fitScale);
+      else setScaleAroundViewCenter(cam.fitScale * Number(z));
+    });
+    const slider = document.getElementById("zoom-slider");
+    if (slider) {
+      slider.addEventListener("input", function () {
+        if (!cam.fitScale) computeFitScale();
+        setScaleAroundViewCenter(cam.fitScale * (Number(slider.value) / 100));
+      });
+    }
+  })();
+
   // ---------- Boot ----------
   renderHotspots();
   drawMinimap();
-  fitInitial(); // always land on the far left first
+  fitInitial(); // always land on the far left at height-fit
   resumeFromSavedProgress();
   window.addEventListener("resize", function () {
+    const factor = zoomFactorFromFit();
+    computeFitScale();
+    // Keep relative zoom vs 适配 across resize
+    cam.scale = Math.max(cam.minScale, Math.min(cam.maxScale, cam.fitScale * factor));
     clampCamera();
     applyTransform();
+    syncZoomUi();
     saveProgress();
   });
   window.addEventListener("pagehide", saveProgress);
