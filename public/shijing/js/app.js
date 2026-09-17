@@ -747,6 +747,23 @@
     return out;
   }
 
+  function annotateOrigPinyin(text) {
+    const pyMap = window.SHIJING_PY || {};
+    const hard = window.SHIJING_PY_HARD;
+    // If hard set exists, only ruby 重点/生僻; else ruby all Han.
+    const useHard = hard && typeof hard === "object";
+    return Array.from(text || "")
+      .map(function (ch) {
+        if (!/[\u4e00-\u9fff]/.test(ch)) return escapeHtml(ch);
+        const py = useHard ? hard[ch] : pyMap[ch];
+        if (!py) return escapeHtml(ch);
+        return (
+          "<ruby>" + escapeHtml(ch) + "<rt>" + escapeHtml(py) + "</rt></ruby>"
+        );
+      })
+      .join("");
+  }
+
   function formatPoemHtml(fullText, translations) {
     const parts = splitPoemCouplets(fullText);
     if (!parts.length) return "";
@@ -757,7 +774,7 @@
         return (
           '<div class="poem-row">' +
           '<div class="poem-orig">' +
-          escapeHtml(orig) +
+          annotateOrigPinyin(orig) +
           "</div>" +
           '<div class="poem-yi">' +
           escapeHtml(yi) +

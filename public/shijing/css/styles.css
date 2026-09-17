@@ -803,12 +803,25 @@ a.home-link {
 }
 .poem-orig {
   font-size: 1.55rem; /* readable; 5× broke layout */
-  line-height: 1.75;
-  letter-spacing: 0.08em;
+  line-height: 2.05;
+  letter-spacing: 0.06em;
   text-align: left;
   color: var(--ink);
   max-width: 100%;
   white-space: normal;
+  ruby-align: center;
+}
+.poem-orig ruby {
+  ruby-position: over;
+  ruby-align: center;
+}
+.poem-orig rt {
+  font-size: 0.42em;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--ink-faint);
+  line-height: 1.1;
+  user-select: none;
 }
 .poem-yi {
   font-size: 0.95rem;
