@@ -322,6 +322,13 @@
     updateMinimap();
     updateStatusSection();
     updateJump();
+    if (window.SHIJING_LANDSCAPE && window.SHIJING_LANDSCAPE.updateVisible) {
+      window.SHIJING_LANDSCAPE.updateVisible({
+        x: cam.x,
+        scale: cam.scale,
+        vw: viewport.clientWidth,
+      });
+    }
   }
 
   function clampCamera() {
@@ -545,6 +552,32 @@
     采薇: "assets/details/caiwei.png",
   };
 
+  function formatPoemHtml(fullText) {
+    const raw = (fullText || "").replace(/\r\n/g, "\n").trim();
+    if (!raw) return "";
+    return raw
+      .split(/\n+/)
+      .map(function (stanza) {
+        const s = stanza.trim();
+        if (!s) return "";
+        // Split on sentence punctuation so couplets stack left-aligned
+        const parts = s.split(/(?<=[。？！])/).map(function (p) {
+          return p.trim();
+        }).filter(Boolean);
+        const body =
+          parts.length > 1
+            ? parts
+                .map(function (p) {
+                  return '<span class="poem-couplet">' + escapeHtml(p) + "</span>";
+                })
+                .join("<br>")
+            : escapeHtml(s);
+        return '<p class="poem-line">' + body + "</p>";
+      })
+      .filter(Boolean)
+      .join("");
+  }
+
   const modal = document.getElementById("modal");
   function openPoem(idx) {
     if (idx < 0 || idx >= poems.length) return;
@@ -554,7 +587,7 @@
       p.section + " · " + p.subsection + " · " + p.title;
     document.getElementById("modal-title").textContent = p.title;
     document.getElementById("modal-famous").textContent = "「" + p.famousLine + "」";
-    document.getElementById("modal-text").textContent = p.fullText;
+    document.getElementById("modal-text").innerHTML = formatPoemHtml(p.fullText);
     const sceneEl = document.getElementById("modal-scene");
     const sceneSrc = SCENE_DETAILS[p.title];
     if (sceneEl) {
