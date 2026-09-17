@@ -731,29 +731,40 @@
     采薇: "assets/details/caiwei.png",
   };
 
-  function formatPoemHtml(fullText) {
+  function splitPoemCouplets(fullText) {
     const raw = (fullText || "").replace(/\r\n/g, "\n").trim();
-    if (!raw) return "";
-    return raw
-      .split(/\n+/)
-      .map(function (stanza) {
-        const s = stanza.trim();
-        if (!s) return "";
-        // Split on sentence punctuation so couplets stack left-aligned
-        const parts = s.split(/(?<=[。？！])/).map(function (p) {
-          return p.trim();
-        }).filter(Boolean);
-        const body =
-          parts.length > 1
-            ? parts
-                .map(function (p) {
-                  return '<span class="poem-couplet">' + escapeHtml(p) + "</span>";
-                })
-                .join("<br>")
-            : escapeHtml(s);
-        return '<p class="poem-line">' + body + "</p>";
+    if (!raw) return [];
+    const out = [];
+    raw.split(/\n+/).forEach(function (stanza) {
+      const s = stanza.trim();
+      if (!s) return;
+      s.split(/(?<=[。？！])/).map(function (p) {
+        return p.trim();
+      }).filter(Boolean).forEach(function (p) {
+        out.push(p);
+      });
+    });
+    return out;
+  }
+
+  function formatPoemHtml(fullText, translations) {
+    const parts = splitPoemCouplets(fullText);
+    if (!parts.length) return "";
+    const yiList = Array.isArray(translations) ? translations : [];
+    return parts
+      .map(function (orig, i) {
+        const yi = (yiList[i] || "").trim();
+        return (
+          '<div class="poem-row">' +
+          '<div class="poem-orig">' +
+          escapeHtml(orig) +
+          "</div>" +
+          '<div class="poem-yi">' +
+          escapeHtml(yi) +
+          "</div>" +
+          "</div>"
+        );
       })
-      .filter(Boolean)
       .join("");
   }
 
@@ -766,7 +777,11 @@
       p.section + " · " + p.subsection + " · " + p.title;
     document.getElementById("modal-title").textContent = p.title;
     document.getElementById("modal-famous").textContent = "「" + p.famousLine + "」";
-    document.getElementById("modal-text").innerHTML = formatPoemHtml(p.fullText);
+    const yi =
+      (window.SHIJING_YI && (window.SHIJING_YI[p.id] || window.SHIJING_YI[p.title])) ||
+      p.translations ||
+      [];
+    document.getElementById("modal-text").innerHTML = formatPoemHtml(p.fullText, yi);
     const sceneEl = document.getElementById("modal-scene");
     const sceneSrc = SCENE_DETAILS[p.title];
     if (sceneEl) {
