@@ -374,19 +374,30 @@
     clearTimeout(revealTimer);
     revealTimer = setTimeout(function () {
       n.btn.classList.remove("is-revealing");
-      n.btn.classList.add("is-settled");
+      n.btn.classList.add("is-settled", "is-traced");
       stopSfx();
       setTimeout(function () {
         revealBusy = false;
         pumpRevealQueue();
-      }, 180);
-    }, 1300);
+      }, 200);
+    }, 1400);
   }
 
   // ---------- Camera ----------
+  function updateHotspotScreenScale() {
+    // Keep markers readable on screen: world is heavily scaled down at fit zoom.
+    const inv = 1 / Math.max(cam.scale, 0.0001);
+    const s = Math.min(28, Math.max(1.1, inv * 0.92));
+    for (let i = 0; i < hotspotNodes.length; i++) {
+      const n = hotspotNodes[i];
+      n.btn.style.transform = "translate(-50%, -50%) scale(" + s + ")";
+    }
+  }
+
   function applyTransform() {
     world.style.transform =
       "translate(" + cam.x + "px," + cam.y + "px) scale(" + cam.scale + ")";
+    updateHotspotScreenScale();
     updateMinimap();
     updateStatusSection();
     updateJump();

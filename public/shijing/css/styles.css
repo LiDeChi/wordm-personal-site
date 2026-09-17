@@ -261,50 +261,71 @@ html, body {
   position: absolute;
   pointer-events: auto;
   transform: translate(-50%, -50%);
+  transform-origin: center center;
   cursor: pointer;
   z-index: 12;
   border: none;
   background: transparent;
-  padding: 12px 10px;
+  padding: 10px 8px;
   text-align: center;
   max-width: 12rem;
-  min-width: 44px;
-  min-height: 44px;
+  min-width: 28px;
+  min-height: 28px;
+  will-change: transform;
 }
 
 .hotspot-dot {
-  width: 9px;
-  height: 9px;
+  width: 12px;
+  height: 12px;
   margin: 0 auto;
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, rgba(236, 210, 150, 0.95), rgba(168, 130, 70, 0.85) 60%, rgba(110, 86, 48, 0.75));
+  background: radial-gradient(circle at 35% 30%, #f3d89a, #c4923a 55%, #7a5520);
   box-shadow:
-    0 0 0 2px rgba(212, 168, 88, 0.22),
-    0 0 8px rgba(196, 160, 80, 0.28);
-  transition: transform 0.25s, box-shadow 0.25s, width 0.25s, height 0.25s;
+    0 0 0 2px rgba(252, 248, 238, 0.55),
+    0 0 0 3px rgba(140, 100, 40, 0.35),
+    0 0 10px rgba(196, 160, 80, 0.45);
+  transition: transform 0.25s, box-shadow 0.25s, width 0.25s, height 0.25s, opacity 0.25s;
   animation: none;
+  opacity: 0.95;
 }
 .hotspot.is-primary .hotspot-dot {
-  width: 11px;
-  height: 11px;
-  box-shadow:
-    0 0 0 2px rgba(212, 168, 88, 0.3),
-    0 0 10px rgba(196, 160, 80, 0.35);
+  width: 13px;
+  height: 13px;
 }
 .hotspot.is-revealing .hotspot-dot {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   box-shadow:
-    0 0 0 4px rgba(212, 168, 88, 0.45),
-    0 0 18px rgba(212, 168, 88, 0.55);
+    0 0 0 3px rgba(252, 248, 238, 0.7),
+    0 0 0 6px rgba(212, 168, 88, 0.4),
+    0 0 18px rgba(212, 168, 88, 0.6);
   animation: pulse 1.2s ease-in-out infinite;
 }
-.hotspot.is-settled .hotspot-dot {
-  width: 8px;
-  height: 8px;
-  background: radial-gradient(circle at 35% 30%, rgba(210, 180, 120, 0.75), rgba(120, 96, 60, 0.55));
-  box-shadow: 0 0 0 1px rgba(160, 130, 80, 0.25), 0 0 6px rgba(120, 100, 60, 0.2);
+.hotspot.is-settled .hotspot-dot,
+.hotspot.is-traced .hotspot-dot {
+  width: 10px;
+  height: 10px;
+  background: radial-gradient(circle at 35% 30%, rgba(232, 200, 130, 0.95), rgba(140, 100, 50, 0.85) 60%, rgba(90, 70, 40, 0.8));
+  box-shadow:
+    0 0 0 1.5px rgba(252, 248, 238, 0.45),
+    0 0 0 3px rgba(120, 90, 40, 0.28),
+    0 1px 4px rgba(40, 32, 20, 0.25);
   animation: none;
+  opacity: 0.9;
+}
+.hotspot.is-traced::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 10px;
+  width: 18px;
+  height: 18px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1px solid rgba(160, 120, 60, 0.35);
+  box-shadow: inset 0 0 0 1px rgba(252, 248, 238, 0.15);
+  pointer-events: none;
+  opacity: 0.7;
 }
 
 .hotspot:hover .hotspot-dot,
@@ -786,7 +807,11 @@ a.home-link {
 
 /* Reveal / scrubber v42 */
 .hotspot.is-secondary .hotspot-dot {
-  width: 6px;
-  height: 6px;
-  opacity: 0.55;
+  width: 8px;
+  height: 8px;
+  opacity: 0.5;
+}
+.hotspot.is-secondary.is-traced .hotspot-dot,
+.hotspot.is-secondary.is-settled .hotspot-dot {
+  opacity: 0.35;
 }
