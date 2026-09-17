@@ -264,17 +264,26 @@
     openPoem(p._index);
   }
 
+  const hotspotNodes = [];
+  const primaryByPoem = Object.create(null);
+  const revealedPoems = Object.create(null);
+  let revealQueue = [];
+  let revealBusy = false;
+  let revealTimer = null;
+
   function renderHotspots() {
     hotspotsEl.innerHTML = "";
+    hotspotNodes.length = 0;
     hotspots.forEach(function (h, hi) {
       const btn = document.createElement("button");
-      btn.className = "hotspot";
-      if (featured.has(h.title)) btn.classList.add("featured");
+      const isPrimary = !primaryByPoem[h.poemId];
+      btn.className = "hotspot " + (isPrimary ? "is-primary" : "is-secondary");
       btn.type = "button";
       btn.style.left = (h.x / 100) * WORLD_W + "px";
       btn.style.top = (h.y / 100) * WORLD_H + "px";
       btn.dataset.poemId = h.poemId;
       btn.dataset.hi = String(hi);
+      btn.dataset.x = String(h.x);
       btn.setAttribute("aria-label", h.title + " " + h.line);
       btn.innerHTML =
         '<span class="hotspot-dot"></span>' +
@@ -299,20 +308,79 @@
       btn.addEventListener("pointerleave", function () {
         stopSfx();
       });
-      btn.addEventListener("mouseenter", function () {
-        playSfx(themeForHotspot(h));
-      });
-      btn.addEventListener("mouseleave", function () {
-        stopSfx();
-      });
 
       hotspotsEl.appendChild(btn);
+      const node = { btn: btn, h: h, hi: hi, primary: isPrimary };
+      hotspotNodes.push(node);
+      if (isPrimary) primaryByPoem[h.poemId] = node;
     });
     const onScrollCount = poems.filter(function (p) {
       return p.onScroll;
     }).length;
-    document.getElementById("status-count").textContent =
-      "名句 " + hotspots.length + " · 诗篇 " + poems.length + "（卷上 " + onScrollCount + "）";
+    const countEl = document.getElementById("status-count");
+    if (countEl) {
+      countEl.textContent =
+        "名句 " + hotspots.length + " · 诗篇 " + poems.length + "（卷上 " + onScrollCount + "）";
+    }
+  }
+
+  function viewportWorldRange() {
+    const vw = viewport.clientWidth || 1;
+    const left = (-cam.x) / cam.scale;
+    const right = left + vw / cam.scale;
+    return { left: left, right: right, vw: vw };
+  }
+
+  function enqueueViewportReveals() {
+    const range = viewportWorldRange();
+    const pad = (range.vw / cam.scale) * 0.05;
+    const left = range.left + pad;
+    const right = range.right - pad;
+    const candidates = [];
+    for (let i = 0; i < hotspotNodes.length; i++) {
+      const n = hotspotNodes[i];
+      if (!n.primary) continue;
+      if (revealedPoems[n.h.poemId]) continue;
+      if (n.btn.classList.contains("is-revealing")) continue;
+      const wx = (n.h.x / 100) * WORLD_W;
+      if (wx >= left && wx <= right) candidates.push(n);
+    }
+    candidates.sort(function (a, b) {
+      return a.h.x - b.h.x;
+    });
+    // limit batch size so UI stays calm
+    const room = 6 - revealQueue.length;
+    for (let j = 0; j < candidates.length && j < Math.max(0, room); j++) {
+      revealQueue.push(candidates[j]);
+    }
+    pumpRevealQueue();
+  }
+
+  function pumpRevealQueue() {
+    if (revealBusy) return;
+    if (!revealQueue.length) return;
+    revealBusy = true;
+    const n = revealQueue.shift();
+    if (!n || revealedPoems[n.h.poemId]) {
+      revealBusy = false;
+      pumpRevealQueue();
+      return;
+    }
+    revealedPoems[n.h.poemId] = true;
+    n.btn.classList.remove("is-settled");
+    n.btn.classList.add("is-revealing");
+    playSfx(themeForHotspot(n.h));
+    // hold label, then settle to harmonious dot
+    clearTimeout(revealTimer);
+    revealTimer = setTimeout(function () {
+      n.btn.classList.remove("is-revealing");
+      n.btn.classList.add("is-settled");
+      stopSfx();
+      setTimeout(function () {
+        revealBusy = false;
+        pumpRevealQueue();
+      }, 180);
+    }, 1300);
   }
 
   // ---------- Camera ----------
@@ -322,6 +390,7 @@
     updateMinimap();
     updateStatusSection();
     updateJump();
+    enqueueViewportReveals();
     if (window.SHIJING_LANDSCAPE && window.SHIJING_LANDSCAPE.updateVisible) {
       window.SHIJING_LANDSCAPE.updateVisible({
         x: cam.x,
@@ -768,53 +837,106 @@
     });
   });
 
-  // ---------- Minimap ----------
+  // ---------- Scrubber / relative anchor ----------
   const mmCanvas = document.getElementById("minimap-canvas");
   const mmVp = document.getElementById("minimap-viewport");
   const mm = document.getElementById("minimap");
+  const scrubNeedle = document.getElementById("scrubber-needle");
+  const scrubPos = document.getElementById("scrubber-pos");
+  const scrubMarks = document.getElementById("scrubber-marks");
 
-  function drawMinimap() {
-    const ctx = mmCanvas.getContext("2d");
-    const w = mmCanvas.width;
-    const h = mmCanvas.height;
-    // clay-ish tones matching panorama
-    ctx.fillStyle = "#8a9a78";
-    ctx.fillRect(0, 0, w, h);
-    ctx.fillStyle = "#6a8498";
-    ctx.fillRect(0, 0, w, h * 0.38);
-    ctx.fillStyle = "#7a8e5a";
-    ctx.fillRect(0, h * 0.38, w, h * 0.62);
-    ctx.strokeStyle = "rgba(90,140,160,0.55)";
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(0, h * 0.7);
-    ctx.quadraticCurveTo(w * 0.35, h * 0.55, w * 0.7, h * 0.72);
-    ctx.quadraticCurveTo(w * 0.85, h * 0.8, w, h * 0.65);
-    ctx.stroke();
-    ctx.fillStyle = "rgba(196,160,80,0.8)";
-    hotspots.forEach(function (hs) {
-      ctx.beginPath();
-      ctx.arc((hs.x / 100) * w, (hs.y / 100) * h, 1.1, 0, Math.PI * 2);
-      ctx.fill();
+  function layoutScrubberMarks() {
+    if (!scrubMarks) return;
+    const marks = scrubMarks.querySelectorAll("span[data-at]");
+    marks.forEach(function (el) {
+      const at = parseFloat(el.getAttribute("data-at") || "0");
+      el.style.left = at * 100 + "%";
     });
   }
 
+  function drawMinimap() {
+    if (!mmCanvas) return;
+    const ctx = mmCanvas.getContext("2d");
+    const w = mmCanvas.width;
+    const h = mmCanvas.height;
+    ctx.fillStyle = "#7d9170";
+    ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = "#5f7d90";
+    ctx.fillRect(0, 0, w, h * 0.36);
+    ctx.fillStyle = "#6f864f";
+    ctx.fillRect(0, h * 0.36, w, h * 0.64);
+    ctx.strokeStyle = "rgba(90,140,160,0.5)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(0, h * 0.72);
+    ctx.quadraticCurveTo(w * 0.35, h * 0.55, w * 0.7, h * 0.74);
+    ctx.quadraticCurveTo(w * 0.85, h * 0.82, w, h * 0.66);
+    ctx.stroke();
+    // section dividers
+    ctx.strokeStyle = "rgba(255,248,230,0.18)";
+    ctx.lineWidth = 1;
+    [0.02, 0.52, 0.76, 0.87].forEach(function (p) {
+      const x = p * w;
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, h);
+      ctx.stroke();
+    });
+    ctx.fillStyle = "rgba(240, 200, 110, 0.7)";
+    Object.keys(primaryByPoem).forEach(function (id) {
+      const n = primaryByPoem[id];
+      if (!n) return;
+      ctx.beginPath();
+      ctx.arc((n.h.x / 100) * w, (n.h.y / 100) * h, 1.2, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    layoutScrubberMarks();
+  }
+
   function updateMinimap() {
+    if (!mmVp) return;
     const vw = viewport.clientWidth;
     const worldVisible = vw / cam.scale;
     const ratio = worldVisible / WORLD_W;
-    const leftRatio = -cam.x / cam.scale / WORLD_W;
+    const leftRatio = Math.max(0, Math.min(1, -cam.x / cam.scale / WORLD_W));
+    const centerRatio = Math.max(
+      0,
+      Math.min(1, (-cam.x + vw / 2) / cam.scale / WORLD_W)
+    );
     mmVp.style.width = Math.min(100, ratio * 100) + "%";
-    mmVp.style.left = Math.max(0, leftRatio * 100) + "%";
+    mmVp.style.left = leftRatio * 100 + "%";
+    if (scrubNeedle) scrubNeedle.style.left = centerRatio * 100 + "%";
+    if (scrubPos) scrubPos.textContent = Math.round(centerRatio * 100) + "%";
   }
 
-  mm.addEventListener("click", function (e) {
+  function scrubToClientX(clientX) {
     const rect = mm.getBoundingClientRect();
-    const ratio = (e.clientX - rect.left) / rect.width;
+    const ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
     const vw = viewport.clientWidth;
     cam.x = -ratio * WORLD_W * cam.scale + vw / 2;
     clampCamera();
     applyTransform();
+  }
+
+  mm.addEventListener("click", function (e) {
+    scrubToClientX(e.clientX);
+  });
+  // drag on scrubber
+  let scrubDrag = false;
+  mm.addEventListener("pointerdown", function (e) {
+    scrubDrag = true;
+    mm.setPointerCapture(e.pointerId);
+    scrubToClientX(e.clientX);
+  });
+  mm.addEventListener("pointermove", function (e) {
+    if (!scrubDrag) return;
+    scrubToClientX(e.clientX);
+  });
+  mm.addEventListener("pointerup", function () {
+    scrubDrag = false;
+  });
+  mm.addEventListener("pointercancel", function () {
+    scrubDrag = false;
   });
 
   // ---------- Boot ----------

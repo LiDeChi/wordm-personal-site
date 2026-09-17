@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>诗经长卷 · 风雅颂</title>
-  <link rel="stylesheet" href="css/styles.css?v=41" />
+  <link rel="stylesheet" href="css/styles.css?v=42" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Ma+Shan+Zheng&display=swap" rel="stylesheet" />
@@ -36,21 +36,35 @@
       </div>
     </main>
 
-    <aside id="minimap" class="minimap" aria-label="缩略图">
-      <canvas id="minimap-canvas" width="280" height="48"></canvas>
-      <div id="minimap-viewport" class="minimap-viewport"></div>
-    </aside>
+    <div id="scrubber" class="scrubber" aria-label="长卷相对位置">
+      <div class="scrubber-track" id="minimap">
+        <canvas id="minimap-canvas" width="1200" height="56"></canvas>
+        <div id="minimap-viewport" class="minimap-viewport"></div>
+        <div class="scrubber-marks" id="scrubber-marks" aria-hidden="true">
+          <span data-at="0.02">国风</span>
+          <span data-at="0.52">小雅</span>
+          <span data-at="0.76">大雅</span>
+          <span data-at="0.87">颂</span>
+        </div>
+        <div class="scrubber-needle" id="scrubber-needle" aria-hidden="true"></div>
+      </div>
+      <div class="scrubber-meta">
+        <span id="scrubber-pos">0%</span>
+        <span class="scrubber-sep">·</span>
+        <span id="status-section">国风 · 周南</span>
+        <span class="scrubber-sep">·</span>
+        <span id="status-count">诗篇 0</span>
+      </div>
+    </div>
 
     <footer class="status-bar">
-      <span id="status-section">国风 · 周南</span>
       <nav class="jump-rail" id="jump-rail" aria-label="快速定位">
         <button type="button" data-section="国风" class="jump-btn">国风</button>
         <button type="button" data-section="小雅" class="jump-btn">小雅</button>
         <button type="button" data-section="大雅" class="jump-btn">大雅</button>
         <button type="button" data-section="颂" class="jump-btn">颂</button>
       </nav>
-      <span id="status-hint">拖拽浏览连续长卷 · 悬停金点听场景音效 · 点击展开全诗</span>
-      <span id="status-count">诗篇 0</span>
+      <span id="status-hint">拖拽展卷 · 视窗内名句按序亮起 · 点击金点读全诗</span>
     </footer>
   </div>
 
@@ -65,7 +79,7 @@
       </header>
       <div class="modal-body">
         <img id="modal-scene" class="modal-scene" alt="" hidden />
-        <pre id="modal-text" class="poem-text"></pre>
+        <div id="modal-text" class="poem-text"></div>
       </div>
       <footer class="modal-footer">
         <button id="modal-prev" class="text-btn">上一首</button>
@@ -100,17 +114,17 @@
       <ul class="help-list">
         <li><strong>拖拽</strong>：按住鼠标或触屏滑动，左右浏览长卷</li>
         <li><strong>滚轮 / 捏合</strong>：放大可看场景细节（最高约 5×）</li>
-        <li><strong>金点</strong>：悬停播放场景音效；点击展开全诗</li>
+        <li><strong>金点</strong>：滑入视窗时名句按序亮起并渐隐留点；悬停可再听场景音效；点击展开全诗</li>
         <li><strong>快速定位</strong>：底栏可跳到风 / 雅 / 颂起点（仍是同一条连续长卷）</li>
         <li><strong>检索</strong>：按篇名或名句定位场景</li>
-        <li><strong>缩略图</strong>：点击小图可快速定位</li>
+        <li><strong>底部锚条</strong>：显示当前在整卷中的相对位置，点击可跳转</li>
       </ul>
       <p class="help-note">本卷以《诗经》公版原文编排，写实长卷山水仅为示意，供品读吟咏。</p>
     </article>
   </div>
 
-  <script src="js/poems.js?v=41"></script>
-  <script src="js/landscape.js?v=41"></script>
-  <script src="js/app.js?v=41"></script>
+  <script src="js/poems.js?v=42"></script>
+  <script src="js/landscape.js?v=42"></script>
+  <script src="js/app.js?v=42"></script>
 </body>
 </html>
