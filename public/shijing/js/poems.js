@@ -1,5 +1,5 @@
 /** Auto-generated: full clay panorama T00–T47 */
-window.SHIJING_WORLD = {"W": 46308, "H": 941, "completedTiles": 48, "totalTiles": 48, "completedEndPct": 100.0, "panorama": "assets/scroll/panorama.jpg", "mode": "clay-panorama"};
+window.SHIJING_WORLD = {"W": 43257, "H": 941, "completedTiles": 48, "totalTiles": 48, "completedEndPct": 100.0, "panorama": "assets/scroll/panorama.jpg", "mode": "clay-panorama"};
 window.SHIJING_SECTION_X = {"国风": 0.0044, "小雅": 0.5246999999999999, "大雅": 0.7639, "颂": 0.8675};
 window.SHIJING_SEC_LABELS = [];
 window.SHIJING_SUB_LABELS = [];

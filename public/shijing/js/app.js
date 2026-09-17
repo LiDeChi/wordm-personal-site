@@ -105,29 +105,91 @@
     currentGain = null;
   }
 
+  // Famous titles → preferred SFX (checked after hovered line, before loose title regex)
+  const SHIJING_SFX = {
+    关雎: "birds",
+    蒹葭: "wind",
+    七月: "farm",
+    鹿鸣: "banquet",
+    采薇: "drums",
+    玄鸟: "birds",
+    桃夭: "farm",
+    芣苢: "farm",
+    静女: "ambient",
+    子衿: "ambient",
+    氓: "farm",
+    月出: "night",
+    风雨: "rain",
+    蟋蟀: "night",
+    黄鸟: "birds",
+    鸿雁: "birds",
+    燕燕: "birds",
+    击鼓: "drums",
+    无衣: "drums",
+    车攻: "drums",
+    出车: "drums",
+    东山: "drums",
+    谷风: "wind",
+    凯风: "wind",
+    终风: "wind",
+    北风: "wind",
+    汉广: "water",
+    河广: "water",
+    溱洧: "water",
+    江汉: "water",
+    硕人: "water",
+    车舝: "ambient",
+    大车: "ambient",
+    有女同车: "ambient",
+    宾之初筵: "banquet",
+    伐木: "farm",
+    生民: "farm",
+    丰年: "farm",
+    雨无正: "rain",
+    云汉: "rain",
+  };
+  window.SHIJING_SFX = SHIJING_SFX;
+
+  function matchTheme(blob) {
+    if (!blob) return null;
+    // specific → general
+    if (/雨|霖|雪/.test(blob)) return "rain";
+    if (/月出|夜|宵|夙夜|蟋蟀/.test(blob)) return "night";
+    if (/宴|饮酒|鹿鸣|琴瑟|嘉宾|钟鼓乐之/.test(blob)) return "banquet";
+    // drums/war: NOT bare 车; bridal 车舝 → skip; 车攻/猎/狩 OK
+    if (/鼓钟|戍|军|征|战|干城|武夫|无衣|车攻|猎|狩/.test(blob)) return "drums";
+    if (/桑|稼|穑|禾|麦|黍|芣苢|采|田/.test(blob)) return "farm";
+    if (/雎鸠|黄鸟|鸠|燕|鸿雁|于飞|关关|其鸣/.test(blob)) return "birds";
+    if (/谷风|终风|凯风|飘风|风雨|蒹葭|杨柳/.test(blob)) return "wind";
+    if (/河|洲|江|淮|汉|淇|溱|洧|泳|舟|楫|在河之洲|流/.test(blob)) return "water";
+    return null;
+  }
+
   function themeForHotspot(h) {
     const poem = poemById[h.poemId];
-    const lineBlob = [
-      h.line || "",
-      h.title || "",
-      poem ? poem.famousLine || "" : "",
-      poem ? (poem.famousLines || []).join("") : "",
-      poem ? poem.fullText || "" : "",
-    ].join("\n");
+    const title = (h.title || (poem && poem.title) || "").trim();
+    const line = h.line || "";
+    const famous =
+      (poem && (poem.famousLine || "")) +
+      ((poem && poem.famousLines) || []).join("");
     const sub = poem ? poem.subsection || "" : "";
 
-    if (/雨|霖|雪/.test(lineBlob)) return "rain";
-    if (/鼓|钟鼓|车|戍|军|师|征|战|戎|甲兵|无衣|干城|武夫|猎|狩|乘马/.test(lineBlob))
-      return "drums";
-    if (/月出|夜|宵|夙夜|蟋蟀|白露|昧旦/.test(lineBlob) || /月/.test(h.title || ""))
-      return "night";
-    if (/宴|饮酒|鹿鸣|笙|琴瑟|嘉宾|燕乐|钟鼓乐之/.test(lineBlob)) return "banquet";
-    if (/桑|田|农|稼|穑|禾|麦|黍|稷|七月/.test(lineBlob)) return "farm";
-    if (/雎鸠|黄鸟|鸟|鸠|燕|雀|鸿|雁|雉|于飞|其鸣喈|关关/.test(lineBlob)) return "birds";
-    if (/飘风|大风|谷风|终风|凯风|风雨|风其|扬风|苇|蒹葭|芦荻|杨柳依依/.test(lineBlob))
-      return "wind";
-    if (/河|水|洲|江|淮|汉广|泉源|流之|泳|舟|楫|涟|溱|洧|淇|泾|渭|在河/.test(lineBlob))
-      return "water";
+    // 1) hovered line first
+    let t = matchTheme(line);
+    if (t) return t;
+
+    // 2) optional title map (before loose title regex)
+    if (title && SHIJING_SFX[title]) return SHIJING_SFX[title];
+
+    // 3) title text (avoid bare 月 → night)
+    t = matchTheme(title);
+    if (t) return t;
+
+    // 4) short famous-line list only — NOT fullText
+    t = matchTheme(famous);
+    if (t) return t;
+
+    // gentle subsection fallbacks
     if (/豳|魏|唐/.test(sub)) return "farm";
     if (sub === "秦风") return "drums";
     return "ambient";
@@ -745,6 +807,6 @@
     WORLD_W: WORLD_W,
     WORLD_H: WORLD_H,
     hotspotCount: hotspots.length,
-    themeFor: themeForHotspotClean,
+    themeFor: themeForHotspot,
   };
 })();

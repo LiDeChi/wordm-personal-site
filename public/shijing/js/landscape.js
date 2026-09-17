@@ -1,7 +1,6 @@
 /**
- * 诗经长卷 – clay panorama landscape (stitched outpaint tiles)
- * WebP single-file max dimension is 16383px; this scroll is wider, so we
- * prefer tiled WebP, then fall back to a progressive JPEG.
+ * 诗经长卷 – clay panorama landscape
+ * Prefer a single progressive JPEG (no tile seams). WebP tiles removed for now.
  */
 (function () {
   "use strict";
@@ -9,14 +8,8 @@
   const meta = window.SHIJING_WORLD || {};
   const W = meta.W || 46308;
   const H = meta.H || 941;
-  const V = "30";
+  const V = "40";
   const JPG = "assets/scroll/panorama.jpg?" + "v=" + V;
-  // 3 tiles cover full width (each under WebP 16383 limit)
-  const WEBP_TILES = [
-    { src: "assets/scroll/panorama-0.webp?" + "v=" + V, w: 15436 },
-    { src: "assets/scroll/panorama-1.webp?" + "v=" + V, w: 15436 },
-    { src: "assets/scroll/panorama-2.webp?" + "v=" + V, w: 15436 },
-  ];
 
   window.SHIJING_LANDSCAPE = {
     W,
@@ -24,15 +17,6 @@
     mode: meta.mode || "clay-panorama",
     src: JPG,
   };
-
-  function supportsWebp() {
-    try {
-      var c = document.createElement("canvas");
-      return c.toDataURL("image/webp").indexOf("data:image/webp") === 0;
-    } catch (e) {
-      return false;
-    }
-  }
 
   function styleImg(img, w) {
     img.className = "panorama-img";
@@ -42,10 +26,15 @@
     img.style.display = "block";
     img.style.width = w + "px";
     img.style.height = H + "px";
+    img.style.maxWidth = "none";
     img.style.objectFit = "fill";
     img.style.pointerEvents = "none";
     img.style.userSelect = "none";
-    img.style.flex = "0 0 auto";
+    img.style.flex = "none";
+    img.style.margin = "0";
+    img.style.padding = "0";
+    img.style.border = "0";
+    img.style.verticalAlign = "top";
   }
 
   function loadJpg(container) {
@@ -59,38 +48,6 @@
     return img;
   }
 
-  function loadWebpTiles(container) {
-    const row = document.createElement("div");
-    row.className = "panorama-row";
-    row.style.display = "flex";
-    row.style.flexDirection = "row";
-    row.style.width = W + "px";
-    row.style.height = H + "px";
-    row.setAttribute("role", "img");
-    row.setAttribute("aria-label", "诗经泥彩长卷");
-
-    let failed = false;
-    const imgs = [];
-    WEBP_TILES.forEach(function (t, i) {
-      const img = document.createElement("img");
-      styleImg(img, t.w);
-      img.src = t.src;
-      img.onerror = function () {
-        if (failed) return;
-        failed = true;
-        container.innerHTML = "";
-        loadJpg(container);
-      };
-      row.appendChild(img);
-      imgs.push(img);
-    });
-    container.appendChild(row);
-    window.SHIJING_LANDSCAPE.img = imgs[0];
-    window.SHIJING_LANDSCAPE.imgs = imgs;
-    window.SHIJING_LANDSCAPE.src = WEBP_TILES[0].src;
-    return imgs[0];
-  }
-
   window.renderLandscape = function (container) {
     if (!container) return null;
     container.innerHTML = "";
@@ -98,10 +55,9 @@
     container.style.height = H + "px";
     container.style.background = "#5a6e5a";
     container.style.overflow = "hidden";
-
-    if (supportsWebp()) {
-      return loadWebpTiles(container);
-    }
+    container.style.display = "block";
+    container.style.lineHeight = "0";
+    container.style.fontSize = "0";
     return loadJpg(container);
   };
 })();
