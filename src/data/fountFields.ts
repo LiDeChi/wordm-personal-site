@@ -134,6 +134,56 @@ export const FOUNT_FIELDS: FountField[] = [
     },
   },
   {
+    key: "shijing",
+    name: "诗经长卷",
+    href: "https://wordm.us/shijing/",
+    previewUrl: "wordm.us/shijing",
+    coverUrl: "/home/shijing-scroll.jpg",
+    coverAlt: {
+      zh: "诗经长卷青绿山水与风雅颂场景",
+      en: "Shijing landscape scroll of Airs, Odes, and Hymns",
+    },
+    coverCaption: {
+      zh: "风 · 雅 · 颂 · 一卷观古今",
+      en: "Airs, odes, and hymns in one scroll",
+    },
+    screenshots: [
+      {
+        url: "/home/shijing-scroll.jpg",
+        alt: {
+          zh: "诗经长卷中的山水与诗篇位点",
+          en: "Landscape and poem markers on the Shijing scroll",
+        },
+        caption: {
+          zh: "拖拽展卷，点击金点读全诗",
+          en: "Drag to unfurl, click a gold mark to read",
+        },
+      },
+    ],
+    kind: {
+      zh: "山河长卷 Field",
+      en: "Landscape Scroll Field",
+    },
+    status: {
+      zh: "可进入",
+      en: "Enter now",
+    },
+    summary: {
+      zh: "风、雅、颂铺成一卷青绿山水；拖拽展卷，记住浏览位置，点击金点读全诗。",
+      en: "Airs, odes, and hymns unfold as one landscape. Drag to unfurl, keep your place, and click a gold mark to read.",
+    },
+    readingShift: {
+      from: {
+        zh: "按篇目翻页读诗",
+        en: "Turn pages poem by poem",
+      },
+      to: {
+        zh: "在长卷上走到诗所在的现场",
+        en: "Walk the scroll to the scene that holds the poem",
+      },
+    },
+  },
+  {
     key: "bookplain",
     name: "Bookplain",
     href: "https://bookplain.wordm.us",

@@ -328,6 +328,16 @@
   gap:35px
 }
 
+@media (min-width:1100px) {
+  .ih-projects {
+    grid-template-columns:1fr 1fr 1fr;
+    gap:28px
+  }
+  .ih-project-heading h3 {
+    font-size:21px
+  }
+}
+
 .ih-project-image {
   position:relative;
   aspect-ratio:1.6;
@@ -357,10 +367,10 @@
 
 .ih-project-heading {
   display:flex;
-  align-items:center;
-  justify-content:space-between;
+  flex-direction:column;
+  align-items:flex-start;
   margin:20px 0 10px;
-  gap:10px
+  gap:6px
 }
 
 .ih-project-heading h3 {
@@ -369,7 +379,8 @@
 }
 
 .ih-project-heading>span {
-  color:var(--ih-muted)
+  color:var(--ih-muted);
+  line-height:1.45
 }
 
 .ih-project>p {

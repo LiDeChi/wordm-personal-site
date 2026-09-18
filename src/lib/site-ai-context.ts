@@ -32,7 +32,7 @@ const SITE_STRUCTURE = {
   zh: [
     "根域 wordm.us: 系统主页、产品入口、文章和旧作品归档。",
     "主页 Home: 介绍 Wordm System、Agent Core life loop、Core Host 下载和产品入口。",
-    "Projects: 展示 Flipook、ARC3、Forge、Agent Core、Town Agents 等产品入口，并支持项目预览。",
+    "Projects: 展示 Flipook、诗经、MuseumBook、Bookplain、万卷、RingBook、ARC3、Forge、Foundry、Town Agents 等产品入口，并支持项目预览。",
     "Blog: 连续文章阅读流，包含站内长文、X/Substack 归档和配图。",
     "Minds /minds: 机器构建心智页面——意识与认知学派史（Active Inference、Predictive Processing、GWT、IIT、AST、HOT、RPT）、关键人物、经典著作/论文链接，以及脑—身—环境交互关系图。",
     "About: 旧作品集归档与项目详情弹窗。",
@@ -43,7 +43,7 @@ const SITE_STRUCTURE = {
   en: [
     "Root domain wordm.us: system home, product entries, articles, and archived portfolio.",
     "Home: introduces Wordm System, the Agent Core life loop, Core Host download, and product entries.",
-    "Projects: presents Flipook, ARC3, Forge, Agent Core, Town Agents, and product previews.",
+    "Projects: presents Flipook, Shijing, MuseumBook, Bookplain, WanJuan, RingBook, ARC3, Forge, Foundry, Town Agents, and product previews.",
     "Blog: continuous article reading flow with on-site writing plus X/Substack archives and figures.",
     "Minds /minds: building machine minds — history of consciousness/cognition schools (Active Inference, Predictive Processing, GWT, IIT, AST, HOT, RPT), key people, classic books/papers with links, and an interactive brain–body–environment relation map.",
     "About: archived portfolio and project detail modal.",
@@ -71,6 +71,7 @@ const HOME_SUMMARY = {
 const LANDING_PAGES = {
   zh: [
     "Flipook: 把一本书变成可以进入、回看和继续生长的空间化阅读世界。",
+    "诗经长卷: https://wordm.us/shijing/ ，风雅颂铺成一卷青绿山水，拖拽展卷并点击金点读全诗。",
     "ARC3: 围绕 ARC-AGI-3 的世界模型 agent、想象 rollout 和自调训练 cockpit。",
     "Forge: 把项目、资源、分支、审核和 agent 实时活动放进同一个可观察工作台。",
     "Agent Core: wordm.us 主页里的 agent core 入口，包含 agent loop、监控、记忆和生命周期。",
@@ -78,6 +79,7 @@ const LANDING_PAGES = {
   ],
   en: [
     "Flipook: turns a book into a spatial reading world you can enter, revisit, and keep growing.",
+    "Shijing: https://wordm.us/shijing/ — Airs, odes, and hymns as one landscape scroll; drag to unfurl and click a gold mark to read.",
     "ARC3: a world-model agent cockpit for ARC-AGI-3, imagined rollouts, and self-tuning training.",
     "Forge: keeps projects, resources, branches, review, and live agent activity inside one observable workspace.",
     "Agent Core: the agent core entry on wordm.us for loops, monitoring, memory, and lifecycle.",
