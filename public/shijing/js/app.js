@@ -25,6 +25,71 @@
 
   let currentIndex = 0;
   let listFilter = "all";
+  const LANG_KEY = "shijing-lang-v1";
+  let lang = "zh";
+  try {
+    const savedLang = localStorage.getItem(LANG_KEY);
+    if (savedLang === "en" || savedLang === "zh") lang = savedLang;
+  } catch (e) {}
+
+  function t(key) {
+    const pack = (window.SHIJING_I18N && window.SHIJING_I18N[lang]) || {};
+    const fallback = (window.SHIJING_I18N && window.SHIJING_I18N.zh) || {};
+    return pack[key] != null ? pack[key] : fallback[key] != null ? fallback[key] : key;
+  }
+
+  function applyI18n() {
+    document.documentElement.lang = lang === "en" ? "en" : "zh-CN";
+    document.querySelectorAll("[data-i18n]").forEach(function (el) {
+      const key = el.getAttribute("data-i18n");
+      if (!key) return;
+      const val = t(key);
+      if (el.tagName === "TITLE") {
+        document.title = val;
+      } else {
+        el.textContent = val;
+      }
+    });
+    document.querySelectorAll("[data-i18n-placeholder]").forEach(function (el) {
+      el.setAttribute("placeholder", t(el.getAttribute("data-i18n-placeholder")));
+    });
+    document.querySelectorAll("[data-i18n-title]").forEach(function (el) {
+      el.setAttribute("title", t(el.getAttribute("data-i18n-title")));
+    });
+    document.querySelectorAll("[data-i18n-aria]").forEach(function (el) {
+      el.setAttribute("aria-label", t(el.getAttribute("data-i18n-aria")));
+    });
+    // mute button label depends on state
+    const muteBtn = document.getElementById("btn-mute");
+    if (muteBtn) {
+      const muted = muteBtn.getAttribute("aria-pressed") === "true";
+      muteBtn.textContent = muted ? t("unmute") : t("mute");
+      muteBtn.setAttribute("title", muted ? t("unmute") : t("mute"));
+    }
+    const countEl = document.getElementById("status-count");
+    if (countEl && countEl.dataset.n != null) {
+      countEl.textContent = t("poemsCount").replace("{n}", countEl.dataset.n);
+    }
+    // refresh open modal / list if needed
+    if (typeof syncZoomUi === "function") {
+      try { syncZoomUi(); } catch (e) {}
+    }
+    if (typeof updateStatusSection === "function") {
+      try { updateStatusSection(); } catch (e) {}
+    }
+    if (!document.getElementById("modal").hidden && poems[currentIndex]) {
+      openPoem(currentIndex);
+    }
+    if (typeof renderList === "function") {
+      try { renderList(); } catch (e) {}
+    }
+  }
+
+  function setLang(next) {
+    lang = next === "en" ? "en" : "zh";
+    try { localStorage.setItem(LANG_KEY, lang); } catch (e) {}
+    applyI18n();
+  }
 
   const cam = {
     x: 0,
@@ -320,8 +385,16 @@
     }).length;
     const countEl = document.getElementById("status-count");
     if (countEl) {
-      countEl.textContent =
-        "名句 " + hotspots.length + " · 诗篇 " + poems.length + "（卷上 " + onScrollCount + "）";
+      countEl.dataset.n = String(poems.length);
+      countEl.dataset.hot = String(hotspots.length);
+      countEl.dataset.on = String(onScrollCount);
+      if (lang === "en") {
+        countEl.textContent =
+          hotspots.length + " lines · " + poems.length + " poems (" + onScrollCount + " on scroll)";
+      } else {
+        countEl.textContent =
+          "名句 " + hotspots.length + " · 诗篇 " + poems.length + "（卷上 " + onScrollCount + "）";
+      }
     }
   }
 
@@ -548,7 +621,7 @@
       slider.value = String(Math.max(Number(slider.min), Math.min(Number(slider.max), pct)));
     }
     if (label) {
-      label.textContent = Math.abs(factor - 1) < 0.03 ? "适配" : pct + "%";
+      label.textContent = Math.abs(factor - 1) < 0.03 ? t("fit") : pct + "%";
     }
     document.querySelectorAll(".zoom-btn[data-zoom]").forEach(function (btn) {
       const z = btn.getAttribute("data-zoom");
@@ -662,9 +735,15 @@
         nearest = p;
       }
     }
-    const label = nearest
-      ? nearest.section + " · " + nearest.subsection
-      : "连续长卷";
+    let label;
+    if (!nearest) {
+      label = lang === "en" ? "Continuous scroll" : "连续长卷";
+    } else if (lang === "en" && window.SHIJING_META_EN && window.SHIJING_META_EN[nearest.id]) {
+      const m = window.SHIJING_META_EN[nearest.id];
+      label = m.section + " · " + m.subsection;
+    } else {
+      label = nearest.section + " · " + nearest.subsection;
+    }
     document.getElementById("status-section").textContent = label;
   }
 
@@ -825,13 +904,16 @@
     return parts
       .map(function (orig, i) {
         const yi = (yiList[i] || "").trim();
+        const yiHtml = yi
+          ? escapeHtml(yi)
+          : '<span class="poem-yi-pending">' + escapeHtml(t("noYi")) + "</span>";
         return (
           '<div class="poem-row">' +
           '<div class="poem-orig">' +
           annotateOrigPinyin(orig) +
           "</div>" +
           '<div class="poem-yi">' +
-          escapeHtml(yi) +
+          yiHtml +
           "</div>" +
           "</div>"
         );
@@ -844,14 +926,29 @@
     if (idx < 0 || idx >= poems.length) return;
     currentIndex = idx;
     const p = poems[idx];
-    document.getElementById("modal-path").textContent =
-      p.section + " · " + p.subsection + " · " + p.title;
-    document.getElementById("modal-title").textContent = p.title;
+    const metaEn = (window.SHIJING_META_EN && window.SHIJING_META_EN[p.id]) || null;
+    if (lang === "en" && metaEn) {
+      document.getElementById("modal-path").textContent =
+        metaEn.section + " · " + metaEn.subsection + " · " + metaEn.title;
+      document.getElementById("modal-title").textContent = metaEn.title;
+    } else {
+      document.getElementById("modal-path").textContent =
+        p.section + " · " + p.subsection + " · " + p.title;
+      document.getElementById("modal-title").textContent = p.title;
+    }
     document.getElementById("modal-famous").textContent = "「" + p.famousLine + "」";
-    const yi =
-      (window.SHIJING_YI && (window.SHIJING_YI[p.id] || window.SHIJING_YI[p.title])) ||
-      p.translations ||
-      [];
+    let yi = [];
+    if (lang === "en") {
+      yi =
+        (window.SHIJING_EN && (window.SHIJING_EN[p.id] || window.SHIJING_EN[p.title])) ||
+        [];
+    }
+    if (!yi.length) {
+      yi =
+        (window.SHIJING_YI && (window.SHIJING_YI[p.id] || window.SHIJING_YI[p.title])) ||
+        p.translations ||
+        [];
+    }
     document.getElementById("modal-text").innerHTML = formatPoemHtml(p.fullText, yi);
     const sceneEl = document.getElementById("modal-scene");
     const sceneSrc = SCENE_DETAILS[p.title];
@@ -914,7 +1011,7 @@
       .slice(0, 20);
     if (!hits.length) {
       searchResults.innerHTML =
-        '<div class="search-item" style="cursor:default">未觅得相关诗篇</div>';
+        '<div class="search-item" style="cursor:default">' + (lang === 'en' ? 'No matching poems' : '未觅得相关诗篇') + '</div>';
       searchResults.hidden = false;
       return;
     }
@@ -1135,6 +1232,15 @@
     scrubDrag = false;
   });
 
+  // ---------- Language ----------
+  (function bindLang() {
+    const btn = document.getElementById("btn-lang");
+    if (!btn) return;
+    btn.addEventListener("click", function () {
+      setLang(lang === "en" ? "zh" : "en");
+    });
+  })();
+
   // ---------- Zoom bar ----------
   (function bindZoomBar() {
     const bar = document.getElementById("zoom-bar");
@@ -1161,6 +1267,7 @@
   drawMinimap();
   fitInitial(); // always land on the far left at height-fit
   resumeFromSavedProgress();
+  applyI18n();
   window.addEventListener("resize", function () {
     const factor = zoomFactorFromFit();
     computeFitScale();

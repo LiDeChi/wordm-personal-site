@@ -834,8 +834,7 @@ a.home-link {
   padding-top: 0.2em;
   word-break: break-word;
 }
-.poem-yi:empty::before {
-  content: "（暂无白话）";
+.poem-yi-pending {
   opacity: 0.45;
   font-size: 0.85rem;
 }
