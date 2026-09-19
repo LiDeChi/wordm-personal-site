@@ -70,12 +70,12 @@ export function InteractiveHomePage({ lang, onLangChange, themeMode, onThemeTogg
     useEffect(() => {
         document.title = zh ? "简永杰 · 动态呈现与交互 | wordm.us" : "Jian Yongjie · Dynamic & Interactive | wordm.us";
     }, [zh]);
-    const mindsIndex = String(FOUNT_FIELDS.length + 1).padStart(2, "0");
+    const mindsHref = withSiteParams("/minds", { lang });
     return <div className="interactive-home">
     <a className="ih-skip" href="#home-main">{zh ? "跳到正文" : "Skip to content"}</a>
     <header className="ih-header">
       <a className="ih-brand" href={`/?lang=${lang}`}>wordm<span>●</span>us</a>
-      <nav aria-label={zh ? "主导航" : "Main navigation"}><a href="#explorations">{zh ? "探索" : "Explore"}</a><a href={ARTICLES_SITE_URL}>{zh ? "文章" : "Writing"}</a><a href={`/?view=about&lang=${lang}`}>{zh ? "关于" : "About"}</a></nav>
+      <nav aria-label={zh ? "主导航" : "Main navigation"}><a href="#explorations">{zh ? "探索" : "Explore"}</a><a href={mindsHref}>{zh ? "心智" : "Minds"}</a><a href={ARTICLES_SITE_URL}>{zh ? "文章" : "Writing"}</a><a href={`/?view=about&lang=${lang}`}>{zh ? "关于" : "About"}</a></nav>
       <div className="ih-utils"><button aria-pressed={zh} onClick={() => onLangChange("zh")}>中文</button><button aria-pressed={!zh} onClick={() => onLangChange("en")}>EN</button><button className="ih-theme" onClick={onThemeToggle} aria-label={zh ? (themeMode === "day" ? "切换到黑夜模式" : "切换到白天模式") : (themeMode === "day" ? "Switch to dark mode" : "Switch to light mode")}><ThemeModeIcon mode={themeMode}/></button></div>
     </header>
     <main id="home-main">
@@ -87,11 +87,21 @@ export function InteractiveHomePage({ lang, onLangChange, themeMode, onThemeTogg
       </section>
       <section id="explorations" className="ih-explorations">
         <div className="ih-section-heading"><span>01 — {zh ? "正在探索" : "EXPLORATIONS"}</span><h2>{zh ? "从读到一段话，到走进一个世界。" : "From reading a passage to entering a world."}</h2><a href={`/fields?lang=${lang}`}>{zh ? "全部作品" : "All projects"} ↗</a></div>
+        <a className="ih-minds" href={mindsHref}>
+          <div className="ih-minds-image">
+            <img src="/minds/scenes/hero.jpg" alt={zh ? "脑、身体与环境连成同一张机器心智关系图" : "Brain, body, and environment linked as a machine-mind map"}/>
+            <span>↗</span>
+          </div>
+          <div className="ih-minds-copy">
+            <span>{zh ? "心智探索" : "EXPLORING MINDS"}</span>
+            <h3>{zh ? "机器构建心智" : "Building Machine Minds"}</h3>
+            <p>{zh ? "把意识与认知科学的主要学派、人物，以及脑、身体与环境的关系，放到同一个可操作的现场里看。" : "See the main schools of mind, their people, and how brain, body, and world relate — in one shared, operable space."}</p>
+          </div>
+        </a>
         <div className="ih-projects">{FOUNT_FIELDS.map((field, index) => <a className="ih-project" key={field.key} href={fieldEntryHref(field, lang)}>
           <div className="ih-project-image"><img src={field.coverUrl} alt={field.coverAlt[lang]} loading={index > 1 ? "lazy" : "eager"}/><span>{String(index + 1).padStart(2, "0")} ↗</span></div>
           <div className="ih-project-heading"><h3>{field.name}</h3><span>{field.kind[lang]}</span></div><p>{field.summary[lang]}</p>
         </a>)}</div>
-        <a className="ih-minds" href={`/minds?lang=${lang}`}><span>{mindsIndex} / {zh ? "心智探索" : "EXPLORING MINDS"}</span><h3>{zh ? "关于心智的不同解释，放到同一个现场里看。" : "Explore different explanations of mind in one shared space."}</h3><span className="ih-minds-arrow">↗</span></a>
       </section>
       <section className="ih-note"><span>02 — {zh ? "为什么做这些" : "THE QUESTION BEHIND THE WORK"}</span><div><h2>{zh ? "理解，能不能从一次操作开始？" : "Can understanding begin with an interaction?"}</h2><p>{zh ? "有些关系，写下来仍然很远；改变一个条件，看见结果怎样变化，就近了一步。我想把这样的时刻放进阅读、工具和日常界面里，让呈现本身也参与思考。" : "Some relationships remain distant on the page. Change a condition and watch the result, and they come closer. I want to bring those moments into reading, tools, and everyday interfaces, so the medium becomes part of the thinking."}</p><a href={ARTICLES_SITE_URL}>{zh ? "阅读我的文章" : "Read my writing"} ↗</a></div></section>
     </main>

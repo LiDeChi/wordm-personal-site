@@ -117,7 +117,7 @@
   display:block
 }
 
-.ih-eyebrow,.ih-section-heading>span,.ih-note>span,.study-heading,.ih-project-heading>span,.ih-minds>span,.ih-footer {
+.ih-eyebrow,.ih-section-heading>span,.ih-note>span,.study-heading,.ih-project-heading>span,.ih-minds-copy>span,.ih-footer {
   font:11px/1.6 var(--font-mono);
   letter-spacing:.06em
 }
@@ -392,32 +392,64 @@
 
 .ih-minds {
   display:grid;
-  grid-template-columns:180px 1fr 40px;
-  gap:20px;
-  align-items:center;
-  border-top:1px solid var(--ih-line)!important;
-  border-bottom:1px solid var(--ih-line)!important;
-  padding:35px 0;
-  margin-top:45px
+  grid-template-columns:1.45fr 1fr;
+  gap:40px;
+  align-items:start;
+  margin:0 0 55px
 }
 
-.ih-minds>span {
+.ih-minds-image {
+  position:relative;
+  aspect-ratio:1.6;
+  background:var(--ih-line);
+  overflow:hidden
+}
+
+.ih-minds-image img {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center 28%;
+  transition:transform .6s
+}
+
+.ih-minds:hover img {
+  transform:scale(1.035)
+}
+
+.ih-minds-image>span {
+  position:absolute;
+  bottom:16px;
+  right:16px;
+  background:var(--ih-paper);
+  padding:6px 12px;
+  font:12px var(--font-mono)
+}
+
+.ih-minds-copy {
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:10px;
+  max-width:460px;
+  padding-top:8px
+}
+
+.ih-minds-copy>span {
   color:var(--ih-muted)
 }
 
-.ih-minds h3 {
-  font-size:20px;
+.ih-minds-copy h3 {
+  font-size:clamp(26px,2.6vw,36px);
   font-weight:400;
-  line-height:1.7
+  line-height:1.35
 }
 
-.ih-minds .ih-minds-arrow {
-  font-size:30px;
-  transition:transform .2s
-}
-
-.ih-minds:hover .ih-minds-arrow {
-  transform:translate(3px,-3px)
+.ih-minds-copy p {
+  font-size:14px;
+  color:var(--ih-muted);
+  line-height:1.9;
+  margin:0
 }
 
 .ih-note {
@@ -484,18 +516,22 @@
     padding:0 6vw
   }
   .ih-header {
-    height:76px;
-    gap:20px;
+    height:auto;
+    min-height:76px;
+    padding:18px 0;
+    gap:12px 20px;
     flex-wrap:wrap
   }
   .ih-brand {
     font-size:22px
   }
   .ih-header nav {
+    margin-left:auto;
     gap:16px;
     font-size:12px
   }
   .ih-utils {
+    margin-left:auto;
     gap:8px
   }
   .ih-eyebrow {
@@ -569,15 +605,15 @@
     gap:35px
   }
   .ih-minds {
-    grid-template-columns:1fr 30px;
-    gap:12px;
-    padding:25px 0
+    grid-template-columns:1fr;
+    gap:18px;
+    margin-bottom:40px
   }
-  .ih-minds>span:first-child {
-    grid-column:1/-1
+  .ih-minds-copy h3 {
+    font-size:26px
   }
-  .ih-minds h3 {
-    font-size:18px
+  .ih-minds-copy p {
+    font-size:13px
   }
   .ih-note {
     grid-template-columns:1fr;
