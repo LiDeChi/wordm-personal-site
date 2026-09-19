@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   HOME_MUSIC_TRACKS,
   shuffleHomeMusicTracks,
@@ -50,16 +50,28 @@ type YouTubeWindow = Window & {
   onYouTubeIframeAPIReady?: () => void;
 };
 
+type MusicSnapshot = {
+  queue: HomeMusicTrack[];
+  index: number;
+  playing: boolean;
+  muted: boolean;
+  ready: boolean;
+  failed: boolean;
+};
+
 const YOUTUBE_API_SRC = "https://www.youtube.com/iframe_api";
 const PLAYER_ENDED = 0;
 const PLAYER_PLAYING = 1;
 const PLAYER_PAUSED = 2;
 const RESTART_THRESHOLD_SECONDS = 3;
 const DEFAULT_VOLUME = 72;
+const VOLUME_RAMP_DURATION_MS = 6000;
+const VOLUME_RAMP_TICK_MS = 50;
+const MUSIC_HOST_ID = "fount-music-youtube-host";
 
 const COPY = {
   zh: {
-    region: "主页音乐",
+    region: "音乐",
     play: "播放",
     pause: "暂停",
     previous: "上一首",
@@ -71,7 +83,7 @@ const COPY = {
     shuffleLoop: "随机播放 · 列表循环",
   },
   en: {
-    region: "Home music",
+    region: "Music",
     play: "Play",
     pause: "Pause",
     previous: "Previous",
@@ -90,6 +102,43 @@ function wrapIndex(index: number, length: number) {
   }
 
   return ((index % length) + length) % length;
+}
+
+function playerApiReady(
+  player: YouTubePlayer | null | undefined,
+): player is YouTubePlayer {
+  return (
+    typeof player?.unMute === "function" &&
+    typeof player.setVolume === "function" &&
+    typeof player.playVideo === "function"
+  );
+}
+
+function callPlayer(
+  player: YouTubePlayer | null | undefined,
+  method:
+    | "destroy"
+    | "getCurrentTime"
+    | "isMuted"
+    | "loadVideoById"
+    | "mute"
+    | "pauseVideo"
+    | "playVideo"
+    | "seekTo"
+    | "setVolume"
+    | "unMute",
+  ...args: unknown[]
+) {
+  const fn = player?.[method];
+  if (typeof fn !== "function") {
+    return undefined;
+  }
+
+  try {
+    return (fn as (...fnArgs: unknown[]) => unknown).apply(player, args);
+  } catch {
+    return undefined;
+  }
 }
 
 function loadYouTubeApi(): Promise<YouTubeNamespace> {
@@ -135,6 +184,576 @@ function loadYouTubeApi(): Promise<YouTubeNamespace> {
     };
     document.head.appendChild(script);
   });
+}
+
+function ensureMusicHost(): HTMLDivElement {
+  const existing = document.getElementById(MUSIC_HOST_ID);
+  if (existing instanceof HTMLDivElement) {
+    return existing;
+  }
+
+  const host = document.createElement("div");
+  host.id = MUSIC_HOST_ID;
+  host.className = "fount-music-host";
+  host.setAttribute("aria-hidden", "true");
+  document.body.appendChild(host);
+  return host;
+}
+
+type EngineListener = (snapshot: MusicSnapshot) => void;
+
+type MusicEngine = {
+  snapshot: MusicSnapshot;
+  player: YouTubePlayer | null;
+  host: HTMLDivElement;
+  retain: number;
+  teardownTimer: number | null;
+  kickTimer: number | null;
+  muteFallbackTimer: number | null;
+  bootPromise: Promise<void> | null;
+  userWantsSound: boolean;
+  policyMuted: boolean;
+  userPaused: boolean;
+  mutedFallbackAttempted: boolean;
+  hasStartedPlayback: boolean;
+  volume: number;
+  rampTimer: number | null;
+  hasCompletedRamp: boolean;
+  listeners: Set<EngineListener>;
+};
+
+let engine: MusicEngine | null = null;
+
+function getSnapshot(source: MusicEngine): MusicSnapshot {
+  return source.snapshot;
+}
+
+function emit(source: MusicEngine) {
+  const snapshot = source.snapshot;
+  source.listeners.forEach((listener) => listener(snapshot));
+}
+
+function patch(source: MusicEngine, partial: Partial<MusicSnapshot>) {
+  source.snapshot = { ...source.snapshot, ...partial };
+  emit(source);
+}
+
+function stopVolumeRamp(source: MusicEngine) {
+  if (source.rampTimer !== null) {
+    window.clearInterval(source.rampTimer);
+    source.rampTimer = null;
+  }
+}
+
+function applyVolume(source: MusicEngine, volume: number) {
+  const next = Math.max(0, Math.min(100, Math.round(volume)));
+  source.volume = next;
+  source.host.dataset.volume = String(next);
+  callPlayer(source.player, "setVolume", next);
+  if (next > 0 && source.userWantsSound && !source.policyMuted) {
+    source.hasStartedPlayback = true;
+    cancelMutedFallback(source);
+  }
+}
+
+function startVolumeRamp(source: MusicEngine) {
+  const player = source.player;
+  if (!player || !source.userWantsSound || source.policyMuted) {
+    return;
+  }
+
+  if (source.hasCompletedRamp || source.volume >= DEFAULT_VOLUME) {
+    applyVolume(source, DEFAULT_VOLUME);
+    source.hasCompletedRamp = true;
+    return;
+  }
+
+  if (source.rampTimer !== null) {
+    return;
+  }
+
+  const from = source.volume;
+  const startedAt = performance.now();
+  const duration = Math.max(
+    800,
+    ((DEFAULT_VOLUME - from) / DEFAULT_VOLUME) * VOLUME_RAMP_DURATION_MS,
+  );
+
+  applyVolume(source, from);
+  source.rampTimer = window.setInterval(() => {
+    if (
+      !source.player ||
+      source.userPaused ||
+      !source.userWantsSound ||
+      source.policyMuted
+    ) {
+      stopVolumeRamp(source);
+      return;
+    }
+
+    const progress = Math.min(1, (performance.now() - startedAt) / duration);
+    const eased = progress * progress;
+    applyVolume(source, from + (DEFAULT_VOLUME - from) * eased);
+
+    if (progress >= 1) {
+      stopVolumeRamp(source);
+      source.hasCompletedRamp = true;
+      applyVolume(source, DEFAULT_VOLUME);
+    }
+  }, VOLUME_RAMP_TICK_MS);
+}
+
+function cancelMutedFallback(source: MusicEngine) {
+  if (source.muteFallbackTimer !== null) {
+    window.clearTimeout(source.muteFallbackTimer);
+    source.muteFallbackTimer = null;
+  }
+}
+
+function scheduleMutedFallback(source: MusicEngine, player: YouTubePlayer) {
+  if (
+    source.mutedFallbackAttempted ||
+    source.userPaused ||
+    source.hasStartedPlayback ||
+    source.volume > 0 ||
+    source.muteFallbackTimer !== null
+  ) {
+    return;
+  }
+
+  source.muteFallbackTimer = window.setTimeout(() => {
+    source.muteFallbackTimer = null;
+    if (
+      source.userPaused ||
+      source.hasStartedPlayback ||
+      source.mutedFallbackAttempted ||
+      source.volume > 0
+    ) {
+      return;
+    }
+
+    source.mutedFallbackAttempted = true;
+    source.policyMuted = true;
+    source.hasCompletedRamp = false;
+    stopVolumeRamp(source);
+    applyVolume(source, 0);
+    callPlayer(player, "mute");
+    patch(source, { muted: true, playing: true });
+    callPlayer(player, "playVideo");
+  }, 2500);
+}
+
+function applyMutePolicy(source: MusicEngine, player: YouTubePlayer) {
+  if (source.userWantsSound && !source.policyMuted) {
+    applyVolume(
+      source,
+      source.hasCompletedRamp ? DEFAULT_VOLUME : source.volume,
+    );
+    callPlayer(player, "unMute");
+    const muted = callPlayer(player, "isMuted") === true;
+    patch(source, { muted });
+    if (!muted) {
+      source.policyMuted = false;
+      startVolumeRamp(source);
+    }
+    return;
+  }
+
+  stopVolumeRamp(source);
+  callPlayer(player, "mute");
+  patch(source, { muted: true });
+}
+
+function playCurrent(source: MusicEngine) {
+  const player = source.player;
+  if (!playerApiReady(player)) {
+    return;
+  }
+
+  source.userPaused = false;
+  applyMutePolicy(source, player);
+  callPlayer(player, "playVideo");
+  patch(source, { playing: true });
+}
+
+function playAt(source: MusicEngine, nextIndex: number) {
+  const { queue } = source.snapshot;
+  const wrapped = wrapIndex(nextIndex, queue.length);
+  const nextTrack = queue[wrapped];
+  const player = source.player;
+  if (!nextTrack || !playerApiReady(player)) {
+    return;
+  }
+
+  source.snapshot = { ...source.snapshot, index: wrapped, playing: true };
+  callPlayer(player, "loadVideoById", nextTrack.id);
+  applyMutePolicy(source, player);
+  callPlayer(player, "playVideo");
+  emit(source);
+}
+
+function tryUnmute(source: MusicEngine) {
+  const player = source.player;
+  if (!playerApiReady(player) || !source.userWantsSound) {
+    return;
+  }
+
+  source.policyMuted = false;
+  applyVolume(
+    source,
+    source.hasCompletedRamp ? DEFAULT_VOLUME : source.volume,
+  );
+  callPlayer(player, "unMute");
+  patch(source, { muted: false });
+
+  if (!source.hasCompletedRamp) {
+    startVolumeRamp(source);
+    return;
+  }
+
+  applyVolume(source, DEFAULT_VOLUME);
+}
+
+function attachPlayer(source: MusicEngine, player: YouTubePlayer) {
+  source.player = player;
+  callPlayer(player, "setVolume", source.volume);
+  if (source.userWantsSound && !source.policyMuted) {
+    callPlayer(player, "unMute");
+  }
+  callPlayer(player, "playVideo");
+}
+
+function beginUnmutedPlayback(source: MusicEngine, player: YouTubePlayer) {
+  source.player = player;
+  applyVolume(source, 0);
+  callPlayer(player, "unMute");
+  source.policyMuted = false;
+  patch(source, {
+    muted: false,
+    ready: true,
+    playing: true,
+  });
+  callPlayer(player, "playVideo");
+  startVolumeRamp(source);
+
+  if (source.kickTimer !== null) {
+    window.clearTimeout(source.kickTimer);
+  }
+  source.kickTimer = window.setTimeout(() => {
+    source.kickTimer = null;
+    if (!source.userPaused) {
+      callPlayer(source.player, "playVideo");
+    }
+  }, 350);
+}
+
+async function bootEngine(source: MusicEngine) {
+  if (playerApiReady(source.player)) {
+    if (!source.userPaused) {
+      playCurrent(source);
+    }
+    return;
+  }
+
+  if (source.bootPromise) {
+    await source.bootPromise;
+    if (playerApiReady(source.player) && source.retain > 0 && !source.userPaused) {
+      playCurrent(source);
+    } else if (!source.player && source.retain > 0 && !source.snapshot.failed) {
+      await bootEngine(source);
+    }
+    return;
+  }
+
+  if (source.snapshot.failed) {
+    return;
+  }
+
+  const firstTrack = source.snapshot.queue[0];
+  if (!firstTrack) {
+    patch(source, { failed: true, playing: false });
+    return;
+  }
+
+  const run = async () => {
+  try {
+    source.policyMuted = false;
+    const api = await loadYouTubeApi();
+    source.host.replaceChildren();
+    const mount = document.createElement("div");
+    source.host.appendChild(mount);
+
+    const created = new api.Player(mount, {
+      height: 180,
+      width: 320,
+      videoId: firstTrack.id,
+      playerVars: {
+        autoplay: 1,
+        controls: 0,
+        disablekb: 1,
+        fs: 0,
+        iv_load_policy: 3,
+        modestbranding: 1,
+        mute: 0,
+        playsinline: 1,
+        rel: 0,
+        origin: window.location.origin,
+      },
+      events: {
+        onReady: (event) => {
+          const initialPlayer = playerApiReady(event.target)
+            ? event.target
+            : created;
+          beginUnmutedPlayback(source, initialPlayer);
+
+          if (playerApiReady(initialPlayer)) {
+            return;
+          }
+
+          let tries = 0;
+          const retryId = window.setInterval(() => {
+            tries += 1;
+            const nextPlayer = playerApiReady(event.target)
+              ? event.target
+              : playerApiReady(created)
+                ? created
+                : null;
+            if (nextPlayer) {
+              window.clearInterval(retryId);
+              attachPlayer(source, nextPlayer);
+              if (!source.snapshot.muted && source.userWantsSound) {
+                startVolumeRamp(source);
+              }
+              return;
+            }
+            if (tries >= 80) {
+              window.clearInterval(retryId);
+            }
+          }, 50);
+        },
+        onStateChange: (event) => {
+          if (event.data === PLAYER_ENDED) {
+            playAt(source, source.snapshot.index + 1);
+            return;
+          }
+
+          if (event.data === PLAYER_PLAYING) {
+            source.hasStartedPlayback = true;
+            cancelMutedFallback(source);
+            patch(source, { playing: true, ready: true });
+            if (source.userWantsSound && !source.policyMuted) {
+              tryUnmute(source);
+            }
+            return;
+          }
+
+          if (event.data === PLAYER_PAUSED) {
+            patch(source, { playing: false });
+            if (!source.userPaused && source.userWantsSound) {
+              scheduleMutedFallback(source, event.target);
+            }
+          }
+        },
+        onError: () => {
+          playAt(source, source.snapshot.index + 1);
+        },
+      },
+    });
+  } catch {
+    if (source.retain > 0) {
+      patch(source, { failed: true, playing: false });
+    }
+  }
+  };
+
+  source.bootPromise = run().finally(() => {
+    if (source.bootPromise) {
+      source.bootPromise = null;
+    }
+  });
+  await source.bootPromise;
+}
+
+function retainEngine(): MusicEngine {
+  if (!engine) {
+    const queue = shuffleHomeMusicTracks();
+    engine = {
+      snapshot: {
+        queue,
+        index: 0,
+        playing: true,
+        muted: false,
+        ready: false,
+        failed: false,
+      },
+      player: null,
+      host: ensureMusicHost(),
+      retain: 0,
+      teardownTimer: null,
+      kickTimer: null,
+      muteFallbackTimer: null,
+      bootPromise: null,
+      userWantsSound: true,
+      policyMuted: false,
+      userPaused: false,
+      mutedFallbackAttempted: false,
+      hasStartedPlayback: false,
+      volume: 0,
+      rampTimer: null,
+      hasCompletedRamp: false,
+      listeners: new Set(),
+    };
+  }
+
+  engine.retain += 1;
+  if (engine.teardownTimer !== null) {
+    window.clearTimeout(engine.teardownTimer);
+    engine.teardownTimer = null;
+  }
+
+  void bootEngine(engine);
+  return engine;
+}
+
+function releaseEngine() {
+  if (!engine) {
+    return;
+  }
+
+  engine.retain = Math.max(0, engine.retain - 1);
+  if (engine.retain > 0) {
+    return;
+  }
+
+  const current = engine;
+  current.teardownTimer = window.setTimeout(() => {
+    if (current.retain > 0) {
+      current.teardownTimer = null;
+      return;
+    }
+
+    if (current.kickTimer !== null) {
+      window.clearTimeout(current.kickTimer);
+      current.kickTimer = null;
+    }
+
+    cancelMutedFallback(current);
+    stopVolumeRamp(current);
+
+    callPlayer(current.player, "destroy");
+
+    current.player = null;
+    current.host.replaceChildren();
+    current.host.remove();
+    if (engine === current) {
+      engine = null;
+    }
+  }, 400);
+}
+
+function subscribeEngine(listener: EngineListener) {
+  const current = retainEngine();
+  current.listeners.add(listener);
+  listener(getSnapshot(current));
+
+  return () => {
+    current.listeners.delete(listener);
+    releaseEngine();
+  };
+}
+
+function markUserGesture() {
+  if (!engine?.userWantsSound) {
+    return;
+  }
+
+  engine.policyMuted = false;
+}
+
+function toggleEnginePlay() {
+  if (!playerApiReady(engine?.player)) {
+    return;
+  }
+
+  if (engine.snapshot.playing) {
+    engine.userPaused = true;
+    stopVolumeRamp(engine);
+    callPlayer(engine.player, "pauseVideo");
+    patch(engine, { playing: false });
+    return;
+  }
+
+  markUserGesture();
+  playCurrent(engine);
+}
+
+function goEnginePrevious() {
+  if (!playerApiReady(engine?.player)) {
+    return;
+  }
+
+  markUserGesture();
+  const elapsed = Number(callPlayer(engine.player, "getCurrentTime") ?? 0);
+  if (elapsed > RESTART_THRESHOLD_SECONDS) {
+    engine.userPaused = false;
+    callPlayer(engine.player, "seekTo", 0, true);
+    applyMutePolicy(engine, engine.player);
+    callPlayer(engine.player, "playVideo");
+    patch(engine, { playing: true });
+    return;
+  }
+
+  playAt(engine, engine.snapshot.index - 1);
+}
+
+function goEngineNext() {
+  if (!engine) {
+    return;
+  }
+
+  markUserGesture();
+  playAt(engine, engine.snapshot.index + 1);
+}
+
+function toggleEngineMute() {
+  if (!playerApiReady(engine?.player)) {
+    return;
+  }
+
+  if (engine.snapshot.muted) {
+    engine.userWantsSound = true;
+    engine.policyMuted = false;
+    engine.hasCompletedRamp = false;
+    applyVolume(engine, 0);
+    callPlayer(engine.player, "unMute");
+    patch(engine, { muted: false });
+    if (!engine.snapshot.playing) {
+      playCurrent(engine);
+    } else {
+      startVolumeRamp(engine);
+    }
+    return;
+  }
+
+  engine.userWantsSound = false;
+  stopVolumeRamp(engine);
+  callPlayer(engine.player, "mute");
+  patch(engine, { muted: true });
+}
+
+function unlockEngineSound() {
+  if (!engine || !engine.userWantsSound) {
+    return;
+  }
+
+  if (!engine.policyMuted && !engine.snapshot.muted) {
+    return;
+  }
+
+  tryUnmute(engine);
+  if (!engine.snapshot.playing && !engine.userPaused) {
+    playCurrent(engine);
+  }
 }
 
 function PrevIcon() {
@@ -199,20 +818,45 @@ function SpeakerIcon({ muted }: { muted: boolean }) {
 
 export function FountMusicPlayer({ lang }: FountMusicPlayerProps) {
   const copy = COPY[lang];
-  const [queue] = useState<HomeMusicTrack[]>(() => shuffleHomeMusicTracks());
-  const [index, setIndex] = useState(0);
-  const [playing, setPlaying] = useState(true);
-  const [muted, setMuted] = useState(true);
-  const [ready, setReady] = useState(false);
-  const [failed, setFailed] = useState(false);
-  const hostRef = useRef<HTMLDivElement | null>(null);
-  const playerRef = useRef<YouTubePlayer | null>(null);
-  const indexRef = useRef(0);
-  const queueRef = useRef(queue);
-  const userWantsSoundRef = useRef(true);
-  const policyMutedRef = useRef(true);
+  const [snapshot, setSnapshot] = useState<MusicSnapshot>(() =>
+    engine
+      ? getSnapshot(engine)
+      : {
+          queue: HOME_MUSIC_TRACKS,
+          index: 0,
+          playing: true,
+          muted: false,
+          ready: false,
+          failed: false,
+        },
+  );
 
-  const track = queue[index] ?? HOME_MUSIC_TRACKS[0];
+  useEffect(() => subscribeEngine(setSnapshot), []);
+
+  useEffect(() => {
+    const onGesture = (event: Event) => {
+      const target = event.target;
+      if (target instanceof Element && target.closest(".fount-music-rail")) {
+        return;
+      }
+
+      unlockEngineSound();
+    };
+
+    window.addEventListener("pointerdown", onGesture, { capture: true });
+    window.addEventListener("keydown", onGesture, { capture: true });
+    window.addEventListener("wheel", onGesture, { capture: true, passive: true });
+    window.addEventListener("touchstart", onGesture, { capture: true, passive: true });
+
+    return () => {
+      window.removeEventListener("pointerdown", onGesture, { capture: true });
+      window.removeEventListener("keydown", onGesture, { capture: true });
+      window.removeEventListener("wheel", onGesture, { capture: true });
+      window.removeEventListener("touchstart", onGesture, { capture: true });
+    };
+  }, []);
+
+  const track = snapshot.queue[snapshot.index] ?? HOME_MUSIC_TRACKS[0];
   const trackLabel = useMemo(() => {
     if (!track) {
       return "";
@@ -220,264 +864,19 @@ export function FountMusicPlayer({ lang }: FountMusicPlayerProps) {
     return `${track.artist} — ${track.title}`;
   }, [track]);
 
-  const playAt = useCallback((nextIndex: number) => {
-    const length = queueRef.current.length;
-    const wrapped = wrapIndex(nextIndex, length);
-    const nextTrack = queueRef.current[wrapped];
-    const player = playerRef.current;
-    if (!nextTrack || !player) {
-      return;
-    }
-
-    indexRef.current = wrapped;
-    setIndex(wrapped);
-    setPlaying(true);
-    player.loadVideoById(nextTrack.id);
-    if (userWantsSoundRef.current) {
-      policyMutedRef.current = false;
-      player.unMute();
-      player.setVolume(DEFAULT_VOLUME);
-      setMuted(false);
-    }
-  }, []);
-
-  const syncMuteState = useCallback((player: YouTubePlayer) => {
-    const isMuted = player.isMuted();
-    setMuted(isMuted);
-    if (!isMuted) {
-      policyMutedRef.current = false;
-    }
-  }, []);
-
-  const tryUnmute = useCallback(() => {
-    const player = playerRef.current;
-    if (!player || !userWantsSoundRef.current) {
-      return;
-    }
-
-    player.unMute();
-    player.setVolume(DEFAULT_VOLUME);
-    const stillMuted = player.isMuted();
-    setMuted(stillMuted);
-    if (!stillMuted) {
-      policyMutedRef.current = false;
-    }
-  }, []);
-
-  useEffect(() => {
-    queueRef.current = queue;
-  }, [queue]);
-
-  useEffect(() => {
-    indexRef.current = index;
-  }, [index]);
-
-  useEffect(() => {
-    const firstTrack = queue[0];
-    const host = hostRef.current;
-    if (!firstTrack || !host) {
-      return;
-    }
-
-    let cancelled = false;
-    let createdPlayer: YouTubePlayer | null = null;
-
-    const start = async () => {
-      try {
-        const api = await loadYouTubeApi();
-        if (cancelled || !hostRef.current) {
-          return;
-        }
-
-        host.replaceChildren();
-        const mount = document.createElement("div");
-        host.appendChild(mount);
-
-        createdPlayer = new api.Player(mount, {
-          height: 180,
-          width: 320,
-          videoId: firstTrack.id,
-          playerVars: {
-            autoplay: 1,
-            controls: 0,
-            disablekb: 1,
-            fs: 0,
-            iv_load_policy: 3,
-            modestbranding: 1,
-            mute: 1,
-            playsinline: 1,
-            rel: 0,
-            origin: window.location.origin,
-          },
-          events: {
-            onReady: (event) => {
-              if (cancelled) {
-                event.target.destroy();
-                return;
-              }
-
-              playerRef.current = event.target;
-              event.target.setVolume(DEFAULT_VOLUME);
-              event.target.mute();
-              event.target.playVideo();
-              setReady(true);
-              setPlaying(true);
-              setMuted(true);
-            },
-            onStateChange: (event) => {
-              if (cancelled) {
-                return;
-              }
-
-              if (event.data === PLAYER_ENDED) {
-                playAt(indexRef.current + 1);
-                return;
-              }
-
-              if (event.data === PLAYER_PLAYING) {
-                setPlaying(true);
-                setReady(true);
-                tryUnmute();
-                return;
-              }
-
-              if (event.data === PLAYER_PAUSED) {
-                setPlaying(false);
-              }
-            },
-            onError: () => {
-              if (!cancelled) {
-                playAt(indexRef.current + 1);
-              }
-            },
-          },
-        });
-        playerRef.current = createdPlayer;
-      } catch {
-        if (!cancelled) {
-          setFailed(true);
-          setPlaying(false);
-        }
-      }
-    };
-
-    void start();
-
-    return () => {
-      cancelled = true;
-      try {
-        createdPlayer?.destroy();
-        playerRef.current?.destroy();
-      } catch {
-        // YouTube may throw if the iframe is already gone.
-      }
-      playerRef.current = null;
-      host.replaceChildren();
-    };
-  }, [playAt, queue, tryUnmute]);
-
-  useEffect(() => {
-    const onGesture = (event: Event) => {
-      if (!userWantsSoundRef.current || !policyMutedRef.current) {
-        return;
-      }
-
-      const target = event.target;
-      if (target instanceof Element && target.closest(".fount-music-rail")) {
-        return;
-      }
-
-      tryUnmute();
-    };
-
-    window.addEventListener("pointerdown", onGesture, { capture: true });
-    window.addEventListener("keydown", onGesture, { capture: true });
-
-    return () => {
-      window.removeEventListener("pointerdown", onGesture, { capture: true });
-      window.removeEventListener("keydown", onGesture, { capture: true });
-    };
-  }, [tryUnmute]);
-
-  function togglePlay() {
-    const player = playerRef.current;
-    if (!player) {
-      return;
-    }
-
-    if (playing) {
-      player.pauseVideo();
-      setPlaying(false);
-      return;
-    }
-
-    player.playVideo();
-    setPlaying(true);
-    if (userWantsSoundRef.current) {
-      tryUnmute();
-    }
-  }
-
-  function goPrevious() {
-    const player = playerRef.current;
-    if (!player) {
-      return;
-    }
-
-    const elapsed = player.getCurrentTime?.() ?? 0;
-    if (elapsed > RESTART_THRESHOLD_SECONDS) {
-      player.seekTo(0, true);
-      player.playVideo();
-      setPlaying(true);
-      return;
-    }
-
-    playAt(indexRef.current - 1);
-  }
-
-  function goNext() {
-    playAt(indexRef.current + 1);
-  }
-
-  function toggleMute() {
-    const player = playerRef.current;
-    if (!player) {
-      return;
-    }
-
-    if (muted) {
-      userWantsSoundRef.current = true;
-      policyMutedRef.current = false;
-      player.unMute();
-      player.setVolume(DEFAULT_VOLUME);
-      syncMuteState(player);
-      if (!playing) {
-        player.playVideo();
-        setPlaying(true);
-      }
-      return;
-    }
-
-    userWantsSoundRef.current = false;
-    player.mute();
-    setMuted(true);
-  }
-
   return (
     <aside
-      className={`fount-music-rail${playing ? " is-playing" : ""}${muted ? " is-muted" : ""}${failed ? " is-failed" : ""}`}
+      className={`fount-music-rail${snapshot.playing ? " is-playing" : ""}${snapshot.muted ? " is-muted" : ""}${snapshot.failed ? " is-failed" : ""}`}
       aria-label={copy.region}
     >
-      <div ref={hostRef} className="fount-music-host" aria-hidden="true" />
-
       <p className="sr-only">{copy.shuffleLoop}</p>
 
       <button
         type="button"
         className="fount-music-btn"
         aria-label={copy.previous}
-        disabled={!ready || failed}
-        onClick={goPrevious}
+        disabled={!snapshot.ready || snapshot.failed}
+        onClick={goEnginePrevious}
       >
         <PrevIcon />
       </button>
@@ -485,19 +884,19 @@ export function FountMusicPlayer({ lang }: FountMusicPlayerProps) {
       <button
         type="button"
         className="fount-music-btn fount-music-play"
-        aria-label={playing ? copy.pause : copy.play}
-        disabled={failed}
-        onClick={togglePlay}
+        aria-label={snapshot.playing ? copy.pause : copy.play}
+        disabled={snapshot.failed}
+        onClick={toggleEnginePlay}
       >
-        {playing ? <PauseIcon /> : <PlayIcon />}
+        {snapshot.playing ? <PauseIcon /> : <PlayIcon />}
       </button>
 
       <button
         type="button"
         className="fount-music-btn"
         aria-label={copy.next}
-        disabled={!ready || failed}
-        onClick={goNext}
+        disabled={!snapshot.ready || snapshot.failed}
+        onClick={goEngineNext}
       >
         <NextIcon />
       </button>
@@ -505,17 +904,17 @@ export function FountMusicPlayer({ lang }: FountMusicPlayerProps) {
       <button
         type="button"
         className="fount-music-btn fount-music-mute"
-        aria-label={muted ? copy.unmute : copy.mute}
-        title={muted ? copy.tapToHear : undefined}
-        disabled={!ready || failed}
-        onClick={toggleMute}
+        aria-label={snapshot.muted ? copy.unmute : copy.mute}
+        title={snapshot.muted ? copy.tapToHear : undefined}
+        disabled={!snapshot.ready || snapshot.failed}
+        onClick={toggleEngineMute}
       >
-        <SpeakerIcon muted={muted} />
+        <SpeakerIcon muted={snapshot.muted} />
       </button>
 
       <div className="fount-music-copy" aria-live="polite">
         <strong className="fount-music-title">
-          {failed ? copy.unavailable : trackLabel}
+          {snapshot.failed ? copy.unavailable : trackLabel}
         </strong>
       </div>
     </aside>

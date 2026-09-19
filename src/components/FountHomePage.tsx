@@ -2519,7 +2519,7 @@ export function FountHomePage({
         linkClassName="fount-social-link"
       />
 
-      {isHomePage ? <FountMusicPlayer lang={lang} /> : null}
+      <FountMusicPlayer lang={lang} />
 
       {isDocsPage ? (
         <FountDocsSection lang={lang} />
