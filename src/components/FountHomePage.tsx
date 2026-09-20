@@ -3254,7 +3254,6 @@ function FountFieldsSection({ lang }: { lang: Lang }) {
         <div className="fount-fields-hero-copy">
           <p className="fount-fields-eyebrow">{copy.fieldsEyebrow}</p>
           <h1>{copy.fieldsTitle}</h1>
-          <p>{copy.fieldsLead}</p>
         </div>
         <div className="fount-fields-hero-tools">
           <div

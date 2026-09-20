@@ -87,7 +87,7 @@ export function InteractiveHomePage({ lang, onLangChange, themeMode, onThemeTogg
         <WaveStudy lang={lang}/>
       </section>
       <section id="explorations" className="ih-explorations">
-        <div className="ih-section-heading"><span>01 — {zh ? "正在探索" : "EXPLORATIONS"}</span><h2>{zh ? "从读到一段话，到走进一个世界。" : "From reading a passage to entering a world."}</h2><a href={`/fields?lang=${lang}`}>{zh ? "全部作品" : "All projects"} ↗</a></div>
+        <div className="ih-section-heading"><span>01 — {zh ? "正在探索" : "EXPLORATIONS"}</span><a href={`/fields?lang=${lang}`}>{zh ? "全部作品" : "All projects"} ↗</a></div>
         <a className="ih-minds" href={mindsHref}>
           <div className="ih-minds-image">
             <img src="/minds/scenes/hero.jpg" alt={zh ? "脑、身体与环境连成同一张机器心智关系图" : "Brain, body, and environment linked as a machine-mind map"}/>

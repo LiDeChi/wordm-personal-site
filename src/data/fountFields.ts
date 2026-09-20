@@ -22,15 +22,18 @@ export type FountField = {
   kind: LocalizedText;
   status?: LocalizedText;
   summary: LocalizedText;
+  /** ISO date when this Field was added to the site (sort key). */
+  addedAt: string;
   readingShift?: {
     from: LocalizedText;
     to: LocalizedText;
   };
 };
 
-export const FOUNT_FIELDS: FountField[] = [
+const FOUNT_FIELDS_RAW: FountField[] = [
   {
     key: "flipook",
+    addedAt: "2026-07-17",
     name: "Flipook",
     href: "https://flipook.wordm.us",
     previewUrl: "flipook.wordm.us",
@@ -78,6 +81,7 @@ export const FOUNT_FIELDS: FountField[] = [
   },
   {
     key: "museum-book",
+    addedAt: "2026-07-17",
     name: "MuseumBook",
     href: "https://museum.wordm.us",
     previewUrl: "museum.wordm.us",
@@ -135,6 +139,7 @@ export const FOUNT_FIELDS: FountField[] = [
   },
   {
     key: "shijing",
+    addedAt: "2026-09-18T11:34:50Z",
     name: "诗经长卷",
     href: "https://wordm.us/shijing/",
     previewUrl: "wordm.us/shijing",
@@ -185,6 +190,7 @@ export const FOUNT_FIELDS: FountField[] = [
   },
   {
     key: "bookplain",
+    addedAt: "2026-07-23T07:40:57Z",
     name: "Bookplain",
     href: "https://bookplain.wordm.us",
     previewUrl: "bookplain.wordm.us",
@@ -242,6 +248,7 @@ export const FOUNT_FIELDS: FountField[] = [
   },
   {
     key: "wanjuan",
+    addedAt: "2026-07-23T12:02:44Z",
     name: "万卷 WanJuan",
     href: "https://wanjuan.wordm.us",
     previewUrl: "wanjuan.wordm.us",
@@ -299,6 +306,7 @@ export const FOUNT_FIELDS: FountField[] = [
   },
   {
     key: "ringbook",
+    addedAt: "2026-07-23T07:51:38Z",
     name: "RingBook",
     href: "https://ringbook.wordm.us",
     previewUrl: "ringbook.wordm.us",
@@ -356,6 +364,7 @@ export const FOUNT_FIELDS: FountField[] = [
   },
   {
     key: "arc3",
+    addedAt: "2026-07-17",
     name: "ARC3",
     href: "https://arc3.wordm.us",
     previewUrl: "arc3.wordm.us",
@@ -403,6 +412,7 @@ export const FOUNT_FIELDS: FountField[] = [
   },
   {
     key: "forge",
+    addedAt: "2026-07-17",
     name: "Forge",
     href: "https://agent.wordm.us",
     previewUrl: "agent.wordm.us",
@@ -439,6 +449,7 @@ export const FOUNT_FIELDS: FountField[] = [
   },
   {
     key: "foundry-agent-studio",
+    addedAt: "2026-07-23T07:49:01Z",
     name: "Foundry Agent Studio",
     href: "https://foundry.wordm.us",
     previewUrl: "foundry.wordm.us",
@@ -486,6 +497,7 @@ export const FOUNT_FIELDS: FountField[] = [
   },
   {
     key: "town",
+    addedAt: "2026-07-17",
     name: "Town Agents",
     href: "/?view=about&show=town&project=town",
     previewUrl: "wordm.us/town-agents",
@@ -539,6 +551,7 @@ export const FOUNT_FIELDS: FountField[] = [
   },
   {
     key: "world-models-v3",
+    addedAt: "2026-07-23T07:18:50Z",
     name: "World Models V3",
     href: "/fields/explainers/world-models-v3.mp4",
     previewUrl: "wordm.us/fields/explainers/world-models-v3.mp4",
@@ -591,6 +604,7 @@ export const FOUNT_FIELDS: FountField[] = [
   },
   {
     key: "genie-explainer",
+    addedAt: "2026-07-23T07:19:00Z",
     name: "Genie",
     href: "/fields/explainers/genie.mp4",
     previewUrl: "wordm.us/fields/explainers/genie.mp4",
@@ -641,4 +655,38 @@ export const FOUNT_FIELDS: FountField[] = [
       en: "A twelve-chapter explanation of inferring latent actions from unlabeled video and generating an interactive environment frame by frame.",
     },
   },
+,
+  {
+    key: "alife",
+    addedAt: "2026-09-20T06:00:00Z",
+    name: "人工生命史",
+    href: "/alife/",
+    previewUrl: "wordm.us/alife",
+    coverUrl: "/alife/assets/cover.svg",
+    coverAlt: {
+      zh: "人工生命史画廊：时间与流派交织的展览现场",
+      en: "Artificial life history gallery across time and schools",
+    },
+    coverCaption: {
+      zh: "悬停看扬弃，点击进入可运行核心",
+      en: "Hover for lineage; click into runnable cores",
+    },
+    kind: {
+      zh: "人工生命史展览",
+      en: "ALife History Museum",
+    },
+    status: {
+      zh: "可探索",
+      en: "Explore now",
+    },
+    summary: {
+      zh: "以时间与流派织成画廊：历史上的人工生命项目、团队与可交互演示。",
+      en: "A gallery by decade and school — historical ALife projects, teams, and interactive demos.",
+    },
+  },
 ];
+
+/** Fields sorted by addedAt descending (newest first). */
+export const FOUNT_FIELDS: FountField[] = [...FOUNT_FIELDS_RAW].sort(
+  (a, b) => b.addedAt.localeCompare(a.addedAt),
+);
