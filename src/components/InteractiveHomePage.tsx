@@ -71,11 +71,12 @@ export function InteractiveHomePage({ lang, onLangChange, themeMode, onThemeTogg
         document.title = zh ? "简永杰 · 动态呈现与交互 | wordm.us" : "Jian Yongjie · Dynamic & Interactive | wordm.us";
     }, [zh]);
     const mindsHref = withSiteParams("/minds", { lang });
+    const alifeHref = withSiteParams("/alife/", { lang });
     return <div className="interactive-home">
     <a className="ih-skip" href="#home-main">{zh ? "跳到正文" : "Skip to content"}</a>
     <header className="ih-header">
       <a className="ih-brand" href={`/?lang=${lang}`}>wordm<span>●</span>us</a>
-      <nav aria-label={zh ? "主导航" : "Main navigation"}><a href="#explorations">{zh ? "探索" : "Explore"}</a><a href={mindsHref}>{zh ? "心智" : "Minds"}</a><a href={ARTICLES_SITE_URL}>{zh ? "文章" : "Writing"}</a><a href={`/?view=about&lang=${lang}`}>{zh ? "关于" : "About"}</a></nav>
+      <nav aria-label={zh ? "主导航" : "Main navigation"}><a href="#explorations">{zh ? "探索" : "Explore"}</a><a href={mindsHref}>{zh ? "心智" : "Minds"}</a><a href={alifeHref}>{zh ? "人工生命" : "ALife"}</a><a href={ARTICLES_SITE_URL}>{zh ? "文章" : "Writing"}</a><a href={`/?view=about&lang=${lang}`}>{zh ? "关于" : "About"}</a></nav>
       <div className="ih-utils"><button aria-pressed={zh} onClick={() => onLangChange("zh")}>中文</button><button aria-pressed={!zh} onClick={() => onLangChange("en")}>EN</button><button className="ih-theme" onClick={onThemeToggle} aria-label={zh ? (themeMode === "day" ? "切换到黑夜模式" : "切换到白天模式") : (themeMode === "day" ? "Switch to dark mode" : "Switch to light mode")}><ThemeModeIcon mode={themeMode}/></button></div>
     </header>
     <main id="home-main">
@@ -96,6 +97,17 @@ export function InteractiveHomePage({ lang, onLangChange, themeMode, onThemeTogg
             <span>{zh ? "心智探索" : "EXPLORING MINDS"}</span>
             <h3>{zh ? "机器构建心智" : "Building Machine Minds"}</h3>
             <p>{zh ? "把意识与认知科学的主要学派、人物，以及脑、身体与环境的关系，放到同一个可操作的现场里看。" : "See the main schools of mind, their people, and how brain, body, and world relate — in one shared, operable space."}</p>
+          </div>
+        </a>
+        <a className="ih-minds ih-alife" href={alifeHref}>
+          <div className="ih-minds-image">
+            <img src="/alife/assets/cover.svg" alt={zh ? "人工生命史画廊：时间与流派交织的展览现场" : "Artificial life history gallery across time and schools"}/>
+            <span>↗</span>
+          </div>
+          <div className="ih-minds-copy">
+            <span>{zh ? "人工生命史" : "ALIFE MUSEUM"}</span>
+            <h3>{zh ? "历史上的人工生命" : "Artificial Life, Across History"}</h3>
+            <p>{zh ? "以时间与流派织成画廊：悬停看团队与扬弃，可演示的项目可进入核心交互。" : "A gallery by decade and school — hover for lineage and limits; open runnable cores where demos exist."}</p>
           </div>
         </a>
         <div className="ih-projects">{FOUNT_FIELDS.map((field, index) => <a className="ih-project" key={field.key} href={fieldEntryHref(field, lang)}>
