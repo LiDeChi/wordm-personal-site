@@ -270,12 +270,12 @@ function cardHTML(it) {
     .slice(0, 3)
     .map(
       (L) =>
-        `<img class="gcard-lead-photo" src="${escapeHtml(L.photo)}" alt="" title="${escapeHtml(L.name)}" width="36" height="44" loading="lazy" decoding="async" />`
+        `<img class="gcard-lead-photo" src="${escapeHtml(L.photo.startsWith("/") ? L.photo : "/alife/" + L.photo)}" alt="" title="${escapeHtml(L.name)}" width="36" height="44" loading="lazy" decoding="async" />`
     )
     .join('');
   return `<button type="button" class="${cls}" data-id="${escapeHtml(it.id)}" data-year="${it.year}" data-demo="${runnable ? escapeHtml(it.demo) : ''}" style="--card-accent:${accent}">
     <div class="gcard-cover" aria-hidden="true">
-      ${runnable ? `<img class="gcard-thumb" src="assets/previews/${escapeHtml(it.demo)}.png" alt="" loading="lazy" decoding="async" />` : ''}
+      ${runnable ? `<img class="gcard-thumb" src="/alife/assets/previews/${escapeHtml(it.demo)}.png" alt="" loading="lazy" decoding="async" />` : ''}
       ${runnable ? `<canvas class="gcard-preview" width="320" height="180" data-demo="${escapeHtml(it.demo)}"></canvas>` : ''}
       ${runnable ? '<span class="gcard-demo-badge">可演示 · 点击进入</span>' : ''}
       ${leadPhotos ? `<div class="gcard-leads">${leadPhotos}</div>` : ''}
@@ -568,7 +568,10 @@ function fillTips(it) {
       const attrs = clickable
         ? `type="button" data-href="${escapeHtml(href)}" title="${escapeHtml(title)}"`
         : `title="${escapeHtml(title)}" aria-disabled="true"`;
-      const photo = L.photo || L.avatar || '';
+      const photoRaw = L.photo || L.avatar || '';
+      const photo = photoRaw && !photoRaw.startsWith('http') && !photoRaw.startsWith('/')
+        ? '/alife/' + photoRaw
+        : photoRaw;
       return `<${tag} class="lead${clickable ? ' is-link' : ' is-static'}" ${attrs}>
         <img class="lead-photo" src="${escapeHtml(photo)}" alt="${escapeHtml(L.name)}" width="80" height="100" loading="lazy" decoding="async" />
         <div class="lead-text">
@@ -920,7 +923,7 @@ window.addEventListener('resize', () => {
 });
 
 async function main() {
-  const res = await fetch('data/catalog.json');
+  const res = await fetch('/alife/data/catalog.json');
   state.catalog = await res.json();
   for (const it of state.catalog.items) {
     if (it.id === 'lenia' && (!it.demo || it.demo === 'lenia')) it.demo = 'lenia-lite';

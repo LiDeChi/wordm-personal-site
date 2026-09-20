@@ -9,9 +9,10 @@
 /oneagent /oneagent/ 301
 /oneagent/* /index.html 200
 
-# 人工生命史展览：显式映射，避免被下方 SPA 兜底抢走
-/alife          /alife/index.html  200
+# 人工生命史展览：无尾斜杠先规范化，避免相对资源指到站点根
+/alife          /alife/            301
 /alife/         /alife/index.html  200
+/alife/index.html /alife/          301
 
 # 站内博客暂时屏蔽：永久跳转到 GitHub Pages 个人博客
 /blog         https://lidechi.github.io/        301
