@@ -655,7 +655,6 @@ const FOUNT_FIELDS_RAW: FountField[] = [
       en: "A twelve-chapter explanation of inferring latent actions from unlabeled video and generating an interactive environment frame by frame.",
     },
   },
-,
   {
     key: "alife",
     addedAt: "2026-09-20T06:00:00Z",
