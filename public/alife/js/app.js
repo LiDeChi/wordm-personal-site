@@ -1,10 +1,12 @@
-import { DEMO_FACTORIES, DEMO_LABELS, isRunnableDemo } from './demos/index.js';
+import { DEMO_LABELS, isRunnableDemo, loadDemoFactory } from './demos/index.js';
 
 const SCHOOL_COLORS = [
   '#34d399', '#60a5fa', '#a78bfa', '#f472b6', '#fbbf24',
   '#2dd4bf', '#fb7185', '#818cf8', '#4ade80', '#f59e0b',
   '#22d3ee', '#e879f9', '#a3e635', '#38bdf8', '#f97316',
 ];
+
+const GALLERY_BATCH = 14;
 
 const state = {
   catalog: null,
@@ -13,11 +15,17 @@ const state = {
   demoOnly: false,
   searchQuery: '',
   activeDemo: null,
+  drawerItemId: null,
+  drawerDemoId: null,
+  demoLoadGen: 0,
   tipsItemId: null,
   tipsMode: null,
   hoverTimer: null,
   longPressTimer: null,
   suppressClick: false,
+  galleryItems: [],
+  galleryShown: 0,
+  galleryObserver: null,
 };
 
 const el = {
@@ -214,7 +222,7 @@ function renderSearchResults(q) {
       el.searchInput.value = '';
       closeSearch();
       render();
-      const card = el.gallery.querySelector(`[data-id="${id}"]`);
+      const card = ensureCardInDom(`[data-id="${id}"]`);
       if (card) {
         card.scrollIntoView({ behavior: 'smooth', block: 'center' });
         showTips(id, coarsePointer() ? 'sheet' : 'hover', card);
@@ -230,7 +238,7 @@ function renderYearRail(items) {
     .join('');
   el.yearRail.querySelectorAll('.year-tick').forEach((n) => {
     n.addEventListener('click', () => {
-      const card = el.gallery.querySelector(`[data-year="${n.dataset.year}"]`);
+      const card = ensureCardInDom(`[data-year="${n.dataset.year}"]`);
       if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
   });
@@ -259,7 +267,7 @@ function cardHTML(it) {
     .slice(0, 3)
     .map(
       (L) =>
-        `<img class="gcard-lead-photo" src="${escapeHtml(L.photo)}" alt="" title="${escapeHtml(L.name)}" width="36" height="44" loading="lazy" />`
+        `<img class="gcard-lead-photo" src="${escapeHtml(L.photo)}" alt="" title="${escapeHtml(L.name)}" width="36" height="44" loading="lazy" decoding="async" />`
     )
     .join('');
   return `<button type="button" class="${cls}" data-id="${escapeHtml(it.id)}" data-year="${it.year}" style="--card-accent:${accent}">
@@ -278,27 +286,104 @@ function cardHTML(it) {
   </button>`;
 }
 
+function decadeOf(year) {
+  return Math.floor(year / 10) * 10;
+}
+
+function ensureDecadeBand(decade, totalInDecade) {
+  let section = el.gallery.querySelector(`.decade-band[data-decade="${decade}"]`);
+  if (section) return section.querySelector('.gallery-grid');
+  section = document.createElement('section');
+  section.className = 'decade-band';
+  section.dataset.decade = String(decade);
+  section.innerHTML = `<div class="decade-label"><h2>${decade}s</h2><span data-decade-count>${totalInDecade}</span></div>
+      <div class="gallery-grid"></div>`;
+  const sentinel = el.gallery.querySelector('.gallery-sentinel');
+  if (sentinel) el.gallery.insertBefore(section, sentinel);
+  else el.gallery.appendChild(section);
+  return section.querySelector('.gallery-grid');
+}
+
+function appendGalleryBatch(count = GALLERY_BATCH) {
+  if (!state.galleryItems.length) return;
+  const end = Math.min(state.galleryShown + count, state.galleryItems.length);
+  if (state.galleryShown >= end) return;
+
+  const decadeTotals = new Map();
+  for (const it of state.galleryItems) {
+    const d = decadeOf(it.year);
+    decadeTotals.set(d, (decadeTotals.get(d) || 0) + 1);
+  }
+
+  const fragCards = [];
+  for (let i = state.galleryShown; i < end; i++) {
+    const it = state.galleryItems[i];
+    const decade = decadeOf(it.year);
+    const grid = ensureDecadeBand(decade, decadeTotals.get(decade));
+    const wrap = document.createElement('div');
+    wrap.innerHTML = cardHTML(it);
+    const card = wrap.firstElementChild;
+    grid.appendChild(card);
+    fragCards.push(card);
+  }
+  state.galleryShown = end;
+  fragCards.forEach((card) => wireCard(card));
+  updateGallerySentinel();
+}
+
+function updateGallerySentinel() {
+  let sentinel = el.gallery.querySelector('.gallery-sentinel');
+  const more = state.galleryShown < state.galleryItems.length;
+  if (more) {
+    if (!sentinel) {
+      sentinel = document.createElement('div');
+      sentinel.className = 'gallery-sentinel';
+      sentinel.setAttribute('aria-hidden', 'true');
+      el.gallery.appendChild(sentinel);
+    }
+    if (!state.galleryObserver) {
+      state.galleryObserver = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((e) => e.isIntersecting)) appendGalleryBatch(GALLERY_BATCH);
+        },
+        { root: el.galleryScroll || null, rootMargin: '400px 0px', threshold: 0 }
+      );
+    }
+    state.galleryObserver.disconnect();
+    state.galleryObserver.observe(sentinel);
+  } else if (sentinel) {
+    if (state.galleryObserver) state.galleryObserver.unobserve(sentinel);
+    sentinel.remove();
+  }
+}
+
 function renderGallery(items) {
+  if (state.galleryObserver) {
+    state.galleryObserver.disconnect();
+  }
   const sorted = [...items].sort(
     (a, b) => a.year - b.year || a.name.localeCompare(b.name, 'zh')
   );
-  const bands = new Map();
-  for (const it of sorted) {
-    const decade = Math.floor(it.year / 10) * 10;
-    if (!bands.has(decade)) bands.set(decade, []);
-    bands.get(decade).push(it);
+  state.galleryItems = sorted;
+  state.galleryShown = 0;
+  el.gallery.innerHTML = '';
+  if (!sorted.length) {
+    el.gallery.innerHTML = '<p style="color:var(--muted);padding:1rem">无匹配条目</p>';
+    return;
   }
-  const parts = [];
-  for (const [decade, list] of bands) {
-    parts.push(`<section class="decade-band" data-decade="${decade}">
-      <div class="decade-label"><h2>${decade}s</h2><span>${list.length}</span></div>
-      <div class="gallery-grid">${list.map(cardHTML).join('')}</div>
-    </section>`);
-  }
-  el.gallery.innerHTML =
-    parts.join('') || '<p style="color:var(--muted);padding:1rem">无匹配条目</p>';
+  appendGalleryBatch(GALLERY_BATCH);
+}
 
-  el.gallery.querySelectorAll('.gcard').forEach((card) => wireCard(card));
+/** Expand batches until a card with id/year exists (year-rail / search jump). */
+function ensureCardInDom(selector) {
+  let card = el.gallery.querySelector(selector);
+  if (card) return card;
+  while (state.galleryShown < state.galleryItems.length) {
+    appendGalleryBatch(GALLERY_BATCH);
+    card = el.gallery.querySelector(selector);
+    if (card) return card;
+  }
+  return null;
 }
 
 function wireCard(card) {
@@ -373,7 +458,7 @@ function fillTips(it) {
         : `title="${escapeHtml(title)}" aria-disabled="true"`;
       const photo = L.photo || L.avatar || '';
       return `<${tag} class="lead${clickable ? ' is-link' : ' is-static'}" ${attrs}>
-        <img class="lead-photo" src="${escapeHtml(photo)}" alt="${escapeHtml(L.name)}" width="80" height="100" loading="lazy" />
+        <img class="lead-photo" src="${escapeHtml(photo)}" alt="${escapeHtml(L.name)}" width="80" height="100" loading="lazy" decoding="async" />
         <div class="lead-text">
           <span class="lead-name">${escapeHtml(L.name)}</span>
           <span class="lead-role">${escapeHtml(L.role || '')}</span>
@@ -515,6 +600,7 @@ function destroyDemo() {
     } catch (_) {}
     state.activeDemo = null;
   }
+  el.demoStage.classList.remove('is-loading');
 }
 
 function sizeDemoCanvas() {
@@ -528,10 +614,50 @@ function sizeDemoCanvas() {
   el.demoCanvas.style.height = '100%';
 }
 
-function openDrawer(id) {
+async function startDemoForItem(it, gen) {
+  el.demoStage.hidden = false;
+  el.noDemo.hidden = true;
+  el.demoToolbar.innerHTML = '';
+  el.demoNote.textContent = '加载演示…';
+  el.demoStage.classList.add('is-loading');
+  sizeDemoCanvas();
+  try {
+    const factory = await loadDemoFactory(it.demo);
+    if (gen !== state.demoLoadGen || el.drawer.hidden) return;
+    if (!factory) {
+      el.demoStage.classList.remove('is-loading');
+      el.demoNote.textContent = '演示模块不可用';
+      return;
+    }
+    destroyDemo();
+    if (gen !== state.demoLoadGen || el.drawer.hidden) return;
+    sizeDemoCanvas();
+    state.activeDemo = factory(el.demoCanvas, el.demoToolbar);
+    state.drawerDemoId = it.demo;
+    el.demoNote.textContent =
+      (state.activeDemo && state.activeDemo.note) ||
+      it.demoHint ||
+      DEMO_LABELS[it.demo] ||
+      '';
+  } catch (err) {
+    console.error(err);
+    if (gen === state.demoLoadGen) {
+      el.demoNote.textContent = '演示加载失败';
+    }
+  } finally {
+    if (gen === state.demoLoadGen) {
+      el.demoStage.classList.remove('is-loading');
+    }
+  }
+}
+
+async function openDrawer(id) {
   const it = state.catalog.items.find((x) => x.id === id);
   if (!it) return;
+  const gen = ++state.demoLoadGen;
   destroyDemo();
+  state.drawerItemId = id;
+  state.drawerDemoId = null;
   hideTips();
   closeFilters();
   closeSearch();
@@ -556,19 +682,11 @@ function openDrawer(id) {
 
   const runnable = itemHasRunnableDemo(it);
   if (runnable) {
-    el.demoStage.hidden = false;
-    el.noDemo.hidden = true;
-    sizeDemoCanvas();
-    const factory = DEMO_FACTORIES[it.demo];
-    state.activeDemo = factory(el.demoCanvas, el.demoToolbar);
-    el.demoNote.textContent =
-      (state.activeDemo && state.activeDemo.note) ||
-      it.demoHint ||
-      DEMO_LABELS[it.demo] ||
-      '';
+    await startDemoForItem(it, gen);
   } else {
     el.demoStage.hidden = true;
     el.noDemo.hidden = false;
+    el.demoStage.classList.remove('is-loading');
     if (it.demo && it.demo.endsWith('-link')) {
       el.noDemo.textContent =
         '本人实验：完整交互在独立项目中；本展览仅作史条目卡片。' +
@@ -582,10 +700,26 @@ function openDrawer(id) {
 }
 
 function closeDrawer() {
+  state.demoLoadGen += 1;
   destroyDemo();
+  state.drawerItemId = null;
+  state.drawerDemoId = null;
   el.drawer.hidden = true;
   document.body.style.overflow = '';
 }
+
+/** Page Visibility: stop rAF when tab hidden; recreate when visible again. */
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    destroyDemo();
+    return;
+  }
+  if (el.drawer.hidden || !state.drawerItemId) return;
+  const it = state.catalog?.items?.find((x) => x.id === state.drawerItemId);
+  if (!it || !itemHasRunnableDemo(it)) return;
+  const gen = ++state.demoLoadGen;
+  startDemoForItem(it, gen);
+});
 
 el.drawerBackdrop.addEventListener('click', closeDrawer);
 el.drawerClose.addEventListener('click', closeDrawer);

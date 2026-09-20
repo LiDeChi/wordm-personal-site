@@ -42,6 +42,13 @@ python3 -m http.server 8877
 | Lenia-lite | `js/demos/lenia-lite.js` |
 | Tierra-lite | `js/demos/tierra-lite.js` |
 
+## 性能
+
+- **进页不跑仿真**：可交互 demo 仅在打开全屏抽屉时经动态 `import()` 加载并 `create`；关闭抽屉即 `destroy`（停掉 `requestAnimationFrame`）。
+- **同时只有一个 activeDemo**：新开演示前先销毁旧实例。
+- **渐进加载画廊**：首屏约 14 张卡片，滚动接近底部用 `IntersectionObserver` 追加下一批；照片 `loading="lazy"` + `decoding="async"`。
+- **Page Visibility**：标签页 `document.hidden` 时销毁当前 demo；回到前台且抽屉仍开则重新加载。
+
 ## 自检
 
 ```bash

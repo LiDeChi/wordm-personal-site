@@ -743,3 +743,29 @@ body:hover .foot,
     width: auto;
   }
 }
+
+/* —— Progressive gallery sentinel —— */
+.gallery-sentinel {
+  height: 1px;
+  width: 100%;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+/* —— Demo lazy-load state —— */
+.demo-stage.is-loading::after {
+  content: '加载演示…';
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.55);
+  color: rgba(209, 213, 219, 0.9);
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  pointer-events: none;
+  z-index: 2;
+}
+.demo-stage.is-loading #demo-canvas {
+  opacity: 0.35;
+}
