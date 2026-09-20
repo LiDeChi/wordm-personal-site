@@ -31,6 +31,30 @@ html, body {
 body { display: flex; flex-direction: column; }
 
 /* —— Corner chrome (only UI visible by default) —— */
+.chrome-home {
+  position: fixed;
+  top: 0.65rem;
+  left: 0.75rem;
+  z-index: 45;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  height: 2rem;
+  padding: 0 0.7rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--bg-elev) 72%, transparent);
+  backdrop-filter: blur(10px);
+  color: var(--muted);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+.chrome-home:hover {
+  color: var(--text);
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+}
 .chrome {
   position: fixed;
   top: 0.65rem;
@@ -291,7 +315,7 @@ body { display: flex; flex-direction: column; }
   cursor: pointer;
   overflow: hidden;
   transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s;
-  min-height: 260px;
+  min-height: 0;
   font: inherit;
 }
 .gcard:hover, .gcard:focus-visible, .gcard.is-active {
@@ -308,13 +332,25 @@ body { display: flex; flex-direction: column; }
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--personal) 35%, transparent);
 }
 .gcard-cover {
-  height: 118px;
+  height: 148px;
   background:
     radial-gradient(circle at 20% 30%, color-mix(in srgb, var(--card-accent, var(--accent-2)) 42%, transparent), transparent 55%),
     radial-gradient(circle at 80% 70%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 50%),
     linear-gradient(145deg, #0a0e16, #151e2e 60%, #0c1018);
   position: relative;
+  overflow: hidden;
 }
+.gcard-preview {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.92;
+}
+.gcard.has-demo .gcard-cover::after { opacity: 0.12; }
 .gcard-cover::after {
   content: "";
   position: absolute;
@@ -330,7 +366,7 @@ body { display: flex; flex-direction: column; }
   position: absolute;
   top: 0.45rem;
   right: 0.45rem;
-  z-index: 1;
+  z-index: 2;
   font-size: 0.58rem;
   font-weight: 650;
   padding: 0.12rem 0.4rem;
@@ -342,9 +378,9 @@ body { display: flex; flex-direction: column; }
 .gcard-body {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
-  padding: 0.75rem 0.8rem 0.85rem;
-  flex: 1;
+  gap: 0.2rem;
+  padding: 0.55rem 0.7rem 0.65rem;
+  flex: 0 0 auto;
 }
 .gcard-year {
   font-family: var(--mono);
@@ -369,8 +405,8 @@ body { display: flex; flex-direction: column; }
   display: flex;
   flex-wrap: wrap;
   gap: 0.2rem;
-  margin-top: auto;
-  padding-top: 0.4rem;
+  margin-top: 0.3rem;
+  padding-top: 0;
   opacity: 0.75;
 }
 .school-pill {
@@ -723,8 +759,8 @@ body:hover .foot,
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: 1.15rem;
   }
-  .gcard { min-height: 280px; }
-  .gcard-cover { height: 132px; }
+  .gcard { min-height: 0; }
+  .gcard-cover { height: 160px; }
 }
 
 @media (max-width: 640px) {
@@ -735,8 +771,8 @@ body:hover .foot,
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 0.6rem;
   }
-  .gcard { min-height: 210px; }
-  .gcard-cover { height: 88px; }
+  .gcard { min-height: 0; }
+  .gcard-cover { height: 110px; }
   .filter-float-panel, .search-float-panel {
     left: 0.5rem;
     right: 0.5rem;

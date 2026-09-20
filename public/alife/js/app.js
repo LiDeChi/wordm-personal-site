@@ -18,6 +18,9 @@ const state = {
   drawerItemId: null,
   drawerDemoId: null,
   demoLoadGen: 0,
+  previewDemos: new Map(), // cardId -> { destroy }
+  previewObserver: null,
+  previewCap: 5,
   tipsItemId: null,
   tipsMode: null,
   hoverTimer: null,
@@ -270,9 +273,10 @@ function cardHTML(it) {
         `<img class="gcard-lead-photo" src="${escapeHtml(L.photo)}" alt="" title="${escapeHtml(L.name)}" width="36" height="44" loading="lazy" decoding="async" />`
     )
     .join('');
-  return `<button type="button" class="${cls}" data-id="${escapeHtml(it.id)}" data-year="${it.year}" style="--card-accent:${accent}">
+  return `<button type="button" class="${cls}" data-id="${escapeHtml(it.id)}" data-year="${it.year}" data-demo="${runnable ? escapeHtml(it.demo) : ''}" style="--card-accent:${accent}">
     <div class="gcard-cover" aria-hidden="true">
-      ${runnable ? '<span class="gcard-demo-badge">可演示</span>' : ''}
+      ${runnable ? `<canvas class="gcard-preview" width="320" height="180" data-demo="${escapeHtml(it.demo)}"></canvas>` : ''}
+      ${runnable ? '<span class="gcard-demo-badge">可演示 · 点击进入</span>' : ''}
       ${leadPhotos ? `<div class="gcard-leads">${leadPhotos}</div>` : ''}
     </div>
     <div class="gcard-body">
@@ -361,6 +365,7 @@ function renderGallery(items) {
   if (state.galleryObserver) {
     state.galleryObserver.disconnect();
   }
+  destroyAllPreviews();
   const sorted = [...items].sort(
     (a, b) => a.year - b.year || a.name.localeCompare(b.name, 'zh')
   );
@@ -422,12 +427,116 @@ function wireCard(card) {
       state.suppressClick = false;
       return;
     }
+    const it = state.catalog.items.find((x) => x.id === id);
+    if (it && itemHasRunnableDemo(it)) {
+      openDrawer(id);
+      return;
+    }
     if (coarsePointer()) {
       showTips(id, 'sheet', card);
     } else {
       showTips(id, 'hover', card);
     }
   });
+
+  observeCardPreview(card);
+}
+
+/* —— Lightweight in-card demo previews (viewport + cap) —— */
+function ensurePreviewObserver() {
+  if (state.previewObserver) return state.previewObserver;
+  state.previewObserver = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        const card = entry.target;
+        if (entry.isIntersecting && entry.intersectionRatio > 0.15) {
+          startCardPreview(card);
+        } else {
+          stopCardPreview(card);
+        }
+      }
+    },
+    { root: el.galleryScroll || null, rootMargin: '80px 0px', threshold: [0, 0.15, 0.4] }
+  );
+  return state.previewObserver;
+}
+
+function observeCardPreview(card) {
+  if (!card.classList.contains('has-demo')) return;
+  ensurePreviewObserver().observe(card);
+}
+
+function stopCardPreview(card) {
+  const id = card.dataset.id;
+  const handle = state.previewDemos.get(id);
+  if (!handle) return;
+  try { handle.destroy(); } catch (_) {}
+  state.previewDemos.delete(id);
+  const canvas = card.querySelector('.gcard-preview');
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+}
+
+async function startCardPreview(card) {
+  const id = card.dataset.id;
+  const demoId = card.dataset.demo;
+  if (!id || !demoId || state.previewDemos.has(id)) return;
+  if (state.previewDemos.size >= state.previewCap) {
+    // evict farthest / oldest
+    const first = state.previewDemos.keys().next().value;
+    const oldCard = el.gallery.querySelector(`.gcard[data-id="${CSS.escape(first)}"]`);
+    if (oldCard) stopCardPreview(oldCard);
+    else {
+      try { state.previewDemos.get(first).destroy(); } catch (_) {}
+      state.previewDemos.delete(first);
+    }
+  }
+  const canvas = card.querySelector('.gcard-preview');
+  if (!canvas) return;
+  // mark pending so we don't double-start
+  const placeholder = { destroy() {} };
+  state.previewDemos.set(id, placeholder);
+  try {
+    const factory = await loadDemoFactory(demoId);
+    if (!factory || !card.isConnected || !state.previewDemos.has(id)) return;
+    // still intersecting?
+    const rect = card.getBoundingClientRect();
+    const root = el.galleryScroll?.getBoundingClientRect();
+    if (root && (rect.bottom < root.top - 40 || rect.top > root.bottom + 40)) {
+      state.previewDemos.delete(id);
+      return;
+    }
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    const w = Math.max(160, Math.round(canvas.clientWidth || 240));
+    const h = Math.max(90, Math.round(canvas.clientHeight || 140));
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
+    const ghostToolbar = document.createElement('div');
+    ghostToolbar.hidden = true;
+    const demo = factory(canvas, ghostToolbar);
+    state.previewDemos.set(id, {
+      destroy() {
+        try { demo.destroy(); } catch (_) {}
+        ghostToolbar.remove();
+      },
+    });
+  } catch (err) {
+    console.warn('preview failed', demoId, err);
+    state.previewDemos.delete(id);
+  }
+}
+
+function destroyAllPreviews() {
+  for (const id of [...state.previewDemos.keys()]) {
+    const card = el.gallery.querySelector(`.gcard[data-id="${CSS.escape(id)}"]`);
+    if (card) stopCardPreview(card);
+    else {
+      try { state.previewDemos.get(id)?.destroy(); } catch (_) {}
+      state.previewDemos.delete(id);
+    }
+  }
 }
 
 function fillTips(it) {
@@ -656,6 +765,7 @@ async function openDrawer(id) {
   if (!it) return;
   const gen = ++state.demoLoadGen;
   destroyDemo();
+  destroyAllPreviews();
   state.drawerItemId = id;
   state.drawerDemoId = null;
   hideTips();
@@ -706,12 +816,20 @@ function closeDrawer() {
   state.drawerDemoId = null;
   el.drawer.hidden = true;
   document.body.style.overflow = '';
+  // resume in-view card previews
+  requestAnimationFrame(() => {
+    el.gallery.querySelectorAll('.gcard.has-demo').forEach((card) => {
+      const rect = card.getBoundingClientRect();
+      if (rect.bottom > 0 && rect.top < window.innerHeight) startCardPreview(card);
+    });
+  });
 }
 
 /** Page Visibility: stop rAF when tab hidden; recreate when visible again. */
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) {
     destroyDemo();
+    destroyAllPreviews();
     return;
   }
   if (el.drawer.hidden || !state.drawerItemId) return;
