@@ -3064,12 +3064,9 @@ export function FountHomePage({
   );
 }
 
-type FountFieldsView = "list" | "gallery";
-
 function FountFieldsSection({ lang }: { lang: Lang }) {
   const copy = COPY[lang];
   const [selectedFieldKey, setSelectedFieldKey] = useState<string | null>(null);
-  const [fieldsView, setFieldsView] = useState<FountFieldsView>("gallery");
   const selectedField =
     FOUNT_FIELDS.find((field) => field.key === selectedFieldKey) ?? null;
 
@@ -3244,59 +3241,10 @@ function FountFieldsSection({ lang }: { lang: Lang }) {
 
   return (
     <section
-      className={`fount-section fount-fields-page-section${
-        fieldsView === "gallery" ? " is-gallery-view" : ""
-      }`}
-      data-fields-view={fieldsView}
+      className="fount-section fount-fields-page-section is-gallery-view is-gallery-only"
+      data-fields-view="gallery"
       id="fields"
     >
-      <header className="fount-fields-hero">
-        <div className="fount-fields-hero-copy">
-          <p className="fount-fields-eyebrow">{copy.fieldsEyebrow}</p>
-          <h1>{copy.fieldsTitle}</h1>
-        </div>
-        <div className="fount-fields-hero-tools">
-          <div
-            className="fount-fields-count"
-            aria-label={`${FOUNT_FIELDS.length} ${copy.fieldsCount}`}
-          >
-            <strong>{String(FOUNT_FIELDS.length).padStart(2, "0")}</strong>
-            <span>{copy.fieldsCount}</span>
-          </div>
-          <div
-            className="fount-fields-view-switch"
-            role="group"
-            aria-label={copy.fieldsViewSwitchAria}
-          >
-            <button
-              className={fieldsView === "list" ? "is-active" : undefined}
-              type="button"
-              aria-pressed={fieldsView === "list"}
-              onClick={() => setFieldsView("list")}
-            >
-              <svg viewBox="0 0 20 20" aria-hidden="true">
-                <path d="M4 5.5h2M9 5.5h7M4 10h2M9 10h7M4 14.5h2M9 14.5h7" />
-              </svg>
-              <span>{copy.fieldsViewList}</span>
-            </button>
-            <button
-              className={fieldsView === "gallery" ? "is-active" : undefined}
-              type="button"
-              aria-pressed={fieldsView === "gallery"}
-              onClick={() => setFieldsView("gallery")}
-            >
-              <svg viewBox="0 0 20 20" aria-hidden="true">
-                <rect x="3.75" y="3.75" width="5" height="5" rx="1" />
-                <rect x="11.25" y="3.75" width="5" height="5" rx="1" />
-                <rect x="3.75" y="11.25" width="5" height="5" rx="1" />
-                <rect x="11.25" y="11.25" width="5" height="5" rx="1" />
-              </svg>
-              <span>{copy.fieldsViewGallery}</span>
-            </button>
-          </div>
-        </div>
-      </header>
-
       <div
         className="fount-fields-list"
         role="list"

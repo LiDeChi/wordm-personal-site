@@ -101,7 +101,7 @@ export function InteractiveHomePage({ lang, onLangChange, themeMode, onThemeTogg
         </a>
         <a className="ih-minds ih-alife" href={alifeHref}>
           <div className="ih-minds-image">
-            <img src="/alife/assets/cover.svg" alt={zh ? "人工生命史画廊：时间与流派交织的展览现场" : "Artificial life history gallery across time and schools"}/>
+            <img src="/alife/assets/cover.png" alt={zh ? "人工生命史画廊：时间与流派交织的展览现场" : "Artificial life history gallery across time and schools"}/>
             <span>↗</span>
           </div>
           <div className="ih-minds-copy">

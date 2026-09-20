@@ -661,7 +661,7 @@ const FOUNT_FIELDS_RAW: FountField[] = [
     name: "人工生命史",
     href: "/alife/",
     previewUrl: "wordm.us/alife",
-    coverUrl: "/alife/assets/cover.svg",
+    coverUrl: "/alife/assets/cover.png",
     coverAlt: {
       zh: "人工生命史画廊：时间与流派交织的展览现场",
       en: "Artificial life history gallery across time and schools",

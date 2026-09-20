@@ -275,6 +275,7 @@ function cardHTML(it) {
     .join('');
   return `<button type="button" class="${cls}" data-id="${escapeHtml(it.id)}" data-year="${it.year}" data-demo="${runnable ? escapeHtml(it.demo) : ''}" style="--card-accent:${accent}">
     <div class="gcard-cover" aria-hidden="true">
+      ${runnable ? `<img class="gcard-thumb" src="assets/previews/${escapeHtml(it.demo)}.png" alt="" loading="lazy" decoding="async" />` : ''}
       ${runnable ? `<canvas class="gcard-preview" width="320" height="180" data-demo="${escapeHtml(it.demo)}"></canvas>` : ''}
       ${runnable ? '<span class="gcard-demo-badge">可演示 · 点击进入</span>' : ''}
       ${leadPhotos ? `<div class="gcard-leads">${leadPhotos}</div>` : ''}
@@ -516,9 +517,11 @@ async function startCardPreview(card) {
     const ghostToolbar = document.createElement('div');
     ghostToolbar.hidden = true;
     const demo = factory(canvas, ghostToolbar);
+    canvas.classList.add('is-live');
     state.previewDemos.set(id, {
       destroy() {
         try { demo.destroy(); } catch (_) {}
+        canvas.classList.remove('is-live');
         ghostToolbar.remove();
       },
     });
