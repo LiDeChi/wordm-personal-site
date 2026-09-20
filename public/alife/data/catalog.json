@@ -1,0 +1,1933 @@
+{
+  "title": "人工生命史展览",
+  "titleEn": "Artificial Life Museum",
+  "dimensions": {
+    "time": "year",
+    "school": "schools"
+  },
+  "schoolsOrder": [
+    "自复制/构造器",
+    "经典奠基",
+    "细胞自动机",
+    "自组织",
+    "人工化学",
+    "ALife Art",
+    "群体智能",
+    "stigmergy/痕迹",
+    "领域制度",
+    "数字进化",
+    "进化机器人",
+    "多尺度胜任力",
+    "形态发生",
+    "开放演化",
+    "生命起源/存在判据",
+    "连续介质/形态",
+    "Wet/跨载体",
+    "自修改解释器",
+    "具身/生成",
+    "ALife×AI",
+    "原细胞/化学机器人",
+    "本人实验"
+  ],
+  "items": [
+    {
+      "id": "von-neumann-sra",
+      "name": "von Neumann 自复制自动机",
+      "nameEn": "Self-Reproducing Automata",
+      "year": 1948,
+      "yearNote": "1940s–1966",
+      "schools": [
+        "自复制/构造器",
+        "经典奠基"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "people": [
+        "John von Neumann",
+        "Arthur Burks"
+      ],
+      "summary": "描述+构造器+复制描述；为可遗传变异留下理论口。",
+      "demo": "none",
+      "demoHint": "概念示意：蓝图→构造→复制蓝图",
+      "refs": [
+        "Theory of Self-Reproducing Automata (1966)"
+      ],
+      "team": [
+        "Institute for Advanced Study",
+        "University of Illinois（Arthur Burks 整理出版）"
+      ],
+      "leads": [
+        {
+          "name": "John von Neumann",
+          "role": "提出者",
+          "photo": "assets/photos/von-neumann.jpg",
+          "website": "https://www.ias.edu/scholars/john-von-neumann"
+        },
+        {
+          "name": "Arthur Burks",
+          "role": "整理与出版",
+          "photo": "assets/photos/burks.jpg",
+          "website": "https://en.wikipedia.org/wiki/Arthur_Burks"
+        }
+      ],
+      "construction": "机制：通用构造器读取描述带（description），建造对应机器并复制描述本身，使变异可遗传。要点：描述与构造分离；自复制不必神秘。",
+      "lineage": "继承图灵可计算性与逻辑机器观念；抛弃「生命必须是湿件」的直觉，把自复制当作形式问题。",
+      "limits": "完整 29 态 CA 实现极重；理论模型远多于可运行实验；未直接处理代谢与开放演化。",
+      "links": [
+        {
+          "label": "百科：自复制机器",
+          "url": "https://en.wikipedia.org/wiki/Self-replicating_machine"
+        },
+        {
+          "label": "Theory of Self-Reproducing Automata（介绍）",
+          "url": "https://en.wikipedia.org/wiki/Von_Neumann_universal_constructor"
+        }
+      ]
+    },
+    {
+      "id": "turing-morphogenesis",
+      "name": "图灵形态发生",
+      "nameEn": "The Chemical Basis of Morphogenesis",
+      "year": 1952,
+      "schools": [
+        "形态发生",
+        "人工化学",
+        "经典奠基"
+      ],
+      "medium": [
+        "Soft",
+        "Wet"
+      ],
+      "people": [
+        "Alan Turing"
+      ],
+      "summary": "反应扩散方程解释斑图如何从均质涌现；后世 Grey-Scott 等的理论源头。",
+      "demo": "none",
+      "demoHint": "",
+      "refs": [
+        "Turing 1952"
+      ],
+      "team": "University of Manchester",
+      "leads": [
+        {
+          "name": "Alan Turing",
+          "role": "作者",
+          "photo": "assets/photos/turing.jpg",
+          "website": "https://en.wikipedia.org/wiki/Alan_Turing"
+        }
+      ],
+      "construction": "机制：反应—扩散 PDE，激活子与抑制子从近乎均质初态自发形成斑图。要点：形态可自化学动力学涌现。",
+      "lineage": "继承数理生物学传统；为后世 Grey-Scott、形态发生模型奠基；超越纯几何描述，给出可计算化学机制。",
+      "limits": "连续场近似；真实发育远不止两化学物；数值与实验验证滞后数十年。",
+      "links": [
+        {
+          "label": "论文页（Philosophical Transactions）",
+          "url": "https://royalsocietypublishing.org/doi/10.1098/rstb.1952.0012"
+        },
+        {
+          "label": "百科",
+          "url": "https://en.wikipedia.org/wiki/The_Chemical_Basis_of_Morphogenesis"
+        }
+      ]
+    },
+    {
+      "id": "conway-life",
+      "name": "Conway 生命游戏",
+      "nameEn": "Game of Life",
+      "year": 1970,
+      "schools": [
+        "细胞自动机",
+        "自组织"
+      ],
+      "medium": [
+        "Soft",
+        "Art"
+      ],
+      "people": [
+        "John Conway"
+      ],
+      "summary": "局部规则产生滑翔机等非平凡全局模式。",
+      "demo": "life",
+      "demoHint": "可点击格子 / 随机播种 / 跑滑翔机枪",
+      "refs": [
+        "Gardner 1970"
+      ],
+      "team": "University of Cambridge",
+      "leads": [
+        {
+          "name": "John Conway",
+          "role": "发明者",
+          "photo": "assets/photos/conway.jpg",
+          "website": "https://en.wikipedia.org/wiki/John_Horton_Conway"
+        }
+      ],
+      "construction": "机制：二维格点上 B3/S23 局部规则同步更新。要点：滑翔机等非平凡结构；图灵完备。",
+      "lineage": "继承 von Neumann / Ulam CA 传统，大幅简化规则以利于手算与传播；抛弃复杂状态机，换来可玩的涌现。",
+      "limits": "离散、同步、无噪声；「生命」是隐喻；开放演化与代谢不在模型内。",
+      "links": [
+        {
+          "label": "LifeWiki",
+          "url": "https://conwaylife.com/wiki/Conway%27s_Game_of_Life"
+        },
+        {
+          "label": "百科",
+          "url": "https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life"
+        }
+      ]
+    },
+    {
+      "id": "grey-scott",
+      "name": "Grey-Scott 反应扩散",
+      "nameEn": "Grey-Scott RD",
+      "year": 1983,
+      "yearNote": "1980s–",
+      "schools": [
+        "人工化学",
+        "自组织",
+        "ALife Art"
+      ],
+      "medium": [
+        "Soft",
+        "Art"
+      ],
+      "people": [
+        "Pearson / Turing lineage"
+      ],
+      "summary": "化学斑图与斑点、条纹等生命样纹理。",
+      "demo": "grey-scott",
+      "demoHint": "可运行反应扩散",
+      "refs": [],
+      "team": [
+        "Los Alamos National Laboratory（Pearson 参数探索）"
+      ],
+      "leads": [
+        {
+          "name": "John E. Pearson",
+          "role": "参数空间探索",
+          "photo": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27160%27%20height%3D%27200%27%3E%3Crect%20width%3D%27160%27%20height%3D%27200%27%20rx%3D%2712%27%20fill%3D%27%232c5969%27/%3E%3Ctext%20x%3D%2780%27%20y%3D%27108%27%20text-anchor%3D%27middle%27%20fill%3D%27%23fff%27%20font-family%3D%27system-ui%2Csans-serif%27%20font-size%3D%2748%27%20font-weight%3D%27600%27%3EJE%3C/text%3E%3C/svg%3E",
+          "photoNote": "暂无公开肖像",
+          "website": "https://en.wikipedia.org/wiki/Reaction%E2%80%93diffusion_system"
+        },
+        {
+          "name": "Alan Turing",
+          "role": "理论源头（谱系）",
+          "photo": "assets/photos/turing.jpg",
+          "website": "https://en.wikipedia.org/wiki/Alan_Turing"
+        }
+      ],
+      "construction": "机制：两化学物 U、V 的反应扩散（Grey–Scott 动力学），不同 feed/kill 参数产生斑点、条纹、混沌等。要点：斑图即「类生命纹理」。",
+      "lineage": "继承图灵形态发生；用可交互仿真普及反应扩散美学；抛弃解析闭式，拥抱参数扫描。",
+      "limits": "仍是连续场玩具模型；与真实细胞内化学网络差距大；艺术展示常压过科学主张。",
+      "links": [
+        {
+          "label": "Pearson 1993 相关介绍",
+          "url": "https://en.wikipedia.org/wiki/Reaction%E2%80%93diffusion_system"
+        },
+        {
+          "label": "Karl Sims / RD 艺术脉络",
+          "url": "https://www.karlsims.com/rd.html"
+        }
+      ]
+    },
+    {
+      "id": "wolfram-ca",
+      "name": "初等细胞自动机（Rule 110 等）",
+      "nameEn": "Elementary CA",
+      "year": 1983,
+      "schools": [
+        "细胞自动机",
+        "自组织"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "people": [
+        "Stephen Wolfram"
+      ],
+      "summary": "一维规则空间的计算普适性与复杂度分类。",
+      "demo": "eca",
+      "demoHint": "可选 Rule 30/110 条带",
+      "refs": [],
+      "team": "Wolfram Research / 个人研究",
+      "leads": [
+        {
+          "name": "Stephen Wolfram",
+          "role": "系统研究与分类",
+          "photo": "assets/photos/wolfram.jpg",
+          "website": "https://www.stephenwolfram.com/"
+        }
+      ],
+      "construction": "机制：一维二元 CA，256 条规则；Rule 110 等显示计算普适性。要点：简单程序 → 复杂行为分类（I–IV）。",
+      "lineage": "继承 CA 传统并系统枚举规则空间；主张「计算等价性」；与生物学细节脱钩，追求统一计算世界观。",
+      "limits": "分类带主观性；从 CA 直接外推到物理/生物有争议；交互演示常止于条带可视化。",
+      "links": [
+        {
+          "label": "A New Kind of Science（相关）",
+          "url": "https://www.wolframscience.com/nks/"
+        },
+        {
+          "label": "百科：初等 CA",
+          "url": "https://en.wikipedia.org/wiki/Elementary_cellular_automaton"
+        }
+      ]
+    },
+    {
+      "id": "langton-loops",
+      "name": "Langton 自复制环",
+      "nameEn": "Langton's Loops",
+      "year": 1984,
+      "schools": [
+        "细胞自动机",
+        "自复制/构造器"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "people": [
+        "Christopher Langton"
+      ],
+      "summary": "在 CA 上实现自复制环；导向「life as it could be」。",
+      "demo": "none",
+      "demoHint": "完整环复制 CA 较重，展览以卡片呈现",
+      "refs": [],
+      "team": [
+        "Los Alamos / Santa Fe Institute 脉络"
+      ],
+      "leads": [
+        {
+          "name": "Christopher Langton",
+          "role": "提出者",
+          "photo": "assets/photos/langton.jpg",
+          "website": "https://en.wikipedia.org/wiki/Christopher_Langton"
+        }
+      ],
+      "construction": "机制：CA 上的「环」结构携带遗传信息并建造副本。要点：比 von Neumann 构造器更小、更可实现的自复制。",
+      "lineage": "继承 von Neumann 自复制思想，大幅压缩状态与结构；为「生命如其所能」纲领铺路。",
+      "limits": "仍依赖精心设计的初始构型；演化开放性有限；与湿生命代谢无关。",
+      "links": [
+        {
+          "label": "百科：Langton's loops",
+          "url": "https://en.wikipedia.org/wiki/Langton%27s_loops"
+        }
+      ]
+    },
+    {
+      "id": "boids",
+      "name": "Boids",
+      "nameEn": "Boids",
+      "year": 1986,
+      "schools": [
+        "群体智能",
+        "stigmergy/痕迹",
+        "ALife Art"
+      ],
+      "medium": [
+        "Soft",
+        "Art"
+      ],
+      "people": [
+        "Craig Reynolds"
+      ],
+      "summary": "分离/对齐/聚合 → 鸟群涌现。",
+      "demo": "boids",
+      "demoHint": "可交互鸟群",
+      "refs": [],
+      "team": "Symbolics Graphics Division（原实现）",
+      "leads": [
+        {
+          "name": "Craig Reynolds",
+          "role": "发明者",
+          "photo": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27160%27%20height%3D%27200%27%3E%3Crect%20width%3D%27160%27%20height%3D%27200%27%20rx%3D%2712%27%20fill%3D%27%23424d6d%27/%3E%3Ctext%20x%3D%2780%27%20y%3D%27108%27%20text-anchor%3D%27middle%27%20fill%3D%27%23fff%27%20font-family%3D%27system-ui%2Csans-serif%27%20font-size%3D%2748%27%20font-weight%3D%27600%27%3ECR%3C/text%3E%3C/svg%3E",
+          "photoNote": "暂无公开肖像",
+          "website": "https://www.red3d.com/cwr/",
+          "scholar": "https://scholar.google.com/citations?user=PJm3IXAAAAAJ"
+        }
+      ],
+      "construction": "机制：每个 boid 执行分离、对齐、聚合三条局部转向规则。要点：无中心控制的群体涌现。",
+      "lineage": "继承个体本位仿真；抛弃全局路径规划，用局部感知产生鸟群/鱼群外观。",
+      "limits": "规则手调；无进化、无代谢；「智能」是观者投射。",
+      "links": [
+        {
+          "label": "官方 Boids 页",
+          "url": "https://www.red3d.com/cwr/boids/"
+        },
+        {
+          "label": "百科",
+          "url": "https://en.wikipedia.org/wiki/Boids"
+        }
+      ]
+    },
+    {
+      "id": "langton-ant",
+      "name": "Langton 蚂蚁",
+      "nameEn": "Langton's Ant",
+      "year": 1986,
+      "schools": [
+        "细胞自动机",
+        "自组织"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "people": [
+        "Christopher Langton"
+      ],
+      "summary": "简单蚂蚁规则走出「高速公路」等复杂轨迹。",
+      "demo": "langton-ant",
+      "demoHint": "可运行蚂蚁轨迹",
+      "refs": [],
+      "team": [
+        "Santa Fe / Los Alamos 脉络"
+      ],
+      "leads": [
+        {
+          "name": "Christopher Langton",
+          "role": "提出者",
+          "photo": "assets/photos/langton.jpg",
+          "website": "https://en.wikipedia.org/wiki/Christopher_Langton"
+        }
+      ],
+      "construction": "机制：蚂蚁按格子颜色转向并翻转颜色，走出「高速公路」等结构。要点：极简规则 → 复杂轨迹。",
+      "lineage": "继承 CA 与自组织兴趣；比 Life 更极简的单智能体例子。",
+      "limits": "单一蚂蚁、确定性；难以承载生态或进化叙事。",
+      "links": [
+        {
+          "label": "百科",
+          "url": "https://en.wikipedia.org/wiki/Langton%27s_ant"
+        }
+      ]
+    },
+    {
+      "id": "isal-taxonomy",
+      "name": "ISAL Soft/Hard/Wet（+Art）",
+      "nameEn": "ISAL medium taxonomy",
+      "year": 1987,
+      "yearNote": "制度化后持续",
+      "schools": [
+        "领域制度",
+        "ALife Art"
+      ],
+      "medium": [
+        "Soft",
+        "Hard",
+        "Wet",
+        "Art"
+      ],
+      "people": [
+        "ISAL"
+      ],
+      "summary": "载体分类 vs 问题传统分类；会话强调两套分类分开。",
+      "demo": "none",
+      "demoHint": "",
+      "refs": [],
+      "team": "International Society for Artificial Life (ISAL)",
+      "leads": [
+        {
+          "name": "ISAL",
+          "role": "领域制度",
+          "photo": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27160%27%20height%3D%27200%27%3E%3Crect%20width%3D%27160%27%20height%3D%27200%27%20rx%3D%2712%27%20fill%3D%27%23457658%27/%3E%3Ctext%20x%3D%2780%27%20y%3D%27108%27%20text-anchor%3D%27middle%27%20fill%3D%27%23fff%27%20font-family%3D%27system-ui%2Csans-serif%27%20font-size%3D%2748%27%20font-weight%3D%27600%27%3EI%3C/text%3E%3C/svg%3E",
+          "photoNote": "暂无公开肖像"
+        }
+      ],
+      "construction": "机制：以 Soft/Hard/Wet（及 Art）等载体维度组织研究共同体与会议。要点：分类是制度工具而非本体论终审。",
+      "lineage": "继承 1987 研讨会传统；把「什么算 ALife」从口号变成可资助、可发表的谱系。",
+      "limits": "标签会遮蔽跨载体工作；Art 维度长期边缘化；分类随社区政治变动。",
+      "links": [
+        {
+          "label": "ISAL 官网",
+          "url": "https://alife.org/"
+        }
+      ]
+    },
+    {
+      "id": "reynolds-path",
+      "name": "群体路径跟随（Boids 系）",
+      "nameEn": "Flocking variants",
+      "year": 1987,
+      "schools": [
+        "群体智能"
+      ],
+      "medium": [
+        "Soft",
+        "Art"
+      ],
+      "people": [
+        "Craig Reynolds"
+      ],
+      "summary": "群体行为扩展。",
+      "demo": "boids",
+      "demoHint": "",
+      "refs": [],
+      "team": "Craig Reynolds 研究脉络",
+      "leads": [
+        {
+          "name": "Craig Reynolds",
+          "role": "提出者",
+          "photo": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27160%27%20height%3D%27200%27%3E%3Crect%20width%3D%27160%27%20height%3D%27200%27%20rx%3D%2712%27%20fill%3D%27%23424d6d%27/%3E%3Ctext%20x%3D%2780%27%20y%3D%27108%27%20text-anchor%3D%27middle%27%20fill%3D%27%23fff%27%20font-family%3D%27system-ui%2Csans-serif%27%20font-size%3D%2748%27%20font-weight%3D%27600%27%3ECR%3C/text%3E%3C/svg%3E",
+          "photoNote": "暂无公开肖像",
+          "website": "https://www.red3d.com/cwr/",
+          "scholar": "https://scholar.google.com/citations?user=PJm3IXAAAAAJ"
+        }
+      ],
+      "construction": "机制：在 Boids 转向行为上叠加路径跟随、障碍规避等目标导向力。要点：群体 + 个体目标可组合。",
+      "lineage": "继承 Boids；扩展到动画与游戏中的自主角色转向库（如 OpenSteer）。",
+      "limits": "仍是手设计行为混合；非进化开放端。",
+      "links": [
+        {
+          "label": "Steering Behaviors",
+          "url": "https://www.red3d.com/cwr/steer/"
+        },
+        {
+          "label": "Boids",
+          "url": "https://www.red3d.com/cwr/boids/"
+        }
+      ]
+    },
+    {
+      "id": "alife-1987",
+      "name": "首届 ALife 研讨会",
+      "nameEn": "ALife I (Los Alamos)",
+      "year": 1987,
+      "schools": [
+        "经典奠基",
+        "领域制度"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "people": [
+        "Christopher Langton"
+      ],
+      "summary": "领域命名与制度化起点。",
+      "demo": "none",
+      "demoHint": "",
+      "refs": [],
+      "team": [
+        "Los Alamos National Laboratory",
+        "Santa Fe Institute 脉络"
+      ],
+      "leads": [
+        {
+          "name": "Christopher Langton",
+          "role": "组织者 / 命名推动者",
+          "photo": "assets/photos/langton.jpg",
+          "website": "https://en.wikipedia.org/wiki/Christopher_Langton"
+        }
+      ],
+      "construction": "机制：跨学科研讨会把「人工生命」立为研究纲领（life as it could be）。要点：制度化起点。",
+      "lineage": "汇合 CA、遗传算法、自组织、理论生物学；抛弃单一学科垄断「生命」定义。",
+      "limits": "早期定义宽泛；后续分化为数字进化、机器人、化学、艺术等，共识反复重谈。",
+      "links": [
+        {
+          "label": "ALIFE 会议史",
+          "url": "https://alife.org/"
+        },
+        {
+          "label": "百科：Artificial life",
+          "url": "https://en.wikipedia.org/wiki/Artificial_life"
+        }
+      ]
+    },
+    {
+      "id": "rasmussen-protocell",
+      "name": "原细胞 / 生命起源（Rasmussen）",
+      "nameEn": "Protocell ALife",
+      "year": 1990,
+      "yearNote": "1990s–",
+      "schools": [
+        "生命起源/存在判据",
+        "原细胞/化学机器人"
+      ],
+      "medium": [
+        "Wet"
+      ],
+      "people": [
+        "Steen Rasmussen"
+      ],
+      "summary": "从分子、膜、代谢与信息复制组装可维持并进化的原细胞；ISAL 终身成就。",
+      "demo": "none",
+      "demoHint": "",
+      "refs": [],
+      "team": [
+        "Los Alamos / Santa Fe / 欧洲原细胞网络等"
+      ],
+      "leads": [
+        {
+          "name": "Steen Rasmussen",
+          "role": "领军者",
+          "photo": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27160%27%20height%3D%27200%27%3E%3Crect%20width%3D%27160%27%20height%3D%27200%27%20rx%3D%2712%27%20fill%3D%27%23347677%27/%3E%3Ctext%20x%3D%2780%27%20y%3D%27108%27%20text-anchor%3D%27middle%27%20fill%3D%27%23fff%27%20font-family%3D%27system-ui%2Csans-serif%27%20font-size%3D%2748%27%20font-weight%3D%27600%27%3ESR%3C/text%3E%3C/svg%3E",
+          "photoNote": "暂无公开肖像",
+          "website": "https://en.wikipedia.org/wiki/Steen_Rasmussen"
+        }
+      ],
+      "construction": "机制：膜、代谢、信息聚合物在湿系统中耦合成可维持并复制的原细胞。要点：自下而上组装生命功能模块。",
+      "lineage": "继承生命起源问题；把 ALife 从纯 Soft 拉回 Wet；超越仅仿真的路径。",
+      "limits": "实验门槛高；「活」的判据仍争议；完整开放演化原细胞尚未实现。",
+      "links": [
+        {
+          "label": "百科相关：Protocell",
+          "url": "https://en.wikipedia.org/wiki/Protocell"
+        }
+      ]
+    },
+    {
+      "id": "floreano-er",
+      "name": "进化机器人学（Floreano）",
+      "nameEn": "Evolutionary Robotics",
+      "year": 1990,
+      "yearNote": "1990s–",
+      "schools": [
+        "进化机器人"
+      ],
+      "medium": [
+        "Hard"
+      ],
+      "people": [
+        "Dario Floreano"
+      ],
+      "summary": "控制器与感知运动环路由进化/自组织产生，而非工程师写死行为。",
+      "demo": "none",
+      "demoHint": "",
+      "refs": [
+        "EPFL"
+      ],
+      "team": "EPFL Laboratory of Intelligent Systems",
+      "leads": [
+        {
+          "name": "Dario Floreano",
+          "role": "领军者",
+          "photo": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27160%27%20height%3D%27200%27%3E%3Crect%20width%3D%27160%27%20height%3D%27200%27%20rx%3D%2712%27%20fill%3D%27%234a5475%27/%3E%3Ctext%20x%3D%2780%27%20y%3D%27108%27%20text-anchor%3D%27middle%27%20fill%3D%27%23fff%27%20font-family%3D%27system-ui%2Csans-serif%27%20font-size%3D%2748%27%20font-weight%3D%27600%27%3EDF%3C/text%3E%3C/svg%3E",
+          "photoNote": "暂无公开肖像",
+          "website": "https://www.epfl.ch/labs/lis/"
+        }
+      ],
+      "construction": "机制：进化算法优化机器人控制器（有时含形态），在真实或仿真身体上评估适应度。要点：行为由进化而非手写。",
+      "lineage": "继承遗传算法与 ALife；强调具身闭环；超越纯软件 agent。",
+      "limits": "现实评估昂贵；仿真—现实差距；适应度设计仍注入人类目标。",
+      "links": [
+        {
+          "label": "EPFL LIS",
+          "url": "https://www.epfl.ch/labs/lis/"
+        },
+        {
+          "label": "百科：Evolutionary robotics",
+          "url": "https://en.wikipedia.org/wiki/Evolutionary_robotics"
+        }
+      ]
+    },
+    {
+      "id": "tierra",
+      "name": "Tierra",
+      "nameEn": "Tierra",
+      "year": 1991,
+      "schools": [
+        "数字进化"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "people": [
+        "Thomas S. Ray"
+      ],
+      "summary": "虚拟机上自复制程序竞争 CPU/内存；寄生与生态涌现。",
+      "demo": "tierra-lite",
+      "demoHint": "时间片+复制+寄生的极简示意",
+      "refs": [],
+      "team": "University of Delaware / 个人研究（Thomas S. Ray）",
+      "leads": [
+        {
+          "name": "Thomas S. Ray",
+          "role": "设计者",
+          "photo": "assets/photos/ray.jpg",
+          "website": "https://en.wikipedia.org/wiki/Tierra_(computer_simulation)"
+        }
+      ],
+      "construction": "机制：虚拟机上自复制程序竞争 CPU 与内存；突变产生寄生与生态。要点：数字生物地理。",
+      "lineage": "继承自复制与生态思想；抛弃固定适应度函数，让资源竞争驱动。",
+      "limits": "指令集与世界设计强烈塑造结果；可重复实验性弱于后世 Avida；非真实操作系统进程。",
+      "links": [
+        {
+          "label": "百科",
+          "url": "https://en.wikipedia.org/wiki/Tierra_(computer_simulation)"
+        },
+        {
+          "label": "Tom Ray 主页（历史）",
+          "url": "http://life.ou.edu/tierra/"
+        }
+      ]
+    },
+    {
+      "id": "avida",
+      "name": "Avida",
+      "nameEn": "Avida",
+      "year": 1994,
+      "schools": [
+        "数字进化"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "people": [
+        "Chris Adami",
+        "Charles Ofria"
+      ],
+      "summary": "可控实验的数字进化平台；信息论与进化。",
+      "demo": "none",
+      "demoHint": "可链到文档/截图；完整 Avida 过重",
+      "refs": [],
+      "team": [
+        "Michigan State University",
+        "Caltech 等"
+      ],
+      "leads": [
+        {
+          "name": "Chris Adami",
+          "role": "共同创立",
+          "photo": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27160%27%20height%3D%27200%27%3E%3Crect%20width%3D%27160%27%20height%3D%27200%27%20rx%3D%2712%27%20fill%3D%27%233d6489%27/%3E%3Ctext%20x%3D%2780%27%20y%3D%27108%27%20text-anchor%3D%27middle%27%20fill%3D%27%23fff%27%20font-family%3D%27system-ui%2Csans-serif%27%20font-size%3D%2748%27%20font-weight%3D%27600%27%3ECA%3C/text%3E%3C/svg%3E",
+          "photoNote": "暂无公开肖像",
+          "website": "https://mgi.natsci.msu.edu/labs/adami-lab/",
+          "scholar": "https://scholar.google.com/citations?user=VXM7wUMAAAAJ"
+        },
+        {
+          "name": "Charles Ofria",
+          "role": "共同创立 / 长期维护",
+          "photo": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27160%27%20height%3D%27200%27%3E%3Crect%20width%3D%27160%27%20height%3D%27200%27%20rx%3D%2712%27%20fill%3D%27%23615959%27/%3E%3Ctext%20x%3D%2780%27%20y%3D%27108%27%20text-anchor%3D%27middle%27%20fill%3D%27%23fff%27%20font-family%3D%27system-ui%2Csans-serif%27%20font-size%3D%2748%27%20font-weight%3D%27600%27%3ECO%3C/text%3E%3C/svg%3E",
+          "photoNote": "暂无公开肖像",
+          "website": "https://ofria.com/",
+          "scholar": "https://scholar.google.com/citations?user=nYLuKDAAAAAJ"
+        }
+      ],
+      "construction": "机制：网格上的数字生物执行基因组指令，完成逻辑任务获能量；可严格控制实验。要点：可重复的数字进化实验平台。",
+      "lineage": "继承 Tierra，强化实验控制与统计分析；抛弃过于「野生」的不可复现性。",
+      "limits": "逻辑任务生态仍人为；与湿进化类比需谨慎；学习曲线陡。",
+      "links": [
+        {
+          "label": "Avida GitHub",
+          "url": "https://github.com/devosoft/avida"
+        },
+        {
+          "label": "文档/项目",
+          "url": "https://avida.devosoft.org/"
+        }
+      ]
+    },
+    {
+      "id": "life-spacies",
+      "name": "Life Spacies",
+      "nameEn": "Life Spacies",
+      "year": 1997,
+      "schools": [
+        "ALife Art",
+        "开放演化"
+      ],
+      "medium": [
+        "Art",
+        "Soft"
+      ],
+      "people": [
+        "Christa Sommerer",
+        "Laurent Mignonneau"
+      ],
+      "summary": "观众输入与身体运动影响虚拟生物生成与进化；作品是持续互动生态。",
+      "demo": "none",
+      "demoHint": "",
+      "refs": [],
+      "team": [
+        "ATR / 艺术—科学合作脉络"
+      ],
+      "leads": [
+        {
+          "name": "Christa Sommerer",
+          "role": "艺术家 / 研究者",
+          "photo": "assets/photos/sommerer.jpg",
+          "website": "https://interface.ufg.ac.at/christa-laurent/"
+        },
+        {
+          "name": "Laurent Mignonneau",
+          "role": "艺术家 / 研究者",
+          "photo": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27160%27%20height%3D%27200%27%3E%3Crect%20width%3D%27160%27%20height%3D%27200%27%20rx%3D%2712%27%20fill%3D%27%23647777%27/%3E%3Ctext%20x%3D%2780%27%20y%3D%27108%27%20text-anchor%3D%27middle%27%20fill%3D%27%23fff%27%20font-family%3D%27system-ui%2Csans-serif%27%20font-size%3D%2748%27%20font-weight%3D%27600%27%3ELM%3C/text%3E%3C/svg%3E",
+          "photoNote": "暂无公开肖像",
+          "website": "https://interface.ufg.ac.at/christa-laurent/"
+        }
+      ],
+      "construction": "机制：观众文本与动作映射为虚拟生物的生成与交互，形成持续演化的装置生态。要点：观众即选择压。",
+      "lineage": "继承 ALife 与进化艺术；把交互装置当作活系统界面。",
+      "limits": "艺术语境下「进化」常被策展叙事放大；科学可重复性非首要目标。",
+      "links": [
+        {
+          "label": "作品介绍（Sommerer & Mignonneau）",
+          "url": "http://www.interface.ufg.ac.at/christa-laurent/WORKS/FRAMES/FrameSet.html"
+        }
+      ]
+    },
+    {
+      "id": "rinaldo-autopoiesis",
+      "name": "Autopoiesis（机器人雕塑）",
+      "nameEn": "Autopoiesis",
+      "year": 2000,
+      "schools": [
+        "ALife Art",
+        "群体智能"
+      ],
+      "medium": [
+        "Art",
+        "Hard"
+      ],
+      "people": [
+        "Ken Rinaldo"
+      ],
+      "summary": "机器人雕塑感知观众并彼此通信，呈现群体生命感；设计局部规则而非每次动作。",
+      "demo": "none",
+      "demoHint": "",
+      "refs": [],
+      "team": "Ken Rinaldo 工作室",
+      "leads": [
+        {
+          "name": "Ken Rinaldo",
+          "role": "艺术家",
+          "photo": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27160%27%20height%3D%27200%27%3E%3Crect%20width%3D%27160%27%20height%3D%27200%27%20rx%3D%2712%27%20fill%3D%27%2338638b%27/%3E%3Ctext%20x%3D%2780%27%20y%3D%27108%27%20text-anchor%3D%27middle%27%20fill%3D%27%23fff%27%20font-family%3D%27system-ui%2Csans-serif%27%20font-size%3D%2748%27%20font-weight%3D%27600%27%3EKR%3C/text%3E%3C/svg%3E",
+          "photoNote": "暂无公开肖像",
+          "website": "https://www.kenrinaldo.com/"
+        }
+      ],
+      "construction": "机制：机器人雕塑感知观众并相互通信，局部规则产生群体生命感。要点：装置即社会性机体。",
+      "lineage": "继承自创生（autopoiesis）隐喻与机器人艺术；强调关系性而非单机智能。",
+      "limits": "「自创生」多为概念借用；工程上仍是有限状态交互。",
+      "links": [
+        {
+          "label": "Ken Rinaldo",
+          "url": "https://www.kenrinaldo.com/"
+        }
+      ]
+    },
+    {
+      "id": "ikegami-embodied",
+      "name": "池上高志：具身 / 跨载体 ALife",
+      "nameEn": "Ikegami Lab (embodied ALife)",
+      "year": 2000,
+      "yearNote": "三代实验室脉络",
+      "schools": [
+        "具身/生成",
+        "Wet/跨载体",
+        "ALife Art"
+      ],
+      "medium": [
+        "Soft",
+        "Wet",
+        "Art"
+      ],
+      "people": [
+        "Takashi Ikegami"
+      ],
+      "summary": "从遗传码与合作，到具身认知系统，再到现实世界构造人工生命（化学、网络、艺术）。",
+      "demo": "none",
+      "demoHint": "",
+      "refs": [],
+      "team": "University of Tokyo Ikegami Lab",
+      "leads": [
+        {
+          "name": "Takashi Ikegami",
+          "role": "领军者",
+          "photo": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27160%27%20height%3D%27200%27%3E%3Crect%20width%3D%27160%27%20height%3D%27200%27%20rx%3D%2712%27%20fill%3D%27%23297179%27/%3E%3Ctext%20x%3D%2780%27%20y%3D%27108%27%20text-anchor%3D%27middle%27%20fill%3D%27%23fff%27%20font-family%3D%27system-ui%2Csans-serif%27%20font-size%3D%2748%27%20font-weight%3D%27600%27%3ETI%3C/text%3E%3C/svg%3E",
+          "photoNote": "暂无公开肖像",
+          "website": "https://sacral.c.u-tokyo.ac.jp/"
+        }
+      ],
+      "construction": "机制：从遗传码与合作模型，到具身认知与跨载体（化学、网络、艺术）构造。要点：生命在「做成」中显影。",
+      "lineage": "继承日本复杂系统与 ALife 传统；推动从仿真走向现实世界介入。",
+      "limits": "跨载体项目异质，难用单一指标评价；部分工作偏概念装置。",
+      "links": [
+        {
+          "label": "池上高志研究室",
+          "url": "https://sacral.c.u-tokyo.ac.jp/"
+        }
+      ]
+    },
+    {
+      "id": "bongard-robots",
+      "name": "进化机器人 / 身体—大脑共演化",
+      "nameEn": "Evolutionary robotics",
+      "year": 2000,
+      "yearNote": "2000s–",
+      "schools": [
+        "进化机器人"
+      ],
+      "medium": [
+        "Hard"
+      ],
+      "people": [
+        "Josh Bongard",
+        "Hod Lipson"
+      ],
+      "summary": "身体参与计算；损伤适应等。",
+      "demo": "none",
+      "demoHint": "",
+      "refs": [],
+      "team": [
+        "University of Vermont",
+        "Columbia / Cornell 合作脉络"
+      ],
+      "leads": [
+        {
+          "name": "Josh Bongard",
+          "role": "领军者",
+          "photo": "assets/photos/bongard.jpg",
+          "website": "https://www.uvm.edu/~jbongard/",
+          "scholar": "https://scholar.google.com/citations?user=Dj-kPasAAAAJ"
+        },
+        {
+          "name": "Hod Lipson",
+          "role": "合作者",
+          "photo": "assets/photos/lipson.jpg",
+          "website": "https://www.me.columbia.edu/faculty/hod-lipson",
+          "scholar": "https://scholar.google.com/citations?user=F_Go4V4AAAAJ"
+        }
+      ],
+      "construction": "机制：身体形态与控制器共演化；机器人通过自建模适应损伤。要点：身体即计算。",
+      "lineage": "继承进化机器人；超越纯控制器进化，纳入形态与自建模。",
+      "limits": "仿真依赖强；真实硬件共演化成本高；自建模仍粗粒度。",
+      "links": [
+        {
+          "label": "Bongard Lab",
+          "url": "https://www.uvm.edu/~jbongard/"
+        },
+        {
+          "label": "百科相关",
+          "url": "https://en.wikipedia.org/wiki/Evolutionary_robotics"
+        }
+      ]
+    },
+    {
+      "id": "iizuka-embodied",
+      "name": "饭塚博幸：具身认知与复杂系统",
+      "nameEn": "Iizuka Lab",
+      "year": 2005,
+      "yearNote": "2000s–",
+      "schools": [
+        "具身/生成"
+      ],
+      "medium": [
+        "Soft",
+        "Hard"
+      ],
+      "people": [
+        "Hiroyuki Iizuka"
+      ],
+      "summary": "人工生命 × 复杂系统 × 具身认知，强调 agent—身体—环境闭环。",
+      "demo": "none",
+      "demoHint": "",
+      "refs": [],
+      "team": "Hokkaido University 等",
+      "leads": [
+        {
+          "name": "Hiroyuki Iizuka",
+          "role": "研究者",
+          "photo": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27160%27%20height%3D%27200%27%3E%3Crect%20width%3D%27160%27%20height%3D%27200%27%20rx%3D%2712%27%20fill%3D%27%23525480%27/%3E%3Ctext%20x%3D%2780%27%20y%3D%27108%27%20text-anchor%3D%27middle%27%20fill%3D%27%23fff%27%20font-family%3D%27system-ui%2Csans-serif%27%20font-size%3D%2748%27%20font-weight%3D%27600%27%3EHI%3C/text%3E%3C/svg%3E",
+          "photoNote": "暂无公开肖像"
+        }
+      ],
+      "construction": "机制：人工生命 × 复杂系统 × 具身认知，强调 agent—身体—环境闭环动力学。要点：意义在互动中生成。",
+      "lineage": "继承具身认知与日本 ALife；与池上脉络呼应。",
+      "limits": "国际可见度相对分散；演示系统多为实验室规模。",
+      "links": [
+        {
+          "label": "研究者页（检索）",
+          "url": "https://scholar.google.com/scholar?q=Hiroyuki+Iizuka+embodied"
+        }
+      ]
+    },
+    {
+      "id": "swarm-chemistry",
+      "name": "Swarm Chemistry",
+      "nameEn": "Swarm Chemistry",
+      "year": 2007,
+      "schools": [
+        "人工化学",
+        "群体智能",
+        "自组织"
+      ],
+      "medium": [
+        "Soft",
+        "Art"
+      ],
+      "people": [
+        "Hiroki Sayama"
+      ],
+      "summary": "异质粒子规则混合产生形态。",
+      "demo": "none",
+      "demoHint": "完整 Swarm Chemistry 未内嵌；可参照 Boids",
+      "refs": [],
+      "team": "Binghamton University / Sayama Lab",
+      "leads": [
+        {
+          "name": "Hiroki Sayama",
+          "role": "提出者",
+          "photo": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27160%27%20height%3D%27200%27%3E%3Crect%20width%3D%27160%27%20height%3D%27200%27%20rx%3D%2712%27%20fill%3D%27%235b6569%27/%3E%3Ctext%20x%3D%2780%27%20y%3D%27108%27%20text-anchor%3D%27middle%27%20fill%3D%27%23fff%27%20font-family%3D%27system-ui%2Csans-serif%27%20font-size%3D%2748%27%20font-weight%3D%27600%27%3EHS%3C/text%3E%3C/svg%3E",
+          "photoNote": "暂无公开肖像",
+          "website": "https://bingdev.binghamton.edu/sayama/",
+          "scholar": "https://scholar.google.com/citations?user=IwDCodEAAAAJ"
+        }
+      ],
+      "construction": "机制：异质粒子携带不同局部规则，混合后自组织出多样宏观形态。要点：「化学」式配方混合。",
+      "lineage": "继承 Boids 与人工化学隐喻；用配方空间探索形态多样性。",
+      "limits": "规则空间仍设计者定义；与分子化学仅为类比。",
+      "links": [
+        {
+          "label": "Swarm Chemistry 页",
+          "url": "https://bingweb.binghamton.edu/~sayama/SwarmChemistry/"
+        }
+      ]
+    },
+    {
+      "id": "stringmol",
+      "name": "Stringmol",
+      "nameEn": "Stringmol",
+      "year": 2010,
+      "schools": [
+        "人工化学",
+        "开放演化"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "people": [
+        "Susan Stepney",
+        "Simon Hickinbotham"
+      ],
+      "summary": "字符串分子反应；语义闭合与开放度问题。",
+      "demo": "none",
+      "demoHint": "",
+      "refs": [],
+      "team": "University of York / York Centre for Complex Systems Analysis",
+      "leads": [
+        {
+          "name": "Susan Stepney",
+          "role": "领军者",
+          "photo": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27160%27%20height%3D%27200%27%3E%3Crect%20width%3D%27160%27%20height%3D%27200%27%20rx%3D%2712%27%20fill%3D%27%23356753%27/%3E%3Ctext%20x%3D%2780%27%20y%3D%27108%27%20text-anchor%3D%27middle%27%20fill%3D%27%23fff%27%20font-family%3D%27system-ui%2Csans-serif%27%20font-size%3D%2748%27%20font-weight%3D%27600%27%3ESS%3C/text%3E%3C/svg%3E",
+          "photoNote": "暂无公开肖像",
+          "website": "https://www-users.york.ac.uk/~ss44/",
+          "scholar": "https://scholar.google.com/citations?user=rD32w_EAAAAJ"
+        },
+        {
+          "name": "Simon Hickinbotham",
+          "role": "共同作者",
+          "photo": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27160%27%20height%3D%27200%27%3E%3Crect%20width%3D%27160%27%20height%3D%27200%27%20rx%3D%2712%27%20fill%3D%27%23425c8e%27/%3E%3Ctext%20x%3D%2780%27%20y%3D%27108%27%20text-anchor%3D%27middle%27%20fill%3D%27%23fff%27%20font-family%3D%27system-ui%2Csans-serif%27%20font-size%3D%2748%27%20font-weight%3D%27600%27%3ESH%3C/text%3E%3C/svg%3E",
+          "photoNote": "暂无公开肖像",
+          "website": "https://www-users.cs.york.ac.uk/susan/stringmol/"
+        }
+      ],
+      "construction": "机制：字符串「分子」按绑定与反应规则相互作用，探索程序化学与语义闭合。要点：分子即程序。",
+      "lineage": "继承人工化学与开放演化问题；强调可执行分子与生态。",
+      "limits": "抽象字符串世界；与湿化学映射弱；开放性度量仍研究中。",
+      "links": [
+        {
+          "label": "Stringmol / York",
+          "url": "https://www-users.cs.york.ac.uk/susan/stringmol/"
+        },
+        {
+          "label": "相关代码检索",
+          "url": "https://github.com/search?q=stringmol"
+        }
+      ]
+    },
+    {
+      "id": "levin-bioelectric",
+      "name": "生物电形态发生（Levin）",
+      "nameEn": "Bioelectric morphogenesis",
+      "year": 2010,
+      "yearNote": "2010s–",
+      "schools": [
+        "多尺度胜任力",
+        "形态发生"
+      ],
+      "medium": [
+        "Wet"
+      ],
+      "people": [
+        "Michael Levin"
+      ],
+      "summary": "认知光锥；目标导向的组织级问题解决。",
+      "demo": "none",
+      "demoHint": "",
+      "refs": [],
+      "team": [
+        "Tufts University Allen Discovery Center",
+        "Wyss Institute"
+      ],
+      "leads": [
+        {
+          "name": "Michael Levin",
+          "role": "领军者",
+          "photo": "assets/photos/levin.jpg",
+          "website": "https://drmichaellevin.org/",
+          "scholar": "https://scholar.google.com/citations?user=luouyakAAAAJ"
+        }
+      ],
+      "construction": "机制：细胞生物电网络编码解剖目标；干预电压模式可重定向形态发生。要点：多尺度胜任力与目标导向。",
+      "lineage": "继承形态发生与再生医学；超越纯基因中心叙事，引入电生理「软件层」。",
+      "limits": "机制细节仍在展开；「认知」隐喻有争议；临床转化早期。",
+      "links": [
+        {
+          "label": "Levin Lab",
+          "url": "https://www.drmichaellevin.org/"
+        },
+        {
+          "label": "百科：Michael Levin",
+          "url": "https://en.wikipedia.org/wiki/Michael_Levin_(biologist)"
+        }
+      ]
+    },
+    {
+      "id": "novelty-search",
+      "name": "Novelty Search",
+      "nameEn": "Novelty Search",
+      "year": 2011,
+      "schools": [
+        "开放演化",
+        "进化机器人"
+      ],
+      "medium": [
+        "Soft",
+        "Hard"
+      ],
+      "people": [
+        "Joel Lehman",
+        "Kenneth Stanley"
+      ],
+      "summary": "奖励新颖而非目标达成，推动开放探索。",
+      "demo": "none",
+      "demoHint": "",
+      "refs": [],
+      "team": [
+        "University of Central Florida 等（提出时）",
+        "Uber AI / OpenAI 等后续应用"
+      ],
+      "leads": [
+        {
+          "name": "Joel Lehman",
+          "role": "提出者之一",
+          "photo": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27160%27%20height%3D%27200%27%3E%3Crect%20width%3D%27160%27%20height%3D%27200%27%20rx%3D%2712%27%20fill%3D%27%23597b66%27/%3E%3Ctext%20x%3D%2780%27%20y%3D%27108%27%20text-anchor%3D%27middle%27%20fill%3D%27%23fff%27%20font-family%3D%27system-ui%2Csans-serif%27%20font-size%3D%2748%27%20font-weight%3D%27600%27%3EJL%3C/text%3E%3C/svg%3E",
+          "photoNote": "暂无公开肖像"
+        },
+        {
+          "name": "Kenneth Stanley",
+          "role": "提出者之一",
+          "photo": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27160%27%20height%3D%27200%27%3E%3Crect%20width%3D%27160%27%20height%3D%27200%27%20rx%3D%2712%27%20fill%3D%27%23537481%27/%3E%3Ctext%20x%3D%2780%27%20y%3D%27108%27%20text-anchor%3D%27middle%27%20fill%3D%27%23fff%27%20font-family%3D%27system-ui%2Csans-serif%27%20font-size%3D%2748%27%20font-weight%3D%27600%27%3EKS%3C/text%3E%3C/svg%3E",
+          "photoNote": "暂无公开肖像",
+          "website": "https://www.kenstanley.net/",
+          "scholar": "https://scholar.google.com/citations?user=6Q6oO1MAAAAJ"
+        }
+      ],
+      "construction": "机制：选择压奖励行为/表型新颖度而非目标距离，维持开放探索。要点：目标可能欺骗，新颖不骗。",
+      "lineage": "继承神经进化（NEAT 等）；抛弃窄适应度，对抗欺骗性目标。",
+      "limits": "新颖度度量需设计；可能漫游无焦点；与任务成功需额外机制结合。",
+      "links": [
+        {
+          "label": "百科",
+          "url": "https://en.wikipedia.org/wiki/Novelty_search"
+        },
+        {
+          "label": "相关论文入口",
+          "url": "https://www.cs.ucf.edu/~kstanley/"
+        }
+      ]
+    },
+    {
+      "id": "cheney-soft-robots",
+      "name": "软体机器人形态进化",
+      "nameEn": "Soft robot evolution",
+      "year": 2013,
+      "schools": [
+        "进化机器人"
+      ],
+      "medium": [
+        "Hard",
+        "Soft"
+      ],
+      "people": [
+        "Nick Cheney",
+        "Josh Bongard"
+      ],
+      "summary": "在仿真中共同进化软体形态与控制，体现身体参与计算。",
+      "demo": "none",
+      "demoHint": "",
+      "refs": [],
+      "team": [
+        "Cornell / UVM 等"
+      ],
+      "leads": [
+        {
+          "name": "Nick Cheney",
+          "role": "主要作者",
+          "photo": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27160%27%20height%3D%27200%27%3E%3Crect%20width%3D%27160%27%20height%3D%27200%27%20rx%3D%2712%27%20fill%3D%27%232e6660%27/%3E%3Ctext%20x%3D%2780%27%20y%3D%27108%27%20text-anchor%3D%27middle%27%20fill%3D%27%23fff%27%20font-family%3D%27system-ui%2Csans-serif%27%20font-size%3D%2748%27%20font-weight%3D%27600%27%3ENC%3C/text%3E%3C/svg%3E",
+          "photoNote": "暂无公开肖像"
+        },
+        {
+          "name": "Josh Bongard",
+          "role": "合作者",
+          "photo": "assets/photos/bongard.jpg",
+          "website": "https://www.uvm.edu/~jbongard/",
+          "scholar": "https://scholar.google.com/citations?user=Dj-kPasAAAAJ"
+        }
+      ],
+      "construction": "机制：软体机器人的体素材料与控制共演化，在仿真中产生步态与形态。要点：材料即基因。",
+      "lineage": "继承进化机器人与软体机器人；超越刚体连杆假设。",
+      "limits": "仿真—现实差距大；制造演化形态困难。",
+      "links": [
+        {
+          "label": "相关工作检索",
+          "url": "https://scholar.google.com/scholar?q=Cheney+Bongard+soft+robot+evolution"
+        }
+      ]
+    },
+    {
+      "id": "cejkova-droplet",
+      "name": "液滴化学机器人（Čejková）",
+      "nameEn": "Decanol droplet robots",
+      "year": 2014,
+      "yearNote": "2010s–",
+      "schools": [
+        "原细胞/化学机器人",
+        "Wet/跨载体"
+      ],
+      "medium": [
+        "Wet"
+      ],
+      "people": [
+        "Jitka Čejková"
+      ],
+      "summary": "无神经无 DNA 的癸醇液滴：趋化运动、集体行为与形变；自称湿人工生命实验室。",
+      "demo": "none",
+      "demoHint": "",
+      "refs": [],
+      "team": "University of Chemistry and Technology, Prague 等",
+      "leads": [
+        {
+          "name": "Jitka Čejková",
+          "role": "研究者",
+          "photo": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27160%27%20height%3D%27200%27%3E%3Crect%20width%3D%27160%27%20height%3D%27200%27%20rx%3D%2712%27%20fill%3D%27%235b3c54%27/%3E%3Ctext%20x%3D%2780%27%20y%3D%27108%27%20text-anchor%3D%27middle%27%20fill%3D%27%23fff%27%20font-family%3D%27system-ui%2Csans-serif%27%20font-size%3D%2748%27%20font-weight%3D%27600%27%3EJE%3C/text%3E%3C/svg%3E",
+          "photoNote": "暂无公开肖像"
+        }
+      ],
+      "construction": "机制：化学液滴在试剂梯度中表现出趋化、分裂等类生命行为。要点：无细胞的湿机器人。",
+      "lineage": "继承原细胞与人工化学；展示「最小物质」亦可呈行为。",
+      "limits": "行为谱有限；信息遗传弱；规模难扩展。",
+      "links": [
+        {
+          "label": "学者主页检索",
+          "url": "https://scholar.google.com/scholar?q=Jitka+Cejkova+droplet+robots"
+        }
+      ]
+    },
+    {
+      "id": "map-elites",
+      "name": "MAP-Elites / QD",
+      "nameEn": "Quality-Diversity",
+      "year": 2015,
+      "schools": [
+        "开放演化"
+      ],
+      "medium": [
+        "Soft",
+        "Hard"
+      ],
+      "people": [
+        "Jean-Baptiste Mouret et al."
+      ],
+      "summary": "行为空间格子上保存多样优质解。",
+      "demo": "none",
+      "demoHint": "",
+      "refs": [],
+      "team": [
+        "Inria / Sorbonne 等",
+        "多机构 QD 社区"
+      ],
+      "leads": [
+        {
+          "name": "Jean-Baptiste Mouret",
+          "role": "提出者之一",
+          "photo": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27160%27%20height%3D%27200%27%3E%3Crect%20width%3D%27160%27%20height%3D%27200%27%20rx%3D%2712%27%20fill%3D%27%2329638f%27/%3E%3Ctext%20x%3D%2780%27%20y%3D%27108%27%20text-anchor%3D%27middle%27%20fill%3D%27%23fff%27%20font-family%3D%27system-ui%2Csans-serif%27%20font-size%3D%2748%27%20font-weight%3D%27600%27%3EJB%3C/text%3E%3C/svg%3E",
+          "photoNote": "暂无公开肖像",
+          "website": "https://members.loria.fr/JBMouret/",
+          "scholar": "https://scholar.google.com/citations?user=lp8V_UYAAAAJ"
+        },
+        {
+          "name": "Jeff Clune",
+          "role": "提出者之一（协作脉络）",
+          "photo": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27160%27%20height%3D%27200%27%3E%3Crect%20width%3D%27160%27%20height%3D%27200%27%20rx%3D%2712%27%20fill%3D%27%2367795e%27/%3E%3Ctext%20x%3D%2780%27%20y%3D%27108%27%20text-anchor%3D%27middle%27%20fill%3D%27%23fff%27%20font-family%3D%27system-ui%2Csans-serif%27%20font-size%3D%2748%27%20font-weight%3D%27600%27%3EJC%3C/text%3E%3C/svg%3E",
+          "photoNote": "暂无公开肖像",
+          "website": "https://jeffclune.com/"
+        }
+      ],
+      "construction": "机制：在行为特征空间的格子中保留精英，照明多样性档案而非单峰最优。要点：质量—多样性（QD）。",
+      "lineage": "继承 Novelty Search 与进化机器人；用显式档案结构化多样性。",
+      "limits": "特征空间需人手设计；高维照明昂贵；档案不等于开放演化。",
+      "links": [
+        {
+          "label": "MAP-Elites 论文（预印本）",
+          "url": "https://arxiv.org/abs/1504.04909"
+        },
+        {
+          "label": "百科：Quality diversity",
+          "url": "https://en.wikipedia.org/wiki/Quality_diversity"
+        }
+      ]
+    },
+    {
+      "id": "assembly-theory",
+      "name": "组装理论",
+      "nameEn": "Assembly Theory",
+      "year": 2017,
+      "yearNote": "2017–2023",
+      "schools": [
+        "生命起源/存在判据"
+      ],
+      "medium": [
+        "Wet"
+      ],
+      "people": [
+        "Sara Walker",
+        "Lee Cronin"
+      ],
+      "summary": "组装指数测量历史选择痕迹。",
+      "demo": "none",
+      "demoHint": "",
+      "refs": [],
+      "team": [
+        "Arizona State University",
+        "University of Glasgow"
+      ],
+      "leads": [
+        {
+          "name": "Sara Walker",
+          "role": "共同提出",
+          "photo": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27160%27%20height%3D%27200%27%3E%3Crect%20width%3D%27160%27%20height%3D%27200%27%20rx%3D%2712%27%20fill%3D%27%23326d75%27/%3E%3Ctext%20x%3D%2780%27%20y%3D%27108%27%20text-anchor%3D%27middle%27%20fill%3D%27%23fff%27%20font-family%3D%27system-ui%2Csans-serif%27%20font-size%3D%2748%27%20font-weight%3D%27600%27%3ESW%3C/text%3E%3C/svg%3E",
+          "photoNote": "暂无公开肖像",
+          "website": "https://emergence.asu.edu/",
+          "scholar": "https://scholar.google.com/citations?user=-9WfhCYAAAAJ"
+        },
+        {
+          "name": "Lee Cronin",
+          "role": "共同提出",
+          "photo": "assets/photos/cronin.jpg",
+          "website": "https://www.chem.gla.ac.uk/cronin/",
+          "scholar": "https://scholar.google.com/citations?user=orJLEmUAAAAJ"
+        }
+      ],
+      "construction": "机制：以组装指数等度量对象的历史因果深度，作为生命/选择痕迹的物理判据。要点：存在与复杂性的可操作定义。",
+      "lineage": "继承生命起源与信息理论问题；试图给出可测「生命迹象」；超越纯仿真定义。",
+      "limits": "度量与阈值有争议；实验室与天文应用仍早期；非构造性 ALife 引擎。",
+      "links": [
+        {
+          "label": "Nature 相关报道/论文入口",
+          "url": "https://www.nature.com/articles/s41586-023-06600-9"
+        },
+        {
+          "label": "Cronin 组",
+          "url": "https://www.croninlab.com/"
+        }
+      ]
+    },
+    {
+      "id": "witkowski-crosslabs",
+      "name": "Cross Labs / ALife×Agency",
+      "nameEn": "Cross Labs",
+      "year": 2018,
+      "yearNote": "2018–",
+      "schools": [
+        "ALife×AI",
+        "开放演化"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "people": [
+        "Olaf Witkowski"
+      ],
+      "summary": "开放端、主体理论与集体学习；ISAL 主席节点，连接 ALife 与当代 AI/agency。",
+      "demo": "none",
+      "demoHint": "",
+      "refs": [],
+      "team": "Cross Labs / 相关 ALife×Agency 社区",
+      "leads": [
+        {
+          "name": "Olaf Witkowski",
+          "role": "推动者",
+          "photo": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27160%27%20height%3D%27200%27%3E%3Crect%20width%3D%27160%27%20height%3D%27200%27%20rx%3D%2712%27%20fill%3D%27%235f7456%27/%3E%3Ctext%20x%3D%2780%27%20y%3D%27108%27%20text-anchor%3D%27middle%27%20fill%3D%27%23fff%27%20font-family%3D%27system-ui%2Csans-serif%27%20font-size%3D%2748%27%20font-weight%3D%27600%27%3EOW%3C/text%3E%3C/svg%3E",
+          "photoNote": "暂无公开肖像",
+          "website": "https://www.crosslabs.org/"
+        }
+      ],
+      "construction": "机制：交叉实验室连接 ALife、认知与具身智能，推动 agency 测量与跨学科实验。要点：制度与问题设定并进。",
+      "lineage": "继承 ALife 制度化；强调智能与生命定义交叠。",
+      "limits": "「agency」操作化困难；产出分散于工作坊与立场文。",
+      "links": [
+        {
+          "label": "Cross Labs",
+          "url": "https://www.crosslabs.org/"
+        }
+      ]
+    },
+    {
+      "id": "sinapayen-life-intel",
+      "name": "生命与智能定义（Sinapayen）",
+      "nameEn": "Life/Intelligence definitions",
+      "year": 2018,
+      "yearNote": "2010s–",
+      "schools": [
+        "ALife×AI",
+        "开放演化",
+        "生命起源/存在判据"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "people": [
+        "Lana Sinapayen"
+      ],
+      "summary": "横跨 CA、开放演化、学习、预测与天体生物学，追问何种生命/智能定义可实现。",
+      "demo": "none",
+      "demoHint": "",
+      "refs": [],
+      "team": "Sony CSL / ALIFE 社区",
+      "leads": [
+        {
+          "name": "Lana Sinapayen",
+          "role": "研究者",
+          "photo": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27160%27%20height%3D%27200%27%3E%3Crect%20width%3D%27160%27%20height%3D%27200%27%20rx%3D%2712%27%20fill%3D%27%23477b83%27/%3E%3Ctext%20x%3D%2780%27%20y%3D%27108%27%20text-anchor%3D%27middle%27%20fill%3D%27%23fff%27%20font-family%3D%27system-ui%2Csans-serif%27%20font-size%3D%2748%27%20font-weight%3D%27600%27%3ELS%3C/text%3E%3C/svg%3E",
+          "photoNote": "暂无公开肖像"
+        }
+      ],
+      "construction": "机制：从理论与综述层面厘清生命与智能定义的交叠与分歧，服务实验设计。要点：概念工程。",
+      "lineage": "继承 ALife 哲学传统；抵抗口号化定义。",
+      "limits": "元理论工作不直接给出可运行系统。",
+      "links": [
+        {
+          "label": "学者检索",
+          "url": "https://scholar.google.com/scholar?q=Lana+Sinapayen+artificial+life"
+        }
+      ]
+    },
+    {
+      "id": "lenia",
+      "name": "Lenia",
+      "nameEn": "Lenia",
+      "year": 2019,
+      "schools": [
+        "连续介质/形态",
+        "开放演化",
+        "ALife Art"
+      ],
+      "medium": [
+        "Soft",
+        "Art"
+      ],
+      "people": [
+        "Bert Wang-Erickson / Bert Chan"
+      ],
+      "summary": "连续值 CA；类生命「生物」形态与运动。",
+      "demo": "lenia-lite",
+      "demoHint": "简化连续核卷积演示",
+      "refs": [],
+      "team": "个人研究（Bert Chan） / 开源社区",
+      "leads": [
+        {
+          "name": "Bert Chan",
+          "role": "提出者",
+          "photo": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27160%27%20height%3D%27200%27%3E%3Crect%20width%3D%27160%27%20height%3D%27200%27%20rx%3D%2712%27%20fill%3D%27%23486d78%27/%3E%3Ctext%20x%3D%2780%27%20y%3D%27108%27%20text-anchor%3D%27middle%27%20fill%3D%27%23fff%27%20font-family%3D%27system-ui%2Csans-serif%27%20font-size%3D%2748%27%20font-weight%3D%27600%27%3EBC%3C/text%3E%3C/svg%3E",
+          "photoNote": "暂无公开肖像",
+          "website": "https://chakazul.github.io/lenia.html"
+        }
+      ],
+      "construction": "机制：连续空间、时间、状态的 CA，用核卷积 + 增长映射产生可辨识「生命体」。要点：光滑生命。",
+      "lineage": "继承 SmoothLife / CA 艺术与科学；超越二值 Life，探索连续形态物种。",
+      "limits": "本馆 demo 为诚实简化版；完整 Lenia 参数空间巨大；「物种」需人工分类。",
+      "links": [
+        {
+          "label": "GitHub: Chakazul/Lenia",
+          "url": "https://github.com/Chakazul/Lenia"
+        },
+        {
+          "label": "在线演示",
+          "url": "https://chakazul.github.io/Lenia/JavaScript/Lenia.html"
+        },
+        {
+          "label": "论文 arXiv",
+          "url": "https://arxiv.org/abs/1812.05433"
+        }
+      ]
+    },
+    {
+      "id": "poet",
+      "name": "POET",
+      "nameEn": "POET",
+      "year": 2019,
+      "schools": [
+        "开放演化"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "people": [
+        "Uber AI Labs / OpenAI"
+      ],
+      "summary": "环境与策略共演化。",
+      "demo": "none",
+      "demoHint": "",
+      "refs": [],
+      "team": [
+        "Uber AI Labs",
+        "OpenAI（合作/后续）"
+      ],
+      "leads": [
+        {
+          "name": "POET 团队（Wang et al.）",
+          "role": "提出者",
+          "photo": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27160%27%20height%3D%27200%27%3E%3Crect%20width%3D%27160%27%20height%3D%27200%27%20rx%3D%2712%27%20fill%3D%27%23484e77%27/%3E%3Ctext%20x%3D%2780%27%20y%3D%27108%27%20text-anchor%3D%27middle%27%20fill%3D%27%23fff%27%20font-family%3D%27system-ui%2Csans-serif%27%20font-size%3D%2748%27%20font-weight%3D%27600%27%3EPO%3C/text%3E%3C/svg%3E",
+          "photoNote": "暂无公开肖像"
+        }
+      ],
+      "construction": "机制：配对开放端训练——环境与智能体共同进化，持续产生新挑战。要点：环境即课程。",
+      "lineage": "继承开放演化与 QD；抛弃固定任务集。",
+      "limits": "计算昂贵；环境生成空间仍受限；与真实世界迁移未解决。",
+      "links": [
+        {
+          "label": "POET 论文",
+          "url": "https://arxiv.org/abs/1901.01753"
+        },
+        {
+          "label": "Enhanced POET",
+          "url": "https://arxiv.org/abs/2003.08536"
+        }
+      ]
+    },
+    {
+      "id": "nca",
+      "name": "Neural Cellular Automata",
+      "nameEn": "NCA",
+      "year": 2020,
+      "schools": [
+        "细胞自动机",
+        "形态发生",
+        "自组织"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "people": [
+        "Mordvintsev et al.",
+        "Stefano Nichele"
+      ],
+      "summary": "可学习局部更新；生长、再生、记忆。",
+      "demo": "none",
+      "demoHint": "NCA 需训练权重；以卡片呈现",
+      "refs": [],
+      "team": [
+        "Google / 独立研究（Mordvintsev 等）",
+        "OsloMet 等（Nichele）"
+      ],
+      "leads": [
+        {
+          "name": "Alexander Mordvintsev",
+          "role": "主要作者之一",
+          "photo": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27160%27%20height%3D%27200%27%3E%3Crect%20width%3D%27160%27%20height%3D%27200%27%20rx%3D%2712%27%20fill%3D%27%23484b59%27/%3E%3Ctext%20x%3D%2780%27%20y%3D%27108%27%20text-anchor%3D%27middle%27%20fill%3D%27%23fff%27%20font-family%3D%27system-ui%2Csans-serif%27%20font-size%3D%2748%27%20font-weight%3D%27600%27%3EAM%3C/text%3E%3C/svg%3E",
+          "photoNote": "暂无公开肖像",
+          "website": "https://distill.pub/2020/growing-ca/"
+        },
+        {
+          "name": "Stefano Nichele",
+          "role": "相关研究",
+          "photo": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27160%27%20height%3D%27200%27%3E%3Crect%20width%3D%27160%27%20height%3D%27200%27%20rx%3D%2712%27%20fill%3D%27%232d6054%27/%3E%3Ctext%20x%3D%2780%27%20y%3D%27108%27%20text-anchor%3D%27middle%27%20fill%3D%27%23fff%27%20font-family%3D%27system-ui%2Csans-serif%27%20font-size%3D%2748%27%20font-weight%3D%27600%27%3ESN%3C/text%3E%3C/svg%3E",
+          "photoNote": "暂无公开肖像"
+        }
+      ],
+      "construction": "机制：每个细胞用同一神经网络根据邻域更新状态，学习自组织成目标形态并可再生。要点：可微形态发生。",
+      "lineage": "继承 CA 与发育；用深度学习训练局部规则；超越手写 CA。",
+      "limits": "训练目标仍外部给定；稳定性与泛化有限；算力需求高于经典 CA。",
+      "links": [
+        {
+          "label": "Distill: Growing NCA",
+          "url": "https://distill.pub/2020/growing-ca/"
+        },
+        {
+          "label": "GitHub",
+          "url": "https://github.com/google-research/self-organising-systems"
+        }
+      ]
+    },
+    {
+      "id": "xenobots",
+      "name": "Xenobots",
+      "nameEn": "Xenobots",
+      "year": 2020,
+      "schools": [
+        "多尺度胜任力",
+        "进化机器人",
+        "Wet/跨载体"
+      ],
+      "medium": [
+        "Wet",
+        "Hard",
+        "Soft"
+      ],
+      "people": [
+        "Michael Levin",
+        "Josh Bongard",
+        "Douglas Blackiston"
+      ],
+      "summary": "青蛙细胞组装的新型活体机器；设计+生物。",
+      "demo": "none",
+      "demoHint": "视频/图示卡片",
+      "refs": [],
+      "team": [
+        "Tufts University",
+        "University of Vermont",
+        "Wyss Institute"
+      ],
+      "leads": [
+        {
+          "name": "Michael Levin",
+          "role": "生物侧领军",
+          "photo": "assets/photos/levin.jpg",
+          "website": "https://drmichaellevin.org/",
+          "scholar": "https://scholar.google.com/citations?user=luouyakAAAAJ"
+        },
+        {
+          "name": "Josh Bongard",
+          "role": "计算/设计侧",
+          "photo": "assets/photos/bongard.jpg",
+          "website": "https://www.uvm.edu/~jbongard/",
+          "scholar": "https://scholar.google.com/citations?user=Dj-kPasAAAAJ"
+        },
+        {
+          "name": "Douglas Blackiston",
+          "role": "实验合作",
+          "photo": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27160%27%20height%3D%27200%27%3E%3Crect%20width%3D%27160%27%20height%3D%27200%27%20rx%3D%2712%27%20fill%3D%27%23396872%27/%3E%3Ctext%20x%3D%2780%27%20y%3D%27108%27%20text-anchor%3D%27middle%27%20fill%3D%27%23fff%27%20font-family%3D%27system-ui%2Csans-serif%27%20font-size%3D%2748%27%20font-weight%3D%27600%27%3EDB%3C/text%3E%3C/svg%3E",
+          "photoNote": "暂无公开肖像",
+          "website": "https://drmichaellevin.org/"
+        }
+      ],
+      "construction": "机制：仿真演化形态 → 用蛙胚细胞组装可运动、可自愈的活体机器人。要点：湿件可重编程。",
+      "lineage": "继承进化机器人与生物电形态发生；抛弃「机器人必须金属」；展示多尺度胜任力。",
+      "limits": "寿命与能力有限；伦理与监管议题；不可简单外推到人类组织。",
+      "links": [
+        {
+          "label": "百科",
+          "url": "https://en.wikipedia.org/wiki/Xenobot"
+        },
+        {
+          "label": "PNAS 2020",
+          "url": "https://www.pnas.org/doi/10.1073/pnas.1910837117"
+        }
+      ]
+    },
+    {
+      "id": "flow-lenia",
+      "name": "Flow-Lenia",
+      "nameEn": "Flow-Lenia",
+      "year": 2022,
+      "schools": [
+        "连续介质/形态",
+        "开放演化"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "people": [
+        "Bert Chan et al."
+      ],
+      "summary": "质量守恒动力学上的 Lenia 变体。",
+      "demo": "none",
+      "demoHint": "",
+      "refs": [],
+      "team": "Bert Chan 等 / 开源社区",
+      "leads": [
+        {
+          "name": "Bert Chan",
+          "role": "核心作者",
+          "photo": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27160%27%20height%3D%27200%27%3E%3Crect%20width%3D%27160%27%20height%3D%27200%27%20rx%3D%2712%27%20fill%3D%27%23486d78%27/%3E%3Ctext%20x%3D%2780%27%20y%3D%27108%27%20text-anchor%3D%27middle%27%20fill%3D%27%23fff%27%20font-family%3D%27system-ui%2Csans-serif%27%20font-size%3D%2748%27%20font-weight%3D%27600%27%3EBC%3C/text%3E%3C/svg%3E",
+          "photoNote": "暂无公开肖像",
+          "website": "https://chakazul.github.io/lenia.html"
+        }
+      ],
+      "construction": "机制：在 Lenia 上引入质量守恒流场等，增强多实体交互与稳定物质量。要点：可组合的连续生命。",
+      "lineage": "继承 Lenia；修补质量漂移与交互缺陷。",
+      "limits": "实现复杂；本馆未内嵌完整 demo。",
+      "links": [
+        {
+          "label": "相关论文/代码检索",
+          "url": "https://arxiv.org/search/?query=Flow-Lenia&searchtype=all"
+        },
+        {
+          "label": "Lenia 仓库",
+          "url": "https://github.com/Chakazul/Lenia"
+        }
+      ]
+    },
+    {
+      "id": "anthrobots",
+      "name": "Anthrobots",
+      "nameEn": "Anthrobots",
+      "year": 2023,
+      "schools": [
+        "多尺度胜任力",
+        "Wet/跨载体"
+      ],
+      "medium": [
+        "Wet"
+      ],
+      "people": [
+        "Michael Levin et al."
+      ],
+      "summary": "人类气管细胞自组装的微型生物机器人。",
+      "demo": "none",
+      "demoHint": "",
+      "refs": [],
+      "team": [
+        "Tufts University Levin Lab 等"
+      ],
+      "leads": [
+        {
+          "name": "Michael Levin",
+          "role": "领军",
+          "photo": "assets/photos/levin.jpg",
+          "website": "https://drmichaellevin.org/",
+          "scholar": "https://scholar.google.com/citations?user=luouyakAAAAJ"
+        },
+        {
+          "name": "Gizem Gumuskaya",
+          "role": "主要实验作者之一",
+          "photo": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27160%27%20height%3D%27200%27%3E%3Crect%20width%3D%27160%27%20height%3D%27200%27%20rx%3D%2712%27%20fill%3D%27%235c7156%27/%3E%3Ctext%20x%3D%2780%27%20y%3D%27108%27%20text-anchor%3D%27middle%27%20fill%3D%27%23fff%27%20font-family%3D%27system-ui%2Csans-serif%27%20font-size%3D%2748%27%20font-weight%3D%27600%27%3EGG%3C/text%3E%3C/svg%3E",
+          "photoNote": "暂无公开肖像",
+          "website": "https://drmichaellevin.org/"
+        }
+      ],
+      "construction": "机制：由人类气管细胞自组织形成可动微型生物体，无基因编辑。要点：成人细胞的形态可塑性。",
+      "lineage": "继承 Xenobots；把基材从蛙换到人类细胞，强化医学想象。",
+      "limits": "早期研究；治疗应用未证实；伦理审查严格。",
+      "links": [
+        {
+          "label": "高级科学报道入口",
+          "url": "https://www.sciencedaily.com/releases/2023/11/231130132811.htm"
+        },
+        {
+          "label": "Levin Lab",
+          "url": "https://www.drmichaellevin.org/"
+        }
+      ]
+    },
+    {
+      "id": "cma-alife-art",
+      "name": "港科大（广州）CMA / ALife Art",
+      "nameEn": "HKUST(GZ) CMA Creative Future",
+      "year": 2024,
+      "schools": [
+        "ALife Art"
+      ],
+      "medium": [
+        "Art",
+        "Soft"
+      ],
+      "people": [
+        "Ingeborg Reichle",
+        "Zi-Wei Wu"
+      ],
+      "summary": "把 Artificial Life Art 作为正式研究对象；计算生命 × 艺术研究 × 展览。",
+      "demo": "none",
+      "demoHint": "",
+      "refs": [
+        "Artificial Life journal 2024"
+      ],
+      "team": "香港科技大学（广州）CMA 等",
+      "leads": [
+        {
+          "name": "Ingeborg Reichle",
+          "role": "学者 / 策展研究",
+          "photo": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27160%27%20height%3D%27200%27%3E%3Crect%20width%3D%27160%27%20height%3D%27200%27%20rx%3D%2712%27%20fill%3D%27%235a4b86%27/%3E%3Ctext%20x%3D%2780%27%20y%3D%27108%27%20text-anchor%3D%27middle%27%20fill%3D%27%23fff%27%20font-family%3D%27system-ui%2Csans-serif%27%20font-size%3D%2748%27%20font-weight%3D%27600%27%3EIR%3C/text%3E%3C/svg%3E",
+          "photoNote": "暂无公开肖像",
+          "website": "https://cma.hkust-gz.edu.cn/"
+        },
+        {
+          "name": "Zi-Wei Wu",
+          "role": "相关研究者",
+          "photo": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27160%27%20height%3D%27200%27%3E%3Crect%20width%3D%27160%27%20height%3D%27200%27%20rx%3D%2712%27%20fill%3D%27%233f547d%27/%3E%3Ctext%20x%3D%2780%27%20y%3D%27108%27%20text-anchor%3D%27middle%27%20fill%3D%27%23fff%27%20font-family%3D%27system-ui%2Csans-serif%27%20font-size%3D%2748%27%20font-weight%3D%27600%27%3EZW%3C/text%3E%3C/svg%3E",
+          "photoNote": "暂无公开肖像",
+          "website": "https://cma.hkust-gz.edu.cn/"
+        }
+      ],
+      "construction": "机制：艺术—科技机构中的 ALife 创作与策展，把算法生命纳入当代艺术生产。要点：文化层人工生命。",
+      "lineage": "继承 ALife Art；东亚新机构节点。",
+      "limits": "学术与展览产出仍在积累；条目以机构节点记录为主。",
+      "links": [
+        {
+          "label": "HKUST(GZ) CMA",
+          "url": "https://cma.hkust-gz.edu.cn/"
+        }
+      ]
+    },
+    {
+      "id": "alife-x-agents",
+      "name": "ALife × LLM Agent 生态",
+      "nameEn": "Agentic ecosystems at ALIFE",
+      "year": 2025,
+      "yearNote": "2025–2026",
+      "schools": [
+        "ALife×AI",
+        "开放演化"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "people": [
+        "ALIFE community"
+      ],
+      "summary": "会议明确出现 LLM-driven agents、自主组织等议题；Agent 生态成为新 substrate 分支。",
+      "demo": "none",
+      "demoHint": "",
+      "refs": [
+        "ALIFE 2026 Workshop"
+      ],
+      "team": "ALIFE 社区 / 多机构",
+      "leads": [
+        {
+          "name": "ALIFE community",
+          "role": "共同体",
+          "photo": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27160%27%20height%3D%27200%27%3E%3Crect%20width%3D%27160%27%20height%3D%27200%27%20rx%3D%2712%27%20fill%3D%27%23434a51%27/%3E%3Ctext%20x%3D%2780%27%20y%3D%27108%27%20text-anchor%3D%27middle%27%20fill%3D%27%23fff%27%20font-family%3D%27system-ui%2Csans-serif%27%20font-size%3D%2748%27%20font-weight%3D%27600%27%3EAC%3C/text%3E%3C/svg%3E",
+          "photoNote": "暂无公开肖像"
+        }
+      ],
+      "construction": "机制：大模型智能体与 ALife 仿真交叉——种群、开放世界、社会动力学。要点：新的 Soft 实验床。",
+      "lineage": "继承数字进化与多智能体；引入 LLM 作为可控「表型」。",
+      "limits": "炒作风险高；评测标准未定；能耗与可复现性差。",
+      "links": [
+        {
+          "label": "ALIFE 会议",
+          "url": "https://alife.org/"
+        }
+      ]
+    },
+    {
+      "id": "partic-evolution-art",
+      "name": "Participatory Evolution（SIGGRAPH Asia）",
+      "nameEn": "Participatory Evolution of ALife",
+      "year": 2025,
+      "schools": [
+        "ALife Art",
+        "开放演化"
+      ],
+      "medium": [
+        "Art",
+        "Soft"
+      ],
+      "people": [
+        "MiLab / MIT / RCA"
+      ],
+      "summary": "观众用语义反馈改人工生态参数与规则。",
+      "demo": "none",
+      "demoHint": "",
+      "refs": [],
+      "team": [
+        "MiLab",
+        "MIT",
+        "RCA 等合作"
+      ],
+      "leads": [
+        {
+          "name": "Participatory Evolution 团队",
+          "role": "创作者",
+          "photo": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27160%27%20height%3D%27200%27%3E%3Crect%20width%3D%27160%27%20height%3D%27200%27%20rx%3D%2712%27%20fill%3D%27%23544b80%27/%3E%3Ctext%20x%3D%2780%27%20y%3D%27108%27%20text-anchor%3D%27middle%27%20fill%3D%27%23fff%27%20font-family%3D%27system-ui%2Csans-serif%27%20font-size%3D%2748%27%20font-weight%3D%27600%27%3EPa%3C/text%3E%3C/svg%3E",
+          "photoNote": "暂无公开肖像"
+        }
+      ],
+      "construction": "机制：观众参与式进化与生成艺术（SIGGRAPH Asia 等展出语境）。要点：人在环选择压。",
+      "lineage": "继承交互进化艺术（IEC）与 ALife Art。",
+      "limits": "展览时效性；代码与论文公开程度不一。",
+      "links": [
+        {
+          "label": "SIGGRAPH Asia 检索",
+          "url": "https://www.google.com/search?q=Participatory+Evolution+SIGGRAPH+Asia"
+        }
+      ]
+    },
+    {
+      "id": "self-referring",
+      "name": "规则即身体（本人 demo）",
+      "nameEn": "Rules-as-Body",
+      "year": 2026,
+      "schools": [
+        "自修改解释器",
+        "细胞自动机",
+        "本人实验"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "people": [
+        "简永杰"
+      ],
+      "summary": "规则节点可感知、可重接；绕障由拓扑涌现。",
+      "demo": "self-referring-link",
+      "demoHint": "链到本地项目说明或嵌入简化版",
+      "refs": [],
+      "personal": true,
+      "team": "本人实验",
+      "leads": [
+        {
+          "name": "简永杰",
+          "role": "作者",
+          "photo": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27160%27%20height%3D%27200%27%3E%3Crect%20width%3D%27160%27%20height%3D%27200%27%20rx%3D%2712%27%20fill%3D%27%23615288%27/%3E%3Ctext%20x%3D%2780%27%20y%3D%27108%27%20text-anchor%3D%27middle%27%20fill%3D%27%23fff%27%20font-family%3D%27system-ui%2Csans-serif%27%20font-size%3D%2748%27%20font-weight%3D%27600%27%3E%E7%AE%80%E6%B0%B8%3C/text%3E%3C/svg%3E",
+          "photoNote": "暂无公开肖像"
+        }
+      ],
+      "construction": "机制：规则即身体——系统在运行中指涉并改写自身规则结构。要点：自指作为生命隐喻。",
+      "lineage": "继承自修改与反射系统；对接本展览「解释器/规则」线索。",
+      "limits": "完整交互在独立项目；本馆仅史条目卡片，不假装可跑。",
+      "links": []
+    },
+    {
+      "id": "control-itself",
+      "name": "解释器接管（本人 demo）",
+      "nameEn": "Control Itself",
+      "year": 2026,
+      "schools": [
+        "自修改解释器",
+        "本人实验"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "people": [
+        "简永杰"
+      ],
+      "summary": "世界由内核解释→身体抄写后接管时钟。",
+      "demo": "control-itself-link",
+      "demoHint": "",
+      "refs": [],
+      "personal": true,
+      "team": "本人实验",
+      "leads": [
+        {
+          "name": "简永杰",
+          "role": "作者",
+          "photo": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27160%27%20height%3D%27200%27%3E%3Crect%20width%3D%27160%27%20height%3D%27200%27%20rx%3D%2712%27%20fill%3D%27%23615288%27/%3E%3Ctext%20x%3D%2780%27%20y%3D%27108%27%20text-anchor%3D%27middle%27%20fill%3D%27%23fff%27%20font-family%3D%27system-ui%2Csans-serif%27%20font-size%3D%2748%27%20font-weight%3D%27600%27%3E%E7%AE%80%E6%B0%B8%3C/text%3E%3C/svg%3E",
+          "photoNote": "暂无公开肖像"
+        }
+      ],
+      "construction": "机制：解释器接管——控制权上移到可改写解释层，形成「控制自身」的闭环。要点：元级控制。",
+      "lineage": "继承自修改解释器与反射；与 self-referring 成对。",
+      "limits": "完整交互在独立项目；本馆仅卡片。",
+      "links": []
+    }
+  ],
+  "demoPriority": [
+    "conway-life",
+    "boids",
+    "langton-ant",
+    "grey-scott",
+    "wolfram-ca",
+    "lenia",
+    "tierra"
+  ],
+  "sourceNote": "条目来自 chatgpt-full/人工生命 会话（尤其 18-人工生命流派比较）与既有 catalog；对照文档补漏，不编造；本人实验单独标注。"
+}

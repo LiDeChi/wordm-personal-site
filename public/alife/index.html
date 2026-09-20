@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="description" content="人工生命史 · 沉浸式画廊；悬停卡片看 tips；含可交互 canvas 演示" />
+  <title>人工生命史 · 画廊</title>
+  <link rel="stylesheet" href="css/museum.css" />
+</head>
+<body>
+  <!-- Immersive chrome: corner controls only -->
+  <div class="chrome" aria-label="展览控制">
+    <button type="button" class="chrome-btn" id="menu-btn" aria-label="筛选与选项" aria-expanded="false" title="筛选 (.)">···</button>
+    <button type="button" class="chrome-btn" id="search-btn" aria-label="搜索" title="搜索 (/)">/</button>
+  </div>
+
+  <div class="filter-float" id="filter-float" hidden>
+    <div class="filter-float-panel" role="dialog" aria-label="筛选">
+      <header class="filter-float-head">
+        <span>筛选</span>
+        <button type="button" class="chrome-btn tiny" id="filter-close" aria-label="关闭">×</button>
+      </header>
+      <div class="filter-block">
+        <span class="filter-label">流派</span>
+        <div class="chip-row" id="school-filters"></div>
+      </div>
+      <div class="filter-block">
+        <span class="filter-label">介质</span>
+        <div class="chip-row" id="medium-filters">
+          <button type="button" class="chip" data-medium="Soft">Soft</button>
+          <button type="button" class="chip" data-medium="Hard">Hard</button>
+          <button type="button" class="chip" data-medium="Wet">Wet</button>
+          <button type="button" class="chip" data-medium="Art">Art</button>
+        </div>
+      </div>
+      <div class="filter-block inline">
+        <label class="toggle">
+          <input type="checkbox" id="demo-only" />
+          <span>仅可演示</span>
+        </label>
+        <button type="button" class="btn ghost" id="reset-filters">重置</button>
+      </div>
+      <p class="filter-hint">快捷键 · / 搜索 · Esc 关闭</p>
+    </div>
+  </div>
+
+  <div class="search-float" id="search-float" hidden>
+    <div class="search-float-panel" role="dialog" aria-label="搜索">
+      <input type="search" id="search-input" placeholder="搜索名称、人物、流派…" autocomplete="off" />
+      <ul class="search-results" id="search-results"></ul>
+    </div>
+  </div>
+
+  <main class="layout">
+    <aside class="year-rail" id="year-rail" aria-label="时间轴"></aside>
+    <section class="gallery-wrap">
+      <div class="gallery-scroll" id="gallery-scroll">
+        <div class="gallery" id="gallery"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Hover / tap tips -->
+  <div class="tips" id="tips" hidden>
+    <div class="tips-backdrop" id="tips-backdrop" hidden></div>
+    <div class="tips-panel" id="tips-panel" role="dialog" aria-labelledby="tips-title">
+      <button type="button" class="tips-close" id="tips-close" aria-label="关闭">×</button>
+      <header class="tips-head">
+        <p class="tips-meta" id="tips-meta"></p>
+        <h2 id="tips-title"></h2>
+        <p class="tips-en" id="tips-en"></p>
+        <div class="tag-row" id="tips-tags"></div>
+      </header>
+      <div class="tips-leads" id="tips-leads"></div>
+      <section class="tips-sec"><h3>团队 / 机构</h3><p id="tips-team"></p></section>
+      <section class="tips-sec"><h3>生命构建方式</h3><p id="tips-construction"></p></section>
+      <section class="tips-sec"><h3>对前人的扬弃</h3><p id="tips-lineage"></p></section>
+      <section class="tips-sec"><h3>局限性</h3><p id="tips-limits"></p></section>
+      <section class="tips-sec"><h3>链接</h3><ul class="tips-links" id="tips-links"></ul></section>
+      <p class="tips-summary" id="tips-summary"></p>
+      <div class="tips-actions" id="tips-actions"></div>
+    </div>
+  </div>
+
+  <!-- Fullscreen immersive demo -->
+  <aside class="drawer" id="drawer" hidden>
+    <div class="drawer-backdrop" id="drawer-backdrop"></div>
+    <div class="drawer-panel" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
+      <div class="drawer-chrome">
+        <div class="drawer-chrome-left">
+          <p class="drawer-meta" id="drawer-meta"></p>
+          <h2 id="drawer-title"></h2>
+          <p class="drawer-en" id="drawer-en"></p>
+        </div>
+        <button type="button" class="drawer-close" id="drawer-close" aria-label="关闭">×</button>
+      </div>
+      <div class="drawer-body">
+        <div class="tag-row" id="drawer-tags" hidden></div>
+        <p class="drawer-summary" id="drawer-summary" hidden></p>
+        <p class="drawer-people" id="drawer-people" hidden></p>
+        <p class="drawer-refs" id="drawer-refs" hidden></p>
+        <div class="demo-stage" id="demo-stage" hidden>
+          <canvas id="demo-canvas" width="960" height="720"></canvas>
+          <div class="demo-bar">
+            <div class="demo-toolbar" id="demo-toolbar"></div>
+            <p class="demo-note" id="demo-note"></p>
+          </div>
+        </div>
+        <p class="no-demo" id="no-demo" hidden>本条目以卡片呈现，无内嵌交互演示。</p>
+      </div>
+    </div>
+  </aside>
+
+  <footer class="foot">
+    <span id="stats"></span>
+    <span class="foot-hint">悬停看 tips · / 搜索 · ··· 筛选</span>
+  </footer>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
