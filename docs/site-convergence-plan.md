@@ -190,3 +190,46 @@ export function FocusAreaPage({
 
 ### 保留但已下线
 `src/data/mindSchools.ts`（学派 / 人物 / 著作数据）没有删除——用户此前明确要过这份内容，页面下线但数据留在仓库，要恢复随时说。
+
+## 10. 事故与还原：差点盖掉远端的 人工生命史 展览（2026-09-21）
+
+### 发生了什么
+本分支的工作副本停在 `f05a54e`。在我做改动期间，远端 `origin/main` 已经前进了 **9 个提交**
+（含 `alife-museum` 分支的 PR #17），带来：
+
+- **`public/alife/` 人工生命史展览**：41 条目 / 22 流派 / 12 位人物头像 / 7 个可跑 demo，
+  数据在 `public/alife/data/catalog.json`（1933 行），维度是 `time × school`
+- `src/data/fountFields.ts`：新增 `key: "alife"`（人工生命史，href `/alife/`）与 `addedAt` 排序
+- `src/components/InteractiveHomePage.tsx`：首页新增「人工生命史」入口卡
+- `src/components/FountHomePage.tsx`：Fields 改画廊视图
+
+我基于旧基线重写，删掉了 `InteractiveHomePage`、重写了 `FountHomePage`，等于把这 9 个提交
+的成果盖掉。**`git push` 被远端拒绝**（non-fast-forward），因此线上没有任何损失。
+
+### 处理
+1. `git fetch` → 确认落后 9 / 领先 1，**没有强推**。
+2. `git merge origin/main`，两处冲突按「保留 alife 内容」处理：
+   - `FountHomePage.tsx` 取本分支的新外壳（远端改的是本设计已移除的 Fields 页）
+   - `InteractiveHomePage.tsx` 维持删除（用户明确要去掉这个壳），`/alife` 入口改由关注方向页承担
+   - `public/alife/**` 与 `fountFields.ts` 的 alife 条目、`addedAt` 排序完整保留
+3. 推送前逐条核对：`git log HEAD..origin/main` 为空，9 个远端提交全部 `merge-base --is-ancestor` 通过 → fast-forward 推送，零丢失。
+
+### 设计修正
+「人工生命那个时间轴」= **`/alife/` 人工生命史展览**，不是我自己编的六段式。
+关注方向页因此改成：
+
+- **时间轴**：直接读展览自己的 `/alife/data/catalog.json`（站内与展览同一份事实，不二次维护），
+  41 条按年代分组（1940s→2020s），**渐进式披露**——默认只给 年份/名称/流派/是否可演示，
+  展开单条才渲染详情（人物+头像、机制、谱系、边界、参考、链接、demo 预览），
+  另有「展开全部 / 收起全部」。
+- **项目卡片**：16 个 mind-society 成员，人工生命与机器心智混排、只打标签、不筛选。
+
+### 顺带修掉的两个数据陷阱
+- catalog 里 **31 条的 `demo` 取值是字符串 `"none"`**（不是 `null`），真值判断会把它们全部误标
+  「可演示」并请求不存在的 `previews/none.png`。现在区分 `runnable` / `link` / 无，
+  并把 `demoHint` 给无 demo 的条目展示（它本来就解释「完整 X 较重，展览以卡片呈现」）。
+- 全站 `h2::before` 带 `§N` 计数器（博客版式），会泄漏到年代标签上变成「§1 1940s」。
+  已在 `.focus-page` 范围内显式关掉。
+
+### 经验
+**动别人的仓库之前先 `git fetch`。** 这次唯一救命的是一条 non-fast-forward 报错。
