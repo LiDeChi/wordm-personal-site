@@ -5,7 +5,6 @@ import {
   SHELL_COPY,
   SITE_TABS,
   siteAboutHref,
-  siteAccountHref,
   siteTabHref,
   type SiteTab,
 } from "../lib/site-shell";
@@ -64,7 +63,6 @@ export function FountHomePage({
   bodyClassName,
 }: FountHomePageProps) {
   const copy = SHELL_COPY[lang];
-  const accountHref = siteAccountHref(lang);
   const brandMark = lang === "zh" ? "简" : "J";
 
   return (
@@ -133,9 +131,6 @@ export function FountHomePage({
               <ThemeModeIcon mode={themeMode} />
             </button>
           </div>
-          <a className="fount-account-link" href={accountHref}>
-            {copy.account}
-          </a>
         </div>
       </header>
 
@@ -181,8 +176,7 @@ export function FountHomePage({
             ))}
           </div>
           <div>
-            <strong>{copy.account}</strong>
-            <a href={accountHref}>{copy.account}</a>
+            <strong>{copy.footerAbout}</strong>
             <a href={siteAboutHref(lang)}>{copy.footerAbout}</a>
           </div>
           <div>

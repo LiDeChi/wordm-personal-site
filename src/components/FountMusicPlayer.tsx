@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { CSSProperties } from "react";
 import {
   HOME_MUSIC_TRACKS,
   shuffleHomeMusicTracks,
@@ -863,6 +864,48 @@ export function FountMusicPlayer({ lang }: FountMusicPlayerProps) {
     }
     return `${track.artist} — ${track.title}`;
   }, [track]);
+  const displayLabel = snapshot.failed ? copy.unavailable : trackLabel;
+  // The rail is a narrow column, so a long name is clipped. Once the label is
+  // taller than the visible box, run a marquee instead of leaving it cut off.
+  const [marqueeDuration, setMarqueeDuration] = useState<number | null>(null);
+  const copyRef = useRef<HTMLDivElement | null>(null);
+  const titleRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    const box = copyRef.current;
+    const title = titleRef.current;
+
+    if (!box || !title) {
+      return;
+    }
+
+    const measure = () => {
+      const paddingTop =
+        Number.parseFloat(window.getComputedStyle(box).paddingTop) || 0;
+      const available = box.clientHeight - paddingTop;
+      const needed = title.getBoundingClientRect().height;
+
+      if (!needed || needed <= available) {
+        setMarqueeDuration(null);
+        return;
+      }
+
+      setMarqueeDuration(
+        Math.min(28, Math.max(9, Math.round(displayLabel.length * 0.55))),
+      );
+    };
+
+    measure();
+    window.addEventListener("resize", measure);
+    const observer =
+      typeof ResizeObserver === "undefined" ? null : new ResizeObserver(measure);
+    observer?.observe(box);
+
+    return () => {
+      window.removeEventListener("resize", measure);
+      observer?.disconnect();
+    };
+  }, [displayLabel]);
 
   return (
     <aside
@@ -912,10 +955,35 @@ export function FountMusicPlayer({ lang }: FountMusicPlayerProps) {
         <SpeakerIcon muted={snapshot.muted} />
       </button>
 
-      <div className="fount-music-copy" aria-live="polite">
-        <strong className="fount-music-title">
-          {snapshot.failed ? copy.unavailable : trackLabel}
-        </strong>
+      <div
+        className={`fount-music-copy${marqueeDuration ? " is-marquee" : ""}`}
+        aria-live="polite"
+        title={displayLabel || undefined}
+        ref={copyRef}
+      >
+        <span
+          className="fount-music-track"
+          style={
+            marqueeDuration
+              ? ({
+                  "--fount-music-marquee-duration": `${marqueeDuration}s`,
+                } as CSSProperties)
+              : undefined
+          }
+        >
+          <strong
+            className="fount-music-title"
+            ref={titleRef}
+            title={displayLabel || undefined}
+          >
+            {displayLabel}
+          </strong>
+          {marqueeDuration ? (
+            <strong className="fount-music-title" aria-hidden="true">
+              {displayLabel}
+            </strong>
+          ) : null}
+        </span>
       </div>
     </aside>
   );

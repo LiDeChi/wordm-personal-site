@@ -123,7 +123,7 @@ export const ALIFE_COPY: Record<
 > = {
   zh: {
     eyebrow: "关注方向",
-    title: "人工生命与机器心智",
+    title: "人工的生命、心智、交互",
     timelineAria: "人工生命史时间轴",
     counts: (items, schools) => `${items} 个条目 · ${schools} 个流派 · 1948 → 2026`,
     expandAll: "展开全部",
@@ -149,7 +149,7 @@ export const ALIFE_COPY: Record<
   },
   en: {
     eyebrow: "Focus",
-    title: "Artificial Life & Machine Minds",
+    title: "Artificial Life, Minds & Interaction",
     timelineAria: "Artificial life history timeline",
     counts: (items, schools) =>
       `${items} entries · ${schools} schools · 1948 → 2026`,

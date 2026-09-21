@@ -1,10 +1,6 @@
 import { Suspense, lazy, useEffect, useMemo, useRef, useState } from "react";
 import katex from "katex";
 import "katex/dist/katex.min.css";
-import type {
-  KeyboardEvent as ReactKeyboardEvent,
-  MouseEvent as ReactMouseEvent,
-} from "react";
 import { LoginPage, type AccountTier } from "./components/LoginPage";
 import { AdminPage } from "./components/AdminPage";
 import { FountHomePage } from "./components/FountHomePage";
@@ -421,7 +417,6 @@ const CURSOR_REACTIVE_SELECTOR = [
   ".home-project-card",
   ".blog-sidebar",
   ".blog-article",
-  ".home-download-bar",
 ].join(",");
 
 function useCursorReactiveSurfaces() {
@@ -567,14 +562,6 @@ const APP_COPY = {
     homeProjectsCta: "进入产品页",
     homeProjectsPreview: "预览页面",
     homeProjectsPreviewOpen: "打开",
-    homeProjectsSelectAria: "选择用于批量下载",
-    homeProjectsDownloadCount: "已选择",
-    homeProjectsDownloadClear: "取消",
-    homeProjectsDownloadButton: "下载",
-    homeProjectsDownloadPickHint: "点击项目卡片选择要下载的入口。",
-    homeProjectsDownloadEmpty: "请先选择至少一个项目。",
-    homeProjectsDownloadSelected: "下载",
-    homeProjectsDownloadStatus: "已下载所选产品入口清单。",
     systemHeroTitle: "wordm.us 的公开入口",
     systemHeroIntro:
       "这里集中呈现 Jian Yongjie 正在构建的产品、写作和 Agent 系统。愿景是让工具拥有可沉淀的经验；定位是公开的项目地图与进展记录；近况会通过产品入口、博客和 System 说明持续更新。",
@@ -764,14 +751,6 @@ const APP_COPY = {
     homeProjectsCta: "Open product page",
     homeProjectsPreview: "Page preview",
     homeProjectsPreviewOpen: "Open",
-    homeProjectsSelectAria: "Select for bulk download",
-    homeProjectsDownloadCount: "Selected",
-    homeProjectsDownloadClear: "Cancel",
-    homeProjectsDownloadButton: "Download",
-    homeProjectsDownloadPickHint: "Click project cards to choose entries.",
-    homeProjectsDownloadEmpty: "Select at least one project first.",
-    homeProjectsDownloadSelected: "Download",
-    homeProjectsDownloadStatus: "Downloaded the selected product entry list.",
     systemHeroTitle: "The public entrance to wordm.us",
     systemHeroIntro:
       "This site presents the products, writing, and agent system Jian Yongjie is building. The vision is to let tools retain useful experience; the positioning is a public project map and progress record; current updates arrive through product entries, the blog, and System notes.",
@@ -1252,13 +1231,6 @@ function App() {
   // Preview iframes are hover-only in the design, so they are mounted on
   // demand instead of loading five external sites on every page view.
   const [homePreviewKey, setHomePreviewKey] = useState<string | null>(null);
-  const [selectedHomeProductKeys, setSelectedHomeProductKeys] = useState<
-    string[]
-  >([]);
-  const [homeProductSelectionMode, setHomeProductSelectionMode] =
-    useState(false);
-  const [homeDownloadStatusMessage, setHomeDownloadStatusMessage] =
-    useState("");
   const [shareToken] = useState<string | null>(initialShareToken);
   const [shareAccess, setShareAccess] = useState<ShareAccess | null>(null);
   const [shareResolveStatus, setShareResolveStatus] =
@@ -1383,8 +1355,8 @@ function App() {
 
     document.title =
       lang === "zh"
-        ? "关注方向 · 人工生命与机器心智 | wordm.us"
-        : "Focus · Artificial Life and Machine Minds | wordm.us";
+        ? "关注方向 · 人工的生命、心智、交互 | wordm.us"
+        : "Focus · Artificial Life, Minds & Interaction | wordm.us";
   }, [lang, rootView]);
 
   useEffect(() => {
@@ -3011,17 +2983,6 @@ function App() {
     onLogout: handleLogout,
   };
   const projectModalOpen = rootView === "about" && Boolean(selectedProject);
-  const selectedHomeProductKeySet = useMemo(
-    () => new Set(selectedHomeProductKeys),
-    [selectedHomeProductKeys],
-  );
-  const selectedHomeProducts = useMemo(
-    () =>
-      HOME_PROJECTS.filter((project) =>
-        selectedHomeProductKeySet.has(project.key),
-      ),
-    [selectedHomeProductKeySet],
-  );
 
   useEffect(() => {
     if (!authEnabled || authLoading) {
@@ -3256,54 +3217,6 @@ function App() {
     setSelectedProjectSlug(visibleProjects[nextIndex]?.slug ?? null);
   }
 
-  function toggleHomeProductSelection(projectKey: string) {
-    setHomeDownloadStatusMessage("");
-    setSelectedHomeProductKeys((current) =>
-      current.includes(projectKey)
-        ? current.filter((key) => key !== projectKey)
-        : [...current, projectKey],
-    );
-  }
-
-  function clearHomeProductSelection() {
-    setSelectedHomeProductKeys([]);
-    setHomeProductSelectionMode(false);
-    setHomeDownloadStatusMessage("");
-  }
-
-  function handleHomeProductCardClick(
-    event: ReactMouseEvent<HTMLElement>,
-    projectKey: string,
-  ) {
-    if (!homeProductSelectionMode) {
-      return;
-    }
-
-    const target = event.target as HTMLElement;
-    if (target.closest("a, iframe")) {
-      return;
-    }
-
-    event.preventDefault();
-    toggleHomeProductSelection(projectKey);
-  }
-
-  function handleHomeProductCardKeyDown(
-    event: ReactKeyboardEvent<HTMLElement>,
-    projectKey: string,
-  ) {
-    if (!homeProductSelectionMode) {
-      return;
-    }
-
-    if (event.key !== "Enter" && event.key !== " ") {
-      return;
-    }
-
-    event.preventDefault();
-    toggleHomeProductSelection(projectKey);
-  }
-
   function switchRootView(nextRootView: SiteTab) {
     if (nextRootView === "blog" && !IN_SITE_BLOG_ENABLED) {
       window.location.assign(ARTICLES_SITE_URL);
@@ -3315,52 +3228,6 @@ function App() {
     window.requestAnimationFrame(() => {
       window.scrollTo({ top: 0, left: 0, behavior: "auto" });
     });
-  }
-
-  function handleHomeProductsDownload() {
-    if (!homeProductSelectionMode) {
-      setHomeProductSelectionMode(true);
-      setHomeDownloadStatusMessage(copy.homeProjectsDownloadPickHint);
-      return;
-    }
-
-    if (!selectedHomeProducts.length) {
-      setHomeDownloadStatusMessage(copy.homeProjectsDownloadEmpty);
-      return;
-    }
-
-    const createdAt = new Date();
-    const title =
-      lang === "zh"
-        ? "wordm.us 已选产品入口"
-        : "wordm.us selected product entries";
-    const generatedLabel = lang === "zh" ? "生成时间" : "Generated";
-    const entries = selectedHomeProducts.map((project, index) => {
-      const projectHref = withSiteParams(project.href, { lang });
-      return `${index + 1}. ${project.name}\n${projectHref}`;
-    });
-    const body = [
-      title,
-      `${generatedLabel}: ${createdAt.toLocaleString(
-        lang === "zh" ? "zh-CN" : "en-US",
-      )}`,
-      "",
-      ...entries,
-      "",
-    ].join("\n");
-    const blob = new Blob([body], { type: "text/plain;charset=utf-8" });
-    const downloadUrl = window.URL.createObjectURL(blob);
-    const link = document.createElement("a");
-
-    link.href = downloadUrl;
-    link.download = `wordm-selected-products-${createdAt
-      .toISOString()
-      .slice(0, 10)}.txt`;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    window.setTimeout(() => window.URL.revokeObjectURL(downloadUrl), 0);
-    setHomeDownloadStatusMessage(copy.homeProjectsDownloadStatus);
   }
 
   function scrollToBlogArticle(articleId: string) {
@@ -3854,28 +3721,13 @@ function App() {
 
               <div className="home-projects-grid">
                 {HOME_PROJECTS.map((project, index) => {
-                  const selected = selectedHomeProductKeySet.has(project.key);
                   const projectHref = withSiteParams(project.href, { lang });
                   const opensInNewTab = project.href === SYSTEM_SITE_URL;
 
                   return (
                     <article
                       key={project.key}
-                      className={`home-project-card home-project-card-${project.key}${homeProductSelectionMode ? " is-selectable" : ""}${selected ? " selected" : ""}`}
-                      role={homeProductSelectionMode ? "button" : undefined}
-                      tabIndex={homeProductSelectionMode ? 0 : undefined}
-                      aria-pressed={homeProductSelectionMode ? selected : undefined}
-                      aria-label={
-                        homeProductSelectionMode
-                          ? `${copy.homeProjectsSelectAria}: ${project.name}`
-                          : undefined
-                      }
-                      onClick={(event) =>
-                        handleHomeProductCardClick(event, project.key)
-                      }
-                      onKeyDown={(event) =>
-                        handleHomeProductCardKeyDown(event, project.key)
-                      }
+                      className={`home-project-card home-project-card-${project.key}`}
                     >
                       <div
                         className="home-project-cover"
@@ -3941,41 +3793,6 @@ function App() {
                     </article>
                   );
                 })}
-              </div>
-              <div
-                className={`home-download-bar${homeProductSelectionMode ? " is-selecting" : " is-idle"}${selectedHomeProducts.length ? " has-selection" : ""}`}
-                role="status"
-                aria-live="polite"
-              >
-                {homeProductSelectionMode ||
-                selectedHomeProducts.length ||
-                homeDownloadStatusMessage ? (
-                  <div className="home-download-bar-copy">
-                    <strong>
-                      {copy.homeProjectsDownloadCount} ·{" "}
-                      {selectedHomeProducts.length}
-                    </strong>
-                    {homeDownloadStatusMessage ? (
-                      <span>{homeDownloadStatusMessage}</span>
-                    ) : null}
-                  </div>
-                ) : null}
-                <div className="home-download-actions">
-                  {homeProductSelectionMode || selectedHomeProducts.length ? (
-                    <button type="button" onClick={clearHomeProductSelection}>
-                      {copy.homeProjectsDownloadClear}
-                    </button>
-                  ) : null}
-                  <button
-                    type="button"
-                    className="home-download-primary"
-                    onClick={handleHomeProductsDownload}
-                  >
-                    {homeProductSelectionMode
-                      ? copy.homeProjectsDownloadSelected
-                      : copy.homeProjectsDownloadButton}
-                  </button>
-                </div>
               </div>
             </div>
           </section>

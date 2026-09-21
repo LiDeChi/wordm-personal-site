@@ -1,4 +1,4 @@
-/* 关注方向 / Focus — timeline + tagged project cards. */
+/* 关注方向 / Focus — timeline + indexed project gallery. */
 
 .focus-page {
   --focus-ink: var(--warm-ink, #211a14);
@@ -26,7 +26,8 @@
   counter-increment: none;
 }
 
-.focus-label {
+.focus-label,
+.focus-panel-label {
   display: block;
   color: var(--focus-faint);
   font-family: var(--font-mono);
@@ -37,12 +38,12 @@
 }
 
 /* ------------------------------------------------------------------ */
-/* 项目卡片                                                            */
+/* 项目索引和画廊                                                      */
 /* ------------------------------------------------------------------ */
 
 .focus-projects-head {
   max-width: 74ch;
-  margin-bottom: clamp(18px, 3vh, 28px);
+  margin-bottom: clamp(22px, 3vh, 32px);
 }
 
 .focus-projects-head h2 {
@@ -69,13 +70,231 @@
   font-size: 0.94rem;
 }
 
-.focus-card-grid {
+.focus-projects-layout {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
-  gap: 14px;
-  margin: 0;
+  grid-template-columns: minmax(235px, 0.62fr) minmax(0, 1.38fr);
+  gap: clamp(22px, 3.5vw, 44px);
+  align-items: start;
+}
+
+.focus-project-index,
+.focus-project-gallery {
+  min-width: 0;
+}
+
+.focus-project-panel-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 30px;
+  padding-bottom: 9px;
+  border-bottom: 1px solid var(--focus-line);
+}
+
+.focus-panel-count,
+.focus-panel-hint {
+  color: var(--focus-faint);
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.04em;
+}
+
+.focus-project-list {
+  display: grid;
+  gap: 2px;
+  margin: 8px 0 0;
   padding: 0;
   list-style: none;
+}
+
+.focus-project-list-item {
+  position: relative;
+  min-width: 0;
+  border-bottom: 1px solid var(--focus-line);
+}
+
+.focus-project-list-button {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr) auto;
+  grid-template-areas:
+    "number name status"
+    "number tags arrow";
+  width: 100%;
+  min-height: 58px;
+  padding: 10px 8px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--focus-ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    transform 160ms ease;
+}
+
+.focus-project-list-button:hover,
+.focus-project-list-button:focus-visible,
+.focus-project-list-item.is-active .focus-project-list-button {
+  border-color: rgb(49 79 67 / 30%);
+  background: rgb(49 79 67 / 7%);
+  outline: none;
+}
+
+.focus-project-list-button:focus-visible {
+  box-shadow: 0 0 0 3px rgb(49 79 67 / 14%);
+}
+
+.focus-project-list-item.is-active .focus-project-list-button {
+  transform: translateX(3px);
+}
+
+.focus-project-list-number {
+  grid-area: number;
+  align-self: center;
+  color: var(--focus-faint);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+}
+
+.focus-project-list-name {
+  grid-area: name;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--focus-ink);
+  font-size: 0.83rem;
+  font-weight: 620;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.focus-project-list-name small {
+  margin-left: 7px;
+  color: var(--focus-faint);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 400;
+}
+
+.focus-project-list-button .focus-card-status {
+  grid-area: status;
+  align-self: start;
+  margin-left: 8px;
+}
+
+.focus-project-list-tags {
+  grid-area: tags;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--focus-faint);
+  font-family: var(--font-mono);
+  font-size: 0.61rem;
+  line-height: 1.4;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.focus-project-list-arrow {
+  grid-area: arrow;
+  align-self: end;
+  margin-left: 8px;
+  color: var(--focus-faint);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  transition: color 160ms ease;
+}
+
+.focus-project-list-button:hover .focus-project-list-arrow,
+.focus-project-list-button:focus-visible .focus-project-list-arrow,
+.focus-project-list-item.is-active .focus-project-list-arrow {
+  color: var(--focus-green);
+}
+
+.focus-project-list-tip {
+  position: absolute;
+  top: 6px;
+  left: calc(100% + 12px);
+  z-index: 5;
+  display: grid;
+  gap: 4px;
+  width: min(300px, calc(100vw - 40px));
+  padding: 11px 13px;
+  border: 1px solid var(--focus-line);
+  border-radius: 10px;
+  background: rgb(255 253 247 / 97%);
+  box-shadow: 0 12px 32px rgb(33 26 20 / 12%);
+  color: var(--focus-ink);
+  font-size: 0.78rem;
+  line-height: 1.55;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(4px);
+  transition:
+    opacity 140ms ease,
+    transform 140ms ease,
+    visibility 140ms ease;
+  visibility: hidden;
+}
+
+.focus-project-list-item:hover .focus-project-list-tip,
+.focus-project-list-item:focus-within .focus-project-list-tip {
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
+}
+
+.focus-project-list-tip strong {
+  color: var(--focus-green);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.focus-project-list-tip small {
+  color: var(--focus-faint);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+}
+
+.focus-gallery-track {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 14px;
+  overflow-x: auto;
+  margin: 8px 0 0;
+  padding: 0 2px 14px 0;
+  list-style: none;
+  overscroll-behavior-x: contain;
+  scroll-behavior: smooth;
+  scroll-snap-type: x proximity;
+  scrollbar-color: var(--focus-line) transparent;
+  scrollbar-width: thin;
+}
+
+.focus-gallery-card {
+  flex: 0 0 clamp(270px, 31vw, 360px);
+  min-height: 286px;
+  scroll-snap-align: start;
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+
+.focus-gallery-card:hover,
+.focus-gallery-card:focus-within,
+.focus-gallery-card.is-highlighted {
+  border-color: var(--focus-green);
+  box-shadow:
+    0 0 0 2px rgb(49 79 67 / 12%),
+    0 14px 30px rgb(33 26 20 / 9%);
+  transform: translateY(-3px);
 }
 
 .focus-card {
@@ -238,6 +457,18 @@
   --focus-card: rgb(31 25 19 / 74%);
 }
 
+:root[data-theme="night"] .focus-project-list-button:hover,
+:root[data-theme="night"] .focus-project-list-button:focus-visible,
+:root[data-theme="night"] .focus-project-list-item.is-active .focus-project-list-button {
+  border-color: rgb(242 195 123 / 42%);
+  background: rgb(242 195 123 / 9%);
+}
+
+:root[data-theme="night"] .focus-project-list-tip {
+  background: rgb(31 25 19 / 97%);
+  box-shadow: 0 12px 32px rgb(0 0 0 / 25%);
+}
+
 :root[data-theme="night"] .focus-stage-members a,
 :root[data-theme="night"] .focus-card-repo {
   background: rgb(255 241 217 / 6%);
@@ -296,6 +527,15 @@
   color: rgb(242 195 123 / 88%);
 }
 
+:root[data-theme="night"] .focus-gallery-card:hover,
+:root[data-theme="night"] .focus-gallery-card:focus-within,
+:root[data-theme="night"] .focus-gallery-card.is-highlighted {
+  border-color: rgb(242 195 123 / 72%);
+  box-shadow:
+    0 0 0 2px rgb(242 195 123 / 17%),
+    0 14px 30px rgb(0 0 0 / 20%);
+}
+
 /* ------------------------------------------------------------------ */
 /* 窄屏                                                                */
 /* ------------------------------------------------------------------ */
@@ -316,7 +556,19 @@
     line-height: 1.76;
   }
 
-  .focus-card-grid {
+  .focus-projects-layout {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .focus-project-list-tip {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: auto;
+    margin: -2px 10px 8px;
+  }
+
+  .focus-gallery-card {
+    flex-basis: min(78vw, 360px);
   }
 }

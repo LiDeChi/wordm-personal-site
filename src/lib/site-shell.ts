@@ -23,7 +23,6 @@ type SiteShellCopy = {
   langAria: string;
   themeToDayAria: string;
   themeToNightAria: string;
-  account: string;
   railAria: string;
   socialAria: string;
   footerNavAria: string;
@@ -42,7 +41,6 @@ export const SHELL_COPY: Record<Lang, SiteShellCopy> = {
     langAria: "语言",
     themeToDayAria: "切换到白天模式",
     themeToNightAria: "切换到黑夜模式",
-    account: "账号",
     railAria: "侧边栏",
     socialAria: "社交媒体",
     footerNavAria: "页脚导航",
@@ -59,7 +57,6 @@ export const SHELL_COPY: Record<Lang, SiteShellCopy> = {
     langAria: "Language",
     themeToDayAria: "Switch to light mode",
     themeToNightAria: "Switch to dark mode",
-    account: "Account",
     railAria: "Side rail",
     socialAria: "Social channels",
     footerNavAria: "Footer navigation",
@@ -83,10 +80,6 @@ export function siteTabHref(tab: SiteTab, lang: Lang): string {
   }
 
   return withSiteParams("/", { lang });
-}
-
-export function siteAccountHref(lang: Lang): string {
-  return withSiteParams("/?view=login", { lang });
 }
 
 export function siteAboutHref(lang: Lang): string {
