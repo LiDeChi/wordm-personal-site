@@ -66,6 +66,32 @@ const DOWNLOAD_EXTENSION_PATTERN = /\.(dmg|exe|msi|pkg|zip|tar|gz|pdf|csv|json|m
 
 let cachedAuthToken: { token: string; expiresAt: number } | null = null
 
+/**
+ * Analytics failures used to be swallowed silently (`return response.ok`), so a
+ * broken pipeline was invisible. Report each distinct failure once per session.
+ */
+const reportedAnalyticsFailures = new Set<string>()
+
+async function reportAnalyticsFailure(response: Response) {
+  let detail = ""
+  try {
+    const payload = (await response.clone().json()) as { error?: unknown } | null
+    detail = typeof payload?.error === "string" ? payload.error : ""
+  } catch {
+    // Gateway-level failures have no JSON (or CORS-readable) body.
+  }
+
+  const key = `${response.status}:${detail}`
+  if (reportedAnalyticsFailures.has(key)) {
+    return
+  }
+
+  reportedAnalyticsFailures.add(key)
+  console.warn(
+    `[analytics] site-analytics responded ${response.status}${detail ? ` (${detail})` : ""}`,
+  )
+}
+
 function hasWindow() {
   return typeof window !== 'undefined'
 }
@@ -255,6 +281,10 @@ export async function trackSiteEvent(config: AuthConfig, input: TrackSiteAnalyti
       body,
       keepalive: Boolean(input.flush) && body.length < 60_000,
     })
+    if (!response.ok) {
+      void reportAnalyticsFailure(response)
+    }
+
     return response.ok
   } catch {
     return false

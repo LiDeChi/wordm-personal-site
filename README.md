@@ -3,14 +3,26 @@
 > **根域名管理说明**：本仓库已接管 `wordm.us` 根域名管理职责（原 `wordm-personal-home` 的 `_redirects` 和根域名配置已合并至此）。
 > 当前域名归属与迁移原则见 [`docs/domain-ownership.md`](docs/domain-ownership.md)，机器可审计清单见 [`config/domain-ownership.json`](config/domain-ownership.json)。
 
-主页围绕「动态呈现与交互」组织：可操作的波形叠加示例、空间阅读作品和心智探索入口。支持中英文、明暗主题与窄屏布局；原 Fount 介绍不再出现在首页，既有子页面继续保留。
+站点收敛成三段式信息架构（详见 [`docs/site-convergence-plan.md`](docs/site-convergence-plan.md)）：
+
+| 栏目 | 路径 | 说明 |
+| --- | --- | --- |
+| 关注方向 | `/` | 一条**时间轴**（带一段话）+ 一屏**项目卡片**：人工生命与机器心智混在一起，只用标签区分 |
+| 个人项目 | `/projects` | 个人作品展示与子域名入口 |
+| 博客 | 外链 `lidechi.github.io` | 站内博客页暂时关闭 |
+| 关于 / 账号 | `/?view=about`、`/?view=login` | 页脚与右上角入口 |
+
+- 关注方向是一页到底，**没有文章页、没有方向切换、没有筛选**。旧的 `?area=` / `?mode=` 参数会被清掉。
+- 关注方向的项目来自 `mind-society` 项目族登记表（`/Users/lidechi/Documents/Github/mind-society`），双语整理在 `src/data/mindFamily.ts`。
+  修改成员时请同步登记表，避免两边漂移。
+- 旧路由（`/pricing`、`/partners`、`/updates`、`/fields`、`/docs`、`?view=portfolio`）全部 301/回落到上面的新路径，见 [`public/_redirects`](public/_redirects)。
+- 页面右侧固定竖栏把社交入口与音乐播放器放在同一条列里（原先是两个各自定位的固定元素，会在矮屏上互相压住）。
+- 定价页与 Fount / Fields 栏目已下线；项目解锁仍由 `src/lib/project-offers.ts`、`src/lib/pricing-remote.ts`、`src/lib/unlock*.ts` 支撑，未删除。
 
 个人网站包含：
 
-- 根域 `wordm.us`：个人博客 + 作品集
-- `Fields` 中的 Bookplain 入口：独立站 `bookplain.wordm.us`
-- `Fields` 中的 Foundry Agent Studio 入口：独立站 `foundry.wordm.us`
-- `Fields` 中的 RingBook 入口：独立站 `ringbook.wordm.us`
+- 根域 `wordm.us`：关注方向 + 个人项目 + 博客入口
+- 独立站 `bookplain.wordm.us`、`foundry.wordm.us`、`ringbook.wordm.us` 等由「关注方向 > 项目」与「个人项目」列出
 - 子域 `resume.wordm.us`：独立简历页（含 PDF 下载，仅管理员/测试账号可访问）
 - 子域 `admin.wordm.us`：后台系统入口（HTTP Basic Auth 保护）
 - 子域 `support.wordm.us`：所有产品/App Store 上架共用的支持入口
@@ -62,13 +74,11 @@ NEXT_PUBLIC_FOUNT_EARLY_BIRD_CLAIMED=0
 - `VITE_UNLOCK_PRODUCT_ALL_CURRENT` / `VITE_UNLOCK_PRODUCT_ALL_CURRENT_PLUS_YEAR` 仍可作为兼容回退值；前端会优先读取 `VITE_UNLOCK_PRODUCT_ALL_ACCESS`。
 - `VITE_SELFHOST_INSTALL_URL` 用于支付成功后的“自部署安装”入口，默认指向 `center-control` 安装说明。
 - `VITE_SELFHOST_INSTALL_SCRIPT_URL` 用于部署页生成一键部署命令，默认指向 `center-control` 官方安装脚本。
-- `NEXT_PUBLIC_CREEM_AFFILIATE_APPLY_URL` 用于 Fount Partner Program 的申请按钮；未配置时会回退到 `NEXT_PUBLIC_PARTNER_CONTACT_EMAIL` 生成的 `mailto:`。
-- `NEXT_PUBLIC_FOUNT_*_URL` 用于 Fount 定价页的 Builder / Master 买断付款入口；未配置时页面会保留 `/checkout/...-lifetime` 占位路由。
-- `NEXT_PUBLIC_FOUNT_EARLY_BIRD_LIMIT` / `NEXT_PUBLIC_FOUNT_EARLY_BIRD_CLAIMED` 是早鸟进度的构建时回退值；线上会优先通过 `/api/fount-early-bird-status` 从 Creem 交易统计当前进度。
+- `NEXT_PUBLIC_CREEM_AFFILIATE_APPLY_URL`、`NEXT_PUBLIC_FOUNT_*`、`NEXT_PUBLIC_PARTNER_CONTACT_EMAIL` 随 Fount 定价页 / Partner Program 一起下线，代码里已不再读取；`.env.example` 仍保留旧键以免破坏既有部署，可后续清理。
 - 若不配置，会使用 `latti` 当前公开计划商品作为默认值。
 - 站点会将 Supabase 会话同步到 `.wordm.us` 域级 cookie，因此 `wordm.us`、`resume.wordm.us`、`p-*.wordm.us` 会共享登录态。
-- `bookplain.wordm.us` 使用同一 Supabase 项目、`wordm-auth-v1` storage key 与父域 Cookie；从 `/fields` 进入独立站后会继续使用当前账号。
-- `foundry.wordm.us` 使用同一 Supabase 项目与 `wordm-auth-v1` 存储键；从 `/fields` 进入独立站后会继续使用当前账号。
+- `bookplain.wordm.us` 使用同一 Supabase 项目、`wordm-auth-v1` storage key 与父域 Cookie；从「关注方向 > 项目」或「个人项目」进入独立站后会继续使用当前账号。
+- `foundry.wordm.us` 使用同一 Supabase 项目与 `wordm-auth-v1` 存储键；入口同上。
 - `ringbook.wordm.us` 通过 `auth.wordm.us` 读取同一域级会话；未登录时由主站登录并安全回跳 RingBook，EPUB 与阅读进度仍只保存在本机。
 - 账号角色共四类：`admin`（管理员）、`tester`（测试账号）、`user`（普通账号）、`guest`（游客）。
 - 角色判定顺序：Supabase 用户 metadata 的 `role` 字段 > `public/auth-role-rules.json` 邮箱名单（与环境变量合并）> 默认 `user`。

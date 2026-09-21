@@ -25,14 +25,19 @@
 ## Main surface
 - Browser home screen captured at `screenshots/runtime-home.png`.
 ## Deep exploration flow
+- Visit `http://127.0.0.1:44014/?lang=zh` (关注方向：时间轴 + 标签化项目卡片).
+- Visit `http://127.0.0.1:44014/?lang=en` (same page, English).
+- Visit `http://127.0.0.1:44014/projects?lang=zh` (个人项目).
 - Visit `http://127.0.0.1:44014/?show=page-glance-extension%2Capple-notes-webclipper%2Cpersonalinflationbasket%2Cllm-layer%2Cfocusor%2Ccode-agent-demo%2Copen-deep-research%2Cdynamic-delegate-2&debug=1`.
 - Visit `http://127.0.0.1:44014/auth-role-rules.json`.
 - Visit `http://127.0.0.1:44014/jian-yongjie-resume.pdf`.
 - Replay `button` interaction `中文`.
 - Replay `button` interaction `EN`.
+- Scroll the 关注方向 timeline through all six stages, then check the tagged project cards below it.
 ## Acceptance chain
 - Run `npm run dev` and wait for a local browser URL.
 - Confirm `screenshots/runtime-home.png` still matches the main UI (`screenshots/runtime-home.png`).
+- Confirm the top nav has exactly three entries (关注方向 / 个人项目 / 博客) and that the right rail shows the social links above the music player without overlap.
 - Revisit the recorded deep pages and successful interactions listed above.
 ## Commands (real / N/A)
 - run: `npm run dev`

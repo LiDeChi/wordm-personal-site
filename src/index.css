@@ -23973,3 +23973,235 @@ body:has(.fount-page-focused[data-page="docs"]) {
   border-color: color-mix(in srgb, #fff 12%, transparent);
   background: color-mix(in srgb, #fff 3.5%, transparent);
 }
+
+/* ==========================================================================
+   Personal site shell — three-section IA (关注方向 / 个人项目 / 博客)
+   Replaces the Fount product marketing layout. Loaded last on purpose so it
+   wins over the earlier focused-page rules with equal specificity.
+   ========================================================================== */
+
+.fount-page-focused .fount-site-nav a.active {
+    color: var(--warm-green);
+    font-weight: 700;
+}
+
+.fount-page-focused .fount-site-nav a.active::after {
+    content: "";
+    display: block;
+    height: 1px;
+    margin-top: 3px;
+    background: currentColor;
+    opacity: 0.55;
+}
+
+.fount-page-focused .fount-logo-mark span {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--warm-green);
+    color: #fff9ee;
+    font-family: var(--font-main);
+    font-size: 0.98rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+/* Body wrapper for every tab. */
+.fount-body {
+    position: relative;
+    z-index: 1;
+    padding-top: 62px;
+}
+
+.fount-body-section {
+    width: min(1120px, 100%);
+    margin-inline: auto;
+    padding: clamp(20px, 3vh, 34px) clamp(18px, 3vw, 40px)
+        clamp(64px, 9vh, 104px);
+}
+
+/* Reserve room for the fixed right rail so it never covers page content. */
+.fount-page-focused .fount-footer {
+    width: min(1120px, calc(100% - 40px));
+}
+
+@media (min-width: 1240px) {
+    .fount-body-section,
+    .fount-page-focused .fount-footer {
+        width: min(1120px, calc(100% - 190px));
+    }
+}
+
+/* --------------------------------------------------------------------------
+   Right rail: social channels and the music player used to be two independent
+   fixed elements pinned to the same right edge, so they collided on short
+   viewports. They now share one fixed column and can never overlap.
+   -------------------------------------------------------------------------- */
+
+.fount-rail {
+    position: fixed;
+    top: 92px;
+    right: clamp(14px, 2vw, 32px);
+    z-index: 42;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    max-height: calc(100svh - 116px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.fount-rail::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+}
+
+.fount-rail .fount-social-rail,
+.fount-rail .fount-music-rail {
+    position: static;
+    top: auto;
+    right: auto;
+    bottom: auto;
+    left: auto;
+    transform: none;
+    flex: 0 0 auto;
+}
+
+.fount-rail .fount-social-rail {
+    flex-direction: column;
+}
+
+@media (max-height: 900px) {
+    .fount-rail .fount-music-title {
+        max-height: 96px;
+    }
+}
+
+@media (max-height: 780px) {
+    .fount-rail .fount-music-copy {
+        display: none;
+    }
+}
+
+@media (max-width: 900px) {
+    /* Two predictable header rows: brand + utilities, then the section nav.
+       `display: contents` lets the logo, utilities, account link and nav lay
+       out as direct flex children of the header. */
+    .fount-page-focused .fount-header {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 6px 10px;
+        padding: 10px 14px 12px;
+    }
+
+    .fount-page-focused .fount-logo {
+        order: 1;
+    }
+
+    .fount-page-focused .fount-header-actions {
+        display: contents;
+    }
+
+    .fount-page-focused .fount-header-utils {
+        order: 2;
+        width: auto;
+        max-width: none;
+        flex: 0 0 auto;
+    }
+
+    .fount-page-focused .fount-account-link {
+        order: 3;
+        margin-left: 0;
+    }
+
+    .fount-page-focused .fount-site-nav {
+        order: 4;
+        flex: 1 1 100%;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .fount-page-focused .fount-lang-switch {
+        width: 76px;
+        flex: 0 0 76px;
+    }
+
+    .fount-page-focused .fount-theme-toggle {
+        flex: 0 0 40px;
+    }
+
+    /* A fixed rail cannot avoid covering content on a phone, so it becomes a
+       normal row between the header and the page body. */
+    .fount-rail {
+        position: static;
+        flex-direction: row;
+        /* One horizontally scrollable row instead of two stacked rows, so the
+           article starts ~70px earlier on a phone. */
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 8px;
+        max-height: none;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scrollbar-width: none;
+        overscroll-behavior-x: contain;
+        /* Clears the fixed two-row header above it. */
+        margin-top: 88px;
+        padding: 10px 14px 0;
+    }
+
+    .fount-rail::-webkit-scrollbar {
+        display: none;
+    }
+
+    .fount-rail .fount-social-link {
+        width: 30px;
+        height: 30px;
+        flex: 0 0 30px;
+    }
+
+    .fount-rail .fount-social-link svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    .fount-rail .fount-social-rail {
+        order: 1;
+        flex: 0 1 auto;
+        flex-direction: row;
+    }
+
+    .fount-rail .fount-music-rail {
+        order: 2;
+    }
+
+    .fount-rail .fount-music-rail {
+        flex-direction: row;
+        width: auto;
+        flex: 0 0 auto;
+        padding: 5px 8px;
+    }
+
+    .fount-rail .fount-music-btn {
+        width: 32px;
+        height: 32px;
+        flex-basis: 32px;
+    }
+
+    .fount-rail .fount-music-copy {
+        display: none;
+    }
+
+    .fount-body {
+        padding-top: 0;
+    }
+}

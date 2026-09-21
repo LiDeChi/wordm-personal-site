@@ -32,3 +32,6 @@ supabase/.temp/
 !.codex/environments/
 .codex/environments/*
 !.codex/environments/environment.toml
+
+# Pi agent task artifacts (bg_run logs, subagent reports)
+.pi/

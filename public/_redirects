@@ -14,11 +14,22 @@
 /blog/        https://lidechi.github.io/        301
 /blog/*       https://lidechi.github.io/:splat  301
 
-# Fount 暂不开放下载；旧下载地址统一引导到 Fields
-/Fount.dmg                 /fields  302
-/downloads/fount           /fields  302
-/downloads/fount/          /fields  302
-/downloads/fount/*         /fields  302
+# Fount 已下线；旧下载地址与旧栏目路径统一回到首页
+/Fount.dmg                 /  302
+/downloads/fount           /  302
+/downloads/fount/          /  302
+/downloads/fount/*         /  302
+
+# 旧栏目路径收敛到三段式信息架构
+# 注意：/fields/* 与 /minds/* 仍是静态资源目录（画廊图、视频、头像、场景图），
+# 只重定向栏目入口本身，不要匹配子路径。
+/pricing    /  301
+/partners   /  301
+/updates    /  301
+/fields     /  301
+/docs       /  301
+/minds      /?area=minds  301
+/portfolio  /projects     301
 
 # 产品路径 → 子域名
 /zh*          https://inote.wordm.us/:splat     301

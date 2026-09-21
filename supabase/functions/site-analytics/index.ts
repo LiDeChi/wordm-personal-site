@@ -62,8 +62,43 @@ const SENSITIVE_QUERY_KEYS = new Set([
 ]);
 
 const env = (key: string, fallback = "") => Deno.env.get(key) ?? fallback;
-let analyticsSchemaReady: Promise<void> | null = null;
+
+/**
+ * The table is provisioned by
+ * supabase/migrations/20260704120000_wordm_site_analytics.sql. This bootstrap is
+ * only a safety net for a project where the migration has not been applied yet,
+ * so it must never sit on the request path:
+ *
+ *  - it runs ~10 DDL statements (`create index if not exists` needs an exclusive
+ *    lock on the table), which measured ~2.5s per call;
+ *  - module state is not reliably reused between invocations, so it was running
+ *    for *every* event, not once per isolate;
+ *  - when the DDL contended for a lock the invocation exceeded its budget, and
+ *    the gateway answered 500 with an empty body, silently dropping the event.
+ *
+ * It is therefore bounded by a timeout, never rejects, and is only awaited when
+ * an insert has actually failed because the table is missing.
+ */
+const ANALYTICS_SCHEMA_BOOTSTRAP_TIMEOUT_MS = 5000;
+let analyticsSchemaBootstrapped = false;
+let analyticsSchemaBootstrap: Promise<void> | null = null;
 let databasePool: Pool | null | undefined;
+
+function withTimeout<T>(promise: Promise<T>, ms: number, label: string): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error(`${label}_TIMEOUT`)), ms);
+    promise.then(
+      (value) => {
+        clearTimeout(timer);
+        resolve(value);
+      },
+      (error) => {
+        clearTimeout(timer);
+        reject(error);
+      },
+    );
+  });
+}
 
 function clampString(value: unknown, maxLength: number) {
   if (typeof value !== "string") {
@@ -89,19 +124,15 @@ function getDatabasePool() {
   return databasePool;
 }
 
-async function ensureAnalyticsSchema() {
-  if (analyticsSchemaReady) {
-    return analyticsSchemaReady;
+async function runAnalyticsSchemaBootstrap() {
+  const pool = getDatabasePool();
+  if (!pool) {
+    // No direct database URL configured; nothing to bootstrap.
+    return;
   }
 
-  analyticsSchemaReady = (async () => {
-    const pool = getDatabasePool();
-    if (!pool) {
-      return;
-    }
-
-    const connection = await pool.connect();
-    try {
+  const connection = await pool.connect();
+  try {
       await connection.queryArray("create extension if not exists pgcrypto");
       await connection.queryArray(`
         create table if not exists public.site_analytics_events (
@@ -159,15 +190,53 @@ async function ensureAnalyticsSchema() {
       await connection.queryArray("alter table public.site_analytics_events enable row level security");
       await connection.queryArray("revoke all on table public.site_analytics_events from anon, authenticated");
       await connection.queryArray("grant insert, select, delete on table public.site_analytics_events to service_role");
-    } finally {
-      connection.release();
-    }
-  })().catch((error) => {
-    analyticsSchemaReady = null;
-    throw error;
-  });
+  } finally {
+    connection.release();
+    // Release the single pooled connection; the bootstrap is one-shot, so
+    // holding it open on every invocation only risks exhausting Postgres
+    // connections.
+    await pool.end().catch(() => {});
+    databasePool = null;
+  }
+}
 
-  return analyticsSchemaReady;
+/**
+ * Best effort. Resolves even when the bootstrap fails, so a missing safety net
+ * can never turn into a dropped event.
+ */
+function ensureAnalyticsSchema(): Promise<void> {
+  if (analyticsSchemaBootstrapped) {
+    return Promise.resolve();
+  }
+
+  if (!analyticsSchemaBootstrap) {
+    analyticsSchemaBootstrap = withTimeout(
+      runAnalyticsSchemaBootstrap(),
+      ANALYTICS_SCHEMA_BOOTSTRAP_TIMEOUT_MS,
+      "ANALYTICS_SCHEMA_BOOTSTRAP",
+    )
+      .then(() => {
+        analyticsSchemaBootstrapped = true;
+      })
+      .catch((error) => {
+        console.error("ANALYTICS_SCHEMA_BOOTSTRAP_FAILED", error);
+      });
+  }
+
+  return analyticsSchemaBootstrap;
+}
+
+function isMissingTableError(error: unknown) {
+  const candidate = error as { code?: string; message?: string } | null;
+  if (!candidate) {
+    return false;
+  }
+
+  return (
+    candidate.code === "42P01" ||
+    candidate.code === "PGRST205" ||
+    /does not exist|schema cache/i.test(candidate.message ?? "")
+  );
 }
 
 function normalizeRole(value: unknown) {
@@ -377,15 +446,6 @@ const handler = async (req: Request): Promise<Response> => {
 
   const admin = createClient(supabaseUrl, serviceRoleKey);
   const authHeader = req.headers.get("Authorization") ?? "";
-  try {
-    await ensureAnalyticsSchema();
-  } catch (error) {
-    console.error("ANALYTICS_SCHEMA_INIT_FAILED", error);
-    return respond(JSON.stringify({ error: "ANALYTICS_SCHEMA_INIT_FAILED" }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
-  }
 
   if (req.method === "GET") {
     const user = await getUserFromAuthHeader(supabaseUrl, anonKey, authHeader);
@@ -457,7 +517,7 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   const user = await getUserFromAuthHeader(supabaseUrl, anonKey, authHeader).catch(() => null);
-  const insertRes = await admin.from("site_analytics_events").insert({
+  const row = {
     event_type: eventType,
     session_id: sessionId,
     user_id: user?.id ?? null,
@@ -478,9 +538,17 @@ const handler = async (req: Request): Promise<Response> => {
     metadata: normalizeMetadata(body.metadata),
     user_agent: clampString(req.headers.get("user-agent"), 500),
     ip_hash: await resolveIpHash(req),
-  });
+  };
+
+  let insertRes = await admin.from("site_analytics_events").insert(row);
+  if (insertRes.error && isMissingTableError(insertRes.error)) {
+    // Fresh project without the migration applied: provision once, then retry.
+    await ensureAnalyticsSchema();
+    insertRes = await admin.from("site_analytics_events").insert(row);
+  }
 
   if (insertRes.error) {
+    console.error("ANALYTICS_INSERT_FAILED", insertRes.error);
     return respond(JSON.stringify({ error: "ANALYTICS_INSERT_FAILED" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },

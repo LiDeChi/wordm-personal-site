@@ -1,4 +1,3 @@
-import { InteractiveHomePage } from "./components/InteractiveHomePage";
 import { Suspense, lazy, useEffect, useMemo, useRef, useState } from "react";
 import katex from "katex";
 import "katex/dist/katex.min.css";
@@ -6,21 +5,17 @@ import type {
   KeyboardEvent as ReactKeyboardEvent,
   MouseEvent as ReactMouseEvent,
 } from "react";
-import { AccountEntryCard } from "./components/AccountEntryCard";
 import { LoginPage, type AccountTier } from "./components/LoginPage";
 import { AdminPage } from "./components/AdminPage";
-import {
-  FountHomePage,
-  FountPrimaryNav,
-} from "./components/FountHomePage";
+import { FountHomePage } from "./components/FountHomePage";
+import { FocusPage } from "./components/FocusPage";
+import type { SiteTab } from "./lib/site-shell";
 import { OneAgentProductPage } from "./components/OneAgentProductPage";
 import { ProjectDetailModal } from "./components/ProjectDetailModal";
 import { ProjectEntry } from "./components/ProjectEntry";
 import { ShareAccessDenied } from "./components/ShareAccessDenied";
 import { SiteAiChat } from "./components/SiteAiChat";
-import { SocialLinks } from "./components/SocialLinks";
 import { SubdomainProjectView } from "./components/SubdomainProjectView";
-import { ThemeModeIcon } from "./components/ThemeModeIcon";
 import {
   ARTICLES_SITE_URL,
   BLOG_ARTICLES,
@@ -118,18 +113,7 @@ import {
 } from "./lib/projects";
 import type { PortfolioProject, ProjectsSnapshot } from "./types";
 
-type RootView =
-  | "home"
-  | "blog"
-  | "portfolio"
-  | "login"
-  | "about"
-  | "pricing"
-  | "partners"
-  | "updates"
-  | "fields"
-  | "docs"
-  | "minds";
+type RootView = "focus" | "projects" | "blog" | "login" | "about";
 type UnlockStorageMode = "remote" | "local" | "loading" | "idle";
 type ThemeMode = "day" | "night";
 type HomeProject = {
@@ -969,58 +953,18 @@ function defaultSelection(
 }
 
 function toRootView(raw: string | null, pathname: string): RootView {
+  if (pathname === "/projects" || pathname === "/projects/") {
+    return "projects";
+  }
   if (pathname === "/blog" || pathname === "/blog/") {
     return "blog";
   }
   if (pathname === "/login" || pathname === "/login/") {
     return "login";
   }
-  if (pathname === "/pricing" || pathname === "/pricing/") {
-    return "pricing";
-  }
-  if (
-    pathname === "/partners" ||
-    pathname === "/partners/" ||
-    pathname === "/affiliate" ||
-    pathname === "/affiliate/" ||
-    pathname === "/partner-program" ||
-    pathname === "/partner-program/"
-  ) {
-    return "partners";
-  }
-  if (pathname === "/updates" || pathname === "/updates/") {
-    return "updates";
-  }
-  if (pathname === "/fields" || pathname === "/fields/") {
-    return "fields";
-  }
-  if (pathname === "/docs" || pathname === "/docs/") {
-    return "docs";
-  }
-  if (pathname === "/minds" || pathname === "/minds/") {
-    return "minds";
-  }
 
-  if (raw === "home") {
-    return "home";
-  }
-  if (raw === "updates") {
-    return "updates";
-  }
-  if (raw === "fields" || raw === "field") {
-    return "fields";
-  }
-  if (raw === "docs" || raw === "documentation") {
-    return "docs";
-  }
-  if (raw === "minds" || raw === "mind" || raw === "theories") {
-    return "minds";
-  }
-  if (raw === "pricing") {
-    return "pricing";
-  }
-  if (raw === "partners" || raw === "affiliate" || raw === "partner-program") {
-    return "partners";
+  if (raw === "projects" || raw === "portfolio") {
+    return "projects";
   }
   if (raw === "blog") {
     return "blog";
@@ -1031,14 +975,10 @@ function toRootView(raw: string | null, pathname: string): RootView {
   if (raw === "about") {
     return "about";
   }
-  if (raw === "portfolio") {
-    return "portfolio";
-  }
-  if (raw === "projects") {
-    return "portfolio";
-  }
 
-  return "home";
+  // Legacy routes (pricing / partners / updates / fields / docs / minds / home)
+  // all converge on the focus landing page.
+  return "focus";
 }
 
 function normalizeSlug(raw: string | null): string | null {
@@ -1090,31 +1030,19 @@ function withDone(text: string, lang: Lang) {
 
 function relativeRootHref(view: RootView, lang: Lang) {
   if (view === "blog" && !IN_SITE_BLOG_ENABLED) {
-    return ARTICLES_SITE_URL;
+    return withSiteParams(ARTICLES_SITE_URL, { lang });
   }
 
   const url = new URL("/", "https://wordm.us");
 
-  if (view === "login") {
-    url.searchParams.set("view", "login");
-  } else if (view === "portfolio") {
-    url.searchParams.set("view", "portfolio");
+  if (view === "projects") {
+    url.pathname = "/projects";
   } else if (view === "blog") {
     url.pathname = "/blog";
+  } else if (view === "login") {
+    url.searchParams.set("view", "login");
   } else if (view === "about") {
     url.searchParams.set("view", "about");
-  } else if (view === "pricing") {
-    url.searchParams.set("view", "pricing");
-  } else if (view === "partners") {
-    url.pathname = "/partners";
-  } else if (view === "updates") {
-    url.searchParams.set("view", "updates");
-  } else if (view === "fields") {
-    url.pathname = "/fields";
-  } else if (view === "docs") {
-    url.pathname = "/docs";
-  } else if (view === "minds") {
-    url.pathname = "/minds";
   }
 
   url.searchParams.set("lang", lang);
@@ -1219,13 +1147,10 @@ function App() {
   const forcedSubdomain = params.get("subdomain");
   const forcedPage = params.get("page");
   const initialShowSlugs = parseShowSlugs(params.get("show"));
-  const hashRootView =
-    !params.has("view") && window.location.hash === "#updates"
-      ? "updates"
-      : null;
   const initialRootView = initialShowSlugs.length
-    ? "portfolio"
-    : hashRootView ?? toRootView(params.get("view"), window.location.pathname);
+    ? "projects"
+    : toRootView(params.get("view"), window.location.pathname);
+  // Legacy /minds deep link lands on the machine-minds direction.
   const initialBlogArticleId =
     normalizeBlogArticleId(params.get("article")) ??
     BLOG_ARTICLES[0]?.id ??
@@ -1324,6 +1249,9 @@ function App() {
   const [unlockTargetSlug, setUnlockTargetSlug] = useState<string | null>(
     initialUnlockSlug,
   );
+  // Preview iframes are hover-only in the design, so they are mounted on
+  // demand instead of loading five external sites on every page view.
+  const [homePreviewKey, setHomePreviewKey] = useState<string | null>(null);
   const [selectedHomeProductKeys, setSelectedHomeProductKeys] = useState<
     string[]
   >([]);
@@ -1384,13 +1312,11 @@ function App() {
     window.location.pathname === "/oneagent" ||
     window.location.pathname === "/oneagent/";
 
-  const contactEmail = "parsonjian@gmail.com";
   const defaultHomeHref = new URL(
-    relativeRootHref("home", lang),
+    relativeRootHref("focus", lang),
     "https://wordm.us",
   ).toString();
   const accountHref = relativeRootHref("login", lang);
-  const loginHref = accountHref;
   const homeHref = defaultHomeHref;
 
   const primaryUpdatedAt =
@@ -1437,8 +1363,28 @@ function App() {
     }
 
     if (rootView === "blog") {
-      document.title = lang === "zh" ? "Fount 博客 | Notes" : "Fount Blog | Notes";
+      document.title = lang === "zh" ? "博客 | wordm.us" : "Writing | wordm.us";
+      return;
     }
+
+    if (rootView === "projects") {
+      document.title = lang === "zh" ? "个人项目 | wordm.us" : "Projects | wordm.us";
+      return;
+    }
+
+    if (rootView === "about") {
+      document.title = lang === "zh" ? "关于 | wordm.us" : "About | wordm.us";
+      return;
+    }
+
+    if (rootView === "login") {
+      return;
+    }
+
+    document.title =
+      lang === "zh"
+        ? "关注方向 · 人工生命与机器心智 | wordm.us"
+        : "Focus · Artificial Life and Machine Minds | wordm.us";
   }, [lang, rootView]);
 
   useEffect(() => {
@@ -1453,45 +1399,27 @@ function App() {
 
     const next = new URL(window.location.href);
     next.pathname =
-      rootView === "blog"
-        ? "/blog"
-        : rootView === "partners"
-          ? "/partners"
-          : rootView === "fields"
-            ? "/fields"
-            : rootView === "docs"
-              ? "/docs"
-              : rootView === "minds"
-                ? "/minds"
-                : "/";
+      rootView === "projects"
+        ? "/projects"
+        : rootView === "blog"
+          ? "/blog"
+          : "/";
 
     if (rootView === "login") {
       next.searchParams.set("view", "login");
-    } else if (rootView === "portfolio") {
-      next.searchParams.set("view", "portfolio");
-    } else if (rootView === "blog") {
-      next.searchParams.delete("view");
     } else if (rootView === "about") {
       next.searchParams.set("view", "about");
-    } else if (rootView === "pricing") {
-      next.searchParams.set("view", "pricing");
-    } else if (rootView === "partners") {
-      next.searchParams.delete("view");
-    } else if (rootView === "updates") {
-      next.searchParams.set("view", "updates");
-    } else if (rootView === "fields") {
-      next.searchParams.delete("view");
-    } else if (rootView === "docs") {
-      next.searchParams.delete("view");
-    } else if (rootView === "minds") {
-      next.searchParams.delete("view");
     } else {
       next.searchParams.delete("view");
     }
 
+    // 关注方向现在是一页，旧的 area / mode 参数不再有意义。
+    next.searchParams.delete("area");
+    next.searchParams.delete("mode");
+
     next.searchParams.set("lang", lang);
 
-    if (selectedProjectSlug && (rootView === "portfolio" || rootView === "about")) {
+    if (selectedProjectSlug && (rootView === "projects" || rootView === "about")) {
       next.searchParams.set("project", selectedProjectSlug);
     } else {
       next.searchParams.delete("project");
@@ -1560,7 +1488,7 @@ function App() {
     }
 
     if (initialPurchaseSuccess) {
-      setRootView("portfolio");
+      setRootView("projects");
       setUnlockStatusMessage(copy.unlockCheckoutSuccess);
     } else {
       setUnlockStatusMessage(copy.unlockCheckoutCanceled);
@@ -2134,7 +2062,7 @@ function App() {
       next.searchParams.delete("project");
     }
 
-    next.searchParams.set("view", "portfolio");
+    next.searchParams.set("view", "projects");
     next.searchParams.set("lang", lang);
     return next.toString();
   }
@@ -2153,7 +2081,7 @@ function App() {
       next.searchParams.delete("project");
     }
 
-    next.searchParams.set("view", "portfolio");
+    next.searchParams.set("view", "projects");
     next.searchParams.set("lang", lang);
     return next.toString();
   }
@@ -3328,13 +3256,6 @@ function App() {
     setSelectedProjectSlug(visibleProjects[nextIndex]?.slug ?? null);
   }
 
-  function openAboutPage() {
-    setRootView("about");
-    window.requestAnimationFrame(() => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    });
-  }
-
   function toggleHomeProductSelection(projectKey: string) {
     setHomeDownloadStatusMessage("");
     setSelectedHomeProductKeys((current) =>
@@ -3383,7 +3304,7 @@ function App() {
     toggleHomeProductSelection(projectKey);
   }
 
-  function switchRootView(nextRootView: RootView) {
+  function switchRootView(nextRootView: SiteTab) {
     if (nextRootView === "blog" && !IN_SITE_BLOG_ENABLED) {
       window.location.assign(ARTICLES_SITE_URL);
       return;
@@ -3653,7 +3574,7 @@ function App() {
   }
 
   useEffect(() => {
-    if (rootView !== "portfolio" || !unlockTargetSlug) {
+    if (rootView !== "projects" || !unlockTargetSlug) {
       return;
     }
 
@@ -3807,7 +3728,7 @@ function App() {
         homeHref={initialAuthReturnTo ?? homeHref}
         accountTier={accountPlanSummary.tier}
         unlockedProjectCount={accountPlanSummary.unlockedProjectCount}
-        singleUpgradeHref={relativeRootHref("portfolio", lang)}
+        singleUpgradeHref={relativeRootHref("projects", lang)}
         singleUpgradeEnabled={pricingConfig.singleUnlock.enabled}
         singleUpgradePriceLabel={accountSinglePriceLabel}
         allAccessEnabled={pricingConfig.allAccess.enabled}
@@ -3824,50 +3745,12 @@ function App() {
     );
   }
 
-  if (rootView === "home") {
-    return <InteractiveHomePage
-      lang={lang}
-      onLangChange={setLang}
-      themeMode={themeMode}
-      onThemeToggle={() => setThemeMode(current => current === "night" ? "day" : "night")}
-    />;
-  }
-
-  if (
-    rootView === "pricing" ||
-    rootView === "partners" ||
-    rootView === "updates" ||
-    rootView === "fields" ||
-    rootView === "docs" ||
-    rootView === "minds"
-  ) {
-    return (
-      <FountHomePage
-        lang={lang}
-        page={
-          rootView === "pricing"
-            ? "pricing"
-            : rootView === "partners"
-              ? "partners"
-              : rootView === "updates"
-                ? "updates"
-                : rootView === "fields"
-                  ? "fields"
-                  : rootView === "docs"
-                    ? "docs"
-                    : rootView === "minds"
-                      ? "minds"
-                      : "home"
-        }
-        onTabChange={switchRootView}
-        onLangChange={setLang}
-        themeMode={themeMode}
-        onThemeToggle={() =>
-          setThemeMode((current) => (current === "night" ? "day" : "night"))
-        }
-      />
-    );
-  }
+  const activeTab: SiteTab =
+    rootView === "projects"
+      ? "projects"
+      : rootView === "blog"
+        ? "blog"
+        : "focus";
 
   if (rootView === "blog" && !IN_SITE_BLOG_ENABLED) {
     return (
@@ -3900,7 +3783,7 @@ function App() {
   }
 
   if (
-    (rootView === "portfolio" || rootView === "about") &&
+    (rootView === "projects" || rootView === "about") &&
     portfolioShareDeniedStatus
   ) {
     return (
@@ -3914,300 +3797,25 @@ function App() {
   }
 
   return (
-    <div
-      className={`page-container${rootView === "blog" ? " fount-blog-container fount-page-focused" : ""}`}
-      data-page={rootView === "blog" ? "blog" : undefined}
-    >
-      <main
-        className={`main-content portfolio-main-content${rootView === "blog" ? " blog-main" : ""}${rootView === "about" ? " about-main" : ""}`}
+    <>
+      <FountHomePage
+        lang={lang}
+        activeTab={activeTab}
+        onTabChange={switchRootView}
+        onLangChange={setLang}
+        themeMode={themeMode}
+        onThemeToggle={() =>
+          setThemeMode((current) => (current === "night" ? "day" : "night"))
+        }
       >
-        {rootView === "blog" ? (
-          <header className="fount-header fount-blog-topbar">
-            <a className="fount-logo" href={relativeRootHref("home", lang)} aria-label="Fount home">
-              <span className="fount-logo-mark" aria-hidden="true">
-                <img src="/fount/fount-logo-source.png" alt="" />
-              </span>
-              Fount
-            </a>
+        {rootView === "focus" ? <FocusPage lang={lang} /> : null}
 
-            <nav
-              className="fount-nav fount-outline-nav fount-pricing-back-nav"
-              aria-label={lang === "zh" ? "Fount 博客" : "Fount Blog"}
-            >
-              <a href={relativeRootHref("home", lang)}>
-                {lang === "zh" ? "首页" : "Home"}
-              </a>
-            </nav>
-
-            <div className="fount-header-actions">
-              <FountPrimaryNav
-                activePage="blog"
-                hrefs={{
-                  home: relativeRootHref("home", lang),
-                  fields: relativeRootHref("fields", lang),
-                  docs: relativeRootHref("docs", lang),
-                  minds: relativeRootHref("minds", lang),
-                  updates: relativeRootHref("updates", lang),
-                  blog: relativeRootHref("blog", lang),
-                  pricing: relativeRootHref("pricing", lang),
-                }}
-                lang={lang}
-              />
-              <div className="fount-header-utils">
-                <div className="fount-lang-switch" aria-label="Language switcher">
-                  <button
-                    type="button"
-                    className={lang === "zh" ? "active" : ""}
-                    onClick={() => setLang("zh")}
-                  >
-                    中文
-                  </button>
-                  <button
-                    type="button"
-                    className={lang === "en" ? "active" : ""}
-                    onClick={() => setLang("en")}
-                  >
-                    EN
-                  </button>
-                </div>
-                <button
-                  type="button"
-                  className="fount-theme-toggle"
-                  aria-label={
-                    themeMode === "night"
-                      ? copy.themeToDayAria
-                      : copy.themeToNightAria
-                  }
-                  aria-pressed={themeMode === "night"}
-                  onClick={() =>
-                    setThemeMode((current) =>
-                      current === "night" ? "day" : "night",
-                    )
-                  }
-                >
-                  <ThemeModeIcon mode={themeMode} />
-                </button>
-                <span
-                  className="fount-download-small is-disabled"
-                  role="link"
-                  aria-disabled="true"
-                  title={
-                    lang === "zh"
-                      ? "公开下载暂时关闭"
-                      : "Public download is temporarily closed"
-                  }
-                >
-                  <span>
-                    {lang === "zh" ? "下载即将开放" : "Coming soon"}
-                  </span>
-                </span>
-              </div>
-              <a className="fount-account-link" href={accountHref}>
-                {lang === "zh" ? "账号" : "Account"}
-              </a>
-            </div>
-          </header>
-        ) : (
-        <div className="site-topbar">
-          <div className="site-topbar-primary">
-            <a
-              className="site-brand"
-              href={relativeRootHref("home", lang)}
-              aria-label="wordm.us"
-            >
-              <span className="site-brand-mark">F</span>
-              <span>wordm.us</span>
-            </a>
-          </div>
-
-          <nav
-            className="collection-switch-tabs site-topbar-tabs"
-            aria-label={lang === "zh" ? "内容切换" : "Content switch"}
+        {rootView === "projects" ? (
+          <section
+            className="fount-body-section"
+            aria-labelledby="home-projects-title"
           >
-            <button
-              type="button"
-              className="collection-switch-tab"
-              onClick={() => switchRootView("home")}
-            >
-              {copy.tocHome}
-            </button>
-            <button
-              type="button"
-              className={`collection-switch-tab${rootView === "portfolio" ? " active" : ""}`}
-              onClick={() => switchRootView("portfolio")}
-            >
-              {copy.tocProjects}
-            </button>
-            <button
-              type="button"
-              className="collection-switch-tab"
-              onClick={() => switchRootView("blog")}
-            >
-              {copy.tocBlog}
-            </button>
-          </nav>
-
-          <div className="site-topbar-secondary">
-            <div
-              className="site-topbar-lang"
-              role="group"
-              aria-label={lang === "zh" ? "语言" : "Language"}
-              onWheel={(event) => {
-                event.currentTarget.scrollLeft += event.deltaY;
-              }}
-            >
-              <button
-                type="button"
-                className={lang === "zh" ? "active" : ""}
-                aria-pressed={lang === "zh"}
-                onClick={() => setLang("zh")}
-              >
-                中文
-              </button>
-              <button
-                type="button"
-                className={lang === "en" ? "active" : ""}
-                aria-pressed={lang === "en"}
-                onClick={() => setLang("en")}
-              >
-                EN
-              </button>
-            </div>
-
-            <button
-              type="button"
-              className="site-theme-toggle"
-              aria-label={
-                themeMode === "night"
-                  ? copy.themeToDayAria
-                  : copy.themeToNightAria
-              }
-              aria-pressed={themeMode === "night"}
-              onClick={() =>
-                setThemeMode((current) =>
-                  current === "night" ? "day" : "night",
-                )
-              }
-            >
-              <ThemeModeIcon mode={themeMode} />
-            </button>
-
-            <SocialLinks
-              ariaLabel={copy.socialLinksAria}
-              className="collection-corner-links site-topbar-links"
-              linkClassName="topbar-social-link"
-            />
-
-            <div className="site-topbar-account">
-              <AccountEntryCard
-                {...authPanelProps}
-                loginHref={loginHref}
-                className="topbar-account-entry"
-                variant="topbar"
-              />
-            </div>
-          </div>
-        </div>
-        )}
-
-        <section id="collection" className="main-collection-shell">
-          {rootView === "blog" ? (
-            <p className="visual-intro collection-switch-intro">
-              {copy.blogIntro}
-            </p>
-          ) : null}
-
-          {rootView === "blog" ? (
-            <>
-              <div className="blog-page">
-                <aside className="blog-sidebar">
-                  <ul className="nav-list">
-                    {renderedBlogArticles.map((article) => (
-                      <li key={article.id} className="nav-item">
-                        <button
-                          type="button"
-                          className={`nav-link sidebar-nav-button${activeBlogArticle?.id === article.id ? " active" : ""}`}
-                          onClick={() => scrollToBlogArticle(article.id)}
-                        >
-                          {article.title[lang]}
-                          <span className="toc-meta">
-                            {formatBlogSidebarMeta(article, lang)}
-                          </span>
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                </aside>
-
-                <div className="blog-article-list">
-                  {renderedBlogArticles.map((article) => (
-                    <article
-                      key={article.id}
-                      id={`blog-article-${article.id}`}
-                      data-article-id={article.id}
-                      className={`blog-article${activeBlogArticle?.id === article.id ? " blog-article-active" : ""}`}
-                    >
-                      <div className="paper-meta">
-                        <span>{article.date}</span>
-                        <span>{article.category[lang]}</span>
-                      </div>
-                      <h3 className="blog-article-title">
-                        {article.title[lang]}
-                      </h3>
-                      {article.summary[lang].trim() ? (
-                        <p className="blog-article-summary">
-                          {article.summary[lang]}
-                        </p>
-                      ) : null}
-                      {article.note[lang].trim() ? (
-                        <p className="blog-article-note">
-                          {article.note[lang]}
-                        </p>
-                      ) : null}
-                      {article.blocks?.length
-                        ? article.blocks.map((block, index) =>
-                            renderBlogContentBlock(
-                              article.id,
-                              block,
-                              index,
-                              lang,
-                            ),
-                          )
-                        : article.paragraphs.map((paragraph, index) => (
-                            <p key={`${article.id}-${index}`}>
-                              {paragraph[lang]}
-                            </p>
-                          ))}
-                    </article>
-                  ))}
-                  {hasMoreBlogArticles ? (
-                    <div ref={blogLoadMoreRef} className="blog-load-sentinel">
-                      <button
-                        type="button"
-                        className="blog-load-more"
-                        onClick={() => {
-                          setVisibleBlogCount((current) =>
-                            Math.min(
-                              blogArticles.length,
-                              current + BLOG_RENDER_BATCH_SIZE,
-                            ),
-                          );
-                        }}
-                      >
-                        {copy.blogLoadMore}
-                      </button>
-                    </div>
-                  ) : null}
-                </div>
-              </div>
-            </>
-          ) : null}
-
-          {rootView === "portfolio" ? (
-            <section
-              className="home-projects-hero"
-              aria-labelledby="home-projects-title"
-            >
+            <div className="home-projects-hero">
               <a
                 className="system-cover-portal"
                 href={withSiteParams(SYSTEM_SITE_URL, { lang })}
@@ -4273,6 +3881,18 @@ function App() {
                         className="home-project-cover"
                         role="group"
                         aria-label={`${copy.homeProjectsPreview}: ${project.name}`}
+                        onMouseEnter={() => setHomePreviewKey(project.key)}
+                        onMouseLeave={() =>
+                          setHomePreviewKey((current) =>
+                            current === project.key ? null : current,
+                          )
+                        }
+                        onFocusCapture={() => setHomePreviewKey(project.key)}
+                        onBlurCapture={() =>
+                          setHomePreviewKey((current) =>
+                            current === project.key ? null : current,
+                          )
+                        }
                       >
                         <img
                           src={project.coverUrl}
@@ -4291,13 +3911,16 @@ function App() {
                               {project.previewUrl}
                             </span>
                           </span>
-                          <iframe
-                            className="home-project-preview-frame"
-                            title={`${project.name} ${copy.homeProjectsPreview}`}
-                            src={projectHref}
-                            loading="lazy"
-                            referrerPolicy="no-referrer-when-downgrade"
-                          />
+                          {homePreviewKey === project.key ? (
+                            <iframe
+                              className="home-project-preview-frame"
+                              title={`${project.name} ${copy.homeProjectsPreview}`}
+                              src={projectHref}
+                              loading="lazy"
+                              sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+                              referrerPolicy="no-referrer-when-downgrade"
+                            />
+                          ) : null}
                         </div>
                       </div>
                       <div className="home-project-card-body">
@@ -4354,128 +3977,227 @@ function App() {
                   </button>
                 </div>
               </div>
-            </section>
-          ) : null}
+            </div>
+          </section>
+        ) : null}
 
-          {rootView === "about" ? (
-            <section id="about" className="about-archive-section about-page">
-              <div className="about-archive-copy">
-                <p className="paper-meta">{copy.aboutTitle}</p>
-                <h2>{copy.aboutTitle}</h2>
-                <p>{copy.aboutIntro}</p>
-              </div>
+        {rootView === "about" ? (
+          <section
+            id="about"
+            className="fount-body-section about-archive-section about-page"
+          >
+            <div className="about-archive-copy">
+              <p className="paper-meta">{copy.aboutTitle}</p>
+              <h2>{copy.aboutTitle}</h2>
+              <p>{copy.aboutIntro}</p>
+            </div>
 
-              <div className="about-project-archive">
-                <h2>{copy.aboutArchiveTitle}</h2>
-                <Suspense
-                  fallback={
-                    <div
-                      className="portfolio-showcase-loading"
-                      aria-hidden="true"
-                    />
-                  }
-                >
-                  <PortfolioShowcase
+            <div className="about-project-archive">
+              <h2>{copy.aboutArchiveTitle}</h2>
+              <Suspense
+                fallback={
+                  <div
+                    className="portfolio-showcase-loading"
+                    aria-hidden="true"
+                  />
+                }
+              >
+                <PortfolioShowcase
+                  lang={lang}
+                  projects={visibleProjects}
+                  onSelectProject={(slug) => setSelectedProjectSlug(slug)}
+                />
+              </Suspense>
+              <div className="portfolio-gallery">
+                {visibleProjects.map((project) => (
+                  <ProjectEntry
+                    key={project.id}
                     lang={lang}
-                    projects={visibleProjects}
+                    project={project}
+                    accessible={isProjectUnlocked(project.slug)}
+                    offerState={getOfferStateBySlug(project.slug)}
+                    focused={unlockTargetSlug === project.slug}
                     onSelectProject={(slug) => setSelectedProjectSlug(slug)}
                   />
-                </Suspense>
-                <div className="portfolio-gallery">
-                  {visibleProjects.map((project) => (
-                    <ProjectEntry
-                      key={project.id}
-                      lang={lang}
-                      project={project}
-                      accessible={isProjectUnlocked(project.slug)}
-                      offerState={getOfferStateBySlug(project.slug)}
-                      focused={unlockTargetSlug === project.slug}
-                      onSelectProject={(slug) => setSelectedProjectSlug(slug)}
-                    />
-                  ))}
-                </div>
+                ))}
               </div>
-              {selectedProject ? (
-                projectDetailShareDeniedStatus ? (
+            </div>
+            {selectedProject ? (
+              projectDetailShareDeniedStatus ? (
+                <div
+                  className="project-detail-modal"
+                  role="dialog"
+                  aria-modal="true"
+                  aria-label={
+                    lang === "zh" ? "项目访问受限" : "Project access denied"
+                  }
+                  onClick={() => setSelectedProjectSlug(null)}
+                >
                   <div
-                    className="project-detail-modal"
-                    role="dialog"
-                    aria-modal="true"
-                    aria-label={
-                      lang === "zh" ? "项目访问受限" : "Project access denied"
-                    }
-                    onClick={() => setSelectedProjectSlug(null)}
+                    className="project-detail-modal-shell"
+                    onClick={(event) => event.stopPropagation()}
                   >
-                    <div
-                      className="project-detail-modal-shell"
-                      onClick={(event) => event.stopPropagation()}
-                    >
-                      <div className="project-detail-modal-sheet project-detail-modal-sheet-share">
-                        <ShareAccessDenied
-                          lang={lang}
-                          status={projectDetailShareDeniedStatus}
-                          authPanel={authPanelProps}
-                          fallbackSharedUrl={shareEntryUrl}
-                        />
-                      </div>
+                    <div className="project-detail-modal-sheet project-detail-modal-sheet-share">
+                      <ShareAccessDenied
+                        lang={lang}
+                        status={projectDetailShareDeniedStatus}
+                        authPanel={authPanelProps}
+                        fallbackSharedUrl={shareEntryUrl}
+                      />
                     </div>
                   </div>
-                ) : (
-                  <ProjectDetailModal
-                    lang={lang}
-                    project={selectedProject}
-                    lastUpdated={lastUpdated}
-                    unlocked={isProjectUnlocked(selectedProject.slug)}
-                    offerState={getOfferStateBySlug(selectedProject.slug)}
-                    shareToken={shareToken}
-                    indexLabel={
-                      selectedVisibleProjectIndex >= 0
-                        ? `${String(selectedVisibleProjectIndex + 1).padStart(2, "0")}/${String(visibleProjects.length).padStart(2, "0")}`
-                        : null
-                    }
-                    hasPrevious={
-                      selectedVisibleProjectIndex >= 0 &&
-                      visibleProjects.length > 1
-                    }
-                    hasNext={
-                      selectedVisibleProjectIndex >= 0 &&
-                      visibleProjects.length > 1
-                    }
-                    onClose={() => setSelectedProjectSlug(null)}
-                    onPrevious={() => selectAdjacentVisibleProject(-1)}
-                    onNext={() => selectAdjacentVisibleProject(1)}
-                  />
-                )
-              ) : null}
-            </section>
-          ) : null}
-        </section>
+                </div>
+              ) : (
+                <ProjectDetailModal
+                  lang={lang}
+                  project={selectedProject}
+                  lastUpdated={lastUpdated}
+                  unlocked={isProjectUnlocked(selectedProject.slug)}
+                  offerState={getOfferStateBySlug(selectedProject.slug)}
+                  shareToken={shareToken}
+                  indexLabel={
+                    selectedVisibleProjectIndex >= 0
+                      ? `${String(selectedVisibleProjectIndex + 1).padStart(2, "0")}/${String(visibleProjects.length).padStart(2, "0")}`
+                      : null
+                  }
+                  hasPrevious={
+                    selectedVisibleProjectIndex >= 0 &&
+                    visibleProjects.length > 1
+                  }
+                  hasNext={
+                    selectedVisibleProjectIndex >= 0 &&
+                    visibleProjects.length > 1
+                  }
+                  onClose={() => setSelectedProjectSlug(null)}
+                  onPrevious={() => selectAdjacentVisibleProject(-1)}
+                  onNext={() => selectAdjacentVisibleProject(1)}
+                />
+              )
+            ) : null}
+          </section>
+        ) : null}
 
-        <footer id="contact">
-          <div className="footer-row">
-            <div className="footer-contact-inline">
-              {copy.contactTitle}: 简永杰 / Jian Yongjie · {copy.profileLine1} ·{" "}
-              <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
+        {rootView === "blog" ? (
+          <section className="fount-body-section fount-blog-container">
+            <p className="visual-intro collection-switch-intro">
+              {copy.blogIntro}
+            </p>
+            <div className="blog-page">
+              <aside className="blog-sidebar">
+                <ul className="nav-list">
+                  {renderedBlogArticles.map((article) => (
+                    <li key={article.id} className="nav-item">
+                      <button
+                        type="button"
+                        className={`nav-link sidebar-nav-button${activeBlogArticle?.id === article.id ? " active" : ""}`}
+                        onClick={() => scrollToBlogArticle(article.id)}
+                      >
+                        {article.title[lang]}
+                        <span className="toc-meta">
+                          {formatBlogSidebarMeta(article, lang)}
+                        </span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </aside>
+
+              <div className="blog-article-list">
+                {renderedBlogArticles.map((article) => (
+                  <article
+                    key={article.id}
+                    id={`blog-article-${article.id}`}
+                    data-article-id={article.id}
+                    className={`blog-article${activeBlogArticle?.id === article.id ? " blog-article-active" : ""}`}
+                  >
+                    <div className="paper-meta">
+                      <span>{article.date}</span>
+                      <span>{article.category[lang]}</span>
+                    </div>
+                    <h3 className="blog-article-title">{article.title[lang]}</h3>
+                    {article.summary[lang].trim() ? (
+                      <p className="blog-article-summary">
+                        {article.summary[lang]}
+                      </p>
+                    ) : null}
+                    {article.note[lang].trim() ? (
+                      <p className="blog-article-note">{article.note[lang]}</p>
+                    ) : null}
+                    {article.blocks?.length
+                      ? article.blocks.map((block, index) =>
+                          renderBlogContentBlock(
+                            article.id,
+                            block,
+                            index,
+                            lang,
+                          ),
+                        )
+                      : article.paragraphs.map((paragraph, index) => (
+                          <p key={`${article.id}-${index}`}>
+                            {paragraph[lang]}
+                          </p>
+                        ))}
+                  </article>
+                ))}
+                {hasMoreBlogArticles ? (
+                  <div ref={blogLoadMoreRef} className="blog-load-sentinel">
+                    <button
+                      type="button"
+                      className="blog-load-more"
+                      onClick={() => {
+                        setVisibleBlogCount((current) =>
+                          Math.min(
+                            blogArticles.length,
+                            current + BLOG_RENDER_BATCH_SIZE,
+                          ),
+                        );
+                      }}
+                    >
+                      {copy.blogLoadMore}
+                    </button>
+                  </div>
+                ) : null}
+              </div>
             </div>
-            {rootView !== "about" ? (
-              <a
-                href={relativeRootHref("about", lang)}
-                className="footer-about-link"
-                onClick={(event) => {
-                  event.preventDefault();
-                  openAboutPage();
-                }}
+          </section>
+        ) : null}
+      </FountHomePage>
+
+      {rootView === "blog" ? (
+        <div
+          className="blog-reading-dock"
+          aria-label={lang === "zh" ? "博客下一篇" : "Next blog article"}
+        >
+          {nextBlogArticle ? (
+            <div className="blog-next-fixed-wrap">
+              <button
+                type="button"
+                className="blog-next-fixed-btn"
+                onClick={() => scrollToBlogArticle(nextBlogArticle.id)}
               >
-                {copy.aboutEntryText}
-              </a>
-            ) : (
-              <span className="footer-about-placeholder" aria-hidden="true" />
-            )}
-            <div className="footer-copyright">{copy.copyright}</div>
-            <div className="footer-mode">{copy.portfolioMode}</div>
-          </div>
-        </footer>
-      </main>
+                <span className="blog-next-fixed-label">
+                  {copy.blogNextLabel}
+                </span>
+                <span className="blog-next-fixed-text">
+                  {nextBlogArticle.title[lang]}
+                </span>
+              </button>
+            </div>
+          ) : (
+            <div className="blog-next-fixed-wrap">
+              <button type="button" className="blog-next-fixed-btn" disabled>
+                <span className="blog-next-fixed-label">
+                  {copy.blogNextLabel}
+                </span>
+                <span className="blog-next-fixed-text">
+                  {copy.blogEndOfList}
+                </span>
+              </button>
+            </div>
+          )}
+        </div>
+      ) : null}
+
       {showScrollTop ? (
         <button
           type="button"
@@ -4485,54 +4207,9 @@ function App() {
           TOP
         </button>
       ) : null}
-      {rootView === "blog" ? (
-        <>
-          <div
-            className="blog-reading-dock"
-            aria-label={lang === "zh" ? "博客下一篇" : "Next blog article"}
-          >
-            {nextBlogArticle ? (
-              <div className="blog-next-fixed-wrap">
-                <button
-                  type="button"
-                  className="blog-next-fixed-btn"
-                  onClick={() => scrollToBlogArticle(nextBlogArticle.id)}
-                >
-                  <span className="blog-next-fixed-label">
-                    {copy.blogNextLabel}
-                  </span>
-                  <span className="blog-next-fixed-text">
-                    {nextBlogArticle.title[lang]}
-                  </span>
-                </button>
-              </div>
-            ) : (
-              <div className="blog-next-fixed-wrap">
-                <button type="button" className="blog-next-fixed-btn" disabled>
-                  <span className="blog-next-fixed-label">
-                    {copy.blogNextLabel}
-                  </span>
-                  <span className="blog-next-fixed-text">
-                    {copy.blogEndOfList}
-                  </span>
-                </button>
-              </div>
-            )}
-          </div>
-          <SiteAiChat
-            lang={lang}
-            projects={projects}
-            lastUpdated={lastUpdated}
-          />
-        </>
-      ) : (
-        <SiteAiChat
-          lang={lang}
-          projects={projects}
-          lastUpdated={lastUpdated}
-        />
-      )}
-    </div>
+
+      <SiteAiChat lang={lang} projects={projects} lastUpdated={lastUpdated} />
+    </>
   );
 }
 
