@@ -133,9 +133,64 @@
 /* 年代分组 + 时间轴骨架                                                */
 /* ------------------------------------------------------------------ */
 
+/* 时间轴左侧的年份导航 + 右侧的条目滚动区。导航在滚动区外面，所以不用 sticky。 */
+.alife-timeline-split {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  margin-top: 8px;
+}
+
+.alife-year-rail {
+  display: grid;
+  gap: 2px;
+  padding-right: 6px;
+  border-right: 1px solid var(--at-line);
+}
+
+.alife-year-rail button {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 3px 7px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--at-muted);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    color 160ms ease,
+    background 160ms ease;
+}
+
+.alife-year-rail button small {
+  color: inherit;
+  font-size: 0.6rem;
+  opacity: 0.72;
+}
+
+.alife-year-rail button:hover {
+  background: rgb(33 26 20 / 5%);
+  color: var(--at-ink);
+}
+
+.alife-year-rail button:focus-visible {
+  outline: 2px solid var(--at-green);
+  outline-offset: 1px;
+}
+
+.alife-year-rail button.is-active {
+  background: rgb(49 79 67 / 9%);
+  color: var(--at-green);
+}
+
 /* 两列各自内部滚动，整块落在一屏里；联动滚动不会带着整页跳。 */
 .alife-timeline-body {
-  margin-top: 8px;
   padding-right: 8px;
   max-height: var(--at-pane);
   overflow-y: auto;
@@ -426,6 +481,16 @@
   background: rgb(255 241 217 / 8%);
 }
 
+:root[data-theme="night"] .alife-year-rail button:hover {
+  background: rgb(242 195 123 / 7%);
+  color: var(--at-ink);
+}
+
+:root[data-theme="night"] .alife-year-rail button.is-active {
+  background: rgb(242 195 123 / 12%);
+  color: rgb(242 195 123 / 92%);
+}
+
 :root[data-theme="night"] .alife-badge.is-own {
   background: rgb(242 195 123 / 16%);
   color: rgb(242 195 123 / 92%);
@@ -448,6 +513,23 @@
 
   .alife-timeline-layout {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* 窄屏：年份导航从竖排改成一条横向可滚的带子，放在列表上方。 */
+  .alife-timeline-split {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .alife-year-rail {
+    grid-auto-flow: column;
+    grid-auto-columns: max-content;
+    justify-content: start;
+    gap: 6px;
+    padding: 0 0 6px;
+    border-right: 0;
+    border-bottom: 1px solid var(--at-line);
+    overflow-x: auto;
   }
 
   .alife-entry-summary {

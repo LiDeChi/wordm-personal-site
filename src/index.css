@@ -15219,6 +15219,57 @@ body {
     color: rgb(49 79 67 / 82%);
 }
 
+/* 歌名的悬浮提示：整块名字（静止的壳）是热区，走马灯动的是里面的文字。 */
+.fount-music-name {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.fount-music-tip {
+    position: absolute;
+    top: 50%;
+    right: calc(100% + 12px);
+    z-index: 2;
+    max-width: min(58vw, 340px);
+    padding: 6px 11px;
+    border: 1px solid rgb(43 35 29 / 14%);
+    border-radius: 8px;
+    background: rgb(255 255 255 / 96%);
+    box-shadow: 0 14px 34px rgb(86 58 31 / 12%);
+    color: rgb(43 35 29 / 92%);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(6px, -50%);
+    transition:
+        opacity 140ms ease,
+        transform 140ms ease;
+}
+
+.fount-music-name:hover .fount-music-tip,
+.fount-music-name:focus-within .fount-music-tip {
+    opacity: 1;
+    transform: translate(0, -50%);
+}
+
+:root[data-theme="night"] .fount-music-tip {
+    border-color: rgb(255 241 217 / 14%);
+    background: rgb(31 25 19 / 94%);
+    box-shadow: 0 14px 34px rgb(0 0 0 / 34%);
+    color: rgb(255 241 217 / 92%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .fount-music-tip {
+        transition: none;
+    }
+}
+
 :root[data-theme="night"] .fount-music-rail {
     border-color: rgb(255 241 217 / 10%);
     background: rgb(31 25 19 / 62%);
@@ -15284,7 +15335,8 @@ body {
         flex-basis: 38px;
     }
 
-    .fount-music-copy {
+    .fount-music-copy,
+    .fount-music-tip {
         display: none;
     }
 }
@@ -23759,7 +23811,8 @@ body:has(.fount-page-focused[data-page="docs"]) {
 }
 
 @media (max-height: 780px) {
-    .fount-rail .fount-music-copy {
+    .fount-rail .fount-music-copy,
+    .fount-rail .fount-music-tip {
         display: none;
     }
 }
@@ -23873,7 +23926,8 @@ body:has(.fount-page-focused[data-page="docs"]) {
         flex-basis: 36px;
     }
 
-    .fount-rail .fount-music-copy {
+    .fount-rail .fount-music-copy,
+    .fount-rail .fount-music-tip {
         display: none;
     }
 

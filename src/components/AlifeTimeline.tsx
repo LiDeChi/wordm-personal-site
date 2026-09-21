@@ -45,7 +45,7 @@ const NO_ITEMS: AlifeItem[] = [];
 function scrollPaneToShow(
   pane: HTMLElement,
   el: HTMLElement,
-  block: "center" | "nearest",
+  block: "center" | "nearest" | "start",
   smooth: boolean,
 ) {
   const paneRect = pane.getBoundingClientRect();
@@ -55,6 +55,9 @@ function scrollPaneToShow(
   let top = pane.scrollTop;
   if (block === "center") {
     top += offset - (pane.clientHeight - rect.height) / 2;
+  } else if (block === "start") {
+    // 年份导航跳代：这一代的开头贴到滚动区顶。
+    top += offset;
   } else if (offset < 0) {
     top += offset;
   } else if (rect.bottom > paneRect.bottom) {
@@ -62,6 +65,11 @@ function scrollPaneToShow(
   }
 
   pane.scrollTo({ top, behavior: smooth ? "smooth" : "auto" });
+}
+
+/** 程序化滚动的这段时间里不跟随（平滑滚动比一帧长，400ms 是卡片联动、800ms 是跳代）。 */
+function holdScrollFollow(guard: { current: number }, ms: number) {
+  guard.current = performance.now() + ms;
 }
 
 /** 滚动跟随时用：中心离容器中线最近的那一条。 */
@@ -102,6 +110,8 @@ export function AlifeTimeline({ lang }: TimelineProps) {
   const pendingScroll = useRef<{ from: "list" | "wall"; smooth: boolean } | null>(null);
   const listRefs = useRef<Record<string, HTMLLIElement | null>>({});
   const cardRefs = useRef<Record<string, HTMLLIElement | null>>({});
+  /** 年代分组的外层节点：年份导航按它把左列滚到那一代的开头。 */
+  const decadeRefs = useRef<Record<string, HTMLElement | null>>({});
   const listPaneRef = useRef<HTMLDivElement | null>(null);
   const wallPaneRef = useRef<HTMLUListElement | null>(null);
   const scrollFrame = useRef(0);
@@ -158,6 +168,14 @@ export function AlifeTimeline({ lang }: TimelineProps) {
     return [...byDecade.entries()];
   }, [items]);
 
+  /** 年份导航高亮哪一代：跟当前条目（悬停 / 滚动中线）走，没有当前条目时落在最早一代。 */
+  const activeDecade = useMemo(() => {
+    const current = activeId
+      ? items.find((entry) => entry.id === activeId)
+      : undefined;
+    return current ? alifeDecade(current.year) : (groups[0]?.[0] ?? null);
+  }, [activeId, groups, items]);
+
   // 联动滚动要等渲染完：展开/收起会改左列高度，先滚会滚偏。
   useEffect(() => {
     const pending = pendingScroll.current;
@@ -179,7 +197,7 @@ export function AlifeTimeline({ lang }: TimelineProps) {
     // 指针底下的卡片换掉，反而把悬停态抢走（再触发一轮联动）。
     const row = listRefs.current[activeId];
     if (listPaneRef.current && row) {
-      scrollGuard.current = performance.now() + 400;
+      holdScrollFollow(scrollGuard, 400);
       scrollPaneToShow(listPaneRef.current, row, "nearest", pending.smooth);
     }
   }, [activeId]);
@@ -220,6 +238,27 @@ export function AlifeTimeline({ lang }: TimelineProps) {
     setClosedIds((current) => current.filter((value) => value !== id));
   }
 
+  /**
+   * 点年份导航：左列滚到那一代的开头，右列跟着把这一代第一条的卡片居中。
+   * 跳得远时平滑滚动会超过 400ms，这段里的滚动跟随（scrollGuard）得放长一点，
+   * 否则动画途中「中线附近那一条」会先抢一次高亮。
+   */
+  function goToDecade(decade: string, firstId: string | undefined) {
+    const pane = listPaneRef.current;
+    const section = decadeRefs.current[decade];
+
+    if (!pane || !section) {
+      return;
+    }
+
+    holdScrollFollow(scrollGuard, 800);
+    scrollPaneToShow(pane, section, "start", true);
+
+    if (firstId) {
+      activate(firstId, "list", true);
+    }
+  }
+
   /** 滚左列时右列跟着走：中线附近那一条成为当前条目。 */
   function handleListScroll() {
     if (scrollFrame.current) {
@@ -228,7 +267,13 @@ export function AlifeTimeline({ lang }: TimelineProps) {
     scrollFrame.current = requestAnimationFrame(() => {
       scrollFrame.current = 0;
       const pane = listPaneRef.current;
-      if (!pane || performance.now() < scrollGuard.current) {
+      if (!pane) {
+        return;
+      }
+      if (performance.now() < scrollGuard.current) {
+        // 程序化滚动还没停：守卫顺延，等它停下来再跟——半路上跟着走会把
+        // 指针底下的那条换掉，反而把悬停态抢走。
+        holdScrollFollow(scrollGuard, 150);
         return;
       }
       const next = nearestToPaneCenter(pane, listRefs.current);
@@ -310,38 +355,61 @@ export function AlifeTimeline({ lang }: TimelineProps) {
               </span>
             </header>
 
-            <div
-              className="alife-timeline-body"
-              ref={listPaneRef}
-              onScroll={handleListScroll}
-            >
-              {groups.map(([decade, group]) => (
-                <section className="alife-decade" key={decade}>
-                  <h2 className="alife-decade-label">
+            <div className="alife-timeline-split">
+              <nav className="alife-year-rail" aria-label={copy.decadeNav}>
+                {groups.map(([decade, group]) => (
+                  <button
+                    type="button"
+                    key={decade}
+                    className={decade === activeDecade ? "is-active" : undefined}
+                    aria-current={decade === activeDecade ? "true" : undefined}
+                    onClick={() => goToDecade(decade, group[0]?.id)}
+                  >
                     <span>{decade}</span>
-                  </h2>
-                  <ol className="alife-entry-list">
-                    {group.map((item) => (
-                      <AlifeEntry
-                        key={item.id}
-                        item={item}
-                        lang={lang}
-                        open={isOpen(item.id)}
-                        active={activeId === item.id}
-                        onActivate={() => activate(item.id, "list", false)}
-                        onExpand={() => expandByHover(item.id, "list")}
-                        onCollapseHover={() =>
-                          setExpandId((current) => (current === item.id ? null : current))
-                        }
-                        onToggle={() => toggleEntry(item.id)}
-                        registerRef={(node) => {
-                          listRefs.current[item.id] = node;
-                        }}
-                      />
-                    ))}
-                  </ol>
-                </section>
-              ))}
+                    <small>{group.length}</small>
+                  </button>
+                ))}
+              </nav>
+
+              <div
+                className="alife-timeline-body"
+                ref={listPaneRef}
+                onScroll={handleListScroll}
+              >
+                {groups.map(([decade, group]) => (
+                  <section
+                    className="alife-decade"
+                    key={decade}
+                    ref={(node) => {
+                      decadeRefs.current[decade] = node;
+                    }}
+                  >
+                    <h2 className="alife-decade-label">
+                      <span>{decade}</span>
+                    </h2>
+                    <ol className="alife-entry-list">
+                      {group.map((item) => (
+                        <AlifeEntry
+                          key={item.id}
+                          item={item}
+                          lang={lang}
+                          open={isOpen(item.id)}
+                          active={activeId === item.id}
+                          onActivate={() => activate(item.id, "list", false)}
+                          onExpand={() => expandByHover(item.id, "list")}
+                          onCollapseHover={() =>
+                            setExpandId((current) => (current === item.id ? null : current))
+                          }
+                          onToggle={() => toggleEntry(item.id)}
+                          registerRef={(node) => {
+                            listRefs.current[item.id] = node;
+                          }}
+                        />
+                      ))}
+                    </ol>
+                  </section>
+                ))}
+              </div>
             </div>
           </div>
 

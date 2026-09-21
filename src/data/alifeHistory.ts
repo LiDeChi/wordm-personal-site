@@ -116,6 +116,7 @@ export const ALIFE_COPY: Record<
     /* —— 两列（时间轴 + 画廊）—— */
     timelineLabel: string;
     timelineHint: string;
+    decadeNav: string;
     galleryLabel: string;
     galleryHint: string;
     teamLabel: string;
@@ -150,6 +151,7 @@ export const ALIFE_COPY: Record<
     retry: "重试",
     timelineLabel: "时间轴",
     timelineHint: "滚动浏览 · 点开看详情",
+    decadeNav: "年代导航",
     galleryLabel: "画廊",
     galleryHint: "滚动浏览 · 悬停同步",
     teamLabel: "团队 / 机构",
@@ -184,6 +186,7 @@ export const ALIFE_COPY: Record<
     retry: "Retry",
     timelineLabel: "Timeline",
     timelineHint: "Scroll · click to expand",
+    decadeNav: "Decade navigation",
     galleryLabel: "Gallery",
     galleryHint: "Scroll · hover to sync",
     teamLabel: "Team / institution",

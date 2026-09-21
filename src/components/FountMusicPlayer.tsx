@@ -955,34 +955,38 @@ export function FountMusicPlayer({ lang }: FountMusicPlayerProps) {
         <SpeakerIcon muted={snapshot.muted} />
       </button>
 
-      <div
-        className={`fount-music-copy${marqueeDuration ? " is-marquee" : ""}`}
-        aria-live="polite"
-        title={displayLabel || undefined}
-        ref={copyRef}
-      >
-        <span
-          className="fount-music-track"
-          style={
-            marqueeDuration
-              ? ({
-                  "--fount-music-marquee-duration": `${marqueeDuration}s`,
-                } as CSSProperties)
-              : undefined
-          }
+      <div className="fount-music-name">
+        <div
+          className={`fount-music-copy${marqueeDuration ? " is-marquee" : ""}`}
+          aria-live="polite"
+          ref={copyRef}
         >
-          <strong
-            className="fount-music-title"
-            ref={titleRef}
-            title={displayLabel || undefined}
+          <span
+            className="fount-music-track"
+            style={
+              marqueeDuration
+                ? ({
+                    "--fount-music-marquee-duration": `${marqueeDuration}s`,
+                  } as CSSProperties)
+                : undefined
+            }
           >
-            {displayLabel}
-          </strong>
-          {marqueeDuration ? (
-            <strong className="fount-music-title" aria-hidden="true">
+            <strong className="fount-music-title" ref={titleRef}>
               {displayLabel}
             </strong>
-          ) : null}
+            {marqueeDuration ? (
+              <strong className="fount-music-title" aria-hidden="true">
+                {displayLabel}
+              </strong>
+            ) : null}
+          </span>
+        </div>
+
+        {/* 竖栏放不下一整行歌名：指针停在这块名字上时，把完整标题浮在左边。
+            原生 title 不在这里用——名字是走马灯，悬停的节点一直在动，浏览器
+            的工具提示经常等不到就换了目标；这块壳是静止的，悬停态稳定。 */}
+        <span className="fount-music-tip" aria-hidden="true">
+          {displayLabel}
         </span>
       </div>
     </aside>
