@@ -5,6 +5,7 @@ import { LoginPage, type AccountTier } from "./components/LoginPage";
 import { AdminPage } from "./components/AdminPage";
 import { FountHomePage } from "./components/FountHomePage";
 import { FocusPage } from "./components/FocusPage";
+import { PersonalProjectsPage } from "./components/PersonalProjectsPage";
 import type { SiteTab } from "./lib/site-shell";
 import { OneAgentProductPage } from "./components/OneAgentProductPage";
 import { ProjectDetailModal } from "./components/ProjectDetailModal";
@@ -112,16 +113,6 @@ import type { PortfolioProject, ProjectsSnapshot } from "./types";
 type RootView = "focus" | "projects" | "blog" | "login" | "about";
 type UnlockStorageMode = "remote" | "local" | "loading" | "idle";
 type ThemeMode = "day" | "night";
-type HomeProject = {
-  key: string;
-  unlockSlug?: string;
-  name: string;
-  href: string;
-  previewUrl: string;
-  coverUrl: string;
-  coverAlt: Record<Lang, string>;
-  summary: Record<Lang, string>;
-};
 const BLOG_INITIAL_RENDER_COUNT = 18;
 const BLOG_RENDER_BATCH_SIZE = 18;
 const THEME_STORAGE_KEY = "wordm-theme-mode-v1";
@@ -135,87 +126,7 @@ const PortfolioShowcase = lazy(() =>
 );
 const GOOGLE_OAUTH_PENDING_KEY = "wordm-google-oauth-pending-v1";
 const GOOGLE_OAUTH_PENDING_GRACE_MS = 1500;
-const SYSTEM_SITE_URL = "https://system.wordm.us";
 
-const HOME_PROJECTS: HomeProject[] = [
-  {
-    key: "flipook",
-    name: "Flipook",
-    href: "https://flipook.wordm.us",
-    previewUrl: "flipook.wordm.us",
-    coverUrl: "/home/flipook-reader.png",
-    coverAlt: {
-      zh: "Flipook 3D 阅读器封面",
-      en: "Flipook 3D reader cover",
-    },
-    summary: {
-      zh: "把一本书变成可以进入、回看和继续生长的空间化阅读世界。",
-      en: "Turns a book into a spatial reading world you can enter, revisit, and keep growing.",
-    },
-  },
-  {
-    key: "arc3",
-    name: "ARC3",
-    href: "https://arc3.wordm.us",
-    previewUrl: "arc3.wordm.us",
-    coverUrl: "/home/arc3-cockpit.svg",
-    coverAlt: {
-      zh: "ARC3 cockpit 网格封面",
-      en: "ARC3 cockpit grid cover",
-    },
-    summary: {
-      zh: "围绕 ARC-AGI-3 的世界模型 agent、想象 rollout 和自调训练 cockpit。",
-      en: "A world-model agent cockpit for ARC-AGI-3, imagined rollouts, and self-tuning training.",
-    },
-  },
-  {
-    key: "forge",
-    name: "Forge",
-    href: "https://agent.wordm.us",
-    previewUrl: "agent.wordm.us",
-    coverUrl: "/home/forge-orchard.png",
-    coverAlt: {
-      zh: "Forge 粘土风 agent 工作台封面",
-      en: "Forge clay-style agent workspace cover",
-    },
-    summary: {
-      zh: "把项目、资源、分支、审核和 agent 实时活动放进同一个可观察工作台。",
-      en: "Keeps projects, resources, branches, review, and live agent activity inside one observable workspace.",
-    },
-  },
-  {
-    key: "agent-core",
-    unlockSlug: "agent-core",
-    name: "Wordm System",
-    href: SYSTEM_SITE_URL,
-    previewUrl: "system.wordm.us",
-    coverUrl: "/home/wordm-system-architecture.jpg",
-    coverAlt: {
-      zh: "Wordm System 架构与开源 Core 封面",
-      en: "Wordm System architecture and open Core cover",
-    },
-    summary: {
-      zh: "系统架构、Core / WCP / Apps 的关系，以及开源 Core 源码入口。",
-      en: "The architecture map for Core, WCP, Apps, and the open Core source entry.",
-    },
-  },
-  {
-    key: "town",
-    unlockSlug: "town",
-    name: "Town Agents",
-    href: "/?view=about&show=town&project=town",
-    previewUrl: "wordm.us/town-agents",
-    coverUrl: "/home/town-agents.svg",
-    coverAlt: {
-      zh: "Town Agents 程序化城镇封面",
-      en: "Town Agents procedural town cover",
-    },
-    summary: {
-      zh: "先给 Godot 城镇项目留入口位，后续接上可运行的居民、任务、关系和 debug 体验。",
-      en: "A reserved slot for the Godot town project, ready for the resident, task, relationship, and debug experience.",
-    },
-  },
-];
 
 function mergeProjectLists(
   baseProjects: PortfolioProject[],
@@ -538,12 +449,12 @@ const APP_COPY = {
     themeToDayAria: "切换到日间模式",
     aboutTitle: "关于我",
     aboutIntro:
-      "做产品、写代码，也写关于人工生命与机器心智的东西；所有项目都收在「个人项目」的完整清单里。",
+      "做产品、写代码，也写关于人工生命与机器心智的东西；上线过的作品和正在跑的实验都收在「个人项目」里。",
     aboutArchiveTitle: "项目归档",
-    projectsArchiveMeta: "完整清单",
-    projectsArchiveTitle: "全部个人项目",
+    projectsArchiveMeta: "当前展示",
+    projectsArchiveTitle: "本次展示的项目",
     projectsArchiveIntro:
-      "这里是从项目中心同步过来的完整清单，包含所有在做和已完成的项目；点开任意一张卡片看详情、命令与访问方式。",
+      "这些是链接里点名的工作区项目（?show= 子集或分享范围）；默认的「个人项目」页只铺本人作品与实验。",
     projectsArchiveCount: (count: number) => `共 ${count} 个项目`,
     aboutEntryText: "关于我",
     portfolioTitle: "作品集",
@@ -556,17 +467,6 @@ const APP_COPY = {
     blogNextLabel: "下一篇",
     blogEndOfList: "已经到最后一篇博客。",
     blogLoadMore: "继续加载博客",
-    homeProjectsMeta: "Featured Projects",
-    homeProjectsTitle: "进入 wordm.us 生态",
-    homeProjectsIntro:
-      "这里汇总目前公开可进入的产品与实验：System 说明底座，Agent 承接个人工作台，Flipook、ARC3 和 Town Agents 保留各自的使用现场。",
-    systemCoverDomain: "system.wordm.us",
-    systemCoverTitle: "System",
-    systemCoverSubtitle: "架构图、Core / WCP / Apps 关系，以及开源 Core 源码入口都在这里。",
-    systemCoverCta: "进入 System",
-    homeProjectsCta: "进入产品页",
-    homeProjectsPreview: "预览页面",
-    homeProjectsPreviewOpen: "打开",
     systemHeroTitle: "wordm.us 的公开入口",
     systemHeroIntro:
       "这里集中呈现 Jian Yongjie 正在构建的产品、写作和 Agent 系统。愿景是让工具拥有可沉淀的经验；定位是公开的项目地图与进展记录；近况会通过产品入口、博客和 System 说明持续更新。",
@@ -730,12 +630,12 @@ const APP_COPY = {
     themeToDayAria: "Switch to day mode",
     aboutTitle: "About",
     aboutIntro:
-      "I build products, write code, and write about artificial life and machine minds. Every project lives in the full index on the Projects page.",
+      "I build products, write code, and write about artificial life and machine minds. Shipped work and running experiments both live on the Projects page.",
     aboutArchiveTitle: "Project archive",
-    projectsArchiveMeta: "Full index",
-    projectsArchiveTitle: "All projects",
+    projectsArchiveMeta: "Current selection",
+    projectsArchiveTitle: "Projects named in this link",
     projectsArchiveIntro:
-      "The complete list synced from the project center, covering everything in progress and shipped. Open any card for details, commands, and access.",
+      "These are the workspace projects this link names (?show= subset or share scope). The default Projects page only lists my own work and experiments.",
     projectsArchiveCount: (count: number) => `${count} projects`,
     aboutEntryText: "About",
     portfolioTitle: "Portfolio Gallery",
@@ -749,18 +649,6 @@ const APP_COPY = {
     blogNextLabel: "Next",
     blogEndOfList: "You are at the last blog post.",
     blogLoadMore: "Load more posts",
-    homeProjectsMeta: "Featured Projects",
-    homeProjectsTitle: "Enter the wordm.us ecosystem",
-    homeProjectsIntro:
-      "This gathers the public product and experiment entries available now: System explains the base layer, Agent holds the personal workspace, while Flipook, ARC3, and Town Agents keep their own fields.",
-    systemCoverDomain: "system.wordm.us",
-    systemCoverTitle: "System",
-    systemCoverSubtitle:
-      "Architecture, Core / WCP / Apps, and the open Core source live here.",
-    systemCoverCta: "Enter System",
-    homeProjectsCta: "Open product page",
-    homeProjectsPreview: "Page preview",
-    homeProjectsPreviewOpen: "Open",
     systemHeroTitle: "The public entrance to wordm.us",
     systemHeroIntro:
       "This site presents the products, writing, and agent system Jian Yongjie is building. The vision is to let tools retain useful experience; the positioning is a public project map and progress record; current updates arrive through product entries, the blog, and System notes.",
@@ -1242,7 +1130,6 @@ function App() {
   );
   // Preview iframes are hover-only in the design, so they are mounted on
   // demand instead of loading five external sites on every page view.
-  const [homePreviewKey, setHomePreviewKey] = useState<string | null>(null);
   const [shareToken] = useState<string | null>(initialShareToken);
   const [shareAccess, setShareAccess] = useState<ShareAccess | null>(null);
   const [shareResolveStatus, setShareResolveStatus] =
@@ -2739,13 +2626,18 @@ function App() {
     return chooseProjects(projects, fallbackSlugs);
   }, [projects, selectedSlugs]);
 
+  /**
+   * 「个人项目」默认只铺本人作品与实验（`PersonalProjectsPage`）。
+   * 工作区全量目录只在链接点名了项目时出现：`?show=` 子集或分享链接。
+   */
+  const showsProjectCatalog = hasExplicitShowSelection || Boolean(shareToken);
+
   const visibleProjects = useMemo(() => {
     if (shareToken && shareAccess?.scope.allowAllProjects) {
       return projects;
     }
 
-    // 「个人项目」页默认是完整清单；只有 URL 明确给了 ?show= 子集才按选择收窄。
-    // 「关于」页继续只铺精选，避免和项目页重复。
+    // 目录页（?show= 子集 / 分享）用工作区清单；「关于」页继续只铺精选。
     const baseProjects =
       rootView === "projects" && !hasExplicitShowSelection
         ? projects
@@ -3750,128 +3642,9 @@ function App() {
       >
         {rootView === "focus" ? <FocusPage lang={lang} /> : null}
 
-        {rootView === "projects" ? (
-          <section
-            className="fount-body-section"
-            aria-labelledby="home-projects-title"
-          >
-            <div className="home-projects-hero">
-              <a
-                className="system-cover-portal"
-                href={withSiteParams(SYSTEM_SITE_URL, { lang })}
-                target="_blank"
-                rel="noreferrer"
-                aria-label={copy.systemCoverCta}
-              >
-                <span className="system-cover-bg" aria-hidden="true" />
-                <span
-                  className="system-cover-current system-cover-current-a"
-                  aria-hidden="true"
-                />
-                <span
-                  className="system-cover-current system-cover-current-b"
-                  aria-hidden="true"
-                />
-                <span className="system-cover-gate" aria-hidden="true" />
-                <span className="system-cover-grid" aria-hidden="true" />
-                <span className="system-cover-orbit" aria-hidden="true" />
-                <span className="system-cover-copy">
-                  <span className="system-cover-domain">
-                    {copy.systemCoverDomain}
-                  </span>
-                  <h1 id="home-projects-title" className="system-cover-title">
-                    {copy.systemCoverTitle}
-                  </h1>
-                  <span className="system-cover-subtitle">
-                    {copy.systemCoverSubtitle}
-                  </span>
-                  <span className="system-cover-cta">
-                    {copy.systemCoverCta}
-                    <span aria-hidden="true">→</span>
-                  </span>
-                </span>
-              </a>
+        {rootView === "projects" ? <PersonalProjectsPage lang={lang} /> : null}
 
-              <div className="home-projects-grid">
-                {HOME_PROJECTS.map((project, index) => {
-                  const projectHref = withSiteParams(project.href, { lang });
-                  const opensInNewTab = project.href === SYSTEM_SITE_URL;
-
-                  return (
-                    <article
-                      key={project.key}
-                      className={`home-project-card home-project-card-${project.key}`}
-                    >
-                      <div
-                        className="home-project-cover"
-                        role="group"
-                        aria-label={`${copy.homeProjectsPreview}: ${project.name}`}
-                        onMouseEnter={() => setHomePreviewKey(project.key)}
-                        onMouseLeave={() =>
-                          setHomePreviewKey((current) =>
-                            current === project.key ? null : current,
-                          )
-                        }
-                        onFocusCapture={() => setHomePreviewKey(project.key)}
-                        onBlurCapture={() =>
-                          setHomePreviewKey((current) =>
-                            current === project.key ? null : current,
-                          )
-                        }
-                      >
-                        <img
-                          src={project.coverUrl}
-                          alt={project.coverAlt[lang]}
-                          loading={index === 0 ? "eager" : "lazy"}
-                          decoding="async"
-                        />
-                        <div className="home-project-preview" aria-hidden="true">
-                          <span className="home-project-preview-chrome">
-                            <span className="home-project-preview-dots">
-                              <span />
-                              <span />
-                              <span />
-                            </span>
-                            <span className="home-project-preview-url">
-                              {project.previewUrl}
-                            </span>
-                          </span>
-                          {homePreviewKey === project.key ? (
-                            <iframe
-                              className="home-project-preview-frame"
-                              title={`${project.name} ${copy.homeProjectsPreview}`}
-                              src={projectHref}
-                              loading="lazy"
-                              sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
-                              referrerPolicy="no-referrer-when-downgrade"
-                            />
-                          ) : null}
-                        </div>
-                      </div>
-                      <div className="home-project-card-body">
-                        <h2>{project.name}</h2>
-                        <p>{project.summary[lang]}</p>
-                        <div className="home-project-actions">
-                          <a
-                            className="home-project-cta"
-                            href={projectHref}
-                            target={opensInNewTab ? "_blank" : undefined}
-                            rel={opensInNewTab ? "noreferrer" : undefined}
-                          >
-                            {copy.homeProjectsCta}
-                            <span aria-hidden="true">→</span>
-                          </a>
-                        </div>
-                      </div>
-                    </article>
-                  );
-                })}
-              </div>
-            </div>
-          </section>
-        ) : null}
-
-        {rootView === "projects" ? (
+        {rootView === "projects" && showsProjectCatalog ? (
           <section
             className="fount-body-section projects-archive-section"
             aria-labelledby="projects-archive-title"

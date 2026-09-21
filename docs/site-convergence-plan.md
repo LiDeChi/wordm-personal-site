@@ -362,3 +362,52 @@ export function FocusAreaPage({
 - 窄屏 480px：无溢出（`docOverflow = false`，行内 `scrollWidth` 无溢出）；夜间主题回归检查：深色底 + 淡网格仍在，行与卡片可读；
 - 顶栏三条目（关注方向 / 个人项目 / 博客）、社交栏与音乐栏 `overlap = false`；
 - `tsc -b`、`eslint .`、`npm run build` 均通过。
+
+## 16. 个人项目改回「本人清单」：作品 + 人工生命的实验（2026-09-21）
+
+用户反馈：「个人项目那里不对啊，不是把整个 GitHub 项目都放上去，而是之前有一批什么摩天轮、博物馆等等的，以及最近的人工生命的实验放上去」
+
+### 之前做错的地方
+§15 把「个人项目缺了很多项目」理解成「补全工作区目录」，于是 `/projects` 铺了项目中心同步过来的 103 项
+（`src/data/projects.snapshot.json`）——里面大多是工作区里的脚手架、实验仓库和第三方目录。
+用户要的是**自己收口过的两批东西**：上线过的作品，以及最近在跑的人工生命实验。
+
+### 现在的结构
+`/projects` 默认两段：
+
+1. **产品与作品**（`src/data/fountFields.ts` 的 `FOUNT_FIELDS`，13 个）：Flipook / MuseumBook（博物馆）/
+   RingBook（摩天轮）/ 诗经长卷 / Bookplain / 万卷 WanJuan / ARC3 / Forge / Foundry Agent Studio /
+   Town Agents / World Models V3 / Genie / 人工生命史。
+   卡片沿用首页那张 `.home-project-card`（封面 + 悬停 iframe 预览 + 「打开」）；`system.wordm.us` 门户仍留在页首。
+2. **人工生命的实验**（`mindFamily.ts` 的 `FAMILY_PROJECTS` 里 `tags` 含 `alife`、且没在作品里出现过的 5 个）：
+   machine-being / 东周（ZuoZhuan World）/ multiscale / 规则即身体（Rules-as-Body）/ control itself。
+   卡片给形态、状态（在跑 / 原型 / 想法）、标签（人工生命 / 机器心智 / 智能体社会）与仓库链接；
+   没有公开仓库的标「本机运行」，不把本地命令印到公开页面上。
+
+「人工生命的实验」这一组的口径取自 `mind-society` 登记表已有的 `alife` 标签，不是另编一份名单——
+成员变化时改登记表即可；`town`（Town Agents）已经在作品里出现过，实验区不重复铺。
+
+### 工作区目录的去向
+`?show=` 子集与分享链接（`share` token）**照旧**铺工作区项目卡片（`ProjectEntry` + 共用详情弹窗），
+只是这一段现在只在链接点名项目时出现（`showsProjectCatalog`），默认页不再出现。
+那一段的标题从「全部个人项目 / 完整清单」改成「本次展示的项目」，导语说明它来自链接的点名范围。
+
+### 代码
+- 新增 `src/components/PersonalProjectsPage.tsx` + `.css`：作品网格（复用 `.home-projects-*` 那套样式）+ 实验网格；
+- `App.tsx` 删掉 `HOME_PROJECTS` / `HomeProject` / `homePreviewKey` / `SYSTEM_SITE_URL` 与作品网格 JSX，
+  改挂 `<PersonalProjectsPage lang={lang} />`（净 -227 行）；`systemCover*` 文案移进组件自己的 `COPY`；
+- `APP_COPY` 里 6 个 `homeProjects*` 键（已是死文案）一并删除；`aboutIntro` 从「所有项目都收在完整清单里」
+  改成「上线过的作品和正在跑的实验都收在『个人项目』里」；
+- 两处 h2 的 `§N` 计数器显式关掉（`#personal-experiments-title`、`#projects-archive-title`）：全站 `h2::before`
+  是博客版式，不关会渲染成「§1 人工生命的实验」。
+
+### 验收（44014 实跑，1440×950 / 390×844）
+- `/projects?lang=zh`：13 张作品卡 + 5 张实验卡，工作区目录 0 张（`.gallery-card = 0`），
+  页内唯一 h2 的 `::before` 计算值为 `none`；
+- 版式：门户 1040px 通栏在上，作品网格 3 列（328px/卡）；实验区左边缘 x=200 与作品区对齐，
+  卡片 247px、四列，与导语块（736px）同起点；
+- `?show=town`：目录段照旧出现（1 张卡，slug `town` 来自 `MANUAL_PROJECTS`），标题「本次展示的项目」，`::before` 为 `none`；
+- `/?view=about`：仍是精选画廊（6 张卡），无实验区；
+- 夜间主题：实验卡 `rgb(255 255 255 / 4%)` 底 + `rgb(239 224 198 / 12%)` 边框，标题 `#f4eee2`，「在跑」`#f1d783`；
+- 390px：`docOverflow = false`（scrollWidth 390），实验卡单列 326px；
+- `tsc -b`、`eslint .`、`npm run build` 均通过。

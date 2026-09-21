@@ -1,0 +1,241 @@
+/* 「个人项目」页：作品 + 人工生命的实验。工作区里其余仓库不上这一页。 */
+
+/* 全站 h2 带 §N 计数器（博客那套版式）。这一页是卡片式版式，显式关掉，
+   否则标题会渲染成「§1 人工生命的实验」。 */
+.personal-experiments-section h2::before,
+.personal-experiments-section h3::before {
+    content: none;
+    counter-increment: none;
+}
+
+.personal-work-section {
+    display: grid;
+    gap: clamp(16px, 2.2vh, 24px);
+}
+
+.personal-projects-lead {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 8px 14px;
+}
+
+.personal-projects-lead .paper-meta {
+    margin: 0;
+}
+
+.personal-projects-count {
+    color: var(--warm-muted);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+}
+
+.personal-work-kind {
+    display: block;
+    margin-top: 4px;
+    color: var(--warm-muted);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    line-height: 1.5;
+}
+
+.personal-experiments-section {
+    display: grid;
+    gap: clamp(18px, 2.4vh, 26px);
+    margin-top: clamp(30px, 5vh, 56px);
+    padding-top: clamp(24px, 3.4vh, 36px);
+    border-top: 1px solid var(--warm-line);
+}
+
+.personal-experiments-copy {
+    display: grid;
+    gap: 8px;
+    max-width: 46rem;
+}
+
+.personal-experiments-copy h2 {
+    margin: 0;
+    color: var(--warm-ink);
+    font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+    line-height: 1.24;
+}
+
+.personal-experiments-copy p {
+    margin: 0;
+    color: var(--warm-muted);
+    font-size: 0.92rem;
+    line-height: 1.72;
+}
+
+.personal-experiments-copy p.personal-projects-source {
+    color: var(--warm-faint);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+}
+
+.personal-experiment-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: clamp(12px, 1.6vw, 18px);
+}
+
+.personal-experiment-card {
+    display: grid;
+    grid-template-rows: auto auto 1fr auto;
+    gap: 10px;
+    min-width: 0;
+    padding: clamp(14px, 1.5vw, 18px);
+    border: 1px solid var(--warm-line);
+    border-radius: 8px;
+    background: var(--warm-paper-soft);
+}
+
+.personal-experiment-card:hover,
+.personal-experiment-card:focus-within {
+    border-color: var(--warm-line-strong);
+    background: var(--warm-paper-strong);
+}
+
+.personal-experiment-head {
+    display: grid;
+    gap: 3px;
+}
+
+.personal-experiment-head h3 {
+    margin: 0;
+    color: var(--warm-ink);
+    font-size: 1.05rem;
+    line-height: 1.3;
+}
+
+.personal-experiment-head h3::before {
+    content: none;
+}
+
+.personal-experiment-latin {
+    color: var(--warm-faint);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+}
+
+.personal-experiment-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    color: var(--warm-muted);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+}
+
+.personal-experiment-status {
+    padding: 1px 8px;
+    border: 1px solid var(--warm-line-strong);
+    border-radius: 999px;
+    color: var(--warm-ink);
+}
+
+.personal-experiment-status[data-status="active"] {
+    border-color: rgb(49 79 67 / 42%);
+    color: var(--warm-green);
+}
+
+.personal-experiment-status[data-status="draft"] {
+    border-color: rgb(185 95 56 / 36%);
+    color: var(--warm-accent);
+}
+
+.personal-experiment-summary {
+    margin: 0;
+    color: var(--warm-muted);
+    font-size: 0.9rem;
+    line-height: 1.68;
+}
+
+.personal-experiment-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0;
+}
+
+.personal-experiment-tag {
+    padding: 1px 8px;
+    border: 1px solid var(--warm-line);
+    border-radius: 999px;
+    color: var(--warm-muted);
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+}
+
+.personal-experiment-actions {
+    display: flex;
+    align-items: center;
+}
+
+.personal-experiment-actions a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border-bottom: 1px solid rgb(185 95 56 / 46%);
+    color: var(--warm-ink);
+    font-size: 0.82rem;
+    text-decoration: none;
+}
+
+.personal-experiment-actions a:hover,
+.personal-experiment-actions a:focus-visible {
+    color: var(--warm-accent);
+}
+
+.personal-experiment-local {
+    color: var(--warm-faint);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+}
+
+:root[data-theme="night"] .personal-experiments-section {
+    border-top-color: rgb(239 224 198 / 12%);
+}
+
+:root[data-theme="night"] .personal-experiments-copy h2,
+:root[data-theme="night"] .personal-experiment-head h3,
+:root[data-theme="night"] .personal-experiment-actions a {
+    color: #f4eee2;
+}
+
+:root[data-theme="night"] .personal-experiments-copy p,
+:root[data-theme="night"] .personal-experiment-summary,
+:root[data-theme="night"] .personal-experiment-meta,
+:root[data-theme="night"] .personal-experiment-tag,
+:root[data-theme="night"] .personal-work-kind,
+:root[data-theme="night"] .personal-projects-count {
+    color: rgb(244 238 226 / 66%);
+}
+
+:root[data-theme="night"] .personal-experiment-latin,
+:root[data-theme="night"] .personal-experiment-local {
+    color: rgb(244 238 226 / 52%);
+}
+
+:root[data-theme="night"] .personal-experiment-card {
+    border-color: rgb(239 224 198 / 12%);
+    background: rgb(255 255 255 / 4%);
+}
+
+:root[data-theme="night"] .personal-experiment-card:hover,
+:root[data-theme="night"] .personal-experiment-card:focus-within {
+    border-color: rgb(241 215 131 / 22%);
+    background: rgb(255 255 255 / 7%);
+}
+
+:root[data-theme="night"] .personal-experiment-status {
+    border-color: rgb(239 224 198 / 20%);
+    color: #f4eee2;
+}
+
+:root[data-theme="night"] .personal-experiment-status[data-status="active"] {
+    border-color: rgb(241 215 131 / 28%);
+    color: #f1d783;
+}

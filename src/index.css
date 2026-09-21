@@ -23926,13 +23926,20 @@ body:has(.fount-page-focused[data-page="docs"]) {
     fill: var(--warm-accent-soft, #f2c37b);
 }
 
-/* 个人项目页：完整清单。卡片沿用「关于」页的项目画廊，这里只管分段与计数。 */
+/* 个人项目页：链接点名的工作区项目（?show= 子集 / 分享范围）。
+   卡片沿用「关于」页的项目画廊，这里只管分段与计数。 */
 .projects-archive-section {
     display: grid;
     gap: 26px;
     margin-top: clamp(26px, 4vh, 46px);
     padding-top: clamp(24px, 3.4vh, 36px);
     border-top: 1px solid var(--warm-line);
+}
+
+/* 全站 h2 的 §N 计数器是博客版式，这里关掉。 */
+.projects-archive-section h2::before {
+    content: none;
+    counter-increment: none;
 }
 
 .projects-archive-count {

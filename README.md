@@ -7,15 +7,16 @@
 
 | 栏目 | 路径 | 说明 |
 | --- | --- | --- |
-| 关注方向 | `/` | 一条**时间轴**（带一段话）+ 一屏**项目卡片**：人工生命与机器心智混在一起，只用标签区分 |
-| 个人项目 | `/projects` | 个人作品展示与子域名入口，不提供批量下载 |
+| 关注方向 | `/` | 一屏**人工生命史**：左列时间轴（41 条，1948 → 2026）、右列卡片墙，两列读同一份 `public/alife/data/catalog.json` |
+| 个人项目 | `/projects` | 本人作品（`src/data/fountFields.ts`，13 个已上线入口）+ 人工生命的实验（`mind-society` 里带 `alife` 标签的成员） |
 | 博客 | 外链 `lidechi.github.io` | 站内博客页暂时关闭 |
 | 关于 / 账号 | `/?view=about`、`/?view=login` | 关于页保留；账号入口暂时隐藏，直接 URL 仍可访问 |
 
 - 关注方向是一页到底，**没有文章页、没有方向切换、没有筛选**。旧的 `?area=` / `?mode=` 参数会被清掉。
-- 关注方向的项目来自 `mind-society` 项目族登记表（`/Users/lidechi/Documents/Github/mind-society`），双语整理在 `src/data/mindFamily.ts`。
-  修改成员时请同步登记表，避免两边漂移。
-- 关注方向里的 16 张卡片是 `mind-society` 登记表中的研究 / 原型项目；`/projects` 主要承载产品入口，二者不是同一组项目。
+- 关注方向读 `public/alife/data/catalog.json`（展览自己的数据），站内与 `/alife/` 展览永远同一份事实，不二次维护。
+- 个人项目的作品清单与 `src/components/PersonalProjectsPage.tsx` 一一对应；实验部分取自 `mind-society` 项目族登记表
+  （`/Users/lidechi/Documents/Github/mind-society`，双语整理在 `src/data/mindFamily.ts`，只取 `tags` 含 `alife` 的成员）。
+  工作区里的其余仓库不进这一页；只有链接点名了项目（`?show=` 子集或分享链接）时才铺工作区目录。
 - 账号系统暂时不在主站导航和页脚展示；保留直接登录 URL，避免锁死后台管理与受限访问链路。
 - 旧路由（`/pricing`、`/partners`、`/updates`、`/fields`、`/docs`、`?view=portfolio`）全部 301/回落到上面的新路径，见 [`public/_redirects`](public/_redirects)。
 - 页面右侧固定竖栏把社交入口与音乐播放器放在同一条列里（原先是两个各自定位的固定元素，会在矮屏上互相压住）。
