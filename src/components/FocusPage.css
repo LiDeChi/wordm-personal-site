@@ -17,11 +17,15 @@
     clamp(56px, 9vh, 96px);
 }
 
-.focus-hero {
-  margin-bottom: clamp(24px, 4vh, 40px);
+/* 全站 h2 带 §N 计数器（博客那套版式）。关注方向页是卡片式版式，
+   这里显式关掉，否则每个年代标签都会变成「§1 1940s」。 */
+.focus-page h1::before,
+.focus-page h2::before,
+.focus-page h3::before {
+  content: none;
+  counter-increment: none;
 }
 
-.focus-eyebrow,
 .focus-label {
   display: block;
   color: var(--focus-faint);
@@ -30,153 +34,6 @@
   font-weight: 500;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-}
-
-.focus-hero h1 {
-  margin: 10px 0 0;
-  color: var(--focus-ink);
-  font-family: var(--font-main);
-  font-size: clamp(1.9rem, 4.6vw, 3.2rem);
-  font-weight: 700;
-  line-height: 1.06;
-  letter-spacing: -0.01em;
-}
-
-/* ------------------------------------------------------------------ */
-/* 时间轴                                                              */
-/* ------------------------------------------------------------------ */
-
-.focus-timeline {
-  margin-bottom: clamp(40px, 7vh, 76px);
-}
-
-.focus-timeline-head {
-  max-width: 74ch;
-  margin-bottom: clamp(22px, 3.5vh, 34px);
-  padding: clamp(16px, 2.4vw, 26px);
-  border: 1px solid var(--focus-line);
-  border-radius: 18px;
-  background: var(--focus-card);
-}
-
-.focus-thesis {
-  margin: 10px 0 0;
-  color: var(--focus-ink);
-  font-size: clamp(0.98rem, 1.5vw, 1.16rem);
-  line-height: 1.78;
-}
-
-.focus-timeline-list {
-  display: grid;
-  gap: 0;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.focus-stage {
-  display: grid;
-  grid-template-columns: 62px minmax(0, 1fr);
-  gap: clamp(14px, 2.4vw, 30px);
-  align-items: start;
-  padding-bottom: clamp(22px, 3.6vh, 36px);
-}
-
-.focus-stage-rail {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-self: stretch;
-}
-
-/* The line runs through every node except the last one. */
-.focus-stage:not(:last-child) .focus-stage-rail::after {
-  content: "";
-  position: absolute;
-  top: 30px;
-  bottom: calc(-1 * clamp(22px, 3.6vh, 36px));
-  left: 50%;
-  width: 1px;
-  transform: translateX(-50%);
-  background: var(--focus-line);
-}
-
-.focus-stage-rail span {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  place-items: center;
-  width: 30px;
-  height: 30px;
-  border: 1px solid var(--focus-line);
-  border-radius: 999px;
-  background: var(--focus-card);
-  color: var(--focus-green);
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  font-weight: 600;
-}
-
-.focus-stage-body {
-  min-width: 0;
-  padding-top: 2px;
-}
-
-.focus-stage-label {
-  margin: 0;
-  color: var(--focus-accent);
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.1em;
-}
-
-.focus-stage-body h2 {
-  margin: 6px 0 0;
-  color: var(--focus-ink);
-  font-family: var(--font-main);
-  font-size: clamp(1.15rem, 2vw, 1.5rem);
-  font-weight: 650;
-  line-height: 1.28;
-}
-
-.focus-stage-text {
-  margin: 10px 0 0;
-  max-width: 72ch;
-  color: var(--focus-muted);
-  font-size: 0.94rem;
-  line-height: 1.82;
-}
-
-.focus-stage-members {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin: 14px 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.focus-stage-members a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 26px;
-  padding: 0 10px;
-  border: 1px solid var(--focus-line);
-  border-radius: 999px;
-  background: rgb(255 255 255 / 52%);
-  color: var(--focus-muted);
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  text-decoration: none;
-  transition:
-    border-color 160ms ease,
-    color 160ms ease;
-}
-
-.focus-stage-members a:hover,
-.focus-stage-members a:focus-visible {
-  border-color: var(--focus-green);
-  color: var(--focus-green);
 }
 
 /* ------------------------------------------------------------------ */
@@ -202,6 +59,14 @@
   color: var(--focus-muted);
   font-size: 0.94rem;
   line-height: 1.78;
+}
+
+.focus-projects-head .focus-thesis {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--focus-line);
+  color: var(--focus-ink);
+  font-size: 0.94rem;
 }
 
 .focus-card-grid {
@@ -325,35 +190,11 @@
   color: var(--focus-faint);
   font-family: var(--font-mono);
   font-size: 0.68rem;
+  line-height: 1.7;
 }
 
-.focus-card-foot {
-  display: grid;
-  gap: 8px;
-  margin-top: 2px;
-  padding-top: 10px;
-  border-top: 1px solid var(--focus-line);
-}
-
-.focus-card-entry {
-  display: grid;
-  gap: 4px;
-  margin: 0;
-}
-
-.focus-card-entry span {
-  color: var(--focus-faint);
-  font-family: var(--font-mono);
-  font-size: 0.64rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-.focus-card-entry code {
+.focus-card-inline-entry code {
   color: var(--focus-muted);
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  line-height: 1.6;
   overflow-wrap: anywhere;
 }
 
@@ -470,22 +311,6 @@
     padding-top: 10px;
   }
 
-  .focus-stage {
-    grid-template-columns: 40px minmax(0, 1fr);
-    gap: 12px;
-  }
-
-  .focus-stage-rail span {
-    width: 26px;
-    height: 26px;
-    font-size: 0.62rem;
-  }
-
-  .focus-stage:not(:last-child) .focus-stage-rail::after {
-    top: 26px;
-  }
-
-  .focus-stage-text,
   .focus-projects-head p {
     font-size: 0.88rem;
     line-height: 1.76;

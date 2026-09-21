@@ -1,0 +1,596 @@
+/* 人工生命史时间轴 —— 渐进式披露：默认一行摘要，展开才渲染详情。 */
+
+.alife-timeline {
+  --at-ink: var(--warm-ink, #211a14);
+  --at-muted: var(--warm-muted, rgb(33 26 20 / 62%));
+  --at-faint: var(--warm-faint, rgb(33 26 20 / 36%));
+  --at-line: var(--warm-line, rgb(56 42 30 / 13%));
+  --at-accent: var(--warm-accent, #b95f38);
+  --at-green: var(--warm-green, #314f43);
+  --at-paper: rgb(255 253 247 / 74%);
+
+  margin-bottom: clamp(40px, 7vh, 72px);
+}
+
+.alife-eyebrow {
+  margin: 0;
+  color: var(--at-faint);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.alife-timeline-head h1 {
+  margin: 10px 0 0;
+  color: var(--at-ink);
+  font-family: var(--font-main);
+  font-size: clamp(1.9rem, 4.6vw, 3.2rem);
+  font-weight: 700;
+  line-height: 1.06;
+  letter-spacing: -0.01em;
+}
+
+.alife-intro {
+  max-width: 76ch;
+  margin: clamp(16px, 2.4vh, 24px) 0 0;
+  padding: clamp(16px, 2.4vw, 24px);
+  border: 1px solid var(--at-line);
+  border-radius: 18px;
+  background: var(--at-paper);
+}
+
+.alife-intro p {
+  margin: 0;
+  color: var(--at-ink);
+  font-size: clamp(0.96rem, 1.5vw, 1.12rem);
+  line-height: 1.8;
+}
+
+.alife-intro .alife-note {
+  margin-top: 10px;
+  color: var(--at-faint);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  line-height: 1.6;
+}
+
+.alife-timeline-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.alife-count {
+  color: var(--at-faint);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+}
+
+.alife-tool-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.alife-tool-actions button,
+.alife-tool-actions a,
+.alife-status button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 30px;
+  padding: 0 13px;
+  border: 1px solid var(--at-line);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 55%);
+  color: var(--at-green);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    border-color 160ms ease,
+    color 160ms ease;
+}
+
+.alife-tool-actions button:hover,
+.alife-tool-actions a:hover,
+.alife-status button:hover {
+  border-color: var(--at-green);
+}
+
+.alife-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0 0;
+  color: var(--at-muted);
+  font-size: 0.86rem;
+}
+
+.alife-status.is-failed {
+  color: var(--at-accent);
+}
+
+/* ------------------------------------------------------------------ */
+/* 年代分组 + 时间轴骨架                                                */
+/* ------------------------------------------------------------------ */
+
+.alife-timeline-body {
+  margin-top: clamp(22px, 3.4vh, 34px);
+}
+
+.alife-decade + .alife-decade {
+  margin-top: clamp(18px, 2.6vh, 28px);
+}
+
+.alife-decade-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 10px;
+  color: var(--at-faint);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+}
+
+.alife-decade-label::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--at-line);
+}
+
+.alife-entry-list {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.alife-entry {
+  position: relative;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  transition:
+    border-color 160ms ease,
+    background 160ms ease;
+}
+
+.alife-entry.is-open {
+  border-color: var(--at-line);
+  background: var(--at-paper);
+}
+
+.alife-entry.is-own-work {
+  border-left: 2px solid var(--at-accent);
+}
+
+.alife-entry-heading {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+/* 默认形态：一行摘要。41 条可以快速扫完。 */
+.alife-entry-summary {
+  display: grid;
+  grid-template-columns: 74px minmax(0, 1fr) auto 18px;
+  gap: clamp(10px, 1.6vw, 18px);
+  align-items: center;
+  width: 100%;
+  min-height: 46px;
+  padding: 6px 10px;
+  border: 0;
+  border-radius: 14px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background 150ms ease;
+}
+
+.alife-entry-summary:hover {
+  background: rgb(49 79 67 / 5%);
+}
+
+.alife-entry-summary:focus-visible {
+  outline: 2px solid var(--at-green);
+  outline-offset: 2px;
+}
+
+.alife-entry-year {
+  color: var(--at-green);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.alife-entry-year small {
+  display: block;
+  color: var(--at-faint);
+  font-size: 0.6rem;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.alife-entry-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+
+.alife-entry-title strong {
+  color: var(--at-ink);
+  font-family: var(--font-main);
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.alife-entry-title small {
+  color: var(--at-faint);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+}
+
+.alife-entry-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: flex-end;
+}
+
+.alife-school {
+  padding: 2px 7px;
+  border-radius: 5px;
+  background: rgb(49 79 67 / 7%);
+  color: var(--at-muted);
+  font-family: var(--font-mono);
+  font-size: 0.63rem;
+  white-space: nowrap;
+}
+
+.alife-badge {
+  padding: 2px 7px;
+  border-radius: 5px;
+  font-family: var(--font-mono);
+  font-size: 0.63rem;
+  white-space: nowrap;
+}
+
+.alife-badge.is-own {
+  background: rgb(185 95 56 / 14%);
+  color: var(--at-accent);
+}
+
+.alife-badge.is-demo {
+  background: rgb(95 141 168 / 16%);
+  color: #3f637a;
+}
+
+.alife-entry-chevron {
+  position: relative;
+  width: 16px;
+  height: 16px;
+}
+
+.alife-entry-chevron::before,
+.alife-entry-chevron::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: var(--at-faint);
+  transition: transform 180ms ease;
+}
+
+.alife-entry-chevron::before {
+  width: 10px;
+  height: 1px;
+  transform: translate(-50%, -50%);
+}
+
+.alife-entry-chevron::after {
+  width: 1px;
+  height: 10px;
+  transform: translate(-50%, -50%);
+}
+
+.alife-entry.is-open .alife-entry-chevron::after {
+  transform: translate(-50%, -50%) scaleY(0);
+}
+
+/* ------------------------------------------------------------------ */
+/* 展开后的详情                                                        */
+/* ------------------------------------------------------------------ */
+
+.alife-entry-panel {
+  display: grid;
+  gap: 14px;
+  padding: 4px 12px 18px clamp(12px, 2vw, 22px);
+  max-width: 84ch;
+}
+
+.alife-summary {
+  margin: 0;
+  color: var(--at-ink);
+  font-size: 0.92rem;
+  line-height: 1.76;
+}
+
+.alife-facts {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 4px 14px;
+  margin: 0;
+}
+
+.alife-facts dt {
+  color: var(--at-faint);
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.9;
+}
+
+.alife-facts dd {
+  margin: 0;
+  color: var(--at-muted);
+  font-size: 0.82rem;
+  line-height: 1.9;
+}
+
+.alife-field-label {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--at-faint);
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.alife-field p {
+  margin: 0;
+  color: var(--at-muted);
+  font-size: 0.86rem;
+  line-height: 1.8;
+}
+
+.alife-people ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.alife-people li {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  min-width: 0;
+}
+
+.alife-people img,
+.alife-person-monogram {
+  width: 48px;
+  height: 60px;
+  flex: 0 0 auto;
+  border-radius: 10px;
+  object-fit: cover;
+  background: rgb(49 79 67 / 8%);
+}
+
+.alife-person-monogram {
+  display: grid;
+  place-items: center;
+  color: var(--at-green);
+  font-family: var(--font-main);
+  font-size: 1.1rem;
+}
+
+.alife-person-copy {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.alife-person-copy a,
+.alife-person-copy strong {
+  color: var(--at-ink);
+  font-size: 0.86rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.alife-person-copy a:hover {
+  color: var(--at-green);
+}
+
+.alife-person-copy small {
+  color: var(--at-faint);
+  font-size: 0.68rem;
+  line-height: 1.5;
+}
+
+.alife-demo {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 12px;
+  border: 1px solid var(--at-line);
+  border-radius: 12px;
+  background: rgb(95 141 168 / 6%);
+}
+
+.alife-demo img {
+  width: 160px;
+  height: 90px;
+  flex: 0 0 auto;
+  border-radius: 8px;
+  object-fit: cover;
+  background: rgb(33 26 20 / 6%);
+}
+
+.alife-demo p {
+  margin: 0 0 8px;
+  color: var(--at-muted);
+  font-size: 0.82rem;
+  line-height: 1.7;
+}
+
+.alife-demo a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 28px;
+  padding: 0 12px;
+  border: 1px solid var(--at-line);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 62%);
+  color: var(--at-green);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-decoration: none;
+}
+
+.alife-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.alife-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--at-muted);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-decoration: none;
+  border-bottom: 1px solid var(--at-line);
+}
+
+.alife-links a:hover {
+  color: var(--at-green);
+  border-bottom-color: var(--at-green);
+}
+
+/* ------------------------------------------------------------------ */
+/* 夜间主题                                                            */
+/* ------------------------------------------------------------------ */
+
+:root[data-theme="night"] .alife-timeline {
+  --at-ink: #fff1d9;
+  --at-muted: rgb(255 241 217 / 68%);
+  --at-faint: rgb(255 241 217 / 42%);
+  --at-line: rgb(255 241 217 / 12%);
+  --at-paper: rgb(31 25 19 / 74%);
+}
+
+:root[data-theme="night"] .alife-tool-actions button,
+:root[data-theme="night"] .alife-tool-actions a,
+:root[data-theme="night"] .alife-status button,
+:root[data-theme="night"] .alife-demo a {
+  background: rgb(255 241 217 / 6%);
+  color: rgb(242 195 123 / 88%);
+}
+
+:root[data-theme="night"] .alife-entry-summary:hover {
+  background: rgb(242 195 123 / 7%);
+}
+
+:root[data-theme="night"] .alife-entry-year {
+  color: rgb(242 195 123 / 88%);
+}
+
+:root[data-theme="night"] .alife-school {
+  background: rgb(255 241 217 / 8%);
+}
+
+:root[data-theme="night"] .alife-badge.is-own {
+  background: rgb(242 195 123 / 16%);
+  color: rgb(242 195 123 / 92%);
+}
+
+:root[data-theme="night"] .alife-badge.is-demo {
+  background: rgb(95 141 168 / 26%);
+  color: rgb(160 199 224 / 92%);
+}
+
+:root[data-theme="night"] .alife-people img,
+:root[data-theme="night"] .alife-person-monogram {
+  background: rgb(255 241 217 / 8%);
+}
+
+:root[data-theme="night"] .alife-person-monogram {
+  color: rgb(242 195 123 / 88%);
+}
+
+:root[data-theme="night"] .alife-demo {
+  background: rgb(95 141 168 / 12%);
+}
+
+/* ------------------------------------------------------------------ */
+/* 窄屏                                                                */
+/* ------------------------------------------------------------------ */
+
+@media (max-width: 900px) {
+  .alife-entry-summary {
+    /* 摘要折成两行：年份 + 标题一行，标签一行。 */
+    grid-template-columns: 62px minmax(0, 1fr) 18px;
+    grid-template-areas:
+      "year title chevron"
+      "meta meta meta";
+    gap: 4px 10px;
+    padding: 8px 10px;
+    min-height: 0;
+  }
+
+  .alife-entry-year {
+    grid-area: year;
+  }
+
+  .alife-entry-title {
+    grid-area: title;
+  }
+
+  .alife-entry-meta {
+    grid-area: meta;
+    justify-content: flex-start;
+    margin-top: 4px;
+  }
+
+  .alife-entry-chevron {
+    grid-area: chevron;
+  }
+
+  .alife-demo {
+    flex-direction: column;
+  }
+
+  .alife-demo img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+  }
+}
