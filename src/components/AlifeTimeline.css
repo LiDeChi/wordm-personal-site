@@ -8,6 +8,8 @@
   --at-accent: var(--warm-accent, #b95f38);
   --at-green: var(--warm-green, #314f43);
   --at-paper: rgb(255 253 247 / 74%);
+  /* 两列滚动区的高度：整块（含标题、导语、工具行）落在一屏内。 */
+  --at-pane: min(74svh, 720px);
 
   margin-bottom: clamp(40px, 7vh, 72px);
 }
@@ -118,11 +120,51 @@
 }
 
 /* ------------------------------------------------------------------ */
+/* 两列骨架：左时间轴 / 右画廊                                         */
+/* ------------------------------------------------------------------ */
+
+.alife-timeline-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.06fr) minmax(0, 0.94fr);
+  gap: clamp(18px, 2.6vw, 34px);
+  align-items: start;
+  margin-top: clamp(22px, 3.4vh, 34px);
+}
+
+.alife-column {
+  min-width: 0;
+}
+
+.alife-column-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 28px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--at-line);
+}
+
+.alife-column-hint {
+  color: var(--at-faint);
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.04em;
+}
+
+/* ------------------------------------------------------------------ */
 /* 年代分组 + 时间轴骨架                                                */
 /* ------------------------------------------------------------------ */
 
+/* 两列各自内部滚动，整块落在一屏里；联动滚动不会带着整页跳。 */
 .alife-timeline-body {
-  margin-top: clamp(22px, 3.4vh, 34px);
+  margin-top: 8px;
+  padding-right: 8px;
+  max-height: var(--at-pane);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-color: var(--at-line) transparent;
+  scrollbar-width: thin;
 }
 
 .alife-decade + .alife-decade {
@@ -168,6 +210,12 @@
 .alife-entry.is-open {
   border-color: var(--at-line);
   background: var(--at-paper);
+}
+
+/* 指针停在右列哪张卡片上，左列对应的那条就亮起来（在 .is-open 之后，盖住面板底色）。 */
+.alife-entry.is-active {
+  border-color: rgb(49 79 67 / 32%);
+  background: rgb(49 79 67 / 6%);
 }
 
 .alife-entry.is-own-work {
@@ -369,6 +417,15 @@
 /* ------------------------------------------------------------------ */
 
 @media (max-width: 900px) {
+  .alife-timeline {
+    /* 窄屏两列改上下，各留一段自己的滚动区。 */
+    --at-pane: min(58svh, 520px);
+  }
+
+  .alife-timeline-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .alife-entry-summary {
     /* 摘要折成两行：年份 + 标题一行，标签一行。 */
     grid-template-columns: 62px minmax(0, 1fr) 18px;

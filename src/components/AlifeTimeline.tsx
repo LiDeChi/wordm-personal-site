@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { Lang } from "../i18n/lang";
 import {
   ALIFE_COPY,
@@ -11,16 +11,18 @@ import {
   type AlifeCatalog,
   type AlifeItem,
 } from "../data/alifeHistory";
+import { AlifeCardWall } from "./AlifeCardWall";
 import { AlifeItemDetail } from "./AlifeItemDetail";
 import "./AlifeTimeline.css";
 
 /**
- * 人工生命史时间轴（41 条，1948 → 2026）。
+ * 人工生命史：左边时间轴，右边展览的卡片墙（41 条，1948 → 2026）。
  *
- * 渐进式披露：
- *  1. 默认只给一行摘要 —— 年份 / 名称 / 流派 / 是否有 demo，41 条可以快速扫完；
- *  2. 展开单条才渲染详情面板（DOM 也是按需的），面板本体复用 AlifeItemDetail；
- *  3. 「展开全部 / 收起全部」给需要通读的人，不默认打开。
+ * 两列读同一份 catalog，联动是双向的：
+ *  - 停/点左列条目 → 右列把对应卡片带进视野；
+ *  - 停/点右列卡片 → 左列滚到那条，并把它的说明牌展开（卡片详情就在左列列表里）。
+ *
+ * 左列的展开面板复用 AlifeItemDetail；「展开全部 / 收起全部」保留给要通读的人。
  */
 
 type TimelineProps = {
@@ -40,6 +42,14 @@ export function AlifeTimeline({ lang }: TimelineProps) {
   const [state, setState] = useState<State>({ status: "loading" });
   const [attempt, setAttempt] = useState(0);
   const [openIds, setOpenIds] = useState<string[]>([]);
+  /** 指针 / 焦点停在谁身上：两列的选中高亮和联动滚动都看它。 */
+  const [activeId, setActiveId] = useState<string | null>(null);
+  /** 从右列卡片选中的条目：它的说明牌在左列展开。 */
+  const [cardId, setCardId] = useState<string | null>(null);
+  /** 谁发起的选中：滚动要对准另一列。 */
+  const pendingScroll = useRef<"list" | "wall" | null>(null);
+  const listRefs = useRef<Record<string, HTMLLIElement | null>>({});
+  const cardRefs = useRef<Record<string, HTMLLIElement | null>>({});
 
   useEffect(() => {
     const controller = new AbortController();
@@ -82,12 +92,42 @@ export function AlifeTimeline({ lang }: TimelineProps) {
     return [...byDecade.entries()];
   }, [items]);
 
-  function toggle(id: string) {
+  // 同步滚动要等渲染完：展开/收起会改左列高度，先滚会滚偏。
+  useEffect(() => {
+    const from = pendingScroll.current;
+    if (!from || !activeId) {
+      return;
+    }
+    pendingScroll.current = null;
+    const target =
+      from === "list" ? cardRefs.current[activeId] : listRefs.current[activeId];
+    target?.scrollIntoView({ block: "nearest", inline: "nearest" });
+  }, [activeId]);
+
+  function activateFromList(id: string) {
+    if (id === activeId) {
+      return;
+    }
+    pendingScroll.current = "list";
+    setActiveId(id);
+  }
+
+  function activateFromWall(id: string) {
+    setCardId(id);
+    if (id === activeId) {
+      return;
+    }
+    pendingScroll.current = "wall";
+    setActiveId(id);
+  }
+
+  function toggleEntry(id: string) {
     setOpenIds((current) =>
       current.includes(id)
         ? current.filter((value) => value !== id)
         : [...current, id],
     );
+    activateFromList(id);
   }
 
   return (
@@ -97,8 +137,8 @@ export function AlifeTimeline({ lang }: TimelineProps) {
       id="alife-timeline"
     >
       <header className="alife-timeline-head">
+        {/* 站点标题已经移到顶栏，这里只留栏目标签。 */}
         <p className="alife-eyebrow">{copy.eyebrow}</p>
-        <h1>{copy.title}</h1>
 
         <div className="alife-intro">
           {/* 时间轴上的一段话：这条方向到底在追什么。 */}
@@ -119,7 +159,10 @@ export function AlifeTimeline({ lang }: TimelineProps) {
               <button
                 type="button"
                 aria-pressed={allOpen}
-                onClick={() => setOpenIds(allOpen ? [] : items.map((item) => item.id))}
+                onClick={() => {
+                  setOpenIds(allOpen ? [] : items.map((item) => item.id));
+                  setCardId(null);
+                }}
               >
                 {allOpen ? copy.collapseAll : copy.expandAll}
               </button>
@@ -154,25 +197,50 @@ export function AlifeTimeline({ lang }: TimelineProps) {
       ) : null}
 
       {state.status === "ready" ? (
-        <div className="alife-timeline-body">
-          {groups.map(([decade, group]) => (
-            <section className="alife-decade" key={decade}>
-              <h2 className="alife-decade-label">
-                <span>{decade}</span>
-              </h2>
-              <ol className="alife-entry-list">
-                {group.map((item) => (
-                  <AlifeEntry
-                    key={item.id}
-                    item={item}
-                    lang={lang}
-                    open={openIds.includes(item.id)}
-                    onToggle={() => toggle(item.id)}
-                  />
-                ))}
-              </ol>
-            </section>
-          ))}
+        <div className="alife-timeline-layout">
+          <div className="alife-column alife-column-timeline">
+            <header className="alife-column-head">
+              <span className="alife-field-label">{copy.timelineLabel}</span>
+              <span className="alife-column-hint" aria-hidden="true">
+                {copy.timelineHint}
+              </span>
+            </header>
+
+            <div className="alife-timeline-body">
+              {groups.map(([decade, group]) => (
+                <section className="alife-decade" key={decade}>
+                  <h2 className="alife-decade-label">
+                    <span>{decade}</span>
+                  </h2>
+                  <ol className="alife-entry-list">
+                    {group.map((item) => (
+                      <AlifeEntry
+                        key={item.id}
+                        item={item}
+                        lang={lang}
+                        open={openIds.includes(item.id) || cardId === item.id}
+                        active={activeId === item.id}
+                        onActivate={() => activateFromList(item.id)}
+                        onToggle={() => toggleEntry(item.id)}
+                        registerRef={(node) => {
+                          listRefs.current[item.id] = node;
+                        }}
+                      />
+                    ))}
+                  </ol>
+                </section>
+              ))}
+            </div>
+          </div>
+
+          <AlifeCardWall
+            lang={lang}
+            items={items}
+            schoolsOrder={state.catalog.schoolsOrder}
+            activeId={activeId}
+            cardRefs={cardRefs}
+            onActivate={activateFromWall}
+          />
         </div>
       ) : null}
     </section>
@@ -183,12 +251,18 @@ function AlifeEntry({
   item,
   lang,
   open,
+  active,
+  onActivate,
   onToggle,
+  registerRef,
 }: {
   item: AlifeItem;
   lang: Lang;
   open: boolean;
+  active: boolean;
+  onActivate: () => void;
   onToggle: () => void;
+  registerRef: (node: HTMLLIElement | null) => void;
 }) {
   const copy = ALIFE_COPY[lang];
   const ownWork = isOwnWork(item);
@@ -198,7 +272,10 @@ function AlifeEntry({
 
   return (
     <li
-      className={`alife-entry${open ? " is-open" : ""}${ownWork ? " is-own-work" : ""}`}
+      className={`alife-entry${open ? " is-open" : ""}${active ? " is-active" : ""}${
+        ownWork ? " is-own-work" : ""
+      }`}
+      ref={registerRef}
     >
       <h3 className="alife-entry-heading" id={headingId}>
         <button
@@ -206,6 +283,8 @@ function AlifeEntry({
           className="alife-entry-summary"
           aria-expanded={open}
           aria-controls={panelId}
+          onMouseEnter={onActivate}
+          onFocus={onActivate}
           onClick={onToggle}
         >
           <span className="alife-entry-year">

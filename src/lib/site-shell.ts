@@ -16,8 +16,8 @@ export const SITE_TABS: SiteTab[] = ["focus", "projects", "blog"];
 export const CONTACT_EMAIL = "parsonjian@gmail.com";
 
 type SiteShellCopy = {
+  /** 顶栏 / 页脚显示的站点标题（衬线体），不再是域名。 */
   brand: string;
-  brandAria: string;
   nav: Record<SiteTab, string>;
   navAria: string;
   langAria: string;
@@ -34,8 +34,7 @@ type SiteShellCopy = {
 
 export const SHELL_COPY: Record<Lang, SiteShellCopy> = {
   zh: {
-    brand: "wordm.us",
-    brandAria: "wordm.us 首页",
+    brand: "人工的生命、心智、交互",
     nav: { focus: "关注方向", projects: "个人项目", blog: "博客" },
     navAria: "主导航",
     langAria: "语言",
@@ -50,8 +49,7 @@ export const SHELL_COPY: Record<Lang, SiteShellCopy> = {
     footerContact: "一起聊聊",
   },
   en: {
-    brand: "wordm.us",
-    brandAria: "wordm.us home",
+    brand: "Artificial Life, Minds & Interaction",
     nav: { focus: "Focus", projects: "Projects", blog: "Writing" },
     navAria: "Main navigation",
     langAria: "Language",

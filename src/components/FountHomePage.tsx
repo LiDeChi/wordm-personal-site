@@ -9,6 +9,7 @@ import {
   type SiteTab,
 } from "../lib/site-shell";
 import { FountMusicPlayer } from "./FountMusicPlayer";
+import { SiteBrand } from "./SiteBrand";
 import { SocialLinks } from "./SocialLinks";
 import { ThemeModeIcon } from "./ThemeModeIcon";
 
@@ -63,7 +64,6 @@ export function FountHomePage({
   bodyClassName,
 }: FountHomePageProps) {
   const copy = SHELL_COPY[lang];
-  const brandMark = lang === "zh" ? "简" : "J";
 
   return (
     <main
@@ -72,17 +72,12 @@ export function FountHomePage({
       data-page={activeTab}
     >
       <header className="fount-header">
-        <a
-          className="fount-logo"
-          href={siteTabHref("focus", lang)}
-          aria-label={copy.brandAria}
-          onClick={(event) => handleTabClick(event, "focus", onTabChange)}
-        >
-          <span className="fount-logo-mark" aria-hidden="true">
-            <span>{brandMark}</span>
-          </span>
-          {copy.brand}
-        </a>
+        <h1 className="site-brand-h1">
+          <SiteBrand
+            lang={lang}
+            onNavigate={(event) => handleTabClick(event, "focus", onTabChange)}
+          />
+        </h1>
 
         <div className="fount-header-actions">
           <nav className="fount-site-nav" aria-label={copy.navAria}>
@@ -149,17 +144,10 @@ export function FountHomePage({
 
       <footer className="fount-footer" id="fount-footer">
         <div className="fount-footer-brand">
-          <a
-            className="fount-logo"
-            href={siteTabHref("focus", lang)}
-            aria-label={copy.brandAria}
-            onClick={(event) => handleTabClick(event, "focus", onTabChange)}
-          >
-            <span className="fount-logo-mark" aria-hidden="true">
-              <span>{brandMark}</span>
-            </span>
-            {copy.brand}
-          </a>
+          <SiteBrand
+            lang={lang}
+            onNavigate={(event) => handleTabClick(event, "focus", onTabChange)}
+          />
           <p>{copy.footerNote}</p>
         </div>
         <nav className="fount-footer-grid" aria-label={copy.footerNavAria}>

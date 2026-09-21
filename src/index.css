@@ -729,13 +729,6 @@ p {
     position: relative;
 }
 
-.fount-logo-mark span {
-    width: 12px;
-    height: 12px;
-    background: #0a0907;
-    border-radius: 2px;
-}
-
 .fount-app-icon {
     display: block;
     flex: 0 0 auto;
@@ -9578,12 +9571,6 @@ body::before {
         var(--warm-paper-strong);
     color: var(--warm-green);
     box-shadow: inset 0 0 0 1px rgb(255 255 255 / 76%);
-}
-
-.fount-logo-mark span {
-    border: 1px solid var(--warm-green);
-    border-radius: 3px;
-    background: transparent;
 }
 
 .fount-nav a,
@@ -23780,20 +23767,6 @@ body:has(.fount-page-focused[data-page="docs"]) {
     opacity: 0.55;
 }
 
-.fount-page-focused .fount-logo-mark span {
-    display: grid;
-    place-items: center;
-    width: 100%;
-    height: 100%;
-    border-radius: inherit;
-    background: var(--warm-green);
-    color: #fff9ee;
-    font-family: var(--font-main);
-    font-size: 0.98rem;
-    font-weight: 700;
-    line-height: 1;
-}
-
 /* Body wrapper for every tab. */
 .fount-body {
     position: relative;
@@ -23991,4 +23964,48 @@ body:has(.fount-page-focused[data-page="docs"]) {
     .fount-body {
         padding-top: 0;
     }
+}
+
+/* ------------------------------------------------------------------ */
+/* Site brand：顶栏的站点标题（衬线）+ 滑翔机标记                       */
+/* ------------------------------------------------------------------ */
+
+/* 顶栏的品牌块本身就是页面标题，这里把全局 h1 的版式（含 §N 计数器）清掉。 */
+.site-brand-h1 {
+    margin: 0;
+    font: inherit;
+    font-weight: inherit;
+    letter-spacing: inherit;
+}
+
+.site-brand-h1::before {
+    content: none;
+    counter-increment: none;
+}
+
+.site-brand-title {
+    font-family: var(--font-main);
+    font-size: 1.02rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    line-height: 1.25;
+    white-space: nowrap;
+}
+
+.site-mark {
+    display: block;
+    width: 72%;
+    height: 72%;
+}
+
+.site-mark rect {
+    fill: currentColor;
+}
+
+.site-mark .is-seed {
+    fill: var(--warm-accent, #b95f38);
+}
+
+:root[data-theme="night"] .site-mark .is-seed {
+    fill: var(--warm-accent-soft, #f2c37b);
 }

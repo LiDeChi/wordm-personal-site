@@ -241,54 +241,63 @@ export function FocusAreaPage({
 - 主站 header / footer 暂时不显示账号入口；`/?view=login` 仍保留为直接 URL，避免锁死后台管理和受限访问链路。
 - 音乐轨道名称在超出竖向可视区域时自动滚动，完整名称通过悬停提示提供；播放按钮使用高对比主色样式。
 
-## 12. 关注方向的两列：人工生命史卡片墙（2026-09-21）
+## 12. 关注方向两列：左时间轴 + 右画廊（2026-09-21）
 
-用户反馈：「这部分不是人工生命历史上的项目，而且我要的两列是人工生命史项目的两列，右侧是 https://wordm.us/alife/ 这里面的项目卡片，只不过卡片的详情就在左侧列表里」
+用户反馈两轮：
+1. 「这部分不是人工生命历史上的项目，而且我要的两列是人工生命史项目的两列，右侧是 https://wordm.us/alife/ 这里面的项目卡片，只不过卡片的详情就在左侧列表里」
+2. 截图圈出页面上方的时间轴：「我说的两列是在这里」——两列不在页面下方另开一块，就在时间轴这一块。
 
 ### 之前做错的地方
-§9 把「项目卡片」理解成 `mind-society` 项目族（16 张 Mind / MindOS / mindfile / CodeMind …）——
-那是本人自己的实验清单，不是人工生命史里的条目。用户要的两列是**人工生命史的项目**。
+- §9 把「项目卡片」理解成 `mind-society` 项目族（16 张 Mind / MindOS / mindfile / CodeMind …）——那是本人自己的实验清单，不是人工生命史里的条目；
+- 第一轮修正又把卡片墙放成了时间轴**下面**的独立模块，于是同一份 catalog 在一页里列了两遍。
 
 ### 现在的结构
-关注方向 = 时间轴 + 卡片墙两块，读同一份 `/alife/data/catalog.json`：
+关注方向只有一块，两列读同一份 `/alife/data/catalog.json`：
 
-1. **时间轴**（`AlifeTimeline`，41 条 / 22 流派，年代分组 + 渐进式披露）保持不变。
-2. **卡片墙**（`AlifeGallery`）：
-   - 左列「项目索引」41 行：序号 / 名称 + 英文名 / 年份 / 流派 / 徽标；选中行在下面展开说明牌
-     —— 摘要、介质、团队 / 机构、参考、人物（头像 + 主页）、机制、谱系、边界、demo、链接、展览入口。
-   - 右列「画廊」：展览那套卡片（年份 + 中英文名 + 流派 pill + 可演示角标 + 封面预览图 + 人物小头像）。
-     可跑的 demo 只挂 `/alife/assets/previews/<demo>.png` 静态封面，不在首页起 canvas。
-   - **双向联动**：指针停在卡片上 → 左列换成那张卡片的说明并把该行滚进视野；指针 / 点击索引行 →
-     右列把对应卡片带进视野。两列各自是固定高度的内部滚动区（桌面 `min(74svh, 720px)`），
-     整块落在一屏内，联动时不带着整页跳。
+- **左列「时间轴」**：41 条按年代分组（1948 → 2026），渐进式披露 —— 默认一行摘要，点开才渲染说明牌
+  （摘要、介质、团队 / 机构、参考、人物 + 头像 + 主页、机制、谱系、边界、demo、链接、展览入口）。
+  「展开全部 / 收起全部」保留给要通读的人。
+- **右列「画廊」**：展览那套卡片（年份 + 中英文名 + 流派 pill + 可演示角标 + 预览封面 + 人物小头像）。
+  可跑的 demo 只挂 `/alife/assets/previews/<demo>.png` 静态封面，首页不起 canvas。
+- **双向联动**：停 / 点右列卡片 → 左列滚到那条并展开它的说明牌（卡片详情就在左列列表里）；
+  停 / 点左列条目 → 右列把对应卡片带进视野。
+- 两列各自内部滚动（`--at-pane: min(74svh, 720px)`），整块连标题、导语、工具行一起落在一屏内，
+  联动滚动不会带着整页跳；窄屏（≤900px）两列改为上下堆叠，各留 `min(58svh, 520px)`。
 
 ### 代码
-- 新增 `src/components/AlifeGallery.tsx` + `.css`；
-- 新增 `src/components/AlifeItemDetail.tsx` + `.css`：时间轴展开面板与卡片墙说明牌共用同一份字段渲染
-  （原来只有时间轴一处，第二处再抄一遍必然漂移）；`.alife-summary / .alife-facts / .alife-people /
-  .alife-field / .alife-demo / .alife-links` 的样式随之搬过去，token 由 `--at-*` 改为 `--ad-*`；
-- `FocusPage.tsx` 收成「时间轴 + 卡片墙」两行，`FocusPage.css` 只留页面壳（`.focus-projects*` /
-  `.focus-card*` / `.focus-project-list*` 旧样式删除）；
-- `alifeHistory.ts` 增补卡片墙文案、流派色板 `alifeSchoolColor()`、链接合并 `alifeItemLinks()`。
+- `AlifeTimeline.tsx` = 这一块的壳：加载 catalog、持有 `openIds` / `activeId` / `cardId` 三个状态、做联动滚动；
+- `AlifeCardWall.tsx` + `.css` = 右列（`--at-*` 用回站点 token，卡片样式沿用展览的 gcard 语言）；
+- `AlifeItemDetail.tsx` + `.css` = 左列展开面板与旧时间轴共用的字段渲染，相关 CSS 从 `AlifeTimeline.css` 迁出；
+- `FocusPage.tsx` 只剩 `<AlifeTimeline />`，`FocusPage.css` 只剩页面壳；
+- `alifeHistory.ts` 增补两列文案、流派色板 `alifeSchoolColor()`、链接合并 `alifeItemLinks()`。
 
 ### 数据层的两个坑
-- **`team` 有两种形态**：22 条字符串、19 条数组。原来的 `{item.team}` 把数组成员直接并排渲染（读起来没有分隔），
-  现在统一 join ` · `；
-- **兜底头像被加前缀**：catalog 里 37 位人物的 `photo` 是 `data:` URI 兜底头像，而 `alifeAssetUrl()` 只放行 `http(s)`，
-  于是拼成 `/alife/data:image/svg+xml,…` 全部 404 —— 首页时间轴、新的说明牌，以及展览自己的 tips 面板都在挂破损头像。
-  现在 helper 放行任意 scheme，`public/alife/js/app.js` 的 tips 前缀逻辑同步修掉。卡片上的人物小头像照展览的做法
+- **`team` 有两种形态**：22 条字符串、19 条数组；原来的 `{item.team}` 把数组成员直接并排渲染，现在统一 join ` · `；
+- **兜底头像被加前缀**：37 位人物的 `photo` 是 `data:` URI，而 `alifeAssetUrl()` 只放行 `http(s)`，
+  拼成 `/alife/data:image/svg+xml,…` 全部 404 —— 时间轴、说明牌、以及展览自己的 tips 面板都在挂破损头像。
+  现在 helper 放行任意 scheme，`public/alife/js/app.js` 的 tips 前缀逻辑同步修掉；卡片上的人物小头像照展览的做法
   只挂 `assets/photos/` 里的真实人像。
 
 ### 保留但已下线
-`src/data/mindFamily.ts`（16 个 mind-society 成员 + 六段式阶段文本）没有删除：数据留在仓库，页面由卡片墙取代，
+`src/data/mindFamily.ts`（16 个 mind-society 成员 + 六段式阶段文本）没有删除：数据留在仓库，页面由这两列取代，
 要恢复随时说。
 
-### 验收（44014 实跑）
-- 桌面 1600×1000：模块 1060×962，索引 41 行、画廊 41 卡（2 列 × 296px，卡高 200、封面 96），
-  两列各自内部滚动，页面无横向溢出；
-- 联动实测：悬停第 26 张卡片 → 左列切到「液滴化学机器人（Čejková）」并滚进视野，页面滚动位置不变（3021 → 3021）；
-  点击第 34 行 → 右列滚到「Xenobots」，卡片进入视野；
-- 窄屏 390×844：两列改为上下堆叠，`horizontalOverflow = false`，滚动区收到 523px；
-- 夜间主题、`?lang=en` 均正常；`tsc -b` + `eslint .` + `npm run build` 通过；
-- 截图更新：`screenshots/runtime-home.png`（此前还是 §9 之前的文章版首页）、`screenshots/focus-alife-wall.png`、
-  `screenshots/focus-alife-wall-mobile.png`。
+### 验收（44014 实跑，1600×1000）
+- 两列 533px / 473px，滚动区各 720px（内容 3105 / 4593），整页 1546px 高；
+- 悬停第 28 张卡片 → 左列切到「生命与智能定义（Sinapayen）」、展开说明牌并滚进视野；悬停第 1 条 → 右列滚回
+  「von Neumann 自复制自动机」，页面滚动位置不变；
+- 窄屏 390×844 两列改上下堆叠、无横向溢出；夜间主题、`?lang=en` 正常。
+
+## 13. 顶栏品牌：站点标题 + 滑翔机标记（2026-09-21）
+
+用户：「标题用图中这个字体，以及标题直接放到顶栏，不用显示 wordm.us，另外做一个能代表标题的 icon，取代目前左上角那个『简』的 icon」
+
+- **标题进顶栏**：顶栏（和页脚）不再显示域名，改显示站点标题本身 —— zh「人工的生命、心智、交互」/ en
+  「Artificial Life, Minds & Interaction」，字体用站点的衬线体 `--font-main`（Noto Serif SC → serif）。
+  顶栏的品牌块整体是页面的 `<h1>`（并清掉全局 h1 的 §N 计数器版式），所以关注方向页正文里那份重复的
+  `<h1>` 一并删掉，正文从栏目标签「关注方向」起头。
+- **新标记**：`SiteBrand.tsx` 里的 `SiteLifeMark` —— Conway 滑翔机的五个格子（`viewBox 0 0 24 24`），
+  四格跟文字同色、上面那格用强调色（`--warm-accent`，夜间换 `--warm-accent-soft`），深浅两套主题共用一份 SVG。
+  原来是绿底 + 「简 / J」字符的方块，相关 `.fount-logo-mark span` 三处死样式随之删掉。
+- `SHELL_COPY.brand` 从域名改成标题，`brandAria` 不再需要（链接文字已经是标题）删掉；
+  顶栏和页脚原本各抄了一份 logo 结构，现在共用 `SiteBrand`。

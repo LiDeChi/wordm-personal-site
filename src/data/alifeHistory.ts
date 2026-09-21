@@ -97,7 +97,6 @@ export const ALIFE_COPY: Record<
   Lang,
   {
     eyebrow: string;
-    title: string;
     timelineAria: string;
     counts: (items: number, schools: number) => string;
     expandAll: string;
@@ -120,13 +119,11 @@ export const ALIFE_COPY: Record<
     failed: string;
     retry: string;
     chineseOnly: string;
-    /* —— 卡片墙（项目索引 + 画廊）—— */
-    wallEyebrow: string;
-    wallTitle: string;
-    wallLead: string;
-    wallIndexLabel: string;
-    wallGalleryLabel: string;
-    wallGalleryHint: string;
+    /* —— 两列（时间轴 + 画廊）—— */
+    timelineLabel: string;
+    timelineHint: string;
+    galleryLabel: string;
+    galleryHint: string;
     teamLabel: string;
     mediumLabel: string;
     leadSite: string;
@@ -136,7 +133,6 @@ export const ALIFE_COPY: Record<
 > = {
   zh: {
     eyebrow: "关注方向",
-    title: "人工的生命、心智、交互",
     timelineAria: "人工生命史时间轴",
     counts: (items, schools) => `${items} 个条目 · ${schools} 个流派 · 1948 → 2026`,
     expandAll: "展开全部",
@@ -159,13 +155,10 @@ export const ALIFE_COPY: Record<
     failed: "展览条目读取失败。",
     retry: "重试",
     chineseOnly: "",
-    wallEyebrow: "项目",
-    wallTitle: "四十一件东西，一件一件看",
-    wallLead:
-      "右边是人工生命史展览里的卡片，左边是同一批卡片的说明。指针停在任意一边，另一边就跟着走；年份、流派、人物、生命构建方式、边界，全都来自展览那一份 catalog。",
-    wallIndexLabel: "项目索引",
-    wallGalleryLabel: "画廊",
-    wallGalleryHint: "滚动浏览 · 悬停同步",
+    timelineLabel: "时间轴",
+    timelineHint: "滚动浏览 · 点开看详情",
+    galleryLabel: "画廊",
+    galleryHint: "滚动浏览 · 悬停同步",
     teamLabel: "团队 / 机构",
     mediumLabel: "介质",
     leadSite: "主页",
@@ -174,7 +167,6 @@ export const ALIFE_COPY: Record<
   },
   en: {
     eyebrow: "Focus",
-    title: "Artificial Life, Minds & Interaction",
     timelineAria: "Artificial life history timeline",
     counts: (items, schools) =>
       `${items} entries · ${schools} schools · 1948 → 2026`,
@@ -200,13 +192,10 @@ export const ALIFE_COPY: Record<
     // 展览原文只有中文，英文模式下如实说明，而不是假装有译文。
     chineseOnly:
       "Exhibition text is the museum's Chinese original; names, years, and links are shown as-is.",
-    wallEyebrow: "Projects",
-    wallTitle: "Forty-one things, one at a time",
-    wallLead:
-      "The right column is the card wall from the artificial-life exhibition; the left column carries the same cards' labels. Point at either side and the other follows — year, school, people, construction, limits all come from the exhibition's single catalog.",
-    wallIndexLabel: "Project index",
-    wallGalleryLabel: "Gallery",
-    wallGalleryHint: "Scroll · hover to sync",
+    timelineLabel: "Timeline",
+    timelineHint: "Scroll · click to expand",
+    galleryLabel: "Gallery",
+    galleryHint: "Scroll · hover to sync",
     teamLabel: "Team / institution",
     mediumLabel: "Medium",
     leadSite: "Site",
