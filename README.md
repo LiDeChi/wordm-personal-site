@@ -20,7 +20,8 @@
 - 账号系统暂时不在主站导航和页脚展示；保留直接登录 URL，避免锁死后台管理与受限访问链路。
 - 旧路由（`/pricing`、`/partners`、`/updates`、`/fields`、`/docs`、`?view=portfolio`）全部 301/回落到上面的新路径，见 [`public/_redirects`](public/_redirects)。
 - 页面右侧固定竖栏把社交入口与音乐播放器放在同一条列里（原先是两个各自定位的固定元素，会在矮屏上互相压住）；
-  竖栏放不下的歌名走马灯滚动，指针停在歌名那块就浮出完整标题（自绘提示，不用原生 `title`）。
+  竖栏放不下的歌名走马灯滚动，指针停在歌名那块会弹出**歌曲播放列表**（portal 到 body 的浮层，
+  当前这首高亮，点一行直接切歌）—— 不走原生 `title`，也不放在竖栏内部（竖栏是滚动容器，会裁掉浮层）。
 - 定价页与 Fount / Fields 栏目已下线；项目解锁仍由 `src/lib/project-offers.ts`、`src/lib/pricing-remote.ts`、`src/lib/unlock*.ts` 支撑，未删除。
 
 个人网站包含：

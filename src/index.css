@@ -15219,54 +15219,171 @@ body {
     color: rgb(49 79 67 / 82%);
 }
 
-/* 歌名的悬浮提示：整块名字（静止的壳）是热区，走马灯动的是里面的文字。 */
+/* 歌名那块（静止的壳）是热区，走马灯动的只是里面的文字。 */
 .fount-music-name {
-    position: relative;
     display: flex;
     justify-content: center;
     width: 100%;
 }
 
-.fount-music-tip {
-    position: absolute;
-    top: 50%;
-    right: calc(100% + 12px);
-    z-index: 2;
-    max-width: min(58vw, 340px);
-    padding: 6px 11px;
+/* 播放列表浮层：portal 挂到 body，坐标由名字块的视口位置算出来。
+   不能放在竖栏内部 —— `.fount-rail` 是 overflow: auto 的滚动容器，会把它裁掉。 */
+.fount-music-playlist {
+    position: fixed;
+    z-index: 60;
+    display: grid;
+    gap: 8px;
+    width: max-content;
+    min-width: 208px;
+    max-width: min(70vw, 320px);
+    max-height: min(62svh, 460px);
+    overflow-y: auto;
+    padding: 10px 12px 11px;
     border: 1px solid rgb(43 35 29 / 14%);
-    border-radius: 8px;
-    background: rgb(255 255 255 / 96%);
-    box-shadow: 0 14px 34px rgb(86 58 31 / 12%);
-    color: rgb(43 35 29 / 92%);
+    border-radius: 10px;
+    background: rgb(255 255 255 / 97%);
+    box-shadow: 0 18px 42px rgb(86 58 31 / 16%);
+    color: var(--warm-ink, #211a14);
+    transform: translateY(-50%);
+    animation: fount-music-playlist-in 140ms ease-out;
+}
+
+@keyframes fount-music-playlist-in {
+    from {
+        opacity: 0;
+        transform: translate(6px, -50%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(0, -50%);
+    }
+}
+
+.fount-music-playlist-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 0;
+    color: var(--warm-ink, #211a14);
     font-family: var(--font-mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.02em;
-    white-space: nowrap;
-    opacity: 0;
-    pointer-events: none;
-    transform: translate(6px, -50%);
-    transition:
-        opacity 140ms ease,
-        transform 140ms ease;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
 }
 
-.fount-music-name:hover .fount-music-tip,
-.fount-music-name:focus-within .fount-music-tip {
-    opacity: 1;
-    transform: translate(0, -50%);
+.fount-music-playlist-head small {
+    color: rgb(43 35 29 / 66%);
+    font-size: 0.62rem;
 }
 
-:root[data-theme="night"] .fount-music-tip {
+.fount-music-playlist-list {
+    display: grid;
+    gap: 2px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.fount-music-playlist-list button {
+    display: grid;
+    grid-template-columns: 18px minmax(0, 1fr);
+    align-items: baseline;
+    gap: 9px;
+    width: 100%;
+    padding: 4px 7px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.fount-music-playlist-list button:hover {
+    background: rgb(49 79 67 / 8%);
+}
+
+.fount-music-playlist-list button:focus-visible {
+    outline: 2px solid var(--warm-green, #314f43);
+    outline-offset: 1px;
+}
+
+.fount-music-playlist-mark {
+    color: rgb(43 35 29 / 66%);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+}
+
+.fount-music-playlist-text {
+    display: grid;
+    gap: 1px;
+    min-width: 0;
+}
+
+.fount-music-playlist-text strong {
+    color: var(--warm-ink, #211a14);
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+.fount-music-playlist-text small {
+    color: rgb(43 35 29 / 72%);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+}
+
+/* 当前这首：整行加底色，序号换成播放三角。 */
+.fount-music-playlist-list button.is-current {
+    background: rgb(49 79 67 / 10%);
+}
+
+.fount-music-playlist-list button.is-current .fount-music-playlist-mark,
+.fount-music-playlist-list button.is-current .fount-music-playlist-text strong {
+    color: var(--warm-green, #314f43);
+}
+
+.fount-music-playlist-hint {
+    margin: 0;
+    color: rgb(43 35 29 / 66%);
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+}
+
+:root[data-theme="night"] .fount-music-playlist {
     border-color: rgb(255 241 217 / 14%);
-    background: rgb(31 25 19 / 94%);
-    box-shadow: 0 14px 34px rgb(0 0 0 / 34%);
+    background: rgb(31 25 19 / 96%);
+    box-shadow: 0 18px 42px rgb(0 0 0 / 38%);
+}
+
+:root[data-theme="night"] .fount-music-playlist-head,
+:root[data-theme="night"] .fount-music-playlist-text strong {
     color: rgb(255 241 217 / 92%);
 }
 
+:root[data-theme="night"] .fount-music-playlist-head small,
+:root[data-theme="night"] .fount-music-playlist-text small,
+:root[data-theme="night"] .fount-music-playlist-mark,
+:root[data-theme="night"] .fount-music-playlist-hint {
+    color: rgb(255 241 217 / 62%);
+}
+
+:root[data-theme="night"] .fount-music-playlist-list button:hover {
+    background: rgb(242 195 123 / 10%);
+}
+
+:root[data-theme="night"] .fount-music-playlist-list button.is-current {
+    background: rgb(242 195 123 / 14%);
+}
+
+:root[data-theme="night"] .fount-music-playlist-list button.is-current .fount-music-playlist-mark,
+:root[data-theme="night"] .fount-music-playlist-list button.is-current .fount-music-playlist-text strong {
+    color: #f1d783;
+}
+
 @media (prefers-reduced-motion: reduce) {
-    .fount-music-tip {
-        transition: none;
+    .fount-music-playlist {
+        animation: none;
     }
 }
 
@@ -15335,8 +15452,7 @@ body {
         flex-basis: 38px;
     }
 
-    .fount-music-copy,
-    .fount-music-tip {
+    .fount-music-copy {
         display: none;
     }
 }
@@ -23811,8 +23927,7 @@ body:has(.fount-page-focused[data-page="docs"]) {
 }
 
 @media (max-height: 780px) {
-    .fount-rail .fount-music-copy,
-    .fount-rail .fount-music-tip {
+    .fount-rail .fount-music-copy {
         display: none;
     }
 }
@@ -23926,8 +24041,7 @@ body:has(.fount-page-focused[data-page="docs"]) {
         flex-basis: 36px;
     }
 
-    .fount-rail .fount-music-copy,
-    .fount-rail .fount-music-tip {
+    .fount-rail .fount-music-copy {
         display: none;
     }
 

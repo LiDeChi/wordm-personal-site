@@ -461,3 +461,40 @@ export function FocusAreaPage({
 - 重拍 `screenshots/runtime-home.png`（1291×900）、`focus-timeline-gallery.png`（1043×754）、
   `focus-timeline-gallery-mobile.png`（780×2200）；
 - `tsc -b`、`eslint .`、`npm run build` 通过。
+
+## 18. 歌名悬停改成播放列表浮层（2026-09-21）
+
+用户：「我想要光标悬置在歌名的位置，在旁边弹出tips显示歌曲播放列表」。
+
+### 顺带修正：§17 那个提示其实看不见
+§17 把歌名提示做成 `.fount-music-name` 里的 `position: absolute` 元素 —— 但竖栏
+`.fount-rail` 是 `overflow: auto` 的滚动容器（`overflow-x` 因此也按 `auto` 用），
+浮层伸到竖栏外面就被**裁掉**了：DOM 里有、`getBoundingClientRect()` 也正常，
+`elementFromPoint(` 面板中心 `)` 却返回背后的 `focus-page`。也就是说 §17 的提示从来没显示过。
+
+### 现在的做法
+- 浮层改用 `createPortal(..., document.body)` 挂到 body，`position: fixed` +
+  由名字块自己的视口坐标算出来的 `top` / `right`（12px 间距，垂直居中贴合名字块），
+  `z-index: 60`（高于竖栏的 42）。这样不受竖栏滚动容器裁剪。
+- 打开 / 关闭是 JS 控制的：名字块 `onMouseEnter` 打开、`onMouseLeave` 起 160ms 宽限；
+  浮层自己 `onMouseEnter` 取消宽限 —— 中间那条 12px 空隙指针慢慢走过去也不会闪断。
+  打开期间监听 `resize` 与捕获阶段的 `scroll`（任意滚动容器）重新贴合。
+- 面板内容 = `snapshot.queue`（引擎里的队列，本身就是随机后的顺序，与前后切歌一致）：
+  标题行「歌曲播放列表 · 4 首」，每行 `序号 / ▸ + 曲名 + 艺人`，当前这首整行加底色、
+  `aria-current="true"`，底部一行「点一行切歌」。
+- **点一行直接切歌**：新增模块级 `goEngineTrack(index)`（与 `goEngineNext` 同一套 `markUserGesture()` + `playAt()`）。
+- 面板只在挂载时播一次 140ms 淡入（`@keyframes`），`prefers-reduced-motion` 下关掉；
+  矮屏（`max-height: 780px`）与窄屏歌名本来就是隐藏的，热区高度 0，浮层不会出现。
+
+### 验收（44014 实跑，1440×950）
+- 悬停名字块：面板 208 × 224、x 1144→1352、垂直居中于名字块（名字中心 y=641），
+  `elementFromPoint(面板中心)` 命中面板本身（不再被裁）；标题「歌曲播放列表 4 首」，
+  四行 `Shadow / Intermezzo / Go West / Fistful of Dynamite`，当前行标 `▸`；
+- 指针从名字块穿过空隙走进面板（中途只停 60ms）→ `panel.matches(":hover") = true`，面板不闪断；
+- 点第 3 行 → 走马灯标签 `Chromatics — Shadow` → `Pet Shop Boys — Go West`，当前行同步移动；
+- 指针移开 400ms 后面板卸载；
+- 矮屏 760px：名字块高度 0、`display: none`，悬停不弹面板；
+- 对比度（白底）：标题 17.2:1、曲名 17.2:1（当前行 9.0:1）、艺人 6.1:1、序号 5.1:1、计数 5.1:1、提示 5.1:1；
+  夜间：面板 `rgb(31 25 19 / 96%)` + `rgb(255 241 217 / 14%)` 边框，当前行 `#f1d783`；
+- 英文：`Playlist · 4 tracks` / `Click a row to switch`；
+- `tsc -b`、`eslint .`、`npm run build` 通过。

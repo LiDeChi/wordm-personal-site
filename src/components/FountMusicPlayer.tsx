@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties } from "react";
+import { createPortal } from "react-dom";
 import {
   HOME_MUSIC_TRACKS,
   shuffleHomeMusicTracks,
@@ -82,6 +83,9 @@ const COPY = {
     tapToHear: "轻触开声",
     unavailable: "播放器暂时不可用",
     shuffleLoop: "随机播放 · 列表循环",
+    playlist: "歌曲播放列表",
+    playlistCount: (count: number) => `${count} 首`,
+    playlistHint: "点一行切歌",
   },
   en: {
     region: "Music",
@@ -94,6 +98,9 @@ const COPY = {
     tapToHear: "Tap for sound",
     unavailable: "Player unavailable",
     shuffleLoop: "Shuffle · loop",
+    playlist: "Playlist",
+    playlistCount: (count: number) => `${count} tracks`,
+    playlistHint: "Click a row to switch",
   },
 } as const;
 
@@ -716,6 +723,16 @@ function goEngineNext() {
   playAt(engine, engine.snapshot.index + 1);
 }
 
+/** 播放列表里点某一首：按队列顺序切过去（队列本身是打乱的，顺序与面板一致）。 */
+function goEngineTrack(trackIndex: number) {
+  if (!engine) {
+    return;
+  }
+
+  markUserGesture();
+  playAt(engine, trackIndex);
+}
+
 function toggleEngineMute() {
   if (!playerApiReady(engine?.player)) {
     return;
@@ -870,6 +887,80 @@ export function FountMusicPlayer({ lang }: FountMusicPlayerProps) {
   const [marqueeDuration, setMarqueeDuration] = useState<number | null>(null);
   const copyRef = useRef<HTMLDivElement | null>(null);
   const titleRef = useRef<HTMLElement | null>(null);
+  /**
+   * 播放列表浮层：指针停在歌名上就弹出来。
+   *
+   * 它不能挂在竖栏里面 —— `.fount-rail` 是 `overflow: auto` 的滚动容器，放在里面的
+   * 浮层会被裁掉（DOM 里有、屏幕上看不见）。所以用 portal 挂到 body 上，坐标按
+   * 名字块自己的视口位置算，浮在竖栏左侧。
+   */
+  const nameRef = useRef<HTMLDivElement | null>(null);
+  const closeTimer = useRef(0);
+  const [playlistOpen, setPlaylistOpen] = useState(false);
+  const [playlistAnchor, setPlaylistAnchor] = useState<{
+    top: number;
+    right: number;
+  } | null>(null);
+
+  /** 贴着名字块的左边缘浮出来（12px 间距），垂直居中对齐名字块。 */
+  function placePlaylist() {
+    const box = nameRef.current;
+    if (!box) {
+      return;
+    }
+
+    const rect = box.getBoundingClientRect();
+    setPlaylistAnchor({
+      top: rect.top + rect.height / 2,
+      right: Math.max(12, window.innerWidth - rect.left + 12),
+    });
+  }
+
+  function openPlaylist() {
+    if (closeTimer.current) {
+      window.clearTimeout(closeTimer.current);
+      closeTimer.current = 0;
+    }
+
+    placePlaylist();
+    setPlaylistOpen(true);
+  }
+
+  /** 名字块与浮层之间隔着一条 12px 的空隙，慢一点关，指针才走得过去。 */
+  function scheduleClosePlaylist() {
+    if (closeTimer.current) {
+      window.clearTimeout(closeTimer.current);
+    }
+
+    closeTimer.current = window.setTimeout(() => {
+      closeTimer.current = 0;
+      setPlaylistOpen(false);
+    }, 160);
+  }
+
+  useEffect(() => {
+    if (!playlistOpen) {
+      return;
+    }
+
+    // 竖栏内部滚动或窗口变化时重新贴合；捕获阶段能收到任意滚动容器的滚动事件。
+    window.addEventListener("resize", placePlaylist);
+    window.addEventListener("scroll", placePlaylist, true);
+
+    return () => {
+      window.removeEventListener("resize", placePlaylist);
+      window.removeEventListener("scroll", placePlaylist, true);
+    };
+  }, [playlistOpen]);
+
+  useEffect(
+    () => () => {
+      if (closeTimer.current) {
+        window.clearTimeout(closeTimer.current);
+      }
+    },
+    [],
+  );
 
   useEffect(() => {
     const box = copyRef.current;
@@ -955,7 +1046,12 @@ export function FountMusicPlayer({ lang }: FountMusicPlayerProps) {
         <SpeakerIcon muted={snapshot.muted} />
       </button>
 
-      <div className="fount-music-name">
+      <div
+        className="fount-music-name"
+        ref={nameRef}
+        onMouseEnter={openPlaylist}
+        onMouseLeave={scheduleClosePlaylist}
+      >
         <div
           className={`fount-music-copy${marqueeDuration ? " is-marquee" : ""}`}
           aria-live="polite"
@@ -981,14 +1077,63 @@ export function FountMusicPlayer({ lang }: FountMusicPlayerProps) {
             ) : null}
           </span>
         </div>
-
-        {/* 竖栏放不下一整行歌名：指针停在这块名字上时，把完整标题浮在左边。
-            原生 title 不在这里用——名字是走马灯，悬停的节点一直在动，浏览器
-            的工具提示经常等不到就换了目标；这块壳是静止的，悬停态稳定。 */}
-        <span className="fount-music-tip" aria-hidden="true">
-          {displayLabel}
-        </span>
       </div>
+
+      {playlistOpen && playlistAnchor
+        ? createPortal(
+            // 竖栏放不下一整行歌名：指针停在名字上就把整个播放列表浮在左边，
+            // 当前这首高亮，点一行直接切过去。
+            <div
+              className="fount-music-playlist"
+              style={{
+                top: `${playlistAnchor.top}px`,
+                right: `${playlistAnchor.right}px`,
+              }}
+              role="group"
+              aria-label={copy.playlist}
+              onMouseEnter={openPlaylist}
+              onMouseLeave={scheduleClosePlaylist}
+            >
+              <p className="fount-music-playlist-head">
+                <span>{copy.playlist}</span>
+                <small>{copy.playlistCount(snapshot.queue.length)}</small>
+              </p>
+
+              <ol className="fount-music-playlist-list">
+                {snapshot.queue.map((entry, entryIndex) => {
+                  const isCurrent = entryIndex === snapshot.index;
+
+                  return (
+                    <li key={entry.id}>
+                      <button
+                        type="button"
+                        className={isCurrent ? "is-current" : undefined}
+                        aria-current={isCurrent ? "true" : undefined}
+                        onClick={() => goEngineTrack(entryIndex)}
+                      >
+                        <span
+                          className="fount-music-playlist-mark"
+                          aria-hidden="true"
+                        >
+                          {isCurrent && snapshot.playing
+                            ? "▸"
+                            : String(entryIndex + 1).padStart(2, "0")}
+                        </span>
+                        <span className="fount-music-playlist-text">
+                          <strong>{entry.title}</strong>
+                          <small>{entry.artist}</small>
+                        </span>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ol>
+
+              <p className="fount-music-playlist-hint">{copy.playlistHint}</p>
+            </div>,
+            document.body,
+          )
+        : null}
     </aside>
   );
 }
