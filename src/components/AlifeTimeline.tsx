@@ -252,7 +252,9 @@ export function AlifeTimeline({ lang }: TimelineProps) {
     }
 
     holdScrollFollow(scrollGuard, 800);
-    scrollPaneToShow(pane, section, "start", true);
+    // 跳代用瞬时滚动：距离上千像素，平滑动画在这种长跳上只是拖时间，
+    // 而且一旦动画不跑（后台标签页 / 低功耗）就变成「点了没反应」。
+    scrollPaneToShow(pane, section, "start", false);
 
     if (firstId) {
       activate(firstId, "list", true);
