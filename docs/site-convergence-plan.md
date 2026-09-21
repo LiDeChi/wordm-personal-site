@@ -119,7 +119,7 @@ export function FocusAreaPage({
 3. **页面过长**：机器心智文章在 390px 下有 19,088px，其中索引表一段就占 5,255px。索引表加 `.mma-index-scroll` 容器，窄屏 `max-height: 68svh` 内部滚动 + 一行说明；宽屏完全不变（不滚动、不显示提示）。整页 19,088px → 14,401px。
 
 ### 已知遗留（未在本次范围内处理）
-- `关于` 页仍保留 center-control 的全量项目归档（约 40 项），是比三段式更杂的一层，建议后续收敛或移入「个人项目 > 全部」。
+- ~~`关于` 页仍保留 center-control 的全量项目归档（约 40 项）~~ → 已在 §15 收敛：全量清单移入「个人项目」，关于页只留精选。
 - 本次改动前就已存在的死代码未清理（`BlogSection`、`BlogNotesPanel`、`DebugPanel`、`MarginNotes`、`Sidebar`、`SiteHeroBanner`、`SiteTopBar`、`SubdomainProjectLocked`、`lib/deploy-ticket.ts`）。
 - `src/index.css` 里 Fount 时代的遗留样式（`fount-pricing-*`、`fount-docs-*`、`fount-minds-*`、`fount-fields-*` 等）已无引用但仍在文件里；`index.css` 未做体积收敛。
 - `.env.example` 中 Fount 定价/Partner 相关键已无代码读取，保留仅为兼容既有部署。
@@ -327,3 +327,38 @@ export function FocusAreaPage({
 - 左列滚到 900 / 1800 / 2600 → 当前条目跟着换成中线附近那一条，卡片始终居中，`pageScroll` 全程 0；
 - 白天 / 夜间两套主题下标题行与详情区的底色差、分隔线、正文对比度均实测确认；
 - `tsc -b` + `eslint .` + `npm run build` 通过；截图 `runtime-home.png`、`focus-timeline-gallery.png`（+ mobile）已按新版重拍。
+
+## 15. 关注方向 + 个人项目：白底、行内换行、完整项目清单（2026-09-21）
+
+用户三张实拍截图提出四件事：页头大段留白、字体在底色上不清晰（尤其详情）、换行差、背景要纯白、「个人项目」缺了很多项目。
+
+### 背景：从暖米色纸面改成纯白
+- `body` / `.fount-page` / `.page-container` 的暖色渐变（`#fffaf0 → #f7ecdc` + 光标跟随径向光）全部换成 `#ffffff`；
+- 三处纸纹叠加层（`body::before` 44px 网格、`.fount-page::before` 46px 网格 + 斜向高光、`.main-collection-shell::before` 网格）删除；夜间主题的 `body::before` 网格改为自包含（原来靠白天基类提供 `content/position/mask`）；
+- `:root` 的暖色 token 中性化：`--warm-paper*` → `#fff`/`#fafafa`，`--warm-muted` 62% → 76%，`--warm-faint` 36% → 62%（后两者同时是「字不清楚」的根因：11px 灰字在米色底上只有 ~2:1 对比度）；
+- 顶栏/社交栏/音乐栏/语言开关的 `rgb(255 250 240 / …)`、`rgb(255 252 246 / …)` 换成白色系；语言开关 `opacity: 0.62` → `0.94`。
+
+### 关注方向：页头收成一行
+- 原来 `关注方向` 一行、`41 个条目 · 22 个流派 · 1948 → 2026` 一行、按钮一行，占掉 130px；现在 eyebrow + 计数同一行（`.alife-head-lead`），按钮右对齐同一行，列表起点从 y=192 提前到 y=132（1440×950 实测），`.focus-page` 上内边距 26–40px → 14–22px。
+
+### 关注方向：行内换行
+- 摘要行原来是 `74px | 1fr | auto | 24px` 四列，`auto` 的标签列按 max-content 抢宽，标题列被压到 126–230px（`规则即身体` 被切成 3 行、26/41 条标题折行）。改成两行网格：`year | title | chevron` + 缩进对齐的标签行，标题列 429px；实测 41 条里 38 条单行标题、3 条长名折 2 行，行高 67 / 87；
+- 年份注记（`1940s–1966` 等 14 条）从年份格移到标签行行首，否则每个有注记的行都被撑高 11px，行高参差。
+
+### 详情块：可读性
+- `--ad-muted` 62% → 80%、`--ad-faint` 36% → 70%；正文 0.86rem/1.8 → 0.9rem/1.78，标签 0.64rem → 0.72rem，`dt` 加 `white-space: nowrap`（`团队 / 机构` 原本折成 3 行）；
+- 详情面板底色 `--at-paper-soft` 由米色改为纯白，靠发丝线分层；卡片墙的流派色原本是给深色展览调的高饱和色，在白底上按 45%（原 74%）混墨；卡片年份色 `#b95f38` → `#a8512c`。
+
+### 个人项目：补完整清单
+- `visibleProjects` 在 `rootView === "projects"` 时以全部项目为基底（URL 带 `?show=` 子集、或分享链接的 scope 仍照旧收窄），「关于」页继续只铺精选；
+- 项目页底部新增 `.projects-archive-section`：标题 + `共 103 个项目` + 全部 `.gallery-card`（复用 `ProjectEntry`），点卡片打开与关于页同一个 `projectDetailModal`（弹窗 JSX 提成变量，两页共用；键盘翻页的 `projectModalOpen` 同时认 projects）；
+- `APP_COPY` 新增 `projectsArchiveMeta/Title/Intro/Count`，关于页那句「等待下一步具体指示」的占位文案替换为正式介绍。
+
+### 验收（44014 实跑）
+- 白底：`body`/`.fount-page` 计算值 `rgb(255,255,255)`，全页扫描无 >4 级暖色底、无全屏 fixed 覆盖层；
+- 对比度实测（WCAG，白底）：行标题 17.2:1、行标签 6.9:1、年份注记 7.3:1、详情正文 9.0:1、详情 mono 标签 6.3:1、卡片英文名 5.5:1、卡片流派 pill 5.2:1、可演示/本人实验角标 6.3 / 4.6:1，均 ≥4.5:1；
+- 时间轴：41 条行高分布 `{67: 38, 87: 3}`，`规则即身体` / `解释器接管` 两条标题与标签各占一行；
+- 个人项目页 `/projects?lang=zh`：`共 103 个项目`、103 张卡片、点开弹窗 `01/103` 可翻页；`/projects?lang=en` 同样 103；
+- 窄屏 480px：无溢出（`docOverflow = false`，行内 `scrollWidth` 无溢出）；夜间主题回归检查：深色底 + 淡网格仍在，行与卡片可读；
+- 顶栏三条目（关注方向 / 个人项目 / 博客）、社交栏与音乐栏 `overlap = false`；
+- `tsc -b`、`eslint .`、`npm run build` 均通过。

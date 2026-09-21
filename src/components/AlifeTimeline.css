@@ -2,44 +2,52 @@
 
 .alife-timeline {
   --at-ink: var(--warm-ink, #211a14);
-  --at-muted: var(--warm-muted, rgb(33 26 20 / 62%));
-  --at-faint: var(--warm-faint, rgb(33 26 20 / 36%));
-  --at-line: var(--warm-line, rgb(56 42 30 / 13%));
+  --at-muted: rgb(33 26 20 / 74%);
+  --at-faint: rgb(33 26 20 / 66%);
+  --at-line: rgb(56 42 30 / 14%);
+  --at-line-strong: rgb(56 42 30 / 26%);
   --at-accent: var(--warm-accent, #b95f38);
   --at-green: var(--warm-green, #314f43);
-  --at-paper: rgb(255 253 247 / 74%);
-  /* 展开状态的两层底色：标题行用纸白，详情用深一档的纸色。 */
-  --at-paper-strong: var(--warm-paper-strong, #fffdf7);
-  --at-paper-soft: var(--warm-paper-soft, #f6eddd);
+  --at-paper: #ffffff;
+  /* 展开状态：标题行与详情都是纯白，用发丝线分层。 */
+  --at-paper-strong: #ffffff;
+  --at-paper-soft: #ffffff;
   /* 两列滚动区的高度：整块（含标题、导语、工具行）落在一屏内。 */
   --at-pane: min(74svh, 720px);
 
   margin-bottom: clamp(40px, 7vh, 72px);
 }
 
+.alife-timeline-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 18px;
+}
+
+.alife-head-lead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 14px;
+  min-width: 0;
+}
+
 .alife-eyebrow {
   margin: 0;
-  color: var(--at-faint);
+  color: var(--at-ink);
   font-family: var(--font-mono);
-  font-size: 0.66rem;
+  font-size: 0.72rem;
   font-weight: 500;
   letter-spacing: 0.16em;
   text-transform: uppercase;
 }
 
-.alife-timeline-tools {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  margin-top: 14px;
-}
-
 .alife-count {
-  color: var(--at-faint);
+  color: var(--at-muted);
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: 0.72rem;
 }
 
 .alife-tool-actions {
@@ -94,10 +102,10 @@
 
 .alife-timeline-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1.06fr) minmax(0, 0.94fr);
+  grid-template-columns: minmax(0, 1.14fr) minmax(0, 0.86fr);
   gap: clamp(18px, 2.6vw, 34px);
   align-items: start;
-  margin-top: clamp(22px, 3.4vh, 34px);
+  margin-top: clamp(14px, 2vh, 20px);
 }
 
 .alife-column {
@@ -115,9 +123,9 @@
 }
 
 .alife-column-hint {
-  color: var(--at-faint);
+  color: var(--at-muted);
   font-family: var(--font-mono);
-  font-size: 0.64rem;
+  font-size: 0.68rem;
   letter-spacing: 0.04em;
 }
 
@@ -145,10 +153,10 @@
   align-items: center;
   gap: 12px;
   margin: 0 0 10px;
-  color: var(--at-faint);
+  color: var(--at-muted);
   font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-weight: 500;
+  font-size: 0.74rem;
+  font-weight: 600;
   letter-spacing: 0.14em;
 }
 
@@ -176,15 +184,15 @@
     background 160ms ease;
 }
 
-/* 展开的那条：标题行是纸白、详情是深一档的纸色，中间一条实分隔线。 */
+/* 展开的那条：标题行与详情都是纯白，中间一条发丝线分层。 */
 .alife-entry.is-open {
-  border-color: rgb(49 79 67 / 26%);
+  border-color: var(--at-line-strong);
   background: var(--at-paper-strong);
-  box-shadow: 0 12px 28px rgb(33 26 20 / 7%);
+  box-shadow: 0 10px 24px rgb(33 26 20 / 6%);
 }
 
 .alife-entry.is-open .alife-entry-summary {
-  border-bottom: 1px solid rgb(56 42 30 / 18%);
+  border-bottom: 1px solid var(--at-line);
   border-radius: 13px 13px 0 0;
   background: var(--at-paper-strong);
 }
@@ -208,15 +216,17 @@
   font-weight: inherit;
 }
 
-/* 默认形态：一行摘要。41 条可以快速扫完。 */
+/* 默认形态：标题一行、标签一行。标题优先拿宽度，41 条可以快速扫完。 */
 .alife-entry-summary {
   display: grid;
-  grid-template-columns: 74px minmax(0, 1fr) auto 24px;
-  gap: clamp(10px, 1.6vw, 18px);
+  grid-template-columns: 62px minmax(0, 1fr) 24px;
+  grid-template-areas:
+    "year title chevron"
+    ".    meta  meta";
+  gap: 3px 14px;
   align-items: center;
   width: 100%;
-  min-height: 46px;
-  padding: 6px 10px;
+  padding: 9px 10px;
   border: 0;
   border-radius: 14px;
   background: transparent;
@@ -228,7 +238,7 @@
 }
 
 .alife-entry-summary:hover {
-  background: rgb(49 79 67 / 5%);
+  background: rgb(33 26 20 / 4%);
 }
 
 .alife-entry-summary:focus-visible {
@@ -237,89 +247,94 @@
 }
 
 .alife-entry-year {
+  grid-area: year;
   color: var(--at-green);
   font-family: var(--font-mono);
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   font-weight: 600;
   letter-spacing: 0.02em;
 }
 
-.alife-entry-year small {
-  display: block;
-  color: var(--at-faint);
-  font-size: 0.6rem;
-  font-weight: 400;
-  letter-spacing: 0;
+.alife-entry-note {
+  align-self: center;
+  margin-right: 2px;
+  color: var(--at-muted);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  white-space: nowrap;
 }
 
 .alife-entry-title {
+  grid-area: title;
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: 8px;
+  gap: 4px 8px;
   min-width: 0;
 }
 
 .alife-entry-title strong {
   color: var(--at-ink);
   font-family: var(--font-main);
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 600;
-  line-height: 1.35;
+  line-height: 1.4;
 }
 
 .alife-entry-title small {
-  color: var(--at-faint);
+  color: var(--at-muted);
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: 0.72rem;
 }
 
 .alife-entry-meta {
+  grid-area: meta;
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
-  justify-content: flex-end;
+  justify-content: flex-start;
+  min-width: 0;
 }
 
 .alife-school {
-  padding: 2px 7px;
-  border-radius: 5px;
-  background: rgb(49 79 67 / 7%);
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgb(33 26 20 / 6%);
   color: var(--at-muted);
   font-family: var(--font-mono);
-  font-size: 0.63rem;
+  font-size: 0.68rem;
   white-space: nowrap;
 }
 
 .alife-badge {
-  padding: 2px 7px;
-  border-radius: 5px;
+  padding: 3px 8px;
+  border-radius: 6px;
   font-family: var(--font-mono);
-  font-size: 0.63rem;
+  font-size: 0.68rem;
   white-space: nowrap;
 }
 
 .alife-badge.is-own {
-  background: rgb(185 95 56 / 14%);
-  color: var(--at-accent);
+  background: rgb(185 95 56 / 16%);
+  color: #a34f2c;
 }
 
 .alife-badge.is-demo {
-  background: rgb(95 141 168 / 16%);
-  color: #3f637a;
+  background: rgb(95 141 168 / 20%);
+  color: #33566d;
 }
 
 /* 「+」是悬停展开的热区：给一块比图形更大的范围，并让它一眼看着像按钮。 */
 .alife-entry-chevron {
+  grid-area: chevron;
   position: relative;
   display: grid;
   place-items: center;
   width: 24px;
   height: 24px;
-  margin-left: -3px;
   border: 1px solid var(--at-line);
   border-radius: 7px;
-  background: rgb(255 255 255 / 62%);
+  background: #ffffff;
   transition:
     background 150ms ease,
     border-color 150ms ease,
@@ -372,7 +387,7 @@
 /* 详情本体在 AlifeItemDetail.css，这里只留面板自身的排布。 */
 .alife-entry-panel {
   max-width: 84ch;
-  padding: 14px 14px 18px;
+  padding: 16px 16px 20px;
   border-radius: 0 0 13px 13px;
   background: var(--at-paper-soft);
 }
@@ -436,31 +451,6 @@
   }
 
   .alife-entry-summary {
-    /* 摘要折成两行：年份 + 标题一行，标签一行。 */
-    grid-template-columns: 62px minmax(0, 1fr) 24px;
-    grid-template-areas:
-      "year title chevron"
-      "meta meta meta";
-    gap: 4px 10px;
-    padding: 8px 10px;
-    min-height: 0;
-  }
-
-  .alife-entry-year {
-    grid-area: year;
-  }
-
-  .alife-entry-title {
-    grid-area: title;
-  }
-
-  .alife-entry-meta {
-    grid-area: meta;
-    justify-content: flex-start;
-    margin-top: 4px;
-  }
-
-  .alife-entry-chevron {
-    grid-area: chevron;
+    gap: 3px 10px;
   }
 }

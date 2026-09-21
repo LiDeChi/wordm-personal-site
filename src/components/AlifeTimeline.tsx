@@ -246,33 +246,36 @@ export function AlifeTimeline({ lang }: TimelineProps) {
       id="alife-timeline"
     >
       <header className="alife-timeline-head">
-        <p className="alife-eyebrow">{copy.eyebrow}</p>
+        <div className="alife-head-lead">
+          <p className="alife-eyebrow">{copy.eyebrow}</p>
+          {state.status === "ready" ? (
+            <span className="alife-count">
+              {copy.counts(
+                state.catalog.items.length,
+                state.catalog.schoolsOrder.length,
+              )}
+            </span>
+          ) : null}
+        </div>
 
-        <div className="alife-timeline-tools">
-          <span className="alife-count">
-            {state.status === "ready"
-              ? copy.counts(state.catalog.items.length, state.catalog.schoolsOrder.length)
-              : null}
-          </span>
-          <div className="alife-tool-actions">
-            {state.status === "ready" ? (
-              <button
-                type="button"
-                aria-pressed={allOpen}
-                onClick={() => {
-                  setOpenIds(allOpen ? [] : items.map((item) => item.id));
-                  setClosedIds(allOpen ? items.map((item) => item.id) : []);
-                  setExpandId(null);
-                }}
-              >
-                {allOpen ? copy.collapseAll : copy.expandAll}
-              </button>
-            ) : null}
-            <a href={ALIFE_MUSEUM_URL}>
-              {copy.openMuseum}
-              <span aria-hidden="true">↗</span>
-            </a>
-          </div>
+        <div className="alife-tool-actions">
+          {state.status === "ready" ? (
+            <button
+              type="button"
+              aria-pressed={allOpen}
+              onClick={() => {
+                setOpenIds(allOpen ? [] : items.map((item) => item.id));
+                setClosedIds(allOpen ? items.map((item) => item.id) : []);
+                setExpandId(null);
+              }}
+            >
+              {allOpen ? copy.collapseAll : copy.expandAll}
+            </button>
+          ) : null}
+          <a href={ALIFE_MUSEUM_URL}>
+            {copy.openMuseum}
+            <span aria-hidden="true">↗</span>
+          </a>
         </div>
       </header>
 
@@ -403,10 +406,7 @@ function AlifeEntry({
           onFocus={onActivate}
           onClick={onToggle}
         >
-          <span className="alife-entry-year">
-            {item.year}
-            {item.yearNote ? <small>{item.yearNote}</small> : null}
-          </span>
+          <span className="alife-entry-year">{item.year}</span>
 
           <span className="alife-entry-title">
             <strong>{item.name}</strong>
@@ -414,6 +414,10 @@ function AlifeEntry({
           </span>
 
           <span className="alife-entry-meta">
+            {/* 年份注记跟标签同行：塞进年份格会把整行撑高，行高就参差了。 */}
+            {item.yearNote ? (
+              <span className="alife-entry-note">{item.yearNote}</span>
+            ) : null}
             {item.schools.map((school) => (
               <span className="alife-school" key={school}>
                 {school}

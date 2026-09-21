@@ -538,8 +538,13 @@ const APP_COPY = {
     themeToDayAria: "切换到日间模式",
     aboutTitle: "关于我",
     aboutIntro:
-      "这里暂时保留旧项目展示与归档，项目页顶部先留成黑色，等待下一步具体指示。",
+      "做产品、写代码，也写关于人工生命与机器心智的东西；所有项目都收在「个人项目」的完整清单里。",
     aboutArchiveTitle: "项目归档",
+    projectsArchiveMeta: "完整清单",
+    projectsArchiveTitle: "全部个人项目",
+    projectsArchiveIntro:
+      "这里是从项目中心同步过来的完整清单，包含所有在做和已完成的项目；点开任意一张卡片看详情、命令与访问方式。",
+    projectsArchiveCount: (count: number) => `共 ${count} 个项目`,
     aboutEntryText: "关于我",
     portfolioTitle: "作品集",
     blogTitle: "博客",
@@ -725,8 +730,13 @@ const APP_COPY = {
     themeToDayAria: "Switch to day mode",
     aboutTitle: "About",
     aboutIntro:
-      "The previous project gallery is kept here as an archive while the Projects tab starts as a black field for the next direction.",
+      "I build products, write code, and write about artificial life and machine minds. Every project lives in the full index on the Projects page.",
     aboutArchiveTitle: "Project archive",
+    projectsArchiveMeta: "Full index",
+    projectsArchiveTitle: "All projects",
+    projectsArchiveIntro:
+      "The complete list synced from the project center, covering everything in progress and shipped. Open any card for details, commands, and access.",
+    projectsArchiveCount: (count: number) => `${count} projects`,
     aboutEntryText: "About",
     portfolioTitle: "Portfolio Gallery",
     blogTitle: "Blog",
@@ -1126,6 +1136,8 @@ function App() {
   const forcedSubdomain = params.get("subdomain");
   const forcedPage = params.get("page");
   const initialShowSlugs = parseShowSlugs(params.get("show"));
+  /** URL 上明确给了 ?show= 子集（分享、演示链接）：项目页只铺这一组，不铺全量。 */
+  const hasExplicitShowSelection = initialShowSlugs.length > 0;
   const initialRootView = initialShowSlugs.length
     ? "projects"
     : toRootView(params.get("view"), window.location.pathname);
@@ -2732,7 +2744,12 @@ function App() {
       return projects;
     }
 
-    const baseProjects = featuredProjects;
+    // 「个人项目」页默认是完整清单；只有 URL 明确给了 ?show= 子集才按选择收窄。
+    // 「关于」页继续只铺精选，避免和项目页重复。
+    const baseProjects =
+      rootView === "projects" && !hasExplicitShowSelection
+        ? projects
+        : featuredProjects;
 
     if (!shareToken || !shareAccess) {
       return baseProjects;
@@ -2748,7 +2765,14 @@ function App() {
     return projects.filter((project) =>
       canShareAccessProject(project.slug, shareAccess),
     );
-  }, [featuredProjects, projects, shareAccess, shareToken]);
+  }, [
+    featuredProjects,
+    hasExplicitShowSelection,
+    projects,
+    rootView,
+    shareAccess,
+    shareToken,
+  ]);
 
   const selectedProject = useMemo(() => {
     if (!selectedProjectSlug) {
@@ -2982,7 +3006,8 @@ function App() {
     onGoogleLogin: handleGoogleLogin,
     onLogout: handleLogout,
   };
-  const projectModalOpen = rootView === "about" && Boolean(selectedProject);
+  const projectModalOpen =
+    (rootView === "about" || rootView === "projects") && Boolean(selectedProject);
 
   useEffect(() => {
     if (!authEnabled || authLoading) {
@@ -3619,6 +3644,54 @@ function App() {
         ? "blog"
         : "focus";
 
+  // 「关于」与「个人项目」共用同一份详情弹窗，避免两页各写一遍。
+  const projectDetailModal = selectedProject ? (
+    projectDetailShareDeniedStatus ? (
+      <div
+        className="project-detail-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-label={lang === "zh" ? "项目访问受限" : "Project access denied"}
+        onClick={() => setSelectedProjectSlug(null)}
+      >
+        <div
+          className="project-detail-modal-shell"
+          onClick={(event) => event.stopPropagation()}
+        >
+          <div className="project-detail-modal-sheet project-detail-modal-sheet-share">
+            <ShareAccessDenied
+              lang={lang}
+              status={projectDetailShareDeniedStatus}
+              authPanel={authPanelProps}
+              fallbackSharedUrl={shareEntryUrl}
+            />
+          </div>
+        </div>
+      </div>
+    ) : (
+      <ProjectDetailModal
+        lang={lang}
+        project={selectedProject}
+        lastUpdated={lastUpdated}
+        unlocked={isProjectUnlocked(selectedProject.slug)}
+        offerState={getOfferStateBySlug(selectedProject.slug)}
+        shareToken={shareToken}
+        indexLabel={
+          selectedVisibleProjectIndex >= 0
+            ? `${String(selectedVisibleProjectIndex + 1).padStart(2, "0")}/${String(visibleProjects.length).padStart(2, "0")}`
+            : null
+        }
+        hasPrevious={
+          selectedVisibleProjectIndex >= 0 && visibleProjects.length > 1
+        }
+        hasNext={selectedVisibleProjectIndex >= 0 && visibleProjects.length > 1}
+        onClose={() => setSelectedProjectSlug(null)}
+        onPrevious={() => selectAdjacentVisibleProject(-1)}
+        onNext={() => selectAdjacentVisibleProject(1)}
+      />
+    )
+  ) : null;
+
   if (rootView === "blog" && !IN_SITE_BLOG_ENABLED) {
     return (
       <div className="page-container" data-page="blog-redirect">
@@ -3798,6 +3871,39 @@ function App() {
           </section>
         ) : null}
 
+        {rootView === "projects" ? (
+          <section
+            className="fount-body-section projects-archive-section"
+            aria-labelledby="projects-archive-title"
+          >
+            <div className="about-archive-copy">
+              <p className="paper-meta">{copy.projectsArchiveMeta}</p>
+              <h2 id="projects-archive-title">{copy.projectsArchiveTitle}</h2>
+              <p>{copy.projectsArchiveIntro}</p>
+              <p className="projects-archive-count">
+                {copy.projectsArchiveCount(visibleProjects.length)}
+              </p>
+            </div>
+
+            <div className="about-project-archive">
+              <div className="portfolio-gallery">
+                {visibleProjects.map((project) => (
+                  <ProjectEntry
+                    key={project.id}
+                    lang={lang}
+                    project={project}
+                    accessible={isProjectUnlocked(project.slug)}
+                    offerState={getOfferStateBySlug(project.slug)}
+                    focused={unlockTargetSlug === project.slug}
+                    onSelectProject={(slug) => setSelectedProjectSlug(slug)}
+                  />
+                ))}
+              </div>
+            </div>
+            {projectDetailModal}
+          </section>
+        ) : null}
+
         {rootView === "about" ? (
           <section
             id="about"
@@ -3839,58 +3945,7 @@ function App() {
                 ))}
               </div>
             </div>
-            {selectedProject ? (
-              projectDetailShareDeniedStatus ? (
-                <div
-                  className="project-detail-modal"
-                  role="dialog"
-                  aria-modal="true"
-                  aria-label={
-                    lang === "zh" ? "项目访问受限" : "Project access denied"
-                  }
-                  onClick={() => setSelectedProjectSlug(null)}
-                >
-                  <div
-                    className="project-detail-modal-shell"
-                    onClick={(event) => event.stopPropagation()}
-                  >
-                    <div className="project-detail-modal-sheet project-detail-modal-sheet-share">
-                      <ShareAccessDenied
-                        lang={lang}
-                        status={projectDetailShareDeniedStatus}
-                        authPanel={authPanelProps}
-                        fallbackSharedUrl={shareEntryUrl}
-                      />
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <ProjectDetailModal
-                  lang={lang}
-                  project={selectedProject}
-                  lastUpdated={lastUpdated}
-                  unlocked={isProjectUnlocked(selectedProject.slug)}
-                  offerState={getOfferStateBySlug(selectedProject.slug)}
-                  shareToken={shareToken}
-                  indexLabel={
-                    selectedVisibleProjectIndex >= 0
-                      ? `${String(selectedVisibleProjectIndex + 1).padStart(2, "0")}/${String(visibleProjects.length).padStart(2, "0")}`
-                      : null
-                  }
-                  hasPrevious={
-                    selectedVisibleProjectIndex >= 0 &&
-                    visibleProjects.length > 1
-                  }
-                  hasNext={
-                    selectedVisibleProjectIndex >= 0 &&
-                    visibleProjects.length > 1
-                  }
-                  onClose={() => setSelectedProjectSlug(null)}
-                  onPrevious={() => selectAdjacentVisibleProject(-1)}
-                  onNext={() => selectAdjacentVisibleProject(1)}
-                />
-              )
-            ) : null}
+            {projectDetailModal}
           </section>
         ) : null}
 

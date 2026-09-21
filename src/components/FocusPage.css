@@ -5,8 +5,8 @@
   z-index: 1;
   width: min(1120px, 100%);
   margin: 0 auto;
-  padding: clamp(26px, 4vh, 40px) clamp(18px, 3vw, 40px)
-    clamp(56px, 9vh, 96px);
+  padding: clamp(14px, 2.2vh, 22px) clamp(18px, 3vw, 40px)
+    clamp(48px, 8vh, 84px);
 }
 
 /* 全站 h2 带 §N 计数器（博客那套版式）。关注方向页是卡片式版式，

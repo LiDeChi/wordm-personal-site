@@ -111,7 +111,7 @@
 }
 
 .alife-card-year {
-  color: var(--at-accent, #b95f38);
+  color: #a8512c;
   font-family: var(--font-mono);
   font-size: 0.64rem;
 }
@@ -147,7 +147,8 @@
   border: 1px solid color-mix(in srgb, var(--pill, var(--at-green, #314f43)) 38%, transparent);
   border-radius: 999px;
   background: color-mix(in srgb, var(--pill, var(--at-green, #314f43)) 12%, transparent);
-  color: color-mix(in srgb, var(--pill, var(--at-green, #314f43)) 74%, var(--at-ink, #211a14));
+  /* 卡片底色现在接近纯白，流派色需要多混一点墨色，否则小字发飘。 */
+  color: color-mix(in srgb, var(--pill, var(--at-green, #314f43)) 45%, var(--at-ink, #211a14));
   font-family: var(--font-mono);
   font-size: 0.58rem;
   white-space: nowrap;

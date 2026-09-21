@@ -2,58 +2,60 @@
 
 .alife-detail {
   --ad-ink: var(--warm-ink, #211a14);
-  --ad-muted: var(--warm-muted, rgb(33 26 20 / 62%));
-  --ad-faint: var(--warm-faint, rgb(33 26 20 / 36%));
-  --ad-line: var(--warm-line, rgb(56 42 30 / 13%));
+  --ad-muted: rgb(33 26 20 / 80%);
+  --ad-faint: rgb(33 26 20 / 70%);
+  --ad-line: rgb(56 42 30 / 14%);
   --ad-green: var(--warm-green, #314f43);
 
   display: grid;
-  gap: 14px;
+  gap: 16px;
 }
 
 .alife-summary {
   margin: 0;
   color: var(--ad-ink);
-  font-size: 0.92rem;
-  line-height: 1.76;
+  font-size: 0.95rem;
+  line-height: 1.72;
 }
 
 .alife-facts {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
-  gap: 4px 14px;
+  gap: 6px 16px;
   margin: 0;
 }
 
 .alife-facts dt {
   color: var(--ad-faint);
   font-family: var(--font-mono);
-  font-size: 0.64rem;
-  letter-spacing: 0.08em;
-  line-height: 1.9;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  line-height: 1.7;
+  /* 「团队 / 机构」这类标签不该折行，否则一列小字会散成三行。 */
+  white-space: nowrap;
 }
 
 .alife-facts dd {
   margin: 0;
   color: var(--ad-muted);
-  font-size: 0.82rem;
-  line-height: 1.9;
+  font-size: 0.88rem;
+  line-height: 1.7;
 }
 
 .alife-field-label {
   display: block;
-  margin-bottom: 5px;
-  color: var(--ad-faint);
+  margin-bottom: 6px;
+  color: var(--ad-faint, rgb(33 26 20 / 70%));
   font-family: var(--font-mono);
-  font-size: 0.64rem;
-  letter-spacing: 0.1em;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
 }
 
 .alife-field p {
   margin: 0;
   color: var(--ad-muted);
-  font-size: 0.86rem;
-  line-height: 1.8;
+  font-size: 0.9rem;
+  line-height: 1.78;
 }
 
 .alife-people ul {
@@ -79,7 +81,7 @@
   flex: 0 0 auto;
   border-radius: 10px;
   object-fit: cover;
-  background: rgb(49 79 67 / 8%);
+  background: rgb(33 26 20 / 6%);
 }
 
 .alife-person-monogram {
@@ -99,7 +101,7 @@
 .alife-person-copy a,
 .alife-person-copy strong {
   color: var(--ad-ink);
-  font-size: 0.86rem;
+  font-size: 0.9rem;
   font-weight: 600;
   text-decoration: none;
 }
@@ -110,7 +112,7 @@
 
 .alife-person-copy small {
   color: var(--ad-faint);
-  font-size: 0.68rem;
+  font-size: 0.74rem;
   line-height: 1.5;
 }
 
@@ -118,10 +120,10 @@
   display: flex;
   align-items: flex-start;
   gap: 14px;
-  padding: 12px;
+  padding: 14px;
   border: 1px solid var(--ad-line);
   border-radius: 12px;
-  background: rgb(95 141 168 / 6%);
+  background: var(--warm-paper-soft, #fafafa);
 }
 
 .alife-demo img {
@@ -136,8 +138,8 @@
 .alife-demo p {
   margin: 0 0 8px;
   color: var(--ad-muted);
-  font-size: 0.82rem;
-  line-height: 1.7;
+  font-size: 0.86rem;
+  line-height: 1.72;
 }
 
 .alife-demo a,
@@ -145,14 +147,14 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  min-height: 28px;
-  padding: 0 12px;
+  min-height: 30px;
+  padding: 0 13px;
   border: 1px solid var(--ad-line);
   border-radius: 999px;
-  background: rgb(255 255 255 / 62%);
+  background: #ffffff;
   color: var(--ad-green);
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   text-decoration: none;
 }
 
@@ -181,7 +183,7 @@
   border-bottom: 1px solid var(--ad-line);
   color: var(--ad-muted);
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   text-decoration: none;
 }
 
