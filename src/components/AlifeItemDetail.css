@@ -196,8 +196,8 @@
 
 :root[data-theme="night"] .alife-detail {
   --ad-ink: #fff1d9;
-  --ad-muted: rgb(255 241 217 / 68%);
-  --ad-faint: rgb(255 241 217 / 42%);
+  --ad-muted: rgb(255 241 217 / 76%);
+  --ad-faint: rgb(255 241 217 / 56%);
   --ad-line: rgb(255 241 217 / 12%);
 }
 

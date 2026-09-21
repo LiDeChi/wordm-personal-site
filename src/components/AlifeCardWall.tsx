@@ -24,6 +24,7 @@ export function AlifeCardWall({
   schoolsOrder,
   activeId,
   cardRefs,
+  paneRef,
   onActivate,
 }: {
   lang: Lang;
@@ -31,6 +32,7 @@ export function AlifeCardWall({
   schoolsOrder: string[];
   activeId: string | null;
   cardRefs: RefObject<Record<string, HTMLLIElement | null>>;
+  paneRef: RefObject<HTMLUListElement | null>;
   onActivate: (id: string) => void;
 }) {
   const copy = ALIFE_COPY[lang];
@@ -44,7 +46,7 @@ export function AlifeCardWall({
         </span>
       </header>
 
-      <ul className="alife-wall-grid">
+      <ul className="alife-wall-grid" ref={paneRef}>
         {items.map((item) => {
           const isActive = activeId === item.id;
           const demoKind = alifeDemoKind(item);

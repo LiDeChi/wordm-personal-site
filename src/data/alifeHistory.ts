@@ -88,11 +88,6 @@ export function alifeDemoKind(item: AlifeItem): AlifeDemoKind {
   return ALIFE_RUNNABLE_DEMOS.has(demo) ? "runnable" : null;
 }
 
-export const ALIFE_INTRO: LocalizedText = {
-  zh: "这条线从 1948 年 von Neumann 的自复制自动机一直排到今年。它不追问「什么是生命」这句话怎么答，而是不断把问题换成一个能跑起来的东西：规则放进去，看它自己长出什么。每一条都可以展开——机制、谱系、边界、人物、可跑的 demo 都在里面。",
-  en: "This line runs from von Neumann's self-reproducing automata in 1948 to this year. It never argues about how to answer “what is life”; it keeps turning the question into something that runs: put the rules in and watch what grows. Every entry opens — mechanism, lineage, limits, people, and the demos that run.",
-};
-
 export const ALIFE_COPY: Record<
   Lang,
   {
@@ -118,7 +113,6 @@ export const ALIFE_COPY: Record<
     loading: string;
     failed: string;
     retry: string;
-    chineseOnly: string;
     /* —— 两列（时间轴 + 画廊）—— */
     timelineLabel: string;
     timelineHint: string;
@@ -154,7 +148,6 @@ export const ALIFE_COPY: Record<
     loading: "正在读取展览条目…",
     failed: "展览条目读取失败。",
     retry: "重试",
-    chineseOnly: "",
     timelineLabel: "时间轴",
     timelineHint: "滚动浏览 · 点开看详情",
     galleryLabel: "画廊",
@@ -189,9 +182,6 @@ export const ALIFE_COPY: Record<
     loading: "Loading exhibition entries…",
     failed: "Could not load the exhibition entries.",
     retry: "Retry",
-    // 展览原文只有中文，英文模式下如实说明，而不是假装有译文。
-    chineseOnly:
-      "Exhibition text is the museum's Chinese original; names, years, and links are shown as-is.",
     timelineLabel: "Timeline",
     timelineHint: "Scroll · click to expand",
     galleryLabel: "Gallery",
