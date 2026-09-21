@@ -4,16 +4,14 @@ import {
   ALIFE_COPY,
   ALIFE_INTRO,
   ALIFE_MUSEUM_URL,
-  alifeAssetUrl,
   alifeDecade,
   alifeDemoKind,
-  alifeDemoPreviewUrl,
-  alifeLeadUrl,
   isOwnWork,
   loadAlifeCatalog,
   type AlifeCatalog,
   type AlifeItem,
 } from "../data/alifeHistory";
+import { AlifeItemDetail } from "./AlifeItemDetail";
 import "./AlifeTimeline.css";
 
 /**
@@ -21,7 +19,7 @@ import "./AlifeTimeline.css";
  *
  * 渐进式披露：
  *  1. 默认只给一行摘要 —— 年份 / 名称 / 流派 / 是否有 demo，41 条可以快速扫完；
- *  2. 展开单条才渲染详情面板（DOM 也是按需的），字段按 机制 → 谱系 → 边界 排列；
+ *  2. 展开单条才渲染详情面板（DOM 也是按需的），面板本体复用 AlifeItemDetail；
  *  3. 「展开全部 / 收起全部」给需要通读的人，不默认打开。
  */
 
@@ -197,7 +195,6 @@ function AlifeEntry({
   const panelId = `alife-entry-panel-${item.id}`;
   const headingId = `alife-entry-head-${item.id}`;
   const demoKind = alifeDemoKind(item);
-  const demoPreview = demoKind === "runnable" ? alifeDemoPreviewUrl(item.demo) : null;
 
   return (
     <li
@@ -247,135 +244,7 @@ function AlifeEntry({
 
       {open ? (
         <div className="alife-entry-panel" id={panelId} aria-labelledby={headingId}>
-          {item.summary ? <p className="alife-summary">{item.summary}</p> : null}
-
-          <dl className="alife-facts">
-            {item.medium?.length ? (
-              <>
-                <dt>Medium</dt>
-                <dd>{item.medium.join(" · ")}</dd>
-              </>
-            ) : null}
-            {item.team ? (
-              <>
-                <dt>Team</dt>
-                <dd>{item.team}</dd>
-              </>
-            ) : null}
-            {item.refs?.length ? (
-              <>
-                <dt>{copy.refs}</dt>
-                <dd>{item.refs.join(" · ")}</dd>
-              </>
-            ) : null}
-          </dl>
-
-          {item.leads?.length ? (
-            <div className="alife-people">
-              <span className="alife-field-label">{copy.people}</span>
-              <ul>
-                {item.leads.map((lead) => {
-                  const href = alifeLeadUrl(lead);
-                  const photo = alifeAssetUrl(lead.photo);
-                  return (
-                    <li key={`${item.id}-${lead.name}`}>
-                      {photo ? (
-                        <img
-                          src={photo}
-                          alt={lead.name}
-                          loading="lazy"
-                          decoding="async"
-                          width={48}
-                          height={60}
-                        />
-                      ) : (
-                        <span className="alife-person-monogram" aria-hidden="true">
-                          {lead.name.slice(0, 1)}
-                        </span>
-                      )}
-                      <span className="alife-person-copy">
-                        {href ? (
-                          <a href={href} target="_blank" rel="noreferrer">
-                            {lead.name}
-                          </a>
-                        ) : (
-                          <strong>{lead.name}</strong>
-                        )}
-                        {lead.role ? <small>{lead.role}</small> : null}
-                        {lead.photoNote ? <small>{lead.photoNote}</small> : null}
-                      </span>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          ) : null}
-
-          {item.construction ? (
-            <div className="alife-field">
-              <span className="alife-field-label">{copy.mechanism}</span>
-              <p>{item.construction}</p>
-            </div>
-          ) : null}
-
-          {item.lineage ? (
-            <div className="alife-field">
-              <span className="alife-field-label">{copy.lineage}</span>
-              <p>{item.lineage}</p>
-            </div>
-          ) : null}
-
-          {item.limits ? (
-            <div className="alife-field">
-              <span className="alife-field-label">{copy.limits}</span>
-              <p>{item.limits}</p>
-            </div>
-          ) : null}
-
-          {demoKind ? (
-            <div className="alife-demo">
-              {demoPreview ? (
-                <img
-                  src={demoPreview}
-                  alt=""
-                  loading="lazy"
-                  decoding="async"
-                  width={160}
-                  height={90}
-                />
-              ) : null}
-              <div>
-                {item.demoHint ? <p>{item.demoHint}</p> : null}
-                <a href={ALIFE_MUSEUM_URL}>
-                  {copy.openDemo}
-                  <span aria-hidden="true">↗</span>
-                </a>
-              </div>
-            </div>
-          ) : null}
-
-          {!demoKind && item.demoHint ? (
-            <div className="alife-field alife-demo-note">
-              <span className="alife-field-label">{copy.demoNotes}</span>
-              <p>{item.demoHint}</p>
-            </div>
-          ) : null}
-
-          {item.links?.length ? (
-            <div className="alife-field">
-              <span className="alife-field-label">{copy.links}</span>
-              <ul className="alife-links">
-                {item.links.map((link) => (
-                  <li key={`${item.id}-${link.url}`}>
-                    <a href={link.url} target="_blank" rel="noreferrer">
-                      {link.label}
-                      <span aria-hidden="true">↗</span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ) : null}
+          <AlifeItemDetail item={item} lang={lang} />
         </div>
       ) : null}
     </li>

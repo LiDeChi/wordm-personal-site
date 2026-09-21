@@ -317,182 +317,10 @@
 /* 展开后的详情                                                        */
 /* ------------------------------------------------------------------ */
 
+/* 详情本体在 AlifeItemDetail.css，这里只留面板的留白。 */
 .alife-entry-panel {
-  display: grid;
-  gap: 14px;
   padding: 4px 12px 18px clamp(12px, 2vw, 22px);
   max-width: 84ch;
-}
-
-.alife-summary {
-  margin: 0;
-  color: var(--at-ink);
-  font-size: 0.92rem;
-  line-height: 1.76;
-}
-
-.alife-facts {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: 4px 14px;
-  margin: 0;
-}
-
-.alife-facts dt {
-  color: var(--at-faint);
-  font-family: var(--font-mono);
-  font-size: 0.64rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  line-height: 1.9;
-}
-
-.alife-facts dd {
-  margin: 0;
-  color: var(--at-muted);
-  font-size: 0.82rem;
-  line-height: 1.9;
-}
-
-.alife-field-label {
-  display: block;
-  margin-bottom: 5px;
-  color: var(--at-faint);
-  font-family: var(--font-mono);
-  font-size: 0.64rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-.alife-field p {
-  margin: 0;
-  color: var(--at-muted);
-  font-size: 0.86rem;
-  line-height: 1.8;
-}
-
-.alife-people ul {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.alife-people li {
-  display: flex;
-  align-items: flex-start;
-  gap: 9px;
-  min-width: 0;
-}
-
-.alife-people img,
-.alife-person-monogram {
-  width: 48px;
-  height: 60px;
-  flex: 0 0 auto;
-  border-radius: 10px;
-  object-fit: cover;
-  background: rgb(49 79 67 / 8%);
-}
-
-.alife-person-monogram {
-  display: grid;
-  place-items: center;
-  color: var(--at-green);
-  font-family: var(--font-main);
-  font-size: 1.1rem;
-}
-
-.alife-person-copy {
-  display: grid;
-  gap: 2px;
-  min-width: 0;
-}
-
-.alife-person-copy a,
-.alife-person-copy strong {
-  color: var(--at-ink);
-  font-size: 0.86rem;
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.alife-person-copy a:hover {
-  color: var(--at-green);
-}
-
-.alife-person-copy small {
-  color: var(--at-faint);
-  font-size: 0.68rem;
-  line-height: 1.5;
-}
-
-.alife-demo {
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-  padding: 12px;
-  border: 1px solid var(--at-line);
-  border-radius: 12px;
-  background: rgb(95 141 168 / 6%);
-}
-
-.alife-demo img {
-  width: 160px;
-  height: 90px;
-  flex: 0 0 auto;
-  border-radius: 8px;
-  object-fit: cover;
-  background: rgb(33 26 20 / 6%);
-}
-
-.alife-demo p {
-  margin: 0 0 8px;
-  color: var(--at-muted);
-  font-size: 0.82rem;
-  line-height: 1.7;
-}
-
-.alife-demo a {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  min-height: 28px;
-  padding: 0 12px;
-  border: 1px solid var(--at-line);
-  border-radius: 999px;
-  background: rgb(255 255 255 / 62%);
-  color: var(--at-green);
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  text-decoration: none;
-}
-
-.alife-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.alife-links a {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  color: var(--at-muted);
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  text-decoration: none;
-  border-bottom: 1px solid var(--at-line);
-}
-
-.alife-links a:hover {
-  color: var(--at-green);
-  border-bottom-color: var(--at-green);
 }
 
 /* ------------------------------------------------------------------ */
@@ -509,8 +337,7 @@
 
 :root[data-theme="night"] .alife-tool-actions button,
 :root[data-theme="night"] .alife-tool-actions a,
-:root[data-theme="night"] .alife-status button,
-:root[data-theme="night"] .alife-demo a {
+:root[data-theme="night"] .alife-status button {
   background: rgb(255 241 217 / 6%);
   color: rgb(242 195 123 / 88%);
 }
@@ -535,19 +362,6 @@
 :root[data-theme="night"] .alife-badge.is-demo {
   background: rgb(95 141 168 / 26%);
   color: rgb(160 199 224 / 92%);
-}
-
-:root[data-theme="night"] .alife-people img,
-:root[data-theme="night"] .alife-person-monogram {
-  background: rgb(255 241 217 / 8%);
-}
-
-:root[data-theme="night"] .alife-person-monogram {
-  color: rgb(242 195 123 / 88%);
-}
-
-:root[data-theme="night"] .alife-demo {
-  background: rgb(95 141 168 / 12%);
 }
 
 /* ------------------------------------------------------------------ */
@@ -582,15 +396,5 @@
 
   .alife-entry-chevron {
     grid-area: chevron;
-  }
-
-  .alife-demo {
-    flex-direction: column;
-  }
-
-  .alife-demo img {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 16 / 9;
   }
 }

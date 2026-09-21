@@ -569,7 +569,8 @@ function fillTips(it) {
         ? `type="button" data-href="${escapeHtml(href)}" title="${escapeHtml(title)}"`
         : `title="${escapeHtml(title)}" aria-disabled="true"`;
       const photoRaw = L.photo || L.avatar || '';
-      const photo = photoRaw && !photoRaw.startsWith('http') && !photoRaw.startsWith('/')
+      // data: 开头的是 catalog 里自带的兜底头像，加了 /alife/ 前缀反而会 404。
+      const photo = photoRaw && !photoRaw.startsWith('http') && !photoRaw.startsWith('/') && !photoRaw.startsWith('data:')
         ? '/alife/' + photoRaw
         : photoRaw;
       return `<${tag} class="lead${clickable ? ' is-link' : ' is-static'}" ${attrs}>

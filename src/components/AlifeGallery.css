@@ -1,0 +1,495 @@
+/* 人工生命史卡片墙 —— 左：项目索引 + 选中条目的说明；右：展览的画廊卡片。 */
+
+.alife-gallery {
+  --ag-ink: var(--warm-ink, #211a14);
+  --ag-muted: var(--warm-muted, rgb(33 26 20 / 62%));
+  --ag-faint: var(--warm-faint, rgb(33 26 20 / 36%));
+  --ag-line: var(--warm-line, rgb(56 42 30 / 13%));
+  --ag-accent: var(--warm-accent, #b95f38);
+  --ag-green: var(--warm-green, #314f43);
+  --ag-paper: rgb(255 253 247 / 78%);
+  /* 两列各自的滚动高度：整块在桌面上一屏内，不用翻整个页面。 */
+  --ag-pane: min(74svh, 720px);
+
+  position: relative;
+}
+
+.alife-gallery-head {
+  max-width: 74ch;
+}
+
+.alife-gallery-head h2 {
+  margin: 10px 0 0;
+  color: var(--ag-ink);
+  font-family: var(--font-main);
+  font-size: clamp(1.35rem, 2.4vw, 1.85rem);
+  font-weight: 650;
+  line-height: 1.24;
+}
+
+.alife-gallery-lead {
+  margin: 10px 0 0;
+  color: var(--ag-muted);
+  font-size: 0.94rem;
+  line-height: 1.78;
+}
+
+.alife-gallery-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0 0;
+  color: var(--ag-muted);
+  font-size: 0.86rem;
+}
+
+.alife-gallery-status.is-failed {
+  color: var(--ag-accent);
+}
+
+.alife-gallery-status button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 0 13px;
+  border: 1px solid var(--ag-line);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 55%);
+  color: var(--ag-green);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  cursor: pointer;
+}
+
+.alife-gallery-status button:hover {
+  border-color: var(--ag-green);
+}
+
+/* ------------------------------------------------------------------ */
+/* 两列骨架                                                            */
+/* ------------------------------------------------------------------ */
+
+.alife-gallery-layout {
+  display: grid;
+  grid-template-columns: minmax(300px, 0.86fr) minmax(0, 1.34fr);
+  gap: clamp(18px, 2.6vw, 36px);
+  align-items: start;
+  margin-top: clamp(18px, 2.6vh, 28px);
+}
+
+.alife-gallery-index,
+.alife-gallery-wall {
+  min-width: 0;
+}
+
+.alife-gallery-panel-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 28px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--ag-line);
+}
+
+.alife-gallery-count,
+.alife-gallery-hint {
+  color: var(--ag-faint);
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.04em;
+}
+
+/* ------------------------------------------------------------------ */
+/* 左列：项目索引                                                      */
+/* ------------------------------------------------------------------ */
+
+.alife-index-list {
+  display: grid;
+  gap: 2px;
+  margin: 8px 0 0;
+  padding: 0 8px 0 0;
+  max-height: var(--ag-pane);
+  overflow-y: auto;
+  list-style: none;
+  overscroll-behavior: contain;
+  scrollbar-color: var(--ag-line) transparent;
+  scrollbar-width: thin;
+}
+
+.alife-index-item {
+  min-width: 0;
+  border-bottom: 1px solid var(--ag-line);
+}
+
+.alife-index-button {
+  display: grid;
+  grid-template-columns: 1.9rem minmax(0, 1fr) auto;
+  grid-template-areas:
+    "number name year"
+    "number schools badges";
+  align-items: baseline;
+  gap: 2px 10px;
+  width: 100%;
+  padding: 8px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    transform 160ms ease;
+}
+
+.alife-index-button:hover,
+.alife-index-button:focus-visible,
+.alife-index-item.is-active .alife-index-button {
+  border-color: rgb(49 79 67 / 30%);
+  background: rgb(49 79 67 / 7%);
+  outline: none;
+}
+
+.alife-index-button:focus-visible {
+  box-shadow: 0 0 0 3px rgb(49 79 67 / 14%);
+}
+
+.alife-index-item.is-active .alife-index-button {
+  transform: translateX(3px);
+}
+
+.alife-index-number {
+  grid-area: number;
+  color: var(--ag-faint);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+}
+
+.alife-index-name {
+  grid-area: name;
+  min-width: 0;
+  color: var(--ag-ink);
+  font-size: 0.83rem;
+  font-weight: 620;
+  line-height: 1.35;
+}
+
+.alife-index-name small {
+  margin-left: 7px;
+  color: var(--ag-faint);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 400;
+}
+
+.alife-index-year {
+  grid-area: year;
+  color: var(--ag-green);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+}
+
+.alife-index-schools {
+  grid-area: schools;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--ag-faint);
+  font-family: var(--font-mono);
+  font-size: 0.61rem;
+  line-height: 1.4;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.alife-index-badges {
+  grid-area: badges;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+.alife-index-item .alife-badge {
+  padding: 1px 6px;
+  border-radius: 999px;
+}
+
+.alife-index-detail {
+  padding: 2px 10px 16px;
+  border-top: 1px solid var(--ag-line);
+  background: var(--ag-paper);
+}
+
+/* ------------------------------------------------------------------ */
+/* 右列：画廊卡片                                                      */
+/* ------------------------------------------------------------------ */
+
+.alife-wall-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(206px, 1fr));
+  gap: 12px;
+  margin: 8px 0 0;
+  padding: 0 8px 0 0;
+  max-height: var(--ag-pane);
+  overflow-y: auto;
+  list-style: none;
+  overscroll-behavior: contain;
+  scrollbar-color: var(--ag-line) transparent;
+  scrollbar-width: thin;
+}
+
+.alife-wall-cell {
+  min-width: 0;
+}
+
+.alife-card {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 1px solid var(--ag-line);
+  border-radius: 14px;
+  background: var(--ag-paper);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  overflow: hidden;
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+
+.alife-card:hover,
+.alife-card:focus-visible {
+  border-color: rgb(49 79 67 / 34%);
+  outline: none;
+}
+
+.alife-wall-cell.is-active .alife-card {
+  border-color: var(--ag-green);
+  box-shadow:
+    0 0 0 2px rgb(49 79 67 / 12%),
+    0 14px 30px rgb(33 26 20 / 9%);
+  transform: translateY(-2px);
+}
+
+.alife-card-cover {
+  position: relative;
+  display: block;
+  height: 96px;
+  background:
+    radial-gradient(
+      circle at 24% 30%,
+      color-mix(in srgb, var(--card-accent, var(--ag-green)) 44%, transparent),
+      transparent 62%
+    ),
+    linear-gradient(160deg, rgb(255 253 247 / 90%), rgb(246 237 221 / 76%));
+}
+
+.alife-card-thumb {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.alife-card-demo {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  padding: 1px 7px;
+  border: 1px solid rgb(63 99 122 / 34%);
+  border-radius: 999px;
+  background: rgb(255 253 247 / 88%);
+  color: #3f637a;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+}
+
+.alife-card-leads {
+  position: absolute;
+  left: 6px;
+  bottom: 6px;
+  display: flex;
+  gap: 4px;
+}
+
+.alife-card-lead {
+  width: 26px;
+  height: 32px;
+  border: 1px solid rgb(255 253 247 / 82%);
+  border-radius: 6px;
+  object-fit: cover;
+  background: rgb(49 79 67 / 8%);
+}
+
+.alife-card-body {
+  display: grid;
+  gap: 3px;
+  align-content: start;
+  padding: 10px 11px 12px;
+}
+
+.alife-card-year {
+  color: var(--ag-accent);
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+}
+
+.alife-card-name {
+  color: var(--ag-ink);
+  font-family: var(--font-main);
+  font-size: 0.92rem;
+  font-weight: 650;
+  line-height: 1.32;
+}
+
+.alife-card-en {
+  overflow: hidden;
+  color: var(--ag-faint);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.alife-card-schools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 3px;
+}
+
+.alife-school-pill {
+  padding: 1px 6px;
+  border: 1px solid color-mix(in srgb, var(--pill, var(--ag-green)) 38%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--pill, var(--ag-green)) 12%, transparent);
+  color: color-mix(in srgb, var(--pill, var(--ag-green)) 74%, var(--ag-ink));
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  white-space: nowrap;
+}
+
+.alife-card-schools .alife-badge {
+  padding: 1px 6px;
+  border-radius: 999px;
+}
+
+/* ------------------------------------------------------------------ */
+/* 页脚：条目数 + 展览入口                                             */
+/* ------------------------------------------------------------------ */
+
+.alife-gallery-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: clamp(14px, 2vh, 20px) 0 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--ag-line);
+  color: var(--ag-faint);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+}
+
+.alife-gallery-foot a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 30px;
+  padding: 0 13px;
+  border: 1px solid var(--ag-line);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 55%);
+  color: var(--ag-green);
+  font-size: 0.7rem;
+  text-decoration: none;
+}
+
+.alife-gallery-foot a:hover {
+  border-color: var(--ag-green);
+}
+
+/* ------------------------------------------------------------------ */
+/* 夜间主题                                                            */
+/* ------------------------------------------------------------------ */
+
+:root[data-theme="night"] .alife-gallery {
+  --ag-ink: #fff1d9;
+  --ag-muted: rgb(255 241 217 / 68%);
+  --ag-faint: rgb(255 241 217 / 42%);
+  --ag-line: rgb(255 241 217 / 12%);
+  --ag-paper: rgb(31 25 19 / 74%);
+}
+
+:root[data-theme="night"] .alife-gallery-status button,
+:root[data-theme="night"] .alife-gallery-foot a {
+  background: rgb(255 241 217 / 6%);
+  color: rgb(242 195 123 / 88%);
+}
+
+:root[data-theme="night"] .alife-index-button:hover,
+:root[data-theme="night"] .alife-index-button:focus-visible,
+:root[data-theme="night"] .alife-index-item.is-active .alife-index-button {
+  background: rgb(242 195 123 / 7%);
+}
+
+:root[data-theme="night"] .alife-index-year {
+  color: rgb(242 195 123 / 88%);
+}
+
+:root[data-theme="night"] .alife-card-cover {
+  background:
+    radial-gradient(
+      circle at 24% 30%,
+      color-mix(in srgb, var(--card-accent, var(--ag-green)) 36%, transparent),
+      transparent 62%
+    ),
+    linear-gradient(160deg, rgb(255 241 217 / 8%), rgb(255 241 217 / 3%));
+}
+
+:root[data-theme="night"] .alife-card-demo {
+  background: rgb(31 25 19 / 86%);
+  color: rgb(160 199 224 / 92%);
+}
+
+:root[data-theme="night"] .alife-card-lead {
+  border-color: rgb(31 25 19 / 82%);
+  background: rgb(255 241 217 / 8%);
+}
+
+:root[data-theme="night"] .alife-school-pill {
+  color: color-mix(in srgb, var(--pill, var(--ag-green)) 62%, var(--ag-ink));
+}
+
+/* ------------------------------------------------------------------ */
+/* 窄屏：两列改为上下，滚动区收窄                                      */
+/* ------------------------------------------------------------------ */
+
+@media (max-width: 900px) {
+  .alife-gallery {
+    --ag-pane: min(62svh, 560px);
+  }
+
+  .alife-gallery-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .alife-wall-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  }
+
+  .alife-card-cover {
+    height: 78px;
+  }
+}

@@ -37,7 +37,8 @@ export type AlifeItem = {
   demo?: string | null;
   demoHint?: string;
   refs?: string[];
-  team?: string;
+  /** catalog 里有两种形态：单个机构字符串，或机构数组（19/41 条是数组）。 */
+  team?: string | string[];
   leads?: AlifeLead[];
   construction?: string;
   lineage?: string;
@@ -119,6 +120,18 @@ export const ALIFE_COPY: Record<
     failed: string;
     retry: string;
     chineseOnly: string;
+    /* —— 卡片墙（项目索引 + 画廊）—— */
+    wallEyebrow: string;
+    wallTitle: string;
+    wallLead: string;
+    wallIndexLabel: string;
+    wallGalleryLabel: string;
+    wallGalleryHint: string;
+    teamLabel: string;
+    mediumLabel: string;
+    leadSite: string;
+    leadScholar: string;
+    openEntry: string;
   }
 > = {
   zh: {
@@ -146,6 +159,18 @@ export const ALIFE_COPY: Record<
     failed: "展览条目读取失败。",
     retry: "重试",
     chineseOnly: "",
+    wallEyebrow: "项目",
+    wallTitle: "四十一件东西，一件一件看",
+    wallLead:
+      "右边是人工生命史展览里的卡片，左边是同一批卡片的说明。指针停在任意一边，另一边就跟着走；年份、流派、人物、生命构建方式、边界，全都来自展览那一份 catalog。",
+    wallIndexLabel: "项目索引",
+    wallGalleryLabel: "画廊",
+    wallGalleryHint: "滚动浏览 · 悬停同步",
+    teamLabel: "团队 / 机构",
+    mediumLabel: "介质",
+    leadSite: "主页",
+    leadScholar: "谷歌学术",
+    openEntry: "在展览里看",
   },
   en: {
     eyebrow: "Focus",
@@ -175,6 +200,18 @@ export const ALIFE_COPY: Record<
     // 展览原文只有中文，英文模式下如实说明，而不是假装有译文。
     chineseOnly:
       "Exhibition text is the museum's Chinese original; names, years, and links are shown as-is.",
+    wallEyebrow: "Projects",
+    wallTitle: "Forty-one things, one at a time",
+    wallLead:
+      "The right column is the card wall from the artificial-life exhibition; the left column carries the same cards' labels. Point at either side and the other follows — year, school, people, construction, limits all come from the exhibition's single catalog.",
+    wallIndexLabel: "Project index",
+    wallGalleryLabel: "Gallery",
+    wallGalleryHint: "Scroll · hover to sync",
+    teamLabel: "Team / institution",
+    mediumLabel: "Medium",
+    leadSite: "Site",
+    leadScholar: "Scholar",
+    openEntry: "See it in the exhibition",
   },
 };
 
@@ -212,11 +249,12 @@ export function alifeAssetUrl(path: string | undefined) {
     return null;
   }
 
-  if (/^https?:\/\//i.test(path)) {
+  // 站点绝对路径、绝对 URL，以及 catalog 里当兜底头像用的 data: URI 都原样使用。
+  if (path.startsWith("/") || /^[a-z][a-z0-9+.-]*:/i.test(path)) {
     return path;
   }
 
-  return `/alife/${path.replace(/^\/+/, "")}`;
+  return `/alife/${path}`;
 }
 
 export function alifeDemoPreviewUrl(demo: string | null | undefined) {
@@ -225,4 +263,42 @@ export function alifeDemoPreviewUrl(demo: string | null | undefined) {
 
 export function alifeLeadUrl(lead: AlifeLead) {
   return lead.website || lead.scholar || null;
+}
+
+/** 卡片色板，按 schoolsOrder 的下标取用（与展览的配色规则一致）。 */
+export const ALIFE_SCHOOL_COLORS = [
+  "#34d399", "#60a5fa", "#a78bfa", "#f472b6", "#fbbf24",
+  "#2dd4bf", "#fb7185", "#818cf8", "#4ade80", "#f59e0b",
+  "#22d3ee", "#e879f9", "#a3e635", "#38bdf8", "#f97316",
+];
+
+export function alifeSchoolColor(school: string, order: string[]) {
+  const index = Math.max(0, order.indexOf(school));
+  return ALIFE_SCHOOL_COLORS[index % ALIFE_SCHOOL_COLORS.length];
+}
+
+/** 详情里的链接 = 条目自带 links + 人物主页 / 学术页，按 URL 去重（与展览 tips 一致）。 */
+export function alifeItemLinks(
+  item: AlifeItem,
+  labels: { site: string; scholar: string },
+): AlifeLink[] {
+  const links = [...(item.links ?? [])];
+
+  for (const lead of item.leads ?? []) {
+    if (lead.website) {
+      links.push({ label: `${lead.name} · ${labels.site}`, url: lead.website });
+    }
+    if (lead.scholar) {
+      links.push({ label: `${lead.name} · ${labels.scholar}`, url: lead.scholar });
+    }
+  }
+
+  const seen = new Set<string>();
+  return links.filter((link) => {
+    if (!link?.url || seen.has(link.url)) {
+      return false;
+    }
+    seen.add(link.url);
+    return true;
+  });
 }
