@@ -70,3 +70,9 @@
 ## Known issues & tips
 - Missing command(s): test, docs. Add real scripts/targets if support exists.
 <!-- ORCHESTRATOR:END -->
+
+## 发布约定（人工指示，2026-09-21）
+
+- 改完并通过 `tsc -b` / `eslint .` / `npm run build` 后，**直接 commit 并 `git push origin main`**，不要等用户说「推送」。
+- push 到 `main` 会触发 `.github/workflows/deploy.yml`（Cloudflare Pages 部署），这是预期行为。
+- 只提交本次改动涉及的文件：不要顺手 `git add .`（`.playwright-mcp/`、历史遗留的 `screenshots/*` 等未跟踪文件不进提交）。
