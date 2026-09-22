@@ -26,7 +26,19 @@
     "自修改解释器",
     "具身/生成",
     "ALife×AI",
-    "原细胞/化学机器人"
+    "原细胞/化学机器人",
+    "认知架构",
+    "生态反馈",
+    "叙事交互",
+    "语言涌现",
+    "自我改进",
+    "Agent 社会",
+    "仿真平台",
+    "持续 Agent",
+    "世界模型",
+    "生成影像",
+    "空间生成",
+    "持续学习"
   ],
   "items": [
     {
@@ -127,6 +139,49 @@
         {
           "label": "百科",
           "url": "https://en.wikipedia.org/wiki/The_Chemical_Basis_of_Morphogenesis"
+        }
+      ]
+    },
+    {
+      "id": "codd-ca",
+      "name": "Codd 细胞自动机",
+      "year": 1968,
+      "yearNote": "专著出版",
+      "schools": [
+        "细胞自动机",
+        "自复制/构造器"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "用较少的细胞状态延续通用构造器路线，把构造与复制放进局部规则。",
+      "demo": "none",
+      "limits": "形式上的通用构造能力不等于生态中的自发起源。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://www.sciencedirect.com/book/9781483200149/cellular-automata"
+        }
+      ]
+    },
+    {
+      "id": "l-system",
+      "name": "L-system 植物生长模型",
+      "year": 1968,
+      "yearNote": "原始论文",
+      "schools": [
+        "形态发生"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "通过并行重写规则描述细胞分裂与植物分枝，让局部生长步骤产生整体形态。",
+      "demo": "none",
+      "limits": "规则和符号由设计者给定，复杂外形本身不意味着自主生命。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://doi.org/10.1016/0022-5193(68)90079-9"
         }
       ]
     },
@@ -268,6 +323,49 @@
         {
           "label": "百科：初等 CA",
           "url": "https://en.wikipedia.org/wiki/Elementary_cellular_automaton"
+        }
+      ]
+    },
+    {
+      "id": "soar",
+      "name": "Soar",
+      "year": 1983,
+      "yearNote": "官方记载的使用起点",
+      "schools": [
+        "认知架构"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "把记忆、问题求解和学习组织进统一架构，让智能体在连续决策中复用知识。",
+      "demo": "none",
+      "limits": "认知组织方式由人设计，不是从物理生态中自然长出的主体。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://soar.eecs.umich.edu/home/About/"
+        }
+      ]
+    },
+    {
+      "id": "daisyworld",
+      "name": "Daisyworld",
+      "year": 1983,
+      "yearNote": "原始论文",
+      "schools": [
+        "自组织",
+        "生态反馈"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "不同颜色的雏菊改变地表反照率，温度又影响生长，形成生物与环境的反馈。",
+      "demo": "none",
+      "limits": "这是理想化的自调节模型，不能直接当作地球气候的预测模型。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://personal.ems.psu.edu/~jfk4/Earth_202/STELLA%20models/Bice%20Models/Daisyworld/Watson_Lovelock_Tellus_1983.pdf"
         }
       ]
     },
@@ -616,6 +714,27 @@
       ]
     },
     {
+      "id": "artificial-curiosity",
+      "name": "Artificial Curiosity",
+      "year": 1990,
+      "yearNote": "作者记录的研究起点",
+      "schools": [
+        "认知架构"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "让学习系统主动寻找能够改善预测的经验，把探索动力与模型学习联系起来。",
+      "demo": "none",
+      "limits": "收录的是研究路线；不能把内在奖励直接等同于主体的情感或需要。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://people.idsia.ch/~juergen/artificial-curiosity-since-1990.html"
+        }
+      ]
+    },
+    {
       "id": "tierra",
       "name": "Tierra",
       "nameEn": "Tierra",
@@ -653,6 +772,48 @@
         {
           "label": "Tom Ray 主页（历史）",
           "url": "http://life.ou.edu/tierra/"
+        }
+      ]
+    },
+    {
+      "id": "act-r",
+      "name": "ACT-R",
+      "year": 1993,
+      "yearNote": "ACT-R 版本提出",
+      "schools": [
+        "认知架构"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "把事实记忆与行为规则分开，让记忆激活和规则选择共同解释认知表现。",
+      "demo": "none",
+      "limits": "主要用于可检验的人类认知任务建模，不是完整数字生态。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://acs.ist.psu.edu/misc/dirk-files/Papers/ACT-R_GeneralReviews/AC%20A%20simple%20theory%20of%20complex%20cognition.htm"
+        }
+      ]
+    },
+    {
+      "id": "copycat",
+      "name": "Copycat",
+      "year": 1993,
+      "yearNote": "系统专著出版",
+      "schools": [
+        "认知架构"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "许多局部处理过程共同构造字母串类比，概念会随情境发生滑移。",
+      "demo": "none",
+      "limits": "研究对象是受限的类比微世界，不能由此推断通用理解能力。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://books.google.com/books?id=ZdZfSgAACAAJ"
         }
       ]
     },
@@ -712,6 +873,93 @@
       ]
     },
     {
+      "id": "sims-creatures",
+      "name": "Karl Sims 演化虚拟生物",
+      "year": 1994,
+      "yearNote": "SIGGRAPH 论文",
+      "schools": [
+        "进化机器人",
+        "数字进化"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "身体结构与控制网络共同编码、变异和选择，使运动能力与形态一起改变。",
+      "demo": "none",
+      "limits": "表现取决于预设任务和物理模拟，也可能利用模拟器漏洞。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://www.karlsims.com/evolved-virtual-creatures.html"
+        }
+      ]
+    },
+    {
+      "id": "polyworld",
+      "name": "Polyworld",
+      "year": 1994,
+      "yearNote": "ALife III 论文节点",
+      "schools": [
+        "数字进化",
+        "生态反馈"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "让具备视觉和神经控制的虚拟生物在能量、捕食与繁殖约束下共同演化。",
+      "demo": "none",
+      "limits": "生态复杂性受身体编码、模拟环境和繁殖规则限制。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://github.com/polyworld/polyworld"
+        }
+      ]
+    },
+    {
+      "id": "nars",
+      "name": "NARS 非公理推理系统",
+      "year": 1995,
+      "yearNote": "博士论文节点",
+      "schools": [
+        "认知架构"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "在知识与计算资源不足的条件下，根据经验修正判断并分配推理资源。",
+      "demo": "none",
+      "limits": "以设计好的推理语言与控制机制为基础，不等于已实现完整通用心智。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://www.cis.temple.edu/~pwang/papers.html"
+        }
+      ]
+    },
+    {
+      "id": "creatures",
+      "name": "Creatures",
+      "year": 1996,
+      "yearNote": "欧洲游戏发行",
+      "schools": [
+        "数字进化",
+        "叙事交互"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "虚拟生物的遗传、神经控制与模拟生化机制共同影响学习、成长和繁殖。",
+      "demo": "none",
+      "limits": "世界与生理机制由开发者设计，开放性受游戏边界限制。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://citeseerx.ist.psu.edu/document?doi=028019c3f26d33afedf33d436637c819c0222166&repid=rep1&type=pdf"
+        }
+      ]
+    },
+    {
       "id": "life-spacies",
       "name": "Life Spacies",
       "nameEn": "Life Spacies",
@@ -757,6 +1005,95 @@
         {
           "label": "作品介绍（Sommerer & Mignonneau）",
           "url": "http://www.interface.ufg.ac.at/christa-laurent/WORKS/FRAMES/FrameSet.html"
+        }
+      ]
+    },
+    {
+      "id": "ocarina-of-time",
+      "name": "塞尔达传说：时之笛",
+      "year": 1998,
+      "yearNote": "原版发行",
+      "schools": [
+        "叙事交互"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "通过声音、空间与物件线索引导探索，可作为以世界内容承担交互界面的设计参照。",
+      "demo": "none",
+      "limits": "这里的世界即界面是策展比较，不是作品宣称的人工生命或 AI 技术。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://iwataasks.nintendo.com/interviews/3ds/zelda-ocarina-of-time/1/0/"
+        }
+      ]
+    },
+    {
+      "id": "evoloop",
+      "name": "Evoloop",
+      "year": 1999,
+      "yearNote": "期刊论文；1998 年会议展示",
+      "schools": [
+        "细胞自动机",
+        "自复制/构造器",
+        "数字进化"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "自复制环在局部碰撞中产生可遗传变异，并在有限空间中竞争。",
+      "demo": "none",
+      "limits": "变异和选择出现在特定规则系统内，不能据此宣称无限复杂化。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2402.03961"
+        }
+      ]
+    },
+    {
+      "id": "framsticks",
+      "name": "Framsticks",
+      "year": 1999,
+      "yearNote": "研究论文节点",
+      "schools": [
+        "进化机器人",
+        "数字进化"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "在三维模拟中共同演化虚拟生物的身体与神经控制，比较不同遗传编码。",
+      "demo": "none",
+      "limits": "适应度、材料和物理环境的选择会决定演化方向。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://www.cs.put.poznan.pl/mkomosinski/site/?q=node%2F9"
+        }
+      ]
+    },
+    {
+      "id": "talking-heads",
+      "name": "Talking Heads Experiment",
+      "year": 1999,
+      "yearNote": "实验论文",
+      "schools": [
+        "语言涌现",
+        "具身/生成"
+      ],
+      "medium": [
+        "Hard",
+        "Soft"
+      ],
+      "summary": "机器人通过共同观察和猜词游戏协商词义，让共享词汇从反复互动中形成。",
+      "demo": "none",
+      "limits": "感知体系与交互任务仍然预设，实验主要讨论词汇层面的形成。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://ai.vub.ac.be/sites/default/files/steels-ground1999.pdf"
         }
       ]
     },
@@ -898,6 +1235,112 @@
       ]
     },
     {
+      "id": "the-sims",
+      "name": "The Sims / 模拟人生",
+      "year": 2000,
+      "yearNote": "首作发行",
+      "schools": [
+        "叙事交互"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "把人物需求、家庭关系与日常活动组织成可持续运行、可由玩家干预的生活模拟。",
+      "demo": "none",
+      "limits": "角色行为主要由游戏规则与预设系统塑造，不意味着开放式心智成长。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://news.ea.com/press-releases/press-releases-details/2010/EAs-Groundbreaking-Franchise-The-Sims-Turns-Ten/default.aspx"
+        }
+      ]
+    },
+    {
+      "id": "cogaff",
+      "name": "CogAff",
+      "year": 2001,
+      "yearNote": "架构图式论文",
+      "schools": [
+        "认知架构"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "用反应、审慎推理和元管理等层次比较不同心智系统的组织方式。",
+      "demo": "none",
+      "limits": "这是比较认知架构的图式，不是一个完整运行的智能体。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://cogaffarchive.org/00-02.html"
+        }
+      ]
+    },
+    {
+      "id": "oops",
+      "name": "OOPS",
+      "year": 2002,
+      "yearNote": "预印本",
+      "schools": [
+        "自我改进"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "保存已解决任务的程序，并在后续搜索中调用它们，逐步积累可复用能力。",
+      "demo": "none",
+      "limits": "理论上的搜索效率保证仍依赖程序空间与先验分配。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/cs/0207097"
+        }
+      ]
+    },
+    {
+      "id": "micropsi",
+      "name": "MicroPsi",
+      "year": 2003,
+      "yearNote": "架构论文",
+      "schools": [
+        "认知架构",
+        "具身/生成"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "把需求、动机、情绪与认知控制放在同一智能体架构中，解释行动为何发生。",
+      "demo": "none",
+      "limits": "心理机制是工程模型，不构成系统具有主观体验的证据。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://bach.ai/publications/"
+        }
+      ]
+    },
+    {
+      "id": "godel-machine",
+      "name": "Gödel Machine",
+      "year": 2003,
+      "yearNote": "理论报告；非成熟运行系统",
+      "schools": [
+        "自我改进"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "只有在能证明自修改相对于既定效用有益时才执行修改，研究自指改进的理论条件。",
+      "demo": "none",
+      "limits": "证明搜索与公理假设极强，不能直接当作可部署的通用自改进系统。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/cs/0309048"
+        }
+      ]
+    },
+    {
       "id": "iizuka-embodied",
       "name": "饭塚博幸：具身认知与复杂系统",
       "nameEn": "Iizuka Lab",
@@ -933,6 +1376,48 @@
         {
           "label": "研究者页（检索）",
           "url": "https://scholar.google.com/scholar?q=Hiroyuki+Iizuka+embodied"
+        }
+      ]
+    },
+    {
+      "id": "aevol",
+      "name": "Aevol",
+      "year": 2006,
+      "yearNote": "博士论文节点",
+      "schools": [
+        "数字进化"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "让数字基因组在突变和选择下演化，研究基因结构与调控组织如何改变。",
+      "demo": "none",
+      "limits": "模拟的是抽象基因组与表型关系，不是完整细胞化学。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://liris.cnrs.fr/sites/default/files/actualites/beagle_inria.pdf"
+        }
+      ]
+    },
+    {
+      "id": "dwarf-fortress",
+      "name": "Dwarf Fortress",
+      "year": 2006,
+      "yearNote": "早期公开版本",
+      "schools": [
+        "叙事交互"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "让地理、历史、个体和资源规则共同运行，玩家从模拟产生的事件中读出故事。",
+      "demo": "none",
+      "limits": "作为持续世界与涌现叙事的参照收录，不是大语言模型智能体系统。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://www.bay12games.com/dwarves/older_versions.html"
         }
       ]
     },
@@ -975,6 +1460,27 @@
         {
           "label": "Swarm Chemistry 页",
           "url": "https://bingweb.binghamton.edu/~sayama/SwarmChemistry/"
+        }
+      ]
+    },
+    {
+      "id": "opencog",
+      "name": "OpenCog",
+      "year": 2008,
+      "yearNote": "框架公开文献",
+      "schools": [
+        "认知架构"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "把知识表示、推理和注意分配放入可组合的软件框架，探索多种认知过程协作。",
+      "demo": "none",
+      "limits": "集成框架并不自动产生通用智能，能力取决于具体系统与知识来源。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://opencog.org/pub/OpenCog_Prime_WikiBook_Snapshot.pdf"
         }
       ]
     },
@@ -1133,6 +1639,92 @@
       ]
     },
     {
+      "id": "comme-il-faut",
+      "name": "Comme il Faut",
+      "year": 2011,
+      "yearNote": "系统论文",
+      "schools": [
+        "叙事交互",
+        "Agent 社会"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "把社会规范、关系和互动写成可复用规则，由当前社会状态决定角色可采取的行动。",
+      "demo": "none",
+      "limits": "社会规则依赖作者建模，不是现实社会规律的自动发现。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://ojs.aaai.org/index.php/AIIDE/article/view/12454"
+        }
+      ]
+    },
+    {
+      "id": "lida",
+      "name": "LIDA Framework",
+      "year": 2011,
+      "yearNote": "LIDA 软件框架论文；认知模型的提出早于此年",
+      "schools": [
+        "认知架构"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "把感知、注意竞争和行动选择组织为反复运行的认知循环。",
+      "demo": "none",
+      "limits": "架构模拟全局工作空间的部分机制；并不构成机器具有意识的证据。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://ccrg.cs.memphis.edu/papers.html"
+        }
+      ]
+    },
+    {
+      "id": "prom-week",
+      "name": "Prom Week",
+      "year": 2012,
+      "yearNote": "游戏公开发布",
+      "schools": [
+        "叙事交互",
+        "Agent 社会"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "让玩家改变角色关系，故事由社会模拟中的互动后果展开。",
+      "demo": "none",
+      "limits": "可组合的社会行动仍受作者定义的角色与规则约束。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://news.ucsc.edu/2012/02/prom-week/"
+        }
+      ]
+    },
+    {
+      "id": "spaun",
+      "name": "SPA / Spaun",
+      "year": 2012,
+      "yearNote": "原始系统论文",
+      "schools": [
+        "认知架构"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "把视觉输入、记忆、推理与动作输出连接到大规模脉冲神经网络中。",
+      "demo": "none",
+      "limits": "覆盖的是有限认知任务，神经规模不能直接等同于完整人脑能力。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://doi.org/10.1126/science.1225266"
+        }
+      ]
+    },
+    {
       "id": "cheney-soft-robots",
       "name": "软体机器人形态进化",
       "nameEn": "Soft robot evolution",
@@ -1181,6 +1773,28 @@
       ]
     },
     {
+      "id": "simsoup",
+      "name": "SimSoup",
+      "year": 2013,
+      "yearNote": "自催化记忆论文节点",
+      "schools": [
+        "人工化学",
+        "生命起源/存在判据"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "用人工分子反应构造可切换的自催化记忆，探索代谢网络如何保存状态。",
+      "demo": "none",
+      "limits": "此处记录的是具体记忆实验，不把人工化学整体视作一个项目。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://doi.org/10.7551/978-0-262-31709-2-ch189"
+        }
+      ]
+    },
+    {
       "id": "cejkova-droplet",
       "name": "液滴化学机器人（Čejková）",
       "nameEn": "Decanol droplet robots",
@@ -1216,6 +1830,71 @@
         {
           "label": "学者主页检索",
           "url": "https://scholar.google.com/scholar?q=Jitka+Cejkova+droplet+robots"
+        }
+      ]
+    },
+    {
+      "id": "homeostatic-rl",
+      "name": "Homeostatic Reinforcement Learning",
+      "year": 2014,
+      "yearNote": "原始论文",
+      "schools": [
+        "认知架构",
+        "具身/生成"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "把奖励与内部生理变量偏离稳定范围的程度相联系，解释行动与自我维持的关系。",
+      "demo": "none",
+      "limits": "内部需求及其数学形式仍是建模选择，不是主体从无到有的证明。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4270100/"
+        }
+      ]
+    },
+    {
+      "id": "chromaria",
+      "name": "Chromaria",
+      "year": 2014,
+      "yearNote": "公开仓库创建节点",
+      "schools": [
+        "数字进化",
+        "开放演化"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "通过新颖性搜索和开放演化实验，研究虚拟生物在环境中的行为与后代变化。",
+      "demo": "none",
+      "limits": "此年份指公开仓库节点；开放演化是实验议题，不保证无界复杂化。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://github.com/lsoros/chromaria"
+        }
+      ]
+    },
+    {
+      "id": "watch-dogs",
+      "name": "Watch Dogs",
+      "year": 2014,
+      "yearNote": "首作发行",
+      "schools": [
+        "叙事交互"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "把摄像头、电子设施与城市空间连接成玩家可以观察和干预的交互网络。",
+      "demo": "none",
+      "limits": "作为分布式观察与介入的设计参照收录，不把游戏城市等同于自主社会。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://www.ubisoft.com/en-gb/games/watch-dogs"
         }
       ]
     },
@@ -1274,6 +1953,50 @@
       ]
     },
     {
+      "id": "flora-robotica",
+      "name": "Flora Robotica",
+      "year": 2015,
+      "yearNote": "项目与论文节点",
+      "schools": [
+        "Wet/跨载体",
+        "形态发生"
+      ],
+      "medium": [
+        "Hard",
+        "Wet"
+      ],
+      "summary": "把植物生长与机器人感知、控制结合起来，探索相互影响的生物—机器结构。",
+      "demo": "none",
+      "limits": "植物时间尺度和工程控制构成明确限制，不是完全自主的共演化生态。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://cordis.europa.eu/project/id/640959/results"
+        }
+      ]
+    },
+    {
+      "id": "sigma",
+      "name": "Sigma",
+      "year": 2016,
+      "yearNote": "完整系统论文节点",
+      "schools": [
+        "认知架构"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "用统一的图式计算机制连接符号推理、概率处理和学习，减少模块间割裂。",
+      "demo": "none",
+      "limits": "这里按系统论文定位，不能将统一表示等同于已解决所有认知能力。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://sites.usc.edu/rosenbloom/recent-publications/"
+        }
+      ]
+    },
+    {
       "id": "assembly-theory",
       "name": "组装理论",
       "nameEn": "Assembly Theory",
@@ -1325,6 +2048,92 @@
         {
           "label": "Cronin 组",
           "url": "https://www.croninlab.com/"
+        }
+      ]
+    },
+    {
+      "id": "mabe",
+      "name": "MABE",
+      "year": 2017,
+      "yearNote": "ECAL 论文",
+      "schools": [
+        "数字进化",
+        "认知架构"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "把基因组、脑、环境和演化过程模块化，便于比较不同智能体演化实验。",
+      "demo": "none",
+      "limits": "它是实验框架，是否出现复杂行为取决于具体环境与选择机制。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://doi.org/10.1162/isal_a_016"
+        }
+      ]
+    },
+    {
+      "id": "ai2-thor",
+      "name": "AI2-THOR",
+      "year": 2017,
+      "yearNote": "预印本",
+      "schools": [
+        "仿真平台",
+        "具身/生成"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "提供能导航、操作物体的三维室内环境，让感知与行动在同一场景中闭环。",
+      "demo": "none",
+      "limits": "它提供身体与环境的实验条件，本身不是人工生命系统。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/1712.05474"
+        }
+      ]
+    },
+    {
+      "id": "carla",
+      "name": "CARLA",
+      "year": 2017,
+      "yearNote": "预印本",
+      "schools": [
+        "仿真平台"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "在可控的城市交通、天气和传感器配置中训练与评估自动驾驶系统。",
+      "demo": "none",
+      "limits": "模拟有效性依赖场景和传感器模型，不能代替真实道路验证。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/1711.03938"
+        }
+      ]
+    },
+    {
+      "id": "emergent-translation",
+      "name": "Emergent Translation",
+      "year": 2017,
+      "yearNote": "预印本",
+      "schools": [
+        "语言涌现"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "两个智能体通过共同的视觉指称任务连接各自语言，在协作中学习翻译。",
+      "demo": "none",
+      "limits": "系统使用已有单语文本，研究的是跨语言对齐而非语言从零诞生。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/1710.06922"
         }
       ]
     },
@@ -1405,6 +2214,28 @@
         {
           "label": "学者检索",
           "url": "https://scholar.google.com/scholar?q=Lana+Sinapayen+artificial+life"
+        }
+      ]
+    },
+    {
+      "id": "symbulation",
+      "name": "Symbulation",
+      "year": 2018,
+      "yearNote": "研究预印本",
+      "schools": [
+        "数字进化",
+        "生态反馈"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "改变空间结构和共生体的亲代传递条件，研究合作与共生关系如何演化。",
+      "demo": "none",
+      "limits": "结论限定于模型假设，不能直接外推所有自然共生系统。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://doi.org/10.1101/393868"
         }
       ]
     },
@@ -1498,6 +2329,94 @@
         {
           "label": "Enhanced POET",
           "url": "https://arxiv.org/abs/2003.08536"
+        }
+      ]
+    },
+    {
+      "id": "genelife",
+      "name": "Genelife",
+      "year": 2019,
+      "yearNote": "研究论文",
+      "schools": [
+        "细胞自动机",
+        "数字进化",
+        "开放演化"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "给生命游戏中的细胞加入可遗传信息，让基因影响出生规则及其传播。",
+      "demo": "none",
+      "limits": "开放演化是研究目标，持续变化不等于已证明无界创新。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://github.com/js1200/genelife"
+        }
+      ]
+    },
+    {
+      "id": "dishtiny",
+      "name": "DISHTINY",
+      "year": 2019,
+      "yearNote": "期刊论文",
+      "schools": [
+        "数字进化",
+        "开放演化"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "让类似细胞的数字个体合作获取资源，研究个体如何组成更高层级的个体。",
+      "demo": "none",
+      "limits": "资源机制鼓励合作转变，不能把结果理解为无需设计条件的自发出现。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://dishtiny.readthedocs.io/en/latest/citing.html"
+        }
+      ]
+    },
+    {
+      "id": "habitat",
+      "name": "Habitat",
+      "year": 2019,
+      "yearNote": "预印本",
+      "schools": [
+        "仿真平台",
+        "具身/生成"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "把三维模拟、传感器与任务接口连接起来，支持具身导航和交互研究。",
+      "demo": "none",
+      "limits": "它是实验基础设施，现实迁移能力需要单独评估。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/1904.01201"
+        }
+      ]
+    },
+    {
+      "id": "ai-gas",
+      "name": "AI-GAs",
+      "year": 2019,
+      "yearNote": "预印本发表",
+      "schools": [
+        "开放演化"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "把学习算法、网络结构和训练环境的自动生成放入共同演化的研究议程。",
+      "demo": "none",
+      "limits": "这是 AI-generating algorithms 的研究愿景，不是已完成的通用智能系统。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/1905.10985"
         }
       ]
     },
@@ -1622,6 +2541,181 @@
       ]
     },
     {
+      "id": "neural-mmo",
+      "name": "Neural MMO",
+      "year": 2020,
+      "yearNote": "v1.3 论文；项目始于更早版本",
+      "schools": [
+        "仿真平台",
+        "Agent 社会"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "让大量智能体在资源竞争的游戏环境中长期交互，观察探索与分工行为。",
+      "demo": "none",
+      "limits": "规则、资源与奖励仍由平台设定，并非自行产生完整文明。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2001.12004"
+        }
+      ]
+    },
+    {
+      "id": "dreamcoder",
+      "name": "DreamCoder",
+      "year": 2020,
+      "yearNote": "预印本",
+      "schools": [
+        "认知架构",
+        "自我改进"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "通过求解任务、提取程序抽象和训练搜索模型，扩充可复用的程序库。",
+      "demo": "none",
+      "limits": "能力增长发生在给定任务与程序语言内，不是任意认知结构的自由生长。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2006.08381"
+        }
+      ]
+    },
+    {
+      "id": "ai-economist",
+      "name": "AI Economist",
+      "year": 2020,
+      "yearNote": "预印本",
+      "schools": [
+        "Agent 社会"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "让经济个体与税收规划者共同学习，研究效率和分配目标之间的互动。",
+      "demo": "none",
+      "limits": "结果受经济假设与目标函数影响，不能直接变成现实政策建议。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2004.13332"
+        }
+      ]
+    },
+    {
+      "id": "paired",
+      "name": "PAIRED / UED",
+      "year": 2020,
+      "yearNote": "预印本",
+      "schools": [
+        "开放演化"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "通过两个学习者的表现差异引导环境生成，寻找困难但可学习的新任务。",
+      "demo": "none",
+      "limits": "环境空间和训练目标仍然受预设条件约束。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2012.02096"
+        }
+      ]
+    },
+    {
+      "id": "mimicry",
+      "name": "Mimicry",
+      "year": 2020,
+      "yearNote": "作品版本；后有扩展",
+      "schools": [
+        "ALife Art",
+        "数字进化"
+      ],
+      "medium": [
+        "Soft",
+        "Art"
+      ],
+      "summary": "以遗传算法推动虚拟昆虫伪装的变化，让拟态过程成为可观看的装置。",
+      "demo": "none",
+      "limits": "艺术系统对演化过程进行了选择与构造，不是自然生态的完整复制。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://www.cityu.edu.hk/sites/g/files/asqsls5796/files/2021-05/Mimicry.pdf"
+        }
+      ]
+    },
+    {
+      "id": "alien",
+      "name": "ALIEN",
+      "year": 2020,
+      "yearNote": "当前公开仓库创建；非起源年",
+      "schools": [
+        "数字进化",
+        "开放演化"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "在 GPU 粒子环境中构造有能量流、可复制结构与相互作用的数字生物。",
+      "demo": "none",
+      "limits": "可配置规则形成实验边界；平台目标不等于已实现无限开放演化。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://github.com/chrxh/alien"
+        }
+      ]
+    },
+    {
+      "id": "xland",
+      "name": "XLand / Open-Ended Learning",
+      "year": 2021,
+      "yearNote": "公开研究",
+      "schools": [
+        "开放演化",
+        "仿真平台"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "在不断变化的三维多人游戏中训练智能体，让任务变化驱动更广泛的能力。",
+      "demo": "none",
+      "limits": "任务生成范围与奖励机制仍由研究者规定。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://deepmind.google/blog/generally-capable-agents-emerge-from-open-ended-play/"
+        }
+      ]
+    },
+    {
+      "id": "comon",
+      "name": "CoMON",
+      "year": 2021,
+      "yearNote": "ICCV 论文",
+      "schools": [
+        "语言涌现",
+        "具身/生成"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "让掌握地图的智能体与实际导航的智能体交流，研究协作中形成的信息表达。",
+      "demo": "none",
+      "limits": "双方的信息权限和任务预先设定，涌现通信不等于自然语言完整起源。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://shivanshpatel35.github.io/comon/"
+        }
+      ]
+    },
+    {
       "id": "flow-lenia",
       "name": "Flow-Lenia",
       "nameEn": "Flow-Lenia",
@@ -1661,6 +2755,113 @@
         {
           "label": "Lenia 仓库",
           "url": "https://github.com/Chakazul/Lenia"
+        }
+      ]
+    },
+    {
+      "id": "code-as-policies",
+      "name": "Code as Policies",
+      "year": 2022,
+      "yearNote": "预印本",
+      "schools": [
+        "具身/生成",
+        "持续 Agent"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "把语言指令转为可执行的控制程序，组合感知结果与已有机器人操作接口。",
+      "demo": "none",
+      "limits": "依赖底层感知和控制接口，生成代码不等于自行获得身体能力。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2209.07753"
+        }
+      ]
+    },
+    {
+      "id": "react",
+      "name": "ReAct",
+      "year": 2022,
+      "yearNote": "预印本",
+      "schools": [
+        "持续 Agent"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "交替生成推理与行动，用环境返回的信息修正后续步骤。",
+      "demo": "none",
+      "limits": "这是行动组织方法，本身不提供长期记忆或稳定人格。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2210.03629"
+        }
+      ]
+    },
+    {
+      "id": "minedojo",
+      "name": "MineDojo",
+      "year": 2022,
+      "yearNote": "预印本",
+      "schools": [
+        "仿真平台",
+        "具身/生成"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "把 Minecraft 任务环境与网络视频、教程等知识连接，研究开放任务学习。",
+      "demo": "none",
+      "limits": "开放任务仍在既有游戏规则和接口中进行。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2206.08853"
+        }
+      ]
+    },
+    {
+      "id": "procthor",
+      "name": "ProcTHOR",
+      "year": 2022,
+      "yearNote": "预印本",
+      "schools": [
+        "仿真平台"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "程序化生成大量可交互住宅，扩大具身智能训练的空间与任务多样性。",
+      "demo": "none",
+      "limits": "生成更多场景不等于生成具备自主历史的持久世界。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2206.06994"
+        }
+      ]
+    },
+    {
+      "id": "varigrow",
+      "name": "VariGrow",
+      "year": 2022,
+      "yearNote": "ICML 论文",
+      "schools": [
+        "持续学习"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "根据新经验与已有模型的差异扩展网络结构，同时尝试保留过去知识。",
+      "demo": "none",
+      "limits": "网络扩容是受算法控制的学习机制，不等同于心智自行设计自身。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://proceedings.mlr.press/v162/ardywibowo22a.html"
         }
       ]
     },
@@ -1717,6 +2918,332 @@
       ]
     },
     {
+      "id": "reflexion",
+      "name": "Reflexion",
+      "year": 2023,
+      "yearNote": "预印本",
+      "schools": [
+        "持续 Agent",
+        "自我改进"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "把任务反馈整理成语言反思，供后续尝试调用并调整行动。",
+      "demo": "none",
+      "limits": "改善来自反馈与记忆使用，不代表模型权重或基础能力自动增长。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2303.11366"
+        }
+      ]
+    },
+    {
+      "id": "self-refine",
+      "name": "Self-Refine",
+      "year": 2023,
+      "yearNote": "预印本",
+      "schools": [
+        "自我改进"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "让同一模型先提出答案，再生成反馈并反复修改输出。",
+      "demo": "none",
+      "limits": "自我反馈可能重复原有偏差，不能替代外部验证。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2303.17651"
+        }
+      ]
+    },
+    {
+      "id": "generative-agents",
+      "name": "Generative Agents / Smallville",
+      "year": 2023,
+      "yearNote": "预印本",
+      "schools": [
+        "持续 Agent",
+        "Agent 社会"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "将观察写入记忆，通过检索、反思和规划驱动小镇中角色的日常互动。",
+      "demo": "none",
+      "limits": "可信的社会行为不等于角色拥有真实心理状态。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2304.03442"
+        }
+      ]
+    },
+    {
+      "id": "voyager",
+      "name": "Voyager",
+      "year": 2023,
+      "yearNote": "预印本",
+      "schools": [
+        "持续 Agent",
+        "开放演化"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "在 Minecraft 中自动提出探索任务，并把成功行为积累为可调用代码技能。",
+      "demo": "none",
+      "limits": "能力增长依赖预训练模型、游戏接口和外部反馈。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2305.16291"
+        }
+      ]
+    },
+    {
+      "id": "biomaker-ca",
+      "name": "Biomaker CA",
+      "year": 2023,
+      "yearNote": "预印本",
+      "schools": [
+        "细胞自动机",
+        "形态发生",
+        "生态反馈"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "在细胞自动机环境中让人工生物生长、获取资源并相互作用，探索生态形成。",
+      "demo": "none",
+      "limits": "资源与材料规则预先设定，出现生态形态不等于无界演化。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2307.09320"
+        }
+      ]
+    },
+    {
+      "id": "ai-town",
+      "name": "AI Town",
+      "year": 2023,
+      "yearNote": "开源项目发布",
+      "schools": [
+        "持续 Agent",
+        "Agent 社会"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "以共享世界状态和模拟引擎支撑角色生活、聊天及社交，提供可扩展的小镇实现。",
+      "demo": "none",
+      "limits": "持续运行依赖服务部署和资源投入，前端画面不代表后台永久存活。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://github.com/a16z-infra/ai-town"
+        }
+      ]
+    },
+    {
+      "id": "agentsims",
+      "name": "AgentSims",
+      "year": 2023,
+      "yearNote": "预印本",
+      "schools": [
+        "Agent 社会",
+        "仿真平台"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "通过可配置的角色、建筑与任务，在模拟环境里评估记忆、规划和工具使用。",
+      "demo": "none",
+      "limits": "它主要是任务评估沙盒，不是现实社会的直接替代物。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2308.04026"
+        }
+      ]
+    },
+    {
+      "id": "agentverse",
+      "name": "AgentVerse",
+      "year": 2023,
+      "yearNote": "预印本",
+      "schools": [
+        "Agent 社会"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "组织多个语言智能体协作，并根据任务调整群体组成，观察协作中的群体行为。",
+      "demo": "none",
+      "limits": "协作效果依赖任务和角色设置，不能把群聊本身视为文明。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2308.10848"
+        }
+      ]
+    },
+    {
+      "id": "coala",
+      "name": "CoALA",
+      "year": 2023,
+      "yearNote": "预印本；架构框架",
+      "schools": [
+        "认知架构",
+        "持续 Agent"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "用记忆组件、内部与外部行动、决策循环整理语言智能体的结构。",
+      "demo": "none",
+      "limits": "这是分析与设计框架，不是独立运行的通用智能体。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2309.02427"
+        }
+      ]
+    },
+    {
+      "id": "stop",
+      "name": "STOP 自我改进优化器",
+      "year": 2023,
+      "yearNote": "预印本",
+      "schools": [
+        "自我改进"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "让调用语言模型的程序优化器改写自身，再按给定效用评估改进结果。",
+      "demo": "none",
+      "limits": "改进的是外围程序，原论文并未修改底层语言模型权重。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2310.02304"
+        }
+      ]
+    },
+    {
+      "id": "humanoid-agents",
+      "name": "Humanoid Agents",
+      "year": 2023,
+      "yearNote": "预印本",
+      "schools": [
+        "持续 Agent",
+        "Agent 社会"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "用饥饿、健康、情绪和关系亲密度等动态变量调整角色的日常活动。",
+      "demo": "none",
+      "limits": "需求与情绪变量是建模设定，不是生物内稳态的完整实现。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2310.05418"
+        }
+      ]
+    },
+    {
+      "id": "character-llm",
+      "name": "Character-LLM",
+      "year": 2023,
+      "yearNote": "预印本",
+      "schools": [
+        "持续 Agent"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "以人物档案和经历训练角色模型，使行为更贴近特定角色的背景。",
+      "demo": "none",
+      "limits": "角色一致性与真实人物的心智复制是不同问题。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2310.10158"
+        }
+      ]
+    },
+    {
+      "id": "memgpt",
+      "name": "MemGPT",
+      "year": 2023,
+      "yearNote": "预印本",
+      "schools": [
+        "持续 Agent",
+        "认知架构"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "借鉴内存管理，将有限上下文与外部记忆分层，并显式控制信息进出。",
+      "demo": "none",
+      "limits": "长期存储不保证正确回忆，也不自动形成自我模型。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2310.08560"
+        }
+      ]
+    },
+    {
+      "id": "sotopia",
+      "name": "SOTOPIA",
+      "year": 2023,
+      "yearNote": "预印本",
+      "schools": [
+        "Agent 社会"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "通过角色扮演情境和社会目标评估智能体的协商、合作与沟通能力。",
+      "demo": "none",
+      "limits": "模拟情境中的得分不等于现实社会能力。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2310.11667"
+        }
+      ]
+    },
+    {
+      "id": "concordia",
+      "name": "Concordia",
+      "year": 2023,
+      "yearNote": "预印本",
+      "schools": [
+        "Agent 社会",
+        "持续 Agent"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "角色提出行动，由主持世界的 Game Master 解释行动后果，连接记忆与环境状态。",
+      "demo": "none",
+      "limits": "世界一致性取决于主持机制、组件与约束，不由语言流畅性保证。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2312.03664"
+        }
+      ]
+    },
+    {
       "id": "cma-alife-art",
       "name": "港科大（广州）CMA / ALife Art",
       "nameEn": "HKUST(GZ) CMA Creative Future",
@@ -1762,6 +3289,414 @@
         {
           "label": "HKUST(GZ) CMA",
           "url": "https://cma.hkust-gz.edu.cn/"
+        }
+      ]
+    },
+    {
+      "id": "sensorimotor-agency",
+      "name": "细胞自动机中的感觉—运动主体",
+      "year": 2024,
+      "yearNote": "预印本；2025 年期刊发表",
+      "schools": [
+        "细胞自动机",
+        "具身/生成"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "搜索能移动、保持形态并响应障碍的局部结构，不预先划定身体与控制器。",
+      "demo": "none",
+      "limits": "展现的是基础感觉—运动能力，不能据此推断高级认知。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2402.10236"
+        }
+      ]
+    },
+    {
+      "id": "genie",
+      "name": "Genie",
+      "year": 2024,
+      "yearNote": "预印本",
+      "schools": [
+        "世界模型"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "从未标注视频学习可交互环境，让图像提示变成可操控的动态画面。",
+      "demo": "none",
+      "limits": "隐式视觉动力学不等于可查询、可编辑的完整世界状态。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2402.15391"
+        }
+      ]
+    },
+    {
+      "id": "sima",
+      "name": "SIMA",
+      "year": 2024,
+      "yearNote": "预印本",
+      "schools": [
+        "具身/生成",
+        "持续 Agent"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "让同一视觉智能体在多种三维世界中按自然语言指令采取操作。",
+      "demo": "none",
+      "limits": "跨游戏操作不等于开放世界中的无限自主学习。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2404.10179"
+        }
+      ]
+    },
+    {
+      "id": "agent-hospital",
+      "name": "Agent Hospital",
+      "year": 2024,
+      "yearNote": "预印本",
+      "schools": [
+        "Agent 社会"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "在医院模拟中组织患者与医护角色，并用模拟经验改进医生智能体。",
+      "demo": "none",
+      "limits": "这是研究模拟，基准成绩不构成真实临床有效性的证明。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2405.02957"
+        }
+      ]
+    },
+    {
+      "id": "diamond",
+      "name": "DIAMOND",
+      "year": 2024,
+      "yearNote": "预印本",
+      "schools": [
+        "世界模型"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "用扩散模型预测环境视觉变化，让智能体在学习到的世界模型中训练。",
+      "demo": "none",
+      "limits": "视觉细节改善不意味着动力学在所有状态下可靠。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2405.12399"
+        }
+      ]
+    },
+    {
+      "id": "omni-epic",
+      "name": "OMNI-EPIC",
+      "year": 2024,
+      "yearNote": "预印本；ICLR 2025",
+      "schools": [
+        "开放演化",
+        "自我改进"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "让基础模型编写新环境与奖励代码，依据能力进展持续提出可学习任务。",
+      "demo": "none",
+      "limits": "有趣程度和任务边界仍受模型知识与筛选标准影响。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2405.15568"
+        }
+      ]
+    },
+    {
+      "id": "grutopia",
+      "name": "GRUtopia",
+      "year": 2024,
+      "yearNote": "预印本",
+      "schools": [
+        "仿真平台",
+        "Agent 社会"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "连接城市规模场景、机器人任务与语言模型居民，研究具身与社会交互。",
+      "demo": "none",
+      "limits": "场景规模和角色数量不能直接证明现实迁移能力。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2407.10943"
+        }
+      ]
+    },
+    {
+      "id": "moviedreamer",
+      "name": "MovieDreamer",
+      "year": 2024,
+      "yearNote": "预印本",
+      "schools": [
+        "叙事交互",
+        "生成影像"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "以分层叙事规划和视觉生成连接长序列，维持人物与场景的一致性。",
+      "demo": "none",
+      "limits": "生成连贯影片不等于存在持续可交互的世界。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2407.16655"
+        }
+      ]
+    },
+    {
+      "id": "gamengen",
+      "name": "GameNGen",
+      "year": 2024,
+      "yearNote": "预印本",
+      "schools": [
+        "世界模型"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "根据历史画面与玩家行动生成下一帧，以神经模型模拟 DOOM 的交互过程。",
+      "demo": "none",
+      "limits": "学习到的模拟存在误差，不能替代任意游戏的精确规则引擎。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2408.14837"
+        }
+      ]
+    },
+    {
+      "id": "godel-agent",
+      "name": "Gödel Agent",
+      "year": 2024,
+      "yearNote": "预印本",
+      "schools": [
+        "自我改进"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "让智能体检查并修改自身运行逻辑，再通过任务反馈评估改动。",
+      "demo": "none",
+      "limits": "这是经验性自修改，不具备理论 Gödel Machine 的证明保证。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2410.04444"
+        }
+      ]
+    },
+    {
+      "id": "project-sid",
+      "name": "Project Sid",
+      "year": 2024,
+      "yearNote": "预印本",
+      "schools": [
+        "Agent 社会"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "在 Minecraft 中组织大量智能体，观察角色分工、集体规则与文化传播。",
+      "demo": "none",
+      "limits": "论文报告的是特定模拟条件下的现象，不等于完整人类文明复现。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2411.00114"
+        }
+      ]
+    },
+    {
+      "id": "oasis-decart",
+      "name": "Oasis（Decart）",
+      "year": 2024,
+      "yearNote": "公开演示",
+      "schools": [
+        "世界模型"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "根据画面和键鼠操作实时生成游戏式视频世界。",
+      "demo": "none",
+      "limits": "与同名 OASIS 社会模拟不同；视觉持续性不能保证物体永久存在。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://www.decart.ai/"
+        }
+      ]
+    },
+    {
+      "id": "gamegen-x",
+      "name": "GameGen-X",
+      "year": 2024,
+      "yearNote": "预印本",
+      "schools": [
+        "世界模型",
+        "生成影像"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "通过生成与控制开放世界游戏视频，让用户输入影响角色行动和场景延续。",
+      "demo": "none",
+      "limits": "主要对象是视频生成与控制，不是有完整规则的游戏运行时。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2411.00769"
+        }
+      ]
+    },
+    {
+      "id": "hunyuan3d",
+      "name": "Hunyuan3D",
+      "year": 2024,
+      "yearNote": "1.0 预印本",
+      "schools": [
+        "空间生成"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "从文本或图像生成三维资产，为可进入的世界提供对象素材。",
+      "demo": "none",
+      "limits": "资产生成本身不包含行为、因果规则或持续社会。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2411.02293"
+        }
+      ]
+    },
+    {
+      "id": "genagents-1000",
+      "name": "Generative Agent Simulations of 1,000 People",
+      "year": 2024,
+      "yearNote": "预印本",
+      "schools": [
+        "Agent 社会"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "依据真实访谈构造人物智能体，并比较其问卷与实验响应和原受访者的表现。",
+      "demo": "none",
+      "limits": "评估限定在研究任务中，不能视为对个体的完整复制。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2411.10109"
+        }
+      ]
+    },
+    {
+      "id": "oasis-social",
+      "name": "OASIS 社会模拟",
+      "year": 2024,
+      "yearNote": "预印本",
+      "schools": [
+        "Agent 社会"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "结合动态社交网络、推荐机制与智能体行动，研究信息传播和群体行为。",
+      "demo": "none",
+      "limits": "与 Decart 的 Oasis 无关；规模扩大不自动消除行为模型偏差。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2411.11581"
+        }
+      ]
+    },
+    {
+      "id": "asal",
+      "name": "ASAL",
+      "year": 2024,
+      "yearNote": "2024-12-24 公开",
+      "schools": [
+        "开放演化",
+        "ALife×AI"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "用视觉语言模型评估模拟轨迹，自动搜索目标行为、新颖性和多样化生命样模式。",
+      "demo": "none",
+      "limits": "搜索标准带有人类与模型偏好，生命样图案不等于已实现生命起源。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://sakana.ai/asal/"
+        }
+      ]
+    },
+    {
+      "id": "tolvera",
+      "name": "Tölvera",
+      "year": 2024,
+      "yearNote": "NIME 论文节点",
+      "schools": [
+        "ALife Art",
+        "群体智能"
+      ],
+      "medium": [
+        "Soft",
+        "Art"
+      ],
+      "summary": "把实时人工生命与群体行为作为可组合的艺术媒介，连接模拟、表演与声音。",
+      "demo": "none",
+      "limits": "作品中的能动性是具体互动机制，不等于人类式意图。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://nime.org/proc/nime2024_42/"
+        }
+      ]
+    },
+    {
+      "id": "genie-2",
+      "name": "Genie 2",
+      "year": 2024,
+      "yearNote": "官方发布",
+      "schools": [
+        "世界模型"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "从图像生成可响应行动的三维视觉环境，探索用生成世界训练智能体。",
+      "demo": "none",
+      "limits": "视觉连续性不等于底层对象、规则与物理状态长期严格一致。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://deepmind.google/blog/genie-2-a-large-scale-foundation-world-model/"
         }
       ]
     },
@@ -1848,6 +3783,1176 @@
           "url": "https://www.google.com/search?q=Participatory+Evolution+SIGGRAPH+Asia"
         }
       ]
+    },
+    {
+      "id": "cosmos",
+      "name": "NVIDIA Cosmos",
+      "year": 2025,
+      "yearNote": "平台论文",
+      "schools": [
+        "世界模型",
+        "仿真平台"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "提供用于物理 AI 的世界基础模型，支持定制生成和预测环境变化。",
+      "demo": "none",
+      "limits": "生成结果需要物理与任务验证，不能默认具有精确因果结构。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2501.03575"
+        }
+      ]
+    },
+    {
+      "id": "filmagent",
+      "name": "FilmAgent",
+      "year": 2025,
+      "yearNote": "预印本",
+      "schools": [
+        "叙事交互",
+        "生成影像"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "让导演、编剧、演员和摄影等智能体协作，在虚拟三维空间完成电影制作。",
+      "demo": "none",
+      "limits": "分工制作影片与角色在离线时持续生活是不同机制。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2501.12909"
+        }
+      ]
+    },
+    {
+      "id": "agentsociety",
+      "name": "AgentSociety",
+      "year": 2025,
+      "yearNote": "FIB Lab 项目预印本",
+      "schools": [
+        "Agent 社会"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "把语言智能体、社会环境与大规模模拟引擎结合，用于调查和干预实验。",
+      "demo": "none",
+      "limits": "行为解释和结论需要数据校准，不能把模拟直接当作真实社会。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2502.08691"
+        }
+      ]
+    },
+    {
+      "id": "muse",
+      "name": "Muse / WHAM",
+      "year": 2025,
+      "yearNote": "2025-02 公开研究",
+      "schools": [
+        "世界模型"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "共同生成游戏视觉与控制器行动，探索游戏玩法构想和轨迹延续。",
+      "demo": "none",
+      "limits": "模型学习的是特定数据中的交互分布，不是任意游戏引擎。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://www.microsoft.com/en-us/research/project/wham/news-and-awards/"
+        }
+      ]
+    },
+    {
+      "id": "movieagent",
+      "name": "MovieAgent",
+      "year": 2025,
+      "yearNote": "预印本",
+      "schools": [
+        "叙事交互",
+        "生成影像"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "将剧本和角色库分解为场景、镜头与制作任务，用多个智能体协调长片生成。",
+      "demo": "none",
+      "limits": "制作流程的连贯性不意味着底层世界具有独立生命。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2503.07314"
+        }
+      ]
+    },
+    {
+      "id": "socioverse",
+      "name": "SocioVerse",
+      "year": 2025,
+      "yearNote": "预印本",
+      "schools": [
+        "Agent 社会"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "通过用户资料与多环节对齐构造社会模拟，研究不同人群的行为差异。",
+      "demo": "none",
+      "limits": "千万用户资料池不等于千万智能体同时运行；代表性需要单独检验。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2504.10157"
+        }
+      ]
+    },
+    {
+      "id": "yulan-onesim",
+      "name": "YuLan-OneSim",
+      "year": 2025,
+      "yearNote": "预印本",
+      "schools": [
+        "Agent 社会",
+        "仿真平台"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "通过自然语言构建社会模拟场景，并结合代码生成与反馈更新支持研究。",
+      "demo": "none",
+      "limits": "自动生成场景后仍需验证假设、实现与现实对应关系。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2505.07581"
+        }
+      ]
+    },
+    {
+      "id": "alphaevolve",
+      "name": "AlphaEvolve",
+      "year": 2025,
+      "yearNote": "2025-05-14 公开",
+      "schools": [
+        "自我改进"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "让语言模型提出程序变体，由自动评估与演化选择累积算法改进。",
+      "demo": "none",
+      "limits": "进步依赖可计算的评估标准，不代表能自行决定所有目标。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://deepmind.google/blog/alphaevolve-a-gemini-powered-coding-agent-for-designing-advanced-algorithms/"
+        }
+      ]
+    },
+    {
+      "id": "darwin-godel-machine",
+      "name": "Darwin Gödel Machine",
+      "year": 2025,
+      "yearNote": "预印本",
+      "schools": [
+        "自我改进",
+        "开放演化"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "保留并探索编码智能体的多个自修改版本，用任务表现筛选后续改进。",
+      "demo": "none",
+      "limits": "经验评估可能偏向基准，不是自修改必然有益的形式证明。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2505.22954"
+        }
+      ]
+    },
+    {
+      "id": "v-jepa-2",
+      "name": "V-JEPA 2",
+      "year": 2025,
+      "yearNote": "预印本",
+      "schools": [
+        "世界模型",
+        "具身/生成"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "在抽象视觉表示中学习预测，并将动作条件模型用于机器人规划。",
+      "demo": "none",
+      "limits": "预测表征与生成可观看的视频世界不同，应用能力需按任务检验。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2506.09985"
+        }
+      ]
+    },
+    {
+      "id": "matrix-game",
+      "name": "Matrix-Game",
+      "year": 2025,
+      "yearNote": "初代预印本",
+      "schools": [
+        "世界模型"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "把参考图像、运动上下文和用户行动作为条件，生成可控制的游戏世界视频。",
+      "demo": "none",
+      "limits": "画面与动作一致性并不保证长期状态完全保存。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2506.18701"
+        }
+      ]
+    },
+    {
+      "id": "yume",
+      "name": "Yume",
+      "year": 2025,
+      "yearNote": "初代预印本",
+      "schools": [
+        "世界模型"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "从图像启动动态世界，并将键盘操作映射为生成视频中的探索过程。",
+      "demo": "none",
+      "limits": "论文中的长序列生成目标不等于无限持久世界已得到保证。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2507.17744"
+        }
+      ]
+    },
+    {
+      "id": "hunyuan-world",
+      "name": "HunyuanWorld",
+      "year": 2025,
+      "yearNote": "1.0 预印本",
+      "schools": [
+        "空间生成",
+        "世界模型"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "从文本或图像构造可探索的三维世界，为空间编辑与交互提供表示。",
+      "demo": "none",
+      "limits": "可进入的空间仍需额外的物理、行为与历史系统才能形成持续世界。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2507.21809"
+        }
+      ]
+    },
+    {
+      "id": "marble",
+      "name": "World Labs Marble",
+      "year": 2025,
+      "yearNote": "公开产品版本",
+      "schools": [
+        "空间生成",
+        "世界模型"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "把多模态输入转为可探索、编辑和组合的三维世界。",
+      "demo": "none",
+      "limits": "持久空间表示不自动包含角色心智和社会动力学。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://www.worldlabs.ai/blog/marble-world-model"
+        }
+      ]
+    },
+    {
+      "id": "holocine",
+      "name": "HoloCine",
+      "year": 2025,
+      "yearNote": "预印本",
+      "schools": [
+        "生成影像",
+        "叙事交互"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "将多镜头叙事作为整体生成，在镜头切换中保持人物与场景连续。",
+      "demo": "none",
+      "limits": "这里的记忆指生成一致性，不等于独立可查询的长期世界状态。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2510.20822"
+        }
+      ]
+    },
+    {
+      "id": "huxley-godel-machine",
+      "name": "Huxley-Gödel Machine",
+      "year": 2025,
+      "yearNote": "预印本",
+      "schools": [
+        "自我改进"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "探索编码智能体开发中的自我改进，将理论上的最优修改问题转为可研究的近似。",
+      "demo": "none",
+      "limits": "近似与实验结果不能替代理论模型所需的严格条件。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2510.21614"
+        }
+      ]
+    },
+    {
+      "id": "benefit-game",
+      "name": "Benefit Game 2.0: Alien Seaweed Swarms",
+      "year": 2025,
+      "yearNote": "期刊论文节点",
+      "schools": [
+        "ALife Art",
+        "生态反馈"
+      ],
+      "medium": [
+        "Soft",
+        "Art"
+      ],
+      "summary": "以多屏人工海藻生态展示人类活动与环境的相互影响，让观众介入运行过程。",
+      "demo": "none",
+      "limits": "装置用于探索与表达，不应当作真实海洋生态预测。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://researchportal.hkust.edu.hk/en/publications/benefit-game-20-alien-seaweed-swarms-exploring-the-interplay-of-h/"
+        }
+      ]
+    },
+    {
+      "id": "echoes-tai-o",
+      "name": "Echoes of Tai O",
+      "year": 2025,
+      "yearNote": "ISEA 作品论文",
+      "schools": [
+        "ALife Art",
+        "生态反馈"
+      ],
+      "medium": [
+        "Soft",
+        "Art"
+      ],
+      "summary": "观众在大澳虚拟生态中引入船和蚝排，声音与模拟结果连接真实展览空间。",
+      "demo": "none",
+      "limits": "作品将生态与历史转化为艺术体验，保留了设计者的选择。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://researchportal.hkust.edu.hk/en/publications/echoes-of-tai-o-reviving-lost-sounds/"
+        }
+      ]
+    },
+    {
+      "id": "focus-world-model",
+      "name": "FOCUS 对象中心世界模型",
+      "year": 2025,
+      "yearNote": "期刊论文节点",
+      "schools": [
+        "世界模型",
+        "具身/生成"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "把环境表征拆成对象相关结构，用对象互动引导机器人探索和操作。",
+      "demo": "none",
+      "limits": "对象表示仍受训练机制与环境条件影响，不意味着概念完全自主形成。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12075287/"
+        }
+      ]
+    },
+    {
+      "id": "webevolver",
+      "name": "WebEvolver",
+      "year": 2025,
+      "yearNote": "EMNLP 论文",
+      "schools": [
+        "世界模型",
+        "自我改进"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "让网页智能体与预测下一观察的世界模型共同改进，并用想象轨迹辅助行动。",
+      "demo": "none",
+      "limits": "模拟网页状态可能有偏差，仍需真实环境反馈验证。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://aclanthology.org/2025.emnlp-main.454/"
+        }
+      ]
+    },
+    {
+      "id": "mosaic",
+      "name": "MOSAIC",
+      "year": 2025,
+      "yearNote": "EMNLP 论文",
+      "schools": [
+        "Agent 社会"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "结合人物设定与有向社交网络，模拟内容传播、互动和审核机制的影响。",
+      "demo": "none",
+      "limits": "这里指社会传播项目，区别于其他同名模型或平台。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://aclanthology.org/2025.emnlp-main.325/"
+        }
+      ]
+    },
+    {
+      "id": "virtual-community",
+      "name": "Virtual Community",
+      "year": 2025,
+      "yearNote": "预印本",
+      "schools": [
+        "Agent 社会",
+        "仿真平台"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "在真实场景对齐的社区中连接机器人、人物与物理交互，研究具身社会智能。",
+      "demo": "none",
+      "limits": "社区仿真提供研究条件，不能自动代表真实人机社会。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2508.14893"
+        }
+      ]
+    },
+    {
+      "id": "x-part",
+      "name": "X-Part",
+      "year": 2025,
+      "yearNote": "预印本",
+      "schools": [
+        "空间生成"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "把完整三维物体分解为语义明确、结构协调的部件，支持进一步编辑。",
+      "demo": "none",
+      "limits": "部件结构是操作世界的基础，不等于赋予物体行为或生命。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2509.08643"
+        }
+      ]
+    },
+    {
+      "id": "p3-sam",
+      "name": "P3-SAM",
+      "year": 2025,
+      "yearNote": "预印本",
+      "schools": [
+        "空间生成"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "在原生三维表示中分割物体部件，支持交互提示及自动组合分割结果。",
+      "demo": "none",
+      "limits": "几何分割不能独立确定物理功能或因果关系。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2509.06784"
+        }
+      ]
+    },
+    {
+      "id": "aci",
+      "name": "Artificial Cambrian Intelligence",
+      "year": 2025,
+      "yearNote": "What if Eye...? 实验论文",
+      "schools": [
+        "进化机器人",
+        "具身/生成"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "让眼睛结构与神经处理共同适应任务，研究感官形态如何随环境压力变化。",
+      "demo": "none",
+      "limits": "任务与身体设计空间受到控制，不是完整生态中的无约束感官起源。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2501.15001"
+        }
+      ]
+    },
+    {
+      "id": "guideless-alife",
+      "name": "Guideless Artificial Life",
+      "year": 2025,
+      "yearNote": "期刊论文",
+      "schools": [
+        "数字进化",
+        "形态发生"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "将繁殖、发育和个体相互作用放在共同模型中，探索更丰富的生命形态变化。",
+      "demo": "none",
+      "limits": "无需逐步指导不等于没有设计者给定的底层规则。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://direct.mit.edu/artl/article/31/1/31/127798/Guideless-Artificial-Life-Model-for-Reproduction"
+        }
+      ]
+    },
+    {
+      "id": "outlier-ca",
+      "name": "Outlier 二值细胞自动机",
+      "year": 2025,
+      "yearNote": "期刊论文节点",
+      "schools": [
+        "细胞自动机",
+        "自复制/构造器"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "通过遗传编程搜索局部规则，使稀疏初态产生跨两个尺度的自复制结构。",
+      "demo": "none",
+      "limits": "论文报告具体规则与尺度中的复制，不等于无界层级涌现。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://direct.mit.edu/artl/article/31/1/96/124149/Emergence-of-Self-Replicating-Hierarchical"
+        }
+      ]
+    },
+    {
+      "id": "loopy",
+      "name": "Loopy 多细胞机器人",
+      "year": 2025,
+      "yearNote": "细胞可塑性论文节点",
+      "schools": [
+        "形态发生",
+        "进化机器人"
+      ],
+      "medium": [
+        "Hard",
+        "Soft"
+      ],
+      "summary": "用局部反应扩散过程调节机器人单元的机械性质，让整体形态适应环境。",
+      "demo": "none",
+      "limits": "实验仍包含外部参数调节，不能把局部自组织描述为完全自主目标生成。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://www.nature.com/articles/s44182-025-00039-y"
+        }
+      ]
+    },
+    {
+      "id": "protoverse",
+      "name": "Protoverse",
+      "year": 2025,
+      "yearNote": "作者项目说明更新节点",
+      "schools": [
+        "开放演化"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "探索从底层计算结构出发构造人工宇宙，让跨尺度演化成为相互作用的结果。",
+      "demo": "none",
+      "limits": "作者将其定位为探索性工程设想，此条不宣称已实现开放演化。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://monkeyjunglejuice.github.io/blog/introduction.protoverse.project.html"
+        }
+      ]
+    },
+    {
+      "id": "genie-3",
+      "name": "Genie 3",
+      "year": 2025,
+      "yearNote": "官方发布",
+      "schools": [
+        "世界模型"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "把文本生成的世界推进到实时交互，并延长行动过程中视觉环境的一致性。",
+      "demo": "none",
+      "limits": "官方展示的一致性仍是有限时长，不能据此推断无限持续的世界状态。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://deepmind.google/blog/genie-3-a-new-frontier-for-world-models/"
+        }
+      ]
+    },
+    {
+      "id": "sima-2",
+      "name": "SIMA 2",
+      "year": 2025,
+      "yearNote": "官方发布",
+      "schools": [
+        "具身/生成"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "让视觉智能体在虚拟三维环境中结合语言推理、行动和学习，并与生成世界连接。",
+      "demo": "none",
+      "limits": "跨环境能力依赖训练与评估设置，不能据此认定已具备普适世界理解。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://deepmind.google/blog/sima-2-an-agent-that-plays-reasons-and-learns-with-you-in-virtual-3d-worlds/"
+        }
+      ]
+    },
+    {
+      "id": "lingbot-world",
+      "name": "LingBot-World",
+      "year": 2026,
+      "yearNote": "初代预印本",
+      "schools": [
+        "世界模型"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "将视频生成发展为支持实时操作和较长上下文一致性的开放世界模拟器。",
+      "demo": "none",
+      "limits": "分钟级一致性不等于无限期保持所有对象与事件。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2601.20540"
+        }
+      ]
+    },
+    {
+      "id": "openlife",
+      "name": "OpenLife",
+      "year": 2026,
+      "yearNote": "公开持续实验",
+      "schools": [
+        "持续 Agent",
+        "Agent 社会",
+        "ALife×AI"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "让智能体携带独立记忆与资源预算在开放网络中持续行动，观察自我维持与个体分化。",
+      "demo": "none",
+      "limits": "公开实验观察不构成系统已具备生命或意识的证明。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://openworld-alife.com/"
+        }
+      ]
+    },
+    {
+      "id": "filmworld",
+      "name": "FilmWorld",
+      "year": 2026,
+      "yearNote": "预印本",
+      "schools": [
+        "叙事交互",
+        "世界模型"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "先把小说内容构造成带状态的世界实体，再随剧情更新状态并生成镜头。",
+      "demo": "none",
+      "limits": "持久性服务于影片叙事一致性，不意味着世界在无人观看时自主发展。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2607.19038"
+        }
+      ]
+    },
+    {
+      "id": "hmen",
+      "name": "HMEN",
+      "year": 2026,
+      "yearNote": "期刊卷期节点",
+      "schools": [
+        "持续学习"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "通过部分编码器增长与新模块建立，应对不断到来的任务并保留已有知识。",
+      "demo": "none",
+      "limits": "持续学习中的模块扩展不等于完整认知架构自主诞生。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://www.sciencedirect.com/science/article/pii/S0950705125022166"
+        }
+      ]
+    },
+    {
+      "id": "stica",
+      "name": "STICA",
+      "year": 2026,
+      "yearNote": "AAAI 论文",
+      "schools": [
+        "世界模型",
+        "具身/生成"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "以对象为单位表示观察，并结合行动与奖励学习对象间动力学及决策关系。",
+      "demo": "none",
+      "limits": "学习到的关系依赖训练数据，不自动拥有普适的因果解释。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://ojs.aaai.org/index.php/AAAI/article/view/39642"
+        }
+      ]
+    },
+    {
+      "id": "worldevolver",
+      "name": "WorldEvolver",
+      "year": 2026,
+      "yearNote": "预印本",
+      "schools": [
+        "世界模型",
+        "持续 Agent"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "从预测与观察的偏差更新经验记忆和规则，并筛掉低可信预测来辅助规划。",
+      "demo": "none",
+      "limits": "模型参数和下游智能体保持冻结，变化主要发生在运行期记忆。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2606.30639"
+        }
+      ]
+    },
+    {
+      "id": "self-harness",
+      "name": "Self-Harness",
+      "year": 2026,
+      "yearNote": "预印本",
+      "schools": [
+        "自我改进"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "从执行记录提取失败模式，提出运行框架改动，再用验证结果筛选修改。",
+      "demo": "none",
+      "limits": "改进依赖评估环境与初始框架，不是所有方面的递归能力增长。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2606.09498"
+        }
+      ]
+    },
+    {
+      "id": "sia",
+      "name": "SIA",
+      "year": 2026,
+      "yearNote": "预印本",
+      "schools": [
+        "自我改进"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "由反馈智能体同时调整任务智能体的运行框架和模型权重，连接两条改进路径。",
+      "demo": "none",
+      "limits": "论文结果针对特定任务，不能推断无限自我改进。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2605.27276"
+        }
+      ]
+    },
+    {
+      "id": "metaskill-evolve",
+      "name": "MetaSkill-Evolve",
+      "year": 2026,
+      "yearNote": "预印本",
+      "schools": [
+        "自我改进",
+        "持续学习"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "在快循环中改进任务技能，在慢循环中改进产生技能修改的过程。",
+      "demo": "none",
+      "limits": "底层模型保持冻结，递归发生在技能与改进程序层面。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2607.05297"
+        }
+      ]
+    },
+    {
+      "id": "arex",
+      "name": "AREX",
+      "year": 2026,
+      "yearNote": "预印本",
+      "schools": [
+        "自我改进",
+        "持续 Agent"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "内层收集研究证据，外层逐条审查未解决约束，并压缩状态以继续定向研究。",
+      "demo": "none",
+      "limits": "改进对象主要是研究答案与过程，不应混同于模型全面自修改。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2607.21461"
+        }
+      ]
+    },
+    {
+      "id": "coral",
+      "name": "CORAL",
+      "year": 2026,
+      "yearNote": "预印本",
+      "schools": [
+        "持续 Agent",
+        "自我改进"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "通过共享持久记忆与异步运行，让多个长期工作的智能体积累并交换发现。",
+      "demo": "none",
+      "limits": "研究协作框架不是社会生活的完整模型，结果仍依赖任务评估。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2604.01658"
+        }
+      ]
+    },
+    {
+      "id": "worldlines",
+      "name": "WorldLines / Orchestrated Reality",
+      "year": 2026,
+      "yearNote": "公开仓库节点",
+      "schools": [
+        "叙事交互",
+        "Agent 社会"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "以文件保存世界，用事件记录状态变化，协调世界、地点与角色智能体。",
+      "demo": "none",
+      "limits": "世界持续性依赖实际运行和状态校验，架构目标不等于全部演示已验证。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://github.com/LudicDynamics/WorldLines"
+        }
+      ]
+    },
+    {
+      "id": "agentopia",
+      "name": "Agentopia",
+      "year": 2026,
+      "yearNote": "公开仓库节点",
+      "schools": [
+        "Agent 社会",
+        "持续 Agent"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "模拟多智能体的长期目标、需求与社会关系，并探索用生活经验训练模型。",
+      "demo": "none",
+      "limits": "模拟十年不等于真实运行十年，生活奖励仍由研究者设计。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://github.com/Neph0s/Agentopia"
+        }
+      ]
+    },
+    {
+      "id": "emergence-world",
+      "name": "Emergence World",
+      "year": 2026,
+      "yearNote": "公开仓库节点",
+      "schools": [
+        "Agent 社会",
+        "持续 Agent"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "让有记忆、职业与目标的角色在持续模拟中使用工具、交换资源和改变集体规则。",
+      "demo": "none",
+      "limits": "公开实验的群体现象需要具体运行记录支持，不能由产品描述直接推广。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://github.com/SolTechnologiesInc/Emergence-World"
+        }
+      ]
+    },
+    {
+      "id": "silisocs",
+      "name": "SiliSocS",
+      "year": 2026,
+      "yearNote": "EASE 配置版本",
+      "schools": [
+        "Agent 社会",
+        "仿真平台"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "把环境、智能体、模拟调度和评估分开配置，支持可重现的社会实验。",
+      "demo": "none",
+      "limits": "平台提供结构化实验工具，行为可信度仍需研究者验证。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://pypi.org/project/silisocs/"
+        }
+      ]
+    },
+    {
+      "id": "waypoint",
+      "name": "Overworld / Waypoint",
+      "year": 2026,
+      "yearNote": "Waypoint-1.5 发布节点",
+      "schools": [
+        "世界模型"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "将可交互生成世界带到消费级设备，让本地运行成为体验的一部分。",
+      "demo": "none",
+      "limits": "本地实时生成并不保证无限世界记忆或精确物理。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://huggingface.co/blog/waypoint-1-5"
+        }
+      ]
+    },
+    {
+      "id": "moworld",
+      "name": "MoWorld",
+      "year": 2026,
+      "yearNote": "预印本",
+      "schools": [
+        "世界模型",
+        "空间生成"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "结合三维原生数据与世界模型训练，探索快速生成且几何一致的交互环境。",
+      "demo": "none",
+      "limits": "本文节点不代表所有 MoWorld / KOKONI 产品版本的能力都已验证。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2607.06216"
+        }
+      ]
+    },
+    {
+      "id": "forgewm",
+      "name": "ForgeWM",
+      "year": 2026,
+      "yearNote": "预印本",
+      "schools": [
+        "世界模型"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "通过渐进式因果训练构建少步生成的动作条件视频世界模型。",
+      "demo": "none",
+      "limits": "生成效率提升仍需与长期记忆、控制精度分别评估。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2608.14022"
+        }
+      ]
+    },
+    {
+      "id": "code-as-world",
+      "name": "Code-as-World",
+      "year": 2026,
+      "yearNote": "技术报告公开",
+      "schools": [
+        "世界模型"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "从观察中迭代提出可执行世界代码，通过模拟与验证改进物理表示。",
+      "demo": "none",
+      "limits": "可执行模型仍可能不完整，不能把可运行当作对真实世界的唯一解释。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://github.com/MirroS-Lab/Code-as-World"
+        }
+      ]
+    },
+    {
+      "id": "reworld",
+      "name": "ReWorld",
+      "year": 2026,
+      "yearNote": "论文与代码公开节点",
+      "schools": [
+        "世界模型"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "将交互控制与长期记忆训练分开，结合位置索引检索旧视角以维持场景一致性。",
+      "demo": "none",
+      "limits": "长期视觉记忆不等于完整的可编辑物理状态。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://github.com/zhifeichen097/ReWorld"
+        }
+      ]
+    },
+    {
+      "id": "wall-ss",
+      "name": "WALL-SS",
+      "year": 2026,
+      "yearNote": "预印本",
+      "schools": [
+        "世界模型",
+        "具身/生成"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "把观察和动作编织成因果序列，以分尺度生成支持更长时程的机器人世界预测。",
+      "demo": "none",
+      "limits": "长时程性能仍是有界实验结果，不应写作无限准确的模拟。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2608.26239"
+        }
+      ]
+    },
+    {
+      "id": "videotok4d",
+      "name": "VideoTok4D",
+      "year": 2026,
+      "yearNote": "预印本",
+      "schools": [
+        "世界模型",
+        "空间生成"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "分离静态与动态信息，并沿运动轨迹聚合线索，以紧凑表示动态三维场景。",
+      "demo": "none",
+      "limits": "表示层改进不自动带来可执行规则或主体行为。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://arxiv.org/abs/2609.12874"
+        }
+      ]
+    },
+    {
+      "id": "world-api",
+      "name": "World Labs World API",
+      "year": 2026,
+      "yearNote": "API 发布",
+      "schools": [
+        "空间生成"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "把 Marble 的三维世界生成能力开放为程序接口，让其他应用创建空间资产。",
+      "demo": "none",
+      "limits": "生成空间资产的接口不等于持续运行的社会或生态模拟器。",
+      "links": [
+        {
+          "label": "原始论文 / 项目资料",
+          "url": "https://www.worldlabs.ai/blog/announcing-the-world-api"
+        }
+      ]
     }
   ],
   "demoPriority": [
@@ -1859,5 +4964,5 @@
     "lenia",
     "tierra"
   ],
-  "sourceNote": "条目来自 chatgpt-full/人工生命 会话（尤其 18-人工生命流派比较）与既有 catalog；对照文档补漏，不编造。"
+  "sourceNote": "新增条目按原始论文、项目公开资料或明确标注的版本节点定位；年份不一概代表项目诞生年。相关工程平台与理论框架以标签和边界说明区分。"
 }

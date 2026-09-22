@@ -7,7 +7,7 @@
 
 | 栏目 | 路径 | 说明 |
 | --- | --- | --- |
-| 关注方向 | `/` | 一屏**人工生命史**：左侧年份导航 + 中列时间轴（39 条，1948 → 2025）+ 右列卡片墙，两列读同一份 `public/alife/data/catalog.json` |
+| 关注方向 | `/` | 一屏**人工生命史**：左侧年份导航 + 中列时间轴（条目与年份跨度随共享目录更新）+ 右列卡片墙，两列读同一份 `public/alife/data/catalog.json` |
 | 个人项目 | `/projects` | 本人作品（`src/data/fountFields.ts`，13 个已上线入口）+ 人工生命的实验（`mind-society` 里带 `alife` 标签的成员） |
 | 博客 | 外链 `lidechi.github.io` | 站内博客页暂时关闭 |
 | 关于 / 账号 | `/?view=about`、`/?view=login` | 关于页保留；账号入口暂时隐藏，直接 URL 仍可访问 |

@@ -15,7 +15,7 @@ import { AlifeItemDetail } from "./AlifeItemDetail";
 import "./AlifeTimeline.css";
 
 /**
- * 人工生命史：左边时间轴，右边展览的卡片墙（39 条，1948 → 2025）。
+ * 人工生命史：左边时间轴，右边展览的卡片墙（条目与年份跨度随共享目录更新）。
  *
  * 联动：
  *  - 指针停在左列条目上 → 右列把对应卡片带到中间；
