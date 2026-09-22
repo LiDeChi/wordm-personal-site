@@ -261,6 +261,13 @@ export function AlifeTimeline({ lang }: TimelineProps) {
     }
   }
 
+  /** 展开全部 / 收起全部：两个集合一起改，点完不留残留的悬停展开。 */
+  function toggleAll() {
+    setOpenIds(allOpen ? [] : items.map((item) => item.id));
+    setClosedIds(allOpen ? items.map((item) => item.id) : []);
+    setExpandId(null);
+  }
+
   /** 滚左列时右列跟着走：中线附近那一条成为当前条目。 */
   function handleListScroll() {
     if (scrollFrame.current) {
@@ -305,25 +312,10 @@ export function AlifeTimeline({ lang }: TimelineProps) {
           ) : null}
         </div>
 
-        <div className="alife-tool-actions">
-          {state.status === "ready" ? (
-            <button
-              type="button"
-              aria-pressed={allOpen}
-              onClick={() => {
-                setOpenIds(allOpen ? [] : items.map((item) => item.id));
-                setClosedIds(allOpen ? items.map((item) => item.id) : []);
-                setExpandId(null);
-              }}
-            >
-              {allOpen ? copy.collapseAll : copy.expandAll}
-            </button>
-          ) : null}
-          <a href={ALIFE_MUSEUM_URL}>
-            {copy.openMuseum}
-            <span aria-hidden="true">↗</span>
-          </a>
-        </div>
+        <a className="alife-museum-link" href={ALIFE_MUSEUM_URL}>
+          {copy.openMuseum}
+          <span aria-hidden="true">↗</span>
+        </a>
       </header>
 
       {state.status === "loading" ? (
@@ -351,10 +343,15 @@ export function AlifeTimeline({ lang }: TimelineProps) {
         <div className="alife-timeline-layout">
           <div className="alife-column alife-column-timeline">
             <header className="alife-column-head">
-              <span className="alife-field-label">{copy.timelineLabel}</span>
-              <span className="alife-column-hint" aria-hidden="true">
-                {copy.timelineHint}
-              </span>
+              <span className="alife-column-title">{copy.timelineLabel}</span>
+              <button
+                type="button"
+                className="alife-head-toggle"
+                aria-pressed={allOpen}
+                onClick={toggleAll}
+              >
+                {allOpen ? copy.collapseAll : copy.expandAll}
+              </button>
             </header>
 
             <div className="alife-timeline-split">

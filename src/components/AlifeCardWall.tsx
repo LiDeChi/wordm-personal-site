@@ -40,10 +40,7 @@ export function AlifeCardWall({
   return (
     <section className="alife-column alife-card-wall" aria-label={copy.galleryLabel}>
       <header className="alife-column-head">
-        <span className="alife-field-label">{copy.galleryLabel}</span>
-        <span className="alife-column-hint" aria-hidden="true">
-          {copy.galleryHint}
-        </span>
+        <span className="alife-column-title">{copy.galleryLabel}</span>
       </header>
 
       <ul className="alife-wall-grid" ref={paneRef}>

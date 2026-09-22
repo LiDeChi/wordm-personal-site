@@ -115,10 +115,8 @@ export const ALIFE_COPY: Record<
     retry: string;
     /* —— 两列（时间轴 + 画廊）—— */
     timelineLabel: string;
-    timelineHint: string;
     decadeNav: string;
     galleryLabel: string;
-    galleryHint: string;
     teamLabel: string;
     mediumLabel: string;
     leadSite: string;
@@ -150,10 +148,8 @@ export const ALIFE_COPY: Record<
     failed: "展览条目读取失败。",
     retry: "重试",
     timelineLabel: "时间轴",
-    timelineHint: "滚动浏览 · 点开看详情",
     decadeNav: "年代导航",
     galleryLabel: "画廊",
-    galleryHint: "滚动浏览 · 悬停同步",
     teamLabel: "团队 / 机构",
     mediumLabel: "介质",
     leadSite: "主页",
@@ -185,10 +181,8 @@ export const ALIFE_COPY: Record<
     failed: "Could not load the exhibition entries.",
     retry: "Retry",
     timelineLabel: "Timeline",
-    timelineHint: "Scroll · click to expand",
     decadeNav: "Decade navigation",
     galleryLabel: "Gallery",
-    galleryHint: "Scroll · hover to sync",
     teamLabel: "Team / institution",
     mediumLabel: "Medium",
     leadSite: "Site",
