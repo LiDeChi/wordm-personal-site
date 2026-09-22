@@ -1,591 +1,102 @@
-/* 人工生命史时间轴 —— 渐进式披露：默认一行摘要，展开才渲染详情。 */
-
 .alife-timeline {
   --at-ink: var(--warm-ink, #211a14);
-  --at-muted: rgb(33 26 20 / 74%);
-  --at-faint: rgb(33 26 20 / 66%);
+  --at-muted: #6a665e;
   --at-line: rgb(56 42 30 / 14%);
-  --at-line-strong: rgb(56 42 30 / 26%);
-  --at-accent: var(--warm-accent, #b95f38);
   --at-green: var(--warm-green, #314f43);
-  --at-paper: #ffffff;
-  /* 展开状态：标题行与详情都是纯白，用发丝线分层。 */
-  --at-paper-strong: #ffffff;
-  --at-paper-soft: #ffffff;
-  /* 两列滚动区的高度：整块（含标题、导语、工具行）落在一屏内。 */
-  --at-pane: min(74svh, 720px);
-
-  margin-bottom: clamp(40px, 7vh, 72px);
-}
-
-.alife-timeline-head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 6px 16px;
-}
-
-.alife-head-lead {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 4px 14px;
-  min-width: 0;
-}
-
-.alife-eyebrow {
-  margin: 0;
-  color: var(--at-ink);
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-weight: 500;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-
-.alife-count {
-  color: var(--at-muted);
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-}
-
-/* 展览是站外的一跳：压在页眉行里做小链接，不占一整条按钮带。 */
-.alife-museum-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  color: var(--at-green);
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.04em;
-  text-decoration: none;
-  border-bottom: 1px solid transparent;
-  transition:
-    border-color 160ms ease,
-    color 160ms ease;
-}
-
-.alife-museum-link:hover {
-  border-bottom-color: currentColor;
-}
-
-.alife-status button {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  min-height: 26px;
-  padding: 0 12px;
-  border: 1px solid var(--at-line);
-  border-radius: 999px;
-  background: rgb(255 255 255 / 55%);
-  color: var(--at-green);
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  text-decoration: none;
-  cursor: pointer;
-  transition:
-    border-color 160ms ease,
-    color 160ms ease;
-}
-
-.alife-status button:hover {
-  border-color: var(--at-green);
-}
-
-.alife-status {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 20px 0 0;
-  color: var(--at-muted);
-  font-size: 0.86rem;
-}
-
-.alife-status.is-failed {
-  color: var(--at-accent);
-}
-
-/* ------------------------------------------------------------------ */
-/* 两列骨架：左时间轴 / 右画廊                                         */
-/* ------------------------------------------------------------------ */
-
-.alife-timeline-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1.14fr) minmax(0, 0.86fr);
-  gap: clamp(18px, 2.6vw, 34px);
-  align-items: start;
-  margin-top: clamp(10px, 1.4vh, 14px);
-}
-
-.alife-column {
-  min-width: 0;
-}
-
-/* 两列的标题行：只有标签 + 该列自己的操作（展开全部），不再挂解释文字。 */
-.alife-column-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  min-height: 20px;
-  padding-bottom: 5px;
-  border-bottom: 1px solid var(--at-line);
-}
-
-/* 与列标题行里的小按钮同高，两列的横线才对得齐。 */
-.alife-column-title {
-  display: inline-flex;
-  align-items: center;
-  height: 20px;
-  color: var(--at-muted);
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-}
-
-/* 列标题行里的小按钮：贴着它作用的那一列。 */
-.alife-head-toggle {
-  display: inline-flex;
-  align-items: center;
-  min-height: 20px;
-  padding: 0 9px;
-  border: 1px solid var(--at-line);
-  border-radius: 999px;
-  background: transparent;
-  color: var(--at-muted);
-  font-family: var(--font-mono);
-  font-size: 0.64rem;
-  letter-spacing: 0.06em;
-  cursor: pointer;
-  transition:
-    border-color 160ms ease,
-    color 160ms ease;
-}
-
-.alife-head-toggle:hover {
-  border-color: var(--at-green);
-  color: var(--at-green);
-}
-
-.alife-head-toggle:focus-visible {
-  outline: 2px solid var(--at-green);
-  outline-offset: 1px;
-}
-
-/* ------------------------------------------------------------------ */
-/* 年代分组 + 时间轴骨架                                                */
-/* ------------------------------------------------------------------ */
-
-/* 时间轴左侧的年份导航 + 右侧的条目滚动区。导航在滚动区外面，所以不用 sticky。 */
-.alife-timeline-split {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: 10px;
-  align-items: start;
-  margin-top: 8px;
-}
-
-.alife-year-rail {
-  display: grid;
-  gap: 2px;
-  padding-right: 6px;
-  border-right: 1px solid var(--at-line);
-}
-
-.alife-year-rail button {
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-  padding: 3px 7px;
-  border: 0;
-  border-radius: 999px;
-  background: transparent;
-  color: var(--at-muted);
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.04em;
-  text-align: left;
-  cursor: pointer;
-  transition:
-    color 160ms ease,
-    background 160ms ease;
-}
-
-.alife-year-rail button small {
-  color: inherit;
-  font-size: 0.6rem;
-  opacity: 0.72;
-}
-
-.alife-year-rail button:hover {
-  background: rgb(33 26 20 / 5%);
-  color: var(--at-ink);
-}
-
-.alife-year-rail button:focus-visible {
-  outline: 2px solid var(--at-green);
-  outline-offset: 1px;
-}
-
-.alife-year-rail button.is-active {
-  background: rgb(49 79 67 / 9%);
-  color: var(--at-green);
-}
-
-/* 两列各自内部滚动，整块落在一屏里；联动滚动不会带着整页跳。 */
-.alife-timeline-body {
-  padding-right: 8px;
-  max-height: var(--at-pane);
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  scrollbar-color: var(--at-line) transparent;
-  scrollbar-width: thin;
-}
-
-.alife-decade + .alife-decade {
-  margin-top: clamp(18px, 2.6vh, 28px);
-}
-
-.alife-decade-label {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 0 0 10px;
-  color: var(--at-muted);
-  font-family: var(--font-mono);
-  font-size: 0.74rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-}
-
-.alife-decade-label::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: var(--at-line);
-}
-
-.alife-entry-list {
-  display: grid;
-  gap: 6px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.alife-entry {
-  position: relative;
-  border: 1px solid transparent;
-  border-radius: 14px;
-  transition:
-    border-color 160ms ease,
-    background 160ms ease;
-}
-
-/* 展开的那条：标题行与详情都是纯白，中间一条发丝线分层。 */
-.alife-entry.is-open {
-  border-color: var(--at-line-strong);
-  background: var(--at-paper-strong);
-  box-shadow: 0 10px 24px rgb(33 26 20 / 6%);
-}
-
-.alife-entry.is-open .alife-entry-summary {
-  border-bottom: 1px solid var(--at-line);
-  border-radius: 13px 13px 0 0;
-  background: var(--at-paper-strong);
-}
-
-/* 指针停在右列哪张卡片上，左列对应的那条就亮起来。 */
-.alife-entry.is-active {
-  border-color: rgb(49 79 67 / 32%);
-}
-
-.alife-entry.is-active:not(.is-open) {
-  background: rgb(49 79 67 / 6%);
-}
-
-.alife-entry.is-own-work {
-  border-left: 2px solid var(--at-accent);
-}
-
-.alife-entry-heading {
-  margin: 0;
-  font-size: inherit;
-  font-weight: inherit;
-}
-
-/* 默认形态：标题一行、标签一行。标题优先拿宽度，39 条可以快速扫完。 */
-.alife-entry-summary {
-  display: grid;
-  grid-template-columns: 62px minmax(0, 1fr) 24px;
-  grid-template-areas:
-    "year title chevron"
-    ".    meta  meta";
-  gap: 3px 14px;
-  align-items: center;
-  width: 100%;
-  padding: 9px 10px;
-  border: 0;
-  border-radius: 14px;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-  transition: background 150ms ease;
-}
-
-.alife-entry-summary:hover {
-  background: rgb(33 26 20 / 4%);
-}
-
-.alife-entry-summary:focus-visible {
-  outline: 2px solid var(--at-green);
-  outline-offset: 2px;
-}
-
-.alife-entry-year {
-  grid-area: year;
-  color: var(--at-green);
-  font-family: var(--font-mono);
-  font-size: 0.82rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-}
-
-.alife-entry-note {
-  align-self: center;
-  margin-right: 2px;
-  color: var(--at-muted);
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  white-space: nowrap;
-}
-
-.alife-entry-title {
-  grid-area: title;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 4px 8px;
-  min-width: 0;
-}
-
-.alife-entry-title strong {
-  color: var(--at-ink);
-  font-family: var(--font-main);
-  font-size: 1rem;
-  font-weight: 600;
-  line-height: 1.4;
-}
-
-.alife-entry-title small {
-  color: var(--at-muted);
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-}
-
-.alife-entry-meta {
-  grid-area: meta;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  justify-content: flex-start;
-  min-width: 0;
-}
-
-.alife-school {
-  padding: 3px 8px;
-  border-radius: 6px;
-  background: rgb(33 26 20 / 6%);
-  color: var(--at-muted);
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  white-space: nowrap;
-}
-
-.alife-badge {
-  padding: 3px 8px;
-  border-radius: 6px;
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  white-space: nowrap;
-}
-
-.alife-badge.is-own {
-  background: rgb(185 95 56 / 16%);
-  color: #a34f2c;
-}
-
-.alife-badge.is-demo {
-  background: rgb(95 141 168 / 20%);
-  color: #33566d;
-}
-
-/* 「+」是悬停展开的热区：给一块比图形更大的范围，并让它一眼看着像按钮。 */
-.alife-entry-chevron {
-  grid-area: chevron;
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: 24px;
-  height: 24px;
-  border: 1px solid var(--at-line);
-  border-radius: 7px;
-  background: #ffffff;
-  transition:
-    background 150ms ease,
-    border-color 150ms ease,
-    transform 160ms ease;
-}
-
-.alife-entry-chevron:hover {
-  border-color: var(--at-green);
-  background: rgb(49 79 67 / 12%);
-  transform: scale(1.06);
-}
-
-.alife-entry-chevron::before,
-.alife-entry-chevron::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  background: var(--at-faint);
-  transition:
-    transform 180ms ease,
-    background 150ms ease;
-}
-
-.alife-entry-chevron::before {
-  width: 10px;
-  height: 1px;
-  transform: translate(-50%, -50%);
-}
-
-.alife-entry-chevron::after {
-  width: 1px;
-  height: 10px;
-  transform: translate(-50%, -50%);
-}
-
-.alife-entry-chevron:hover::before,
-.alife-entry-chevron:hover::after {
-  background: var(--at-green);
-}
-
-.alife-entry.is-open .alife-entry-chevron::after {
-  transform: translate(-50%, -50%) scaleY(0);
-}
-
-/* ------------------------------------------------------------------ */
-/* 展开后的详情                                                        */
-/* ------------------------------------------------------------------ */
-
-/* 详情本体在 AlifeItemDetail.css，这里只留面板自身的排布。 */
-.alife-entry-panel {
-  max-width: 84ch;
-  padding: 16px 16px 20px;
-  border-radius: 0 0 13px 13px;
-  background: var(--at-paper-soft);
-}
-
-/* ------------------------------------------------------------------ */
-/* 夜间主题                                                            */
-/* ------------------------------------------------------------------ */
-
-:root[data-theme="night"] .alife-timeline {
-  --at-ink: #fff1d9;
-  --at-muted: rgb(255 241 217 / 68%);
-  --at-faint: rgb(255 241 217 / 42%);
-  --at-line: rgb(255 241 217 / 12%);
-  --at-paper: rgb(31 25 19 / 74%);
-  /* 夜间：展开的标题行比条目底色亮一档，详情再暗一档。 */
-  --at-paper-strong: rgb(255 241 217 / 9%);
-  --at-paper-soft: rgb(0 0 0 / 22%);
-}
-
-:root[data-theme="night"] .alife-museum-link,
-:root[data-theme="night"] .alife-head-toggle,
-:root[data-theme="night"] .alife-status button {
-  color: rgb(242 195 123 / 88%);
-}
-
-:root[data-theme="night"] .alife-status button {
-  background: rgb(255 241 217 / 6%);
-}
-
-:root[data-theme="night"] .alife-head-toggle:hover,
-:root[data-theme="night"] .alife-status button:hover {
-  border-color: rgb(242 195 123 / 48%);
-}
-
-:root[data-theme="night"] .alife-entry-summary:hover {
-  background: rgb(242 195 123 / 7%);
-}
-
-:root[data-theme="night"] .alife-entry-year {
-  color: rgb(242 195 123 / 88%);
-}
-
-:root[data-theme="night"] .alife-school {
-  background: rgb(255 241 217 / 8%);
-}
-
-:root[data-theme="night"] .alife-year-rail button:hover {
-  background: rgb(242 195 123 / 7%);
-  color: var(--at-ink);
-}
-
-:root[data-theme="night"] .alife-year-rail button.is-active {
-  background: rgb(242 195 123 / 12%);
-  color: rgb(242 195 123 / 92%);
-}
-
-:root[data-theme="night"] .alife-badge.is-own {
-  background: rgb(242 195 123 / 16%);
-  color: rgb(242 195 123 / 92%);
-}
-
-:root[data-theme="night"] .alife-badge.is-demo {
-  background: rgb(95 141 168 / 26%);
-  color: rgb(160 199 224 / 92%);
-}
-
-/* ------------------------------------------------------------------ */
-/* 窄屏                                                                */
-/* ------------------------------------------------------------------ */
-
-@media (max-width: 900px) {
-  .alife-timeline {
-    /* 窄屏两列改上下，各留一段自己的滚动区。 */
-    --at-pane: min(58svh, 520px);
-  }
-
-  .alife-timeline-layout {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  /* 窄屏：年份导航从竖排改成一条横向可滚的带子，放在列表上方。 */
-  .alife-timeline-split {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 8px;
-  }
-
-  .alife-year-rail {
-    grid-auto-flow: column;
-    grid-auto-columns: max-content;
-    justify-content: start;
-    gap: 6px;
-    padding: 0 0 6px;
-    border-right: 0;
-    border-bottom: 1px solid var(--at-line);
-    overflow-x: auto;
-  }
-
-  .alife-entry-summary {
-    gap: 3px 10px;
-  }
-}
+  --at-paper: #fff;
+  --at-soft: #f5f6f2;
+  margin-bottom: 48px;
+}
+.alife-timeline-head, .alife-head-lead, .alife-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+.alife-head-lead { justify-content: flex-start; }
+.alife-eyebrow { margin: 0; font-size: .8rem; letter-spacing: .12em; }
+.alife-count, .alife-museum-link { color: var(--at-muted); font-size: .73rem; }
+.alife-museum-link { text-decoration: none; }
+.alife-toolbar { margin-top: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--at-line); }
+.alife-view-switch { display: flex; gap: 3px; padding: 3px; border: 1px solid var(--at-line); border-radius: 9px; }
+.alife-view-switch button, .alife-head-toggle, .alife-status button { border: 0; background: transparent; color: var(--at-muted); padding: 7px 16px; border-radius: 6px; cursor: pointer; font: inherit; font-size: .78rem; }
+.alife-view-switch button[aria-pressed="true"] { background: var(--at-green); color: white; }
+.alife-head-toggle { border: 1px solid var(--at-line); }
+.alife-timeline button:focus-visible, .alife-timeline a:focus-visible { outline: 2px solid var(--at-green); outline-offset: 3px; }
+.alife-timeline-split { display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: 22px; margin-top: 16px; }
+.alife-year-rail { display: grid; gap: 4px; align-self: start; }
+.alife-year-rail button { display: flex; justify-content: space-between; gap: 6px; padding: 7px 8px; border: 0; background: transparent; border-radius: 5px; font-family: var(--font-mono); font-size: .72rem; color: var(--at-muted); cursor: pointer; }
+.alife-year-rail small { font-size: .62rem; opacity: .75; }
+.alife-year-rail button[aria-current], .alife-year-rail button:hover { background: var(--at-soft); color: var(--at-green); }
+.alife-timeline-body { min-width: 0; max-height: 73svh; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--at-line) transparent; padding-right: 12px; }
+.alife-decade + .alife-decade { margin-top: 28px; }
+.alife-decade-label { display: flex; align-items: center; gap: 12px; margin: 0 0 12px; font: 500 .78rem var(--font-mono); color: var(--at-muted); }
+.alife-decade-label small { font-size: .65rem; }
+.alife-decade-label::after { content: ""; height: 1px; background: var(--at-line); flex: 1; }
+.alife-entry-list { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+.alife-entry { min-width: 0; border: 1px solid var(--at-line); border-radius: 12px; background: var(--at-paper); overflow: hidden; }
+.alife-entry.is-open { border-color: var(--at-green); }
+.alife-entry-overview { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; padding: 20px; }
+.alife-entry-preview { min-width: 0; align-self: start; overflow: hidden; border-radius: 7px; background: var(--at-soft); }
+.alife-entry-preview a { display: block; position: relative; color: white; }
+.alife-entry-preview img { display: block; width: 100%; height: 88px; object-fit: cover; }
+.alife-entry-preview a span { display: block; background: #253d34; color: white; font-size: .62rem; padding: 4px 7px; }
+.alife-entry-copy { min-width: 0; }
+.alife-entry-date { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 7px; font: .7rem var(--font-mono); color: var(--at-muted); line-height: 1.5; }
+.alife-entry-date strong { color: var(--at-green); }
+.alife-entry-copy h3 { margin: 0; }
+.alife-entry-copy h3 button { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; width: 100%; padding: 0; border: 0; background: none; color: var(--at-ink); font: 600 1.12rem/1.4 var(--font-main); text-align: left; cursor: pointer; overflow-wrap: anywhere; }
+.alife-entry-copy h3 button span { flex-shrink: 0; color: var(--at-muted); font-weight: 400; }
+.alife-entry-en { margin: 3px 0 0; color: var(--at-muted); font-size: .73rem; overflow-wrap: anywhere; }
+.alife-entry-meta { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 9px; }
+.alife-school, .alife-badge { padding: 2px 7px; border: 1px solid var(--at-line); border-radius: 5px; color: var(--at-muted); font-size: .65rem; }
+.alife-entry-credits { margin: 9px 0 0; color: var(--at-muted); font-size: .73rem; line-height: 1.6; }
+.alife-entry-abstract { margin: 10px 0 0; color: var(--at-ink); font-size: .86rem; line-height: 1.8; }
+.alife-entry-limit { margin: 9px 0 0; color: var(--at-muted); font-size: .75rem; line-height: 1.7; }
+.alife-entry-limit > span { margin-right: 8px; font-weight: 600; }
+.alife-entry-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 16px; margin-top: 12px; }
+.alife-entry-actions a, .alife-entry-actions button { font: .72rem/1.6 var(--font-main); color: var(--at-green); text-decoration: none; background: none; border: 0; padding: 2px 0; cursor: pointer; overflow-wrap: anywhere; }
+.alife-entry-actions a:hover { text-decoration: underline; }
+.alife-entry-actions button { margin-left: auto; }
+.alife-entry-panel { padding: 22px; border-top: 1px solid var(--at-line); }
+.is-gallery .alife-entry-list { grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; }
+.is-gallery .alife-entry-overview { display: flex; flex-direction: column; gap: 0; padding: 0; }
+.is-gallery .alife-entry-preview { width: 100%; border-radius: 0; }
+.is-gallery .alife-entry-preview img { height: 150px; }
+.is-gallery .alife-entry-copy { padding: 18px; width: 100%; box-sizing: border-box; }
+.is-gallery .alife-entry-copy h3 button { font-size: 1.05rem; }
+:root[data-theme="night"] .alife-timeline { --at-ink: #fff1d9; --at-muted: #c1b6a4; --at-line: rgb(255 241 217 / 18%); --at-green: #e4bd82; --at-paper: #211e19; --at-soft: #2d2b24; }
+:root[data-theme="night"] .alife-view-switch button[aria-pressed="true"] { color: #211e19; }
+@media (max-width: 1100px) { .is-gallery .alife-entry-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 700px) {
+  .alife-timeline-split { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .alife-year-rail { display: flex; overflow-x: auto; }
+  .alife-year-rail button { flex-shrink: 0; }
+  .alife-timeline-body { max-height: 70svh; padding-right: 4px; }
+  .alife-entry-overview { grid-template-columns: 80px minmax(0, 1fr); padding: 13px; gap: 12px; }
+  .alife-entry-preview img { height: 60px; }
+  .alife-entry-copy h3 button { font-size: 1rem; }
+  .alife-entry-preview a span { font-size: .55rem; padding: 3px; }
+  .is-gallery .alife-entry-list { grid-template-columns: minmax(0, 1fr); }
+  .alife-entry-panel { padding: 15px; }
+}
+
+.alife-entry-overview.has-preview { grid-template-columns: 132px minmax(0, 1fr); }
+.alife-entry-preview { position: relative; }
+.alife-entry-preview .alife-demo-author { position: absolute; top: 5px; left: 5px; width: 24px; height: 30px; border: 1px solid white; border-radius: 4px; object-fit: cover; }
+@media (max-width: 700px) { .alife-entry-overview { grid-template-columns: minmax(0, 1fr); } .alife-entry-overview.has-preview { grid-template-columns: 80px minmax(0, 1fr); } }
+
+.alife-credit-avatar { width: 22px; height: 28px; object-fit: cover; vertical-align: middle; margin-right: 7px; border-radius: 3px; }
+.is-gallery .alife-entry-preview .alife-demo-author { width: 24px; height: 30px; }
+@media (max-width: 700px) {
+  .is-list .has-preview .alife-entry-copy { display: contents; }
+  .is-list .has-preview .alife-entry-preview { grid-column: 1; grid-row: 1 / 4; }
+  .is-list .has-preview .alife-entry-date,
+  .is-list .has-preview h3,
+  .is-list .has-preview .alife-entry-en { grid-column: 2; margin: 0; }
+  .is-list .has-preview .alife-entry-meta,
+  .is-list .has-preview .alife-entry-credits,
+  .is-list .has-preview .alife-entry-abstract,
+  .is-list .has-preview .alife-entry-limit,
+  .is-list .has-preview .alife-entry-actions { grid-column: 1 / -1; margin: 0; }
+}
+
+.alife-eyebrow { color: var(--at-ink); }
+.alife-entry-preview canvas { display: block; width: 100%; height: 88px; object-fit: cover; background: #13221d; pointer-events: none; }
+.is-gallery .alife-entry-preview canvas { height: 150px; }
+@media (max-width: 700px) { .is-list .alife-entry-preview canvas { height: 60px; } }

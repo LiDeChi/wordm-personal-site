@@ -18,7 +18,7 @@ import "./AlifeItemDetail.css";
  * 介质 / 团队 / 参考 → 人物 → 机制（生命构建方式）→ 谱系 → 边界 → demo → 链接。
  * 两处共用同一组件，避免 catalog 字段变了只改一边。
  */
-export function AlifeItemDetail({ item, lang }: { item: AlifeItem; lang: Lang }) {
+export function AlifeItemDetail({ item, lang, overviewVisible = false }: { item: AlifeItem; lang: Lang; overviewVisible?: boolean }) {
   const copy = ALIFE_COPY[lang];
   const demoKind = alifeDemoKind(item);
   const demoPreview = demoKind === "runnable" ? alifeDemoPreviewUrl(item.demo) : null;
@@ -32,7 +32,7 @@ export function AlifeItemDetail({ item, lang }: { item: AlifeItem; lang: Lang })
 
   return (
     <div className="alife-detail">
-      {item.summary ? <p className="alife-summary">{item.summary}</p> : null}
+      {!overviewVisible && item.summary ? <p className="alife-summary">{item.summary}</p> : null}
 
       {item.medium?.length || team || item.refs?.length ? (
         <dl className="alife-facts">
@@ -112,7 +112,7 @@ export function AlifeItemDetail({ item, lang }: { item: AlifeItem; lang: Lang })
         </div>
       ) : null}
 
-      {item.limits ? (
+      {!overviewVisible && item.limits ? (
         <div className="alife-field">
           <span className="alife-field-label">{copy.limits}</span>
           <p>{item.limits}</p>

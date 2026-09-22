@@ -2421,6 +2421,37 @@
       ]
     },
     {
+      "id": "neurogenesis-3d-ca",
+      "name": "三维神经生长元胞自动机",
+      "nameEn": "3D Neurogenesis with Multilayered CA",
+      "year": 2019,
+      "yearNote": "期刊第 7 卷第 3 期",
+      "people": [
+        "Eiji Nakamachi",
+        "Akie Nakayama",
+        "Takehiko Yamamoto",
+        "Yusuke Morita",
+        "Hidetoshi Sakamoto"
+      ],
+      "schools": [
+        "细胞自动机",
+        "形态发生"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "用三维多层元胞自动机模拟树突生长、轴突选择及分支，把神经通路作为空间中逐步形成的结构。",
+      "construction": "局部规则结合神经生长因子 NGF 和 Netrin-1 的作用，并与 PC12 细胞网络的显微观察比较。",
+      "limits": "这是按生物机制建立的生长模型，不是让数字生命自行发现高速通信结构。",
+      "demo": "none",
+      "links": [
+        {
+          "label": "原始论文",
+          "url": "https://www.witpress.com/elibrary/cmem-volumes/7/3/2477"
+        }
+      ]
+    },
+    {
       "id": "nca",
       "name": "Neural Cellular Automata",
       "nameEn": "NCA",
@@ -2712,6 +2743,35 @@
         {
           "label": "原始论文 / 项目资料",
           "url": "https://shivanshpatel35.github.io/comon/"
+        }
+      ]
+    },
+    {
+      "id": "graph-neural-ca",
+      "name": "图神经元胞自动机",
+      "nameEn": "Learning Graph Cellular Automata",
+      "year": 2021,
+      "yearNote": "NeurIPS 2021",
+      "people": [
+        "Daniele Grattarola",
+        "Lorenzo Livi",
+        "Cesare Alippi"
+      ],
+      "schools": [
+        "细胞自动机",
+        "形态发生"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "把元胞邻域从规则网格推广到图，用图神经网络学习局部更新规则。",
+      "construction": "节点沿图中的连接交换信息，可学习离散动力学、空间结构及群体运动。",
+      "limits": "图上的邻接不等于空间中生长出的轴突；这项工作不证明通信线路能由生存压力自行演化。",
+      "demo": "none",
+      "links": [
+        {
+          "label": "原始论文",
+          "url": "https://papers.neurips.cc/paper_files/paper/2021/file/af87f7cdcda223c41c3f3ef05a3aaeea-Paper.pdf"
         }
       ]
     },
@@ -3240,6 +3300,99 @@
         {
           "label": "原始论文 / 项目资料",
           "url": "https://arxiv.org/abs/2312.03664"
+        }
+      ]
+    },
+    {
+      "id": "dgca",
+      "name": "发育图元胞自动机 DGCA",
+      "nameEn": "Developmental Graph Cellular Automata",
+      "year": 2023,
+      "yearNote": "ALife 2023 会议论文",
+      "people": [
+        "Riversdale Waldegrave",
+        "Susan Stepney",
+        "Martin A. Trefzer"
+      ],
+      "schools": [
+        "细胞自动机",
+        "形态发生"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "从简单种子图出发，让局部规则同时改变节点状态和连接结构，研究网络如何发育。",
+      "construction": "节点使用共同的发育规则改变有向图，能够产生不同的增长模式与动力学行为。",
+      "limits": "这里主要建模图拓扑，尚未要求每条远程连接在实体空间中消耗材料生长。",
+      "demo": "none",
+      "links": [
+        {
+          "label": "原始论文",
+          "url": "https://doi.org/10.1162/isal_a_00658"
+        },
+        {
+          "label": "项目代码",
+          "url": "https://github.com/rvrsdl/alife2023_dgca"
+        }
+      ]
+    },
+    {
+      "id": "neural-developmental-programs",
+      "name": "神经发育程序 NDP",
+      "nameEn": "Neural Developmental Programs",
+      "year": 2023,
+      "yearNote": "2023-07 预印本",
+      "people": [
+        "Elias Najarro",
+        "Shyam Sudhakaran",
+        "Sebastian Risi"
+      ],
+      "schools": [
+        "细胞自动机",
+        "形态发生"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "让紧凑的发育程序通过局部通信长出神经网络，而不是直接搜索一个固定网络的全部参数。",
+      "construction": "发育规则控制神经元复制与连接权重，形成能够完成分类与控制任务的网络。",
+      "limits": "发育过程受训练目标和设计规则约束，不等于生命体在物理世界中自主发明轴突。",
+      "demo": "none",
+      "links": [
+        {
+          "label": "原始论文",
+          "url": "https://arxiv.org/abs/2307.08197"
+        },
+        {
+          "label": "项目代码",
+          "url": "https://github.com/enajx/NDP"
+        }
+      ]
+    },
+    {
+      "id": "grow-ai",
+      "name": "GROW-AI",
+      "nameEn": "Growing Machines Capable of Rapid Learning in Unknown Environments",
+      "year": 2023,
+      "yearNote": "2023-01-01 项目启动",
+      "people": [
+        "Sebastian Risi"
+      ],
+      "schools": [
+        "形态发生",
+        "认知架构"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "研究能通过发育与持续适应获得学习能力的机器，把网络生长与未知环境中的快速学习联系起来。",
+      "construction": "欧盟资助的研究计划，涵盖自生长网络和终身学习等方向；NDP 是相关研究成果之一。",
+      "limits": "这是研究计划而非单一软件；它在 2023 年初启动，不能写成 NDP 发表后才成立。",
+      "demo": "none",
+      "links": [
+        {
+          "label": "欧盟项目资料",
+          "url": "https://cordis.europa.eu/project/id/101045094/reporting"
         }
       ]
     },
@@ -4951,6 +5104,34 @@
         {
           "label": "原始论文 / 项目资料",
           "url": "https://www.worldlabs.ai/blog/announcing-the-world-api"
+        }
+      ]
+    },
+    {
+      "id": "dgca-echo-state",
+      "name": "DGCA 生长回声状态网络",
+      "nameEn": "Growing Echo State Networks through Graph-Based Morphogenesis",
+      "year": 2026,
+      "yearNote": "2026-09-04 在线发表",
+      "people": [
+        "Matias Barandiaran",
+        "James Stovold"
+      ],
+      "schools": [
+        "细胞自动机",
+        "形态发生"
+      ],
+      "medium": [
+        "Soft"
+      ],
+      "summary": "让发育图元胞自动机长出能处理时序任务的循环网络，从图形生长推进到计算功能。",
+      "construction": "回声状态网络利用循环连接产生随输入变化的内部状态，再训练输出读取；论文比较确定性与随机发育形成的网络。",
+      "limits": "结果来自特定基准任务；尚未证明网络具有真实轴突的空间、能耗与传导约束。",
+      "demo": "none",
+      "links": [
+        {
+          "label": "原始论文",
+          "url": "https://doi.org/10.1162/ARTL.a.486"
         }
       ]
     }
