@@ -116,9 +116,9 @@ function AlifeEntry({ item, lang, open, onToggle, registerRef }: { item: AlifeIt
   const people = item.people?.join(" · ") || item.leads?.map((lead) => lead.name).join(" · ");
   const links = alifeItemLinks(item, { site: copy.leadSite, scholar: copy.leadScholar });
   return <li ref={registerRef} className={`alife-entry${open ? " is-open" : ""}`}>
-    <div className={`alife-entry-overview${preview ? " has-preview" : ""}`}>
-      {preview && <div className={`alife-entry-preview${preview ? " has-demo" : ""}`}>
-        {preview ? <a href={ALIFE_MUSEUM_URL} aria-label={`${copy.openDemo}: ${item.name}`}><AlifeDemoPreview demo={preview} label={`${item.name} · ${lang === "zh" ? "demo 运行预览" : "running demo preview"}`} /><span>{copy.demoBadge} ↗</span></a> : null}
+    <div className={`alife-entry-overview${preview || photoUrl ? " has-preview" : ""}`}>
+      {(preview || photoUrl) && <div className={`alife-entry-preview${preview ? " has-demo" : " has-portrait"}`}>
+        {preview ? <a href={ALIFE_MUSEUM_URL} aria-label={`${copy.openDemo}: ${item.name}`}><AlifeDemoPreview demo={preview} label={`${item.name} · ${lang === "zh" ? "demo 运行预览" : "running demo preview"}`} /><span>{copy.demoBadge} ↗</span></a> : <><img className="alife-author-portrait" src={photoUrl!} alt={photo?.name ?? ""} loading="lazy" decoding="async" /><span className="alife-portrait-caption">{photo?.name}</span></>}
         {preview && photoUrl && <img className="alife-demo-author" src={photoUrl} alt={photo?.name ?? ""} loading="lazy" decoding="async" />}
       </div>}
       <div className="alife-entry-copy">
@@ -126,7 +126,7 @@ function AlifeEntry({ item, lang, open, onToggle, registerRef }: { item: AlifeIt
         <h3 id={`alife-entry-head-${item.id}`}><button type="button" aria-expanded={open} aria-controls={`alife-entry-panel-${item.id}`} onClick={onToggle}>{item.name}<span aria-hidden="true">{open ? "−" : "+"}</span></button></h3>
         {item.nameEn && item.nameEn !== item.name && <p className="alife-entry-en">{item.nameEn}</p>}
         <div className="alife-entry-meta">{item.schools.map((school) => <span className="alife-school" key={school}>{school}</span>)}{isOwnWork(item) && <span className="alife-badge is-own">{copy.ownWork}</span>}</div>
-        {(people || team) && <p className="alife-entry-credits">{!preview && photoUrl && <img className="alife-credit-avatar" src={photoUrl} alt={photo?.name ?? ""} loading="lazy" decoding="async" />}{[people, team].filter(Boolean).join(" · ")}</p>}
+        {(people || team) && <p className="alife-entry-credits">{[people, team].filter(Boolean).join(" · ")}</p>}
         {item.summary && <p className="alife-entry-abstract">{item.summary}</p>}
         {item.limits && <p className="alife-entry-limit"><span>{copy.limits}</span>{item.limits}</p>}
         <div className="alife-entry-actions">

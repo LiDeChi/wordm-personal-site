@@ -19,8 +19,6 @@ import "./PersonalProjectsPage.css";
  * 工作区里其余仓库不进这一页：站点只呈现本人收口过的清单。
  */
 
-const SYSTEM_SITE_URL = "https://system.wordm.us";
-
 /** 已经作为作品出现过的 key（例如 town / Town Agents），实验区不重复铺一遍。 */
 const WORK_KEYS: Record<string, true> = Object.fromEntries(
   FOUNT_FIELDS.map((field) => [field.key, true]),
@@ -32,11 +30,6 @@ const EXPERIMENTS: FamilyProject[] = FAMILY_PROJECTS.filter(
 
 const COPY = {
   zh: {
-    systemCoverDomain: "system.wordm.us",
-    systemCoverTitle: "System",
-    systemCoverSubtitle:
-      "架构图、Core / WCP / Apps 关系，以及开源 Core 源码入口都在这里。",
-    systemCoverCta: "进入 System",
     workMeta: "产品与作品",
     workCount: (count: number) => `${count} 个已上线入口`,
     workPreview: "预览页面",
@@ -50,11 +43,6 @@ const COPY = {
     experimentLocalOnly: "本机运行",
   },
   en: {
-    systemCoverDomain: "system.wordm.us",
-    systemCoverTitle: "System",
-    systemCoverSubtitle:
-      "Architecture, Core / WCP / Apps, and the open Core source live here.",
-    systemCoverCta: "Enter System",
     workMeta: "Products & work",
     workCount: (count: number) => `${count} live entries`,
     workPreview: "Page preview",
@@ -96,40 +84,6 @@ export function PersonalProjectsPage({ lang }: { lang: Lang }) {
         </div>
 
         <div className="home-projects-hero">
-          <a
-            className="system-cover-portal"
-            href={withSiteParams(SYSTEM_SITE_URL, { lang })}
-            target="_blank"
-            rel="noreferrer"
-            aria-label={copy.systemCoverCta}
-          >
-            <span className="system-cover-bg" aria-hidden="true" />
-            <span
-              className="system-cover-current system-cover-current-a"
-              aria-hidden="true"
-            />
-            <span
-              className="system-cover-current system-cover-current-b"
-              aria-hidden="true"
-            />
-            <span className="system-cover-gate" aria-hidden="true" />
-            <span className="system-cover-grid" aria-hidden="true" />
-            <span className="system-cover-orbit" aria-hidden="true" />
-            <span className="system-cover-copy">
-              <span className="system-cover-domain">
-                {copy.systemCoverDomain}
-              </span>
-              <span className="system-cover-title">{copy.systemCoverTitle}</span>
-              <span className="system-cover-subtitle">
-                {copy.systemCoverSubtitle}
-              </span>
-              <span className="system-cover-cta">
-                {copy.systemCoverCta}
-                <span aria-hidden="true">→</span>
-              </span>
-            </span>
-          </a>
-
           <div className="home-projects-grid">
             {FOUNT_FIELDS.map((field, index) => {
               const href = fieldHref(field, lang);
