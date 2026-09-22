@@ -15,7 +15,7 @@ import { AlifeItemDetail } from "./AlifeItemDetail";
 import "./AlifeTimeline.css";
 
 /**
- * 人工生命史：左边时间轴，右边展览的卡片墙（41 条，1948 → 2026）。
+ * 人工生命史：左边时间轴，右边展览的卡片墙（39 条，1948 → 2025）。
  *
  * 联动：
  *  - 指针停在左列条目上 → 右列把对应卡片带到中间；
@@ -302,11 +302,13 @@ export function AlifeTimeline({ lang }: TimelineProps) {
       <header className="alife-timeline-head">
         <div className="alife-head-lead">
           <p className="alife-eyebrow">{copy.eyebrow}</p>
-          {state.status === "ready" ? (
+          {state.status === "ready" && items.length > 0 ? (
             <span className="alife-count">
               {copy.counts(
-                state.catalog.items.length,
+                items.length,
                 state.catalog.schoolsOrder.length,
+                // 跨度取实际条目的首尾（catalog 已按年排序）：写死过 2026，条目一动就成了假话。
+                `${items[0].year} → ${items[items.length - 1].year}`,
               )}
             </span>
           ) : null}

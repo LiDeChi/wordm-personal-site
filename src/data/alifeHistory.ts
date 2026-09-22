@@ -37,7 +37,7 @@ export type AlifeItem = {
   demo?: string | null;
   demoHint?: string;
   refs?: string[];
-  /** catalog 里有两种形态：单个机构字符串，或机构数组（19/41 条是数组）。 */
+  /** catalog 里有两种形态：单个机构字符串，或机构数组（19/39 条是数组）。 */
   team?: string | string[];
   leads?: AlifeLead[];
   construction?: string;
@@ -57,7 +57,7 @@ export type AlifeCatalog = {
 export const ALIFE_CATALOG_URL = "/alife/data/catalog.json";
 export const ALIFE_MUSEUM_URL = "/alife/";
 
-/** 本人实验在 catalog 里就是这个流派名。 */
+/** 本人实验在 catalog 里的流派名；catalog 目前不含本人实验条目，这个标记能力留着。 */
 export const ALIFE_OWN_WORK_SCHOOL = "本人实验";
 
 /**
@@ -93,7 +93,7 @@ export const ALIFE_COPY: Record<
   {
     eyebrow: string;
     timelineAria: string;
-    counts: (items: number, schools: number) => string;
+    counts: (items: number, schools: number, years: string) => string;
     expandAll: string;
     collapseAll: string;
     openMuseum: string;
@@ -127,7 +127,8 @@ export const ALIFE_COPY: Record<
   zh: {
     eyebrow: "关注方向",
     timelineAria: "人工生命史时间轴",
-    counts: (items, schools) => `${items} 个条目 · ${schools} 个流派 · 1948 → 2026`,
+    counts: (items, schools, years) =>
+      `${items} 个条目 · ${schools} 个流派 · ${years}`,
     expandAll: "展开全部",
     collapseAll: "收起全部",
     openMuseum: "进入沉浸式展览",
@@ -159,8 +160,8 @@ export const ALIFE_COPY: Record<
   en: {
     eyebrow: "Focus",
     timelineAria: "Artificial life history timeline",
-    counts: (items, schools) =>
-      `${items} entries · ${schools} schools · 1948 → 2026`,
+    counts: (items, schools, years) =>
+      `${items} entries · ${schools} schools · ${years}`,
     expandAll: "Expand all",
     collapseAll: "Collapse all",
     openMuseum: "Open immersive exhibition",

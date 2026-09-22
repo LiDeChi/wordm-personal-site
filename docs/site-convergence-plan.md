@@ -498,3 +498,33 @@ export function FocusAreaPage({
   夜间：面板 `rgb(31 25 19 / 96%)` + `rgb(255 241 217 / 14%)` 边框，当前行 `#f1d783`；
 - 英文：`Playlist · 4 tracks` / `Click a row to switch`；
 - `tsc -b`、`eslint .`、`npm run build` 通过。
+
+## 19. 时间轴去掉本人实验的两条（2026-09-22）
+
+用户：「将人工生命时间轴的最后两个"我的项目"去掉，羞死个人」——指的是 catalog 里那两条
+`personal: true` 的 2026 条目（`self-referring` 规则即身体、`control-itself` 解释器接管）。
+
+### 改了什么
+- `public/alife/data/catalog.json`：删掉这两条；`schoolsOrder` 去掉随之空掉的「本人实验」；
+  `sourceNote` 去掉「本人实验单独标注」（catalog 里已经没有本人实验条目，这句不成立）。
+  展览与站内时间轴读同一份 catalog（§12 定的约定），所以只动数据一次，两边同时消失——
+  不做「站内过滤、展览保留」那种会让两边事实分叉的改法。
+- 页眉的年份跨度原来是写死的「1948 → 2026」，条目一删就成了假话。现在从实际条目取首尾
+  （`copy.counts(items, schools, span)`，catalog 已按年排序），条目再动也不会漂。
+- 「本人实验 / 本人 demo」的标记能力（`ALIFE_OWN_WORK_SCHOOL` / `isOwnWork` / `personal` 角标 /
+  `-link` demo 文案）**保留**：那是 catalog 的字段能力，不是这两条的硬编码；注释里注明
+  catalog 目前没有条目用它。
+- 写死的计数跟到实际数据：`README.md`、`AlifeTimeline.tsx` / `.css` 注释 41 → 39，
+  `alifeHistory.ts` 的 team 形态注释 19/41 → 19/39。
+
+### 验收（44014 实跑）
+- `/` 时间轴：39 行；页眉「39 个条目 · 21 个流派 · 1948 → 2025」；末三条为 2024 港科大（广州）CMA、
+  2025 ALife × LLM Agent 生态、2025 Participatory Evolution；`本人实验` / `本人 demo` 角标 0 个；
+  右列卡片墙 39 张。
+- 左列年代导航：1940s 1 / 1950s 1 / 1970s 1 / 1980s 8 / 1990s 5 / 2000s 5 / 2010s 11 / 2020s 7
+  （合计 39，2020s 由 9 降为 7）。
+- 展览：滚到底 39 张卡片、末张 Participatory Evolution（2025），DOM 里 `规则即身体` / `解释器接管` 命中 0；
+  筛选浮层的流派 chip 21 个，不再有空的「本人实验」。
+  （dev server 走 SPA 回退，`/alife/` 会落到站点首页，展览要在 `/alife/index.html` 下验；线上 Pages 的 `/alife/` 正常。）
+- `/projects`：两条实验仍在（那是 §16 要的「人工生命的实验」清单），没被这次改动带走。
+- `tsc -b`、`eslint .`、`npm run build` 通过。

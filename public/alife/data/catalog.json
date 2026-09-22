@@ -26,8 +26,7 @@
     "自修改解释器",
     "具身/生成",
     "ALife×AI",
-    "原细胞/化学机器人",
-    "本人实验"
+    "原细胞/化学机器人"
   ],
   "items": [
     {
@@ -1849,75 +1848,6 @@
           "url": "https://www.google.com/search?q=Participatory+Evolution+SIGGRAPH+Asia"
         }
       ]
-    },
-    {
-      "id": "self-referring",
-      "name": "规则即身体（本人 demo）",
-      "nameEn": "Rules-as-Body",
-      "year": 2026,
-      "schools": [
-        "自修改解释器",
-        "细胞自动机",
-        "本人实验"
-      ],
-      "medium": [
-        "Soft"
-      ],
-      "people": [
-        "简永杰"
-      ],
-      "summary": "规则节点可感知、可重接；绕障由拓扑涌现。",
-      "demo": "self-referring-link",
-      "demoHint": "链到本地项目说明或嵌入简化版",
-      "refs": [],
-      "personal": true,
-      "team": "本人实验",
-      "leads": [
-        {
-          "name": "简永杰",
-          "role": "作者",
-          "photo": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27160%27%20height%3D%27200%27%3E%3Crect%20width%3D%27160%27%20height%3D%27200%27%20rx%3D%2712%27%20fill%3D%27%23615288%27/%3E%3Ctext%20x%3D%2780%27%20y%3D%27108%27%20text-anchor%3D%27middle%27%20fill%3D%27%23fff%27%20font-family%3D%27system-ui%2Csans-serif%27%20font-size%3D%2748%27%20font-weight%3D%27600%27%3E%E7%AE%80%E6%B0%B8%3C/text%3E%3C/svg%3E",
-          "photoNote": "暂无公开肖像"
-        }
-      ],
-      "construction": "机制：规则即身体——系统在运行中指涉并改写自身规则结构。要点：自指作为生命隐喻。",
-      "lineage": "继承自修改与反射系统；对接本展览「解释器/规则」线索。",
-      "limits": "完整交互在独立项目；本馆仅史条目卡片，不假装可跑。",
-      "links": []
-    },
-    {
-      "id": "control-itself",
-      "name": "解释器接管（本人 demo）",
-      "nameEn": "Control Itself",
-      "year": 2026,
-      "schools": [
-        "自修改解释器",
-        "本人实验"
-      ],
-      "medium": [
-        "Soft"
-      ],
-      "people": [
-        "简永杰"
-      ],
-      "summary": "世界由内核解释→身体抄写后接管时钟。",
-      "demo": "control-itself-link",
-      "demoHint": "",
-      "refs": [],
-      "personal": true,
-      "team": "本人实验",
-      "leads": [
-        {
-          "name": "简永杰",
-          "role": "作者",
-          "photo": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27160%27%20height%3D%27200%27%3E%3Crect%20width%3D%27160%27%20height%3D%27200%27%20rx%3D%2712%27%20fill%3D%27%23615288%27/%3E%3Ctext%20x%3D%2780%27%20y%3D%27108%27%20text-anchor%3D%27middle%27%20fill%3D%27%23fff%27%20font-family%3D%27system-ui%2Csans-serif%27%20font-size%3D%2748%27%20font-weight%3D%27600%27%3E%E7%AE%80%E6%B0%B8%3C/text%3E%3C/svg%3E",
-          "photoNote": "暂无公开肖像"
-        }
-      ],
-      "construction": "机制：解释器接管——控制权上移到可改写解释层，形成「控制自身」的闭环。要点：元级控制。",
-      "lineage": "继承自修改解释器与反射；与 self-referring 成对。",
-      "limits": "完整交互在独立项目；本馆仅卡片。",
-      "links": []
     }
   ],
   "demoPriority": [
@@ -1929,5 +1859,5 @@
     "lenia",
     "tierra"
   ],
-  "sourceNote": "条目来自 chatgpt-full/人工生命 会话（尤其 18-人工生命流派比较）与既有 catalog；对照文档补漏，不编造；本人实验单独标注。"
+  "sourceNote": "条目来自 chatgpt-full/人工生命 会话（尤其 18-人工生命流派比较）与既有 catalog；对照文档补漏，不编造。"
 }

@@ -316,7 +316,7 @@
   font-weight: inherit;
 }
 
-/* 默认形态：标题一行、标签一行。标题优先拿宽度，41 条可以快速扫完。 */
+/* 默认形态：标题一行、标签一行。标题优先拿宽度，39 条可以快速扫完。 */
 .alife-entry-summary {
   display: grid;
   grid-template-columns: 62px minmax(0, 1fr) 24px;
