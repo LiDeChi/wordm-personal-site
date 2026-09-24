@@ -1,6 +1,8 @@
-import { useRef, useState } from "react";
+import { lazy, Suspense, useRef, useState } from "react";
 import type { Lang } from "../i18n/lang";
 import "./HistoryTrace.css";
+
+const HistoryWorld3D = lazy(() => import("./HistoryWorld3D").then((module) => ({ default: module.HistoryWorld3D })));
 
 type Moment = {
   year: number;
@@ -88,7 +90,10 @@ const MOMENTS: Moment[] = [
 const COPY = {
   zh: {
     heading: "沿着痕迹，读一生",
-    intro: "拖动时间，点开后来的事，再回看此前哪些经历与观念留下了线索。",
+    intro: "旋转山河，点一座碑进入那一年；再沿金线回看此前留下的线索。",
+    sceneHint: "拖动旋转 · Ctrl + 滚轮缩放 · 点碑选年",
+    sceneLabel: "一人之史 / 七处遗痕",
+    openRecord: "读这一年 ↘",
     provenance: "《一念》真实运行记录 · 随机策略 · 种子 14 · 节选 7 个节点",
     record: "这一年发生了什么",
     result: "他如何行动",
@@ -103,7 +108,10 @@ const COPY = {
   },
   en: {
     heading: "Follow the traces of a life",
-    intro: "Drag through the years. Open a later event, then follow the earlier beliefs and experiences connected to it.",
+    intro: "Turn the landscape, choose a year, then follow its golden threads to earlier clues.",
+    sceneHint: "Drag to orbit · Ctrl + scroll to zoom · Select a monument",
+    sceneLabel: "One life / seven traces",
+    openRecord: "Read this year ↘",
     provenance: "A real Yinian run · random policy · seed 14 · seven selected moments",
     record: "What happened",
     result: "What he did",
@@ -136,6 +144,18 @@ export function HistoryTrace({ lang }: { lang: Lang }) {
         <span className="history-trace-seal" aria-hidden="true">念</span>
       </div>
       <div className="history-trace-stage">
+        <div className="history-world-shell">
+          <Suspense fallback={<div className="history-world-loading" /> }>
+            <HistoryWorld3D years={MOMENTS.map((moment) => moment.year)} index={index} related={current.related} lang={lang} onSelect={setIndex} />
+          </Suspense>
+          <div className="history-world-title" aria-hidden="true">{copy.sceneLabel}</div>
+          <button type="button" className="history-world-caption" onClick={() => cardRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })}>
+            <span>{copy.year(current.year)} / {current.kind[lang]}</span>
+            <strong>{current.title[lang]}</strong>
+            <span>{copy.openRecord}</span>
+          </button>
+          <div className="history-world-hint" aria-hidden="true">{copy.sceneHint}</div>
+        </div>
         <div className="history-trace-rail">
           <div className="history-trace-meta"><span>{copy.provenance}</span></div>
           <div className="history-trace-years" role="group" aria-label={lang === "zh" ? "选择年份" : "Select a year"}>
