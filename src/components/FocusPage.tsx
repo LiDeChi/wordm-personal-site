@@ -9,7 +9,7 @@ const COPY = {
     question: "一个念头，怎样成为世界的一部分？",
     sequence: ["世界自行演化", "主体理解并改变世界", "后果留在环境里", "人通过窗口参与"],
     principle: "世界负责因果，交互负责让人看见和参与。玩家的每一次影响，都要进入世界本身的历史。",
-    pathsTitle: "从三个方向走近这个问题",
+    pathsTitle: "两条世界实验线",
     paths: [
       {
         number: "01", title: "心智与社会",
@@ -25,14 +25,10 @@ const COPY = {
         detail: "人工生命是数字世界的一种起点，而不是所有数字世界必须经历的起点。",
         href: "#alife-section", link: "浏览人工生命史",
       },
-      {
-        number: "03", title: "人与世界的窗口",
-        description: "复杂世界需要一种人能理解的入口。智能体选择值得呈现的事，把人的意图转成世界中的行动。",
-        project: "叙事、推演与对照",
-        detail: "同一段历史可以成为游戏、编年史或图册；还可以对照“如果我没有开口”，看见影响的边界。",
-        href: "https://github.com/LiDeChi/yinian", link: "看当前原型",
-      },
     ],
+    windowTitle: "人如何进入这样的世界？",
+    windowIntro: "这是两条实验线共用的交互问题：怎样让人看见世界正在发生什么，并让人的选择成为其中一个真实事件？",
+    windowDetail: "我设想用一个“窗口”翻译两端：把世界的变化呈现给人，把人的意图转成受世界规则约束的行动。《一念》中，玩家作为人物心里的念头影响他的判断，是这个想法的一个早期例子。",
     alifeTitle: "人工生命：数字世界的一种可能",
     alifeIntro: "下面是人工生命研究与作品的时间轴。它帮助我追问：世界里的结构如何获得身体、记忆和改变环境的能力。",
   },
@@ -42,7 +38,7 @@ const COPY = {
     question: "How does one thought become part of a world?",
     sequence: ["A world evolves", "Its inhabitants learn and intervene", "Consequences remain", "People enter through a window"],
     principle: "The world determines what happens. The interface helps us see and participate. Every intervention becomes part of the world's history.",
-    pathsTitle: "Three ways into the question",
+    pathsTitle: "Two lines of world experiments",
     paths: [
       {
         number: "01", title: "Minds and societies",
@@ -58,14 +54,10 @@ const COPY = {
         detail: "Artificial life is one possible starting point for a digital world, not a prerequisite for every world.",
         href: "#alife-section", link: "Explore the timeline",
       },
-      {
-        number: "03", title: "A window into the world",
-        description: "A complex world needs an understandable interface. An agent chooses what to show and translates human intent into actions within the world.",
-        project: "Narrative, simulation, comparison",
-        detail: "The same history can become a game, chronicle, or atlas. A counterfactual can reveal what changed because you spoke.",
-        href: "https://github.com/LiDeChi/yinian", link: "See the current prototype",
-      },
     ],
+    windowTitle: "How do people enter these worlds?",
+    windowIntro: "Both research paths share an interaction question: how can people see what is happening in a world and make choices that become real events within it?",
+    windowDetail: "I imagine a window that translates both ways: it presents changes in the world to a person, then turns their intent into an action constrained by the world's rules. In Yinian, influencing a character as a thought in his mind is an early example.",
     alifeTitle: "Artificial life: one kind of digital world",
     alifeIntro: "This timeline of artificial life research and works helps me ask how structures in a world acquire bodies, memory, and the ability to change their environment.",
   },
@@ -91,6 +83,10 @@ export function FocusPage({ lang }: { lang: Lang }) {
           <div className="world-path-main"><h3>{path.title}</h3><p>{path.description}</p></div>
           <div className="world-path-detail"><strong>{path.project}</strong><p>{path.detail}</p><a href={path.href}>{path.link}<span aria-hidden="true"> ↗</span></a></div>
         </article>)}</div>
+      </section>
+      <section className="world-window" aria-labelledby="world-window-title">
+        <h2 id="world-window-title">{copy.windowTitle}</h2>
+        <div><p>{copy.windowIntro}</p><p>{copy.windowDetail}</p></div>
       </section>
       <section className="world-alife" id="alife-section" aria-labelledby="world-alife-title">
         <div className="world-alife-intro"><h2 id="world-alife-title">{copy.alifeTitle}</h2><p>{copy.alifeIntro}</p></div>
