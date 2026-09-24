@@ -125,7 +125,7 @@ export const ALIFE_COPY: Record<
   }
 > = {
   zh: {
-    eyebrow: "关注方向",
+    eyebrow: "人工生命史",
     timelineAria: "人工生命史时间轴",
     counts: (items, schools, years) =>
       `${items} 个条目 · ${schools} 个流派 · ${years}`,
@@ -158,7 +158,7 @@ export const ALIFE_COPY: Record<
     openEntry: "在展览里看",
   },
   en: {
-    eyebrow: "Focus",
+    eyebrow: "Artificial Life History",
     timelineAria: "Artificial life history timeline",
     counts: (items, schools, years) =>
       `${items} entries · ${schools} schools · ${years}`,

@@ -449,7 +449,7 @@ const APP_COPY = {
     themeToDayAria: "切换到日间模式",
     aboutTitle: "关于我",
     aboutIntro:
-      "做产品、写代码，也写关于人工生命与机器心智的东西；上线过的作品和正在跑的实验都收在「个人项目」里。",
+      "我想构建会持续演化、留下历史的数字世界。《一念》从心智与社会开始，人工生命是另一条研究线；作品与实验收在「个人项目」里。",
     aboutArchiveTitle: "项目归档",
     projectsArchiveMeta: "当前展示",
     projectsArchiveTitle: "本次展示的项目",
@@ -630,7 +630,7 @@ const APP_COPY = {
     themeToDayAria: "Switch to day mode",
     aboutTitle: "About",
     aboutIntro:
-      "I build products, write code, and write about artificial life and machine minds. Shipped work and running experiments both live on the Projects page.",
+      "I build digital worlds that keep evolving and retain their history. Yinian starts with minds and societies; artificial life is another research path. My work and experiments are on the Projects page.",
     aboutArchiveTitle: "Project archive",
     projectsArchiveMeta: "Current selection",
     projectsArchiveTitle: "Projects named in this link",
@@ -1254,8 +1254,8 @@ function App() {
 
     document.title =
       lang === "zh"
-        ? "关注方向 · 人工的生命、心智、交互 | wordm.us"
-        : "Focus · Artificial Life, Minds & Interaction | wordm.us";
+        ? "会产生历史的数字世界 | wordm.us"
+        : "Digital Worlds That Make History | wordm.us";
   }, [lang, rootView]);
 
   useEffect(() => {

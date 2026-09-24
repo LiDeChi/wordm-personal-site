@@ -34,7 +34,7 @@ type SiteShellCopy = {
 
 export const SHELL_COPY: Record<Lang, SiteShellCopy> = {
   zh: {
-    brand: "人工的生命、心智、交互",
+    brand: "会产生历史的数字世界",
     nav: { focus: "关注方向", projects: "个人项目", blog: "博客" },
     navAria: "主导航",
     langAria: "语言",
@@ -44,12 +44,12 @@ export const SHELL_COPY: Record<Lang, SiteShellCopy> = {
     socialAria: "社交媒体",
     footerNavAria: "页脚导航",
     footerSections: "栏目",
-    footerNote: "关注人工生命与机器心智，做一些可以走进去的东西。",
+    footerNote: "构建能持续演化、留下后果的数字世界。",
     footerAbout: "关于",
     footerContact: "一起聊聊",
   },
   en: {
-    brand: "Artificial Life, Minds & Interaction",
+    brand: "Digital Worlds That Make History",
     nav: { focus: "Focus", projects: "Projects", blog: "Writing" },
     navAria: "Main navigation",
     langAria: "Language",
@@ -60,7 +60,7 @@ export const SHELL_COPY: Record<Lang, SiteShellCopy> = {
     footerNavAria: "Footer navigation",
     footerSections: "Sections",
     footerNote:
-      "Artificial life and machine minds — building things you can walk into.",
+      "Building digital worlds that evolve and retain the consequences of our actions.",
     footerAbout: "About",
     footerContact: "Get in touch",
   },
