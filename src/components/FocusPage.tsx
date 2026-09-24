@@ -1,14 +1,12 @@
 import type { Lang } from "../i18n/lang";
 import { AlifeTimeline } from "./AlifeTimeline";
+import { HistoryTrace } from "./HistoryTrace";
 import "./FocusPage.css";
 
 const COPY = {
   zh: {
     title: "让数字世界产生历史",
     intro: "我想构建持续运行的数字世界。世界中的人和生命依据自己的认知行动，逐渐改变环境；这些改变不会在下一次交互时清零，而会成为后来者生活的条件。",
-    question: "一个念头，怎样成为世界的一部分？",
-    sequence: ["世界自行演化", "主体理解并改变世界", "后果留在环境里", "人通过窗口参与"],
-    principle: "世界负责因果，交互负责让人看见和参与。玩家的每一次影响，都要进入世界本身的历史。",
     pathsTitle: "两条世界实验线",
     paths: [
       {
@@ -35,9 +33,6 @@ const COPY = {
   en: {
     title: "Digital worlds that make history",
     intro: "I want to build digital worlds that keep running. Their inhabitants act on what they believe, change their surroundings, and leave consequences that become the conditions for those who come after them.",
-    question: "How does one thought become part of a world?",
-    sequence: ["A world evolves", "Its inhabitants learn and intervene", "Consequences remain", "People enter through a window"],
-    principle: "The world determines what happens. The interface helps us see and participate. Every intervention becomes part of the world's history.",
     pathsTitle: "Two lines of world experiments",
     paths: [
       {
@@ -70,12 +65,8 @@ export function FocusPage({ lang }: { lang: Lang }) {
       <header className="world-hero">
         <h1>{copy.title}</h1>
         <p className="world-hero-intro">{copy.intro}</p>
-        <div className="world-hero-question"><span aria-hidden="true">↗</span><p>{copy.question}</p></div>
       </header>
-      <section className="world-loop" aria-label={lang === "zh" ? "数字世界的循环" : "The digital world loop"}>
-        <ol>{copy.sequence.map((step, index) => <li key={step}><span>0{index + 1}</span>{step}</li>)}</ol>
-        <p>{copy.principle}</p>
-      </section>
+      <HistoryTrace lang={lang} />
       <section className="world-paths" aria-labelledby="world-paths-title">
         <h2 id="world-paths-title">{copy.pathsTitle}</h2>
         <div className="world-path-list">{copy.paths.map((path) => <article className="world-path" key={path.number}>
