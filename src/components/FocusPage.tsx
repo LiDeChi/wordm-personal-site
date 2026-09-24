@@ -1,6 +1,6 @@
 import type { Lang } from "../i18n/lang";
 import { AlifeTimeline } from "./AlifeTimeline";
-import { HistoryTrace } from "./HistoryTrace";
+import { ThoughtInteraction } from "./ThoughtInteraction";
 import "./FocusPage.css";
 
 const COPY = {
@@ -66,7 +66,7 @@ export function FocusPage({ lang }: { lang: Lang }) {
         <h1>{copy.title}</h1>
         <p className="world-hero-intro">{copy.intro}</p>
       </header>
-      <HistoryTrace lang={lang} />
+      <ThoughtInteraction lang={lang} />
       <section className="world-paths" aria-labelledby="world-paths-title">
         <h2 id="world-paths-title">{copy.pathsTitle}</h2>
         <div className="world-path-list">{copy.paths.map((path) => <article className="world-path" key={path.number}>
