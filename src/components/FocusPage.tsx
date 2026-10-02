@@ -27,8 +27,6 @@ const COPY = {
     windowTitle: "人如何进入这样的世界？",
     windowIntro: "这是两条实验线共用的交互问题：怎样让人看见世界正在发生什么，并让人的选择成为其中一个真实事件？",
     windowDetail: "我设想用一个“窗口”翻译两端：把世界的变化呈现给人，把人的意图转成受世界规则约束的行动。《一念》中，玩家作为人物心里的念头影响他的判断，是这个想法的一个早期例子。",
-    alifeTitle: "人工生命：数字世界的一种可能",
-    alifeIntro: "下面是人工生命研究与作品的时间轴。它帮助我追问：世界里的结构如何获得身体、记忆和改变环境的能力。",
   },
   en: {
     title: "Digital worlds that make history",
@@ -53,8 +51,6 @@ const COPY = {
     windowTitle: "How do people enter these worlds?",
     windowIntro: "Both research paths share an interaction question: how can people see what is happening in a world and make choices that become real events within it?",
     windowDetail: "I imagine a window that translates both ways: it presents changes in the world to a person, then turns their intent into an action constrained by the world's rules. In Yinian, influencing a character as a thought in his mind is an early example.",
-    alifeTitle: "Artificial life: one kind of digital world",
-    alifeIntro: "This timeline of artificial life research and works helps me ask how structures in a world acquire bodies, memory, and the ability to change their environment.",
   },
 } as const;
 
@@ -79,8 +75,7 @@ export function FocusPage({ lang }: { lang: Lang }) {
         <h2 id="world-window-title">{copy.windowTitle}</h2>
         <div><p>{copy.windowIntro}</p><p>{copy.windowDetail}</p></div>
       </section>
-      <section className="world-alife" id="alife-section" aria-labelledby="world-alife-title">
-        <div className="world-alife-intro"><h2 id="world-alife-title">{copy.alifeTitle}</h2><p>{copy.alifeIntro}</p></div>
+      <section className="world-alife" id="alife-section" aria-label={lang === "zh" ? "人工生命史" : "Artificial life history"}>
         <AlifeTimeline lang={lang} />
       </section>
     </main>
