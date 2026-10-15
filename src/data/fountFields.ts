@@ -32,6 +32,58 @@ export type FountField = {
 
 const FOUNT_FIELDS_RAW: FountField[] = [
   {
+    key: "zhuzi",
+    addedAt: "2026-10-15T02:25:56Z",
+    name: "竹子 Zhuzi",
+    href: "https://wordm.us/zhuzi/",
+    previewUrl: "wordm.us/zhuzi",
+    coverUrl: "/home/zhuzi-cover.jpg",
+    coverAlt: {
+      zh: "竹子《推门·旱》中的临淄城与东郊田野",
+      en: "Linzi and its eastern fields in Zhuzi's Push the Door: Drought",
+    },
+    coverCaption: {
+      zh: "票根散成临淄城，推门走进《推门·旱》",
+      en: "A ticket stub unfolds into Linzi in Push the Door: Drought",
+    },
+    screenshots: [
+      {
+        url: "/fields/gallery/zhuzi-east-field.jpg",
+        alt: {
+          zh: "《推门·旱》东郊田野中的农夫禾",
+          en: "He the farmer in the eastern fields of Push the Door: Drought",
+        },
+        caption: {
+          zh: "在东郊遇见农夫禾，听他讲过冬缺粟的难处",
+          en: "Meet He in the eastern fields and hear about his winter grain shortage",
+        },
+      },
+      {
+        url: "/fields/gallery/zhuzi-return.jpg",
+        alt: {
+          zh: "《推门·旱》中借粟后返回东郊的场景",
+          en: "Returning to the eastern fields after borrowing grain in Push the Door: Drought",
+        },
+        caption: {
+          zh: "借到粟后回到禾身边，把过冬的事接着办完",
+          en: "Return to He with borrowed grain and help him prepare for winter",
+        },
+      },
+    ],
+    kind: {
+      zh: "个人呈现管线",
+      en: "Personal Presentation Pipeline",
+    },
+    status: {
+      zh: "可试玩",
+      en: "Playable demo",
+    },
+    summary: {
+      zh: "竹子是把意图经过方案、校验、构建与模拟玩家试映变成作品的导演管线，而非聊天机器人；交付的《推门·旱》让票根散成临淄城，你在东郊遇见农夫禾，帮他借粟过冬。",
+      en: "Zhuzi is a directing pipeline from intent through planning, validation, building, and simulated-player screenings, rather than a chatbot; its Push the Door: Drought turns a ticket stub into Linzi, where you meet He the farmer in the eastern fields and help him borrow grain for winter.",
+    },
+  },
+  {
     key: "flipook",
     addedAt: "2026-07-17",
     name: "Flipook",

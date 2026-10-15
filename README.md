@@ -27,6 +27,7 @@
 个人网站包含：
 
 - 根域 `wordm.us`：关注方向 + 个人项目 + 博客入口
+- 产品站 `/zhuzi/`：竹子导演管线介绍与《推门·旱》试玩入口
 - 独立站 `bookplain.wordm.us`、`foundry.wordm.us`、`ringbook.wordm.us` 等由「关注方向 > 项目」与「个人项目」列出
 - 子域 `resume.wordm.us`：独立简历页（含 PDF 下载，仅管理员/测试账号可访问）
 - 子域 `admin.wordm.us`：后台系统入口（HTTP Basic Auth 保护）

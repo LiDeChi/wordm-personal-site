@@ -14,6 +14,11 @@
 /alife/         /alife/index.html  200
 /alife/index.html /alife/          301
 
+# 竹子产品站：规范化尾斜杠，让相对资源从产品目录加载
+/zhuzi          /zhuzi/            301
+/zhuzi/         /zhuzi/index.html  200
+/zhuzi/index.html /zhuzi/          301
+
 # 站内博客暂时屏蔽：永久跳转到 GitHub Pages 个人博客
 /blog         https://lidechi.github.io/        301
 /blog/        https://lidechi.github.io/        301
