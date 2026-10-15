@@ -42,8 +42,15 @@
 /portfolio  /projects     301
 
 # 产品路径 → 子域名
-/zh*          https://inote.wordm.us/:splat     301
-/en*          https://inote.wordm.us/:splat     301
+# 语言前缀原来写成 /zh* 与 /en*，会连同 /zhuzi/** 一起吞掉（Cloudflare 先判 301/302、
+# 后判 200 重写，所以 /zhuzi/ 的 200 重写抢不过它）。拆成 /zh、/zh/*、/zh-* 三条，
+# 覆盖原来所有能用的映射，但不再匹配 /zhuzi。
+/zh            https://inote.wordm.us/           301
+/zh/*          https://inote.wordm.us/:splat     301
+/zh-*          https://inote.wordm.us/-:splat    301
+/en            https://inote.wordm.us/           301
+/en/*          https://inote.wordm.us/:splat     301
+/en-*          https://inote.wordm.us/-:splat    301
 /api/*        https://inote.wordm.us/api/:splat  308
 
 # 兜底 → 个人主页
