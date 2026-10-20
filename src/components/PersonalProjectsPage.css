@@ -25,7 +25,7 @@
 
 .personal-projects-count {
     color: var(--warm-muted);
-    font-family: var(--font-mono);
+    font-family: var(--font-bear-body);
     font-size: 0.72rem;
 }
 
@@ -33,9 +33,9 @@
     display: block;
     margin-top: 4px;
     color: var(--warm-muted);
-    font-family: var(--font-mono);
-    font-size: 0.68rem;
-    line-height: 1.5;
+    font-family: var(--font-bear-body);
+    font-size: 0.78rem;
+    line-height: 1.6;
 }
 
 .personal-experiments-section {
