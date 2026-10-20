@@ -3635,7 +3635,16 @@ function App() {
           setThemeMode((current) => (current === "night" ? "day" : "night"))
         }
       >
-        {rootView === "projects" ? <PersonalProjectsPage lang={lang} /> : null}
+        {rootView === "projects" ? (
+          <PersonalProjectsPage
+            lang={lang}
+            themeMode={themeMode}
+            onThemeToggle={() =>
+              setThemeMode((current) => (current === "night" ? "day" : "night"))
+            }
+            onLangChange={setLang}
+          />
+        ) : null}
 
         {rootView === "projects" && showsProjectCatalog ? (
           <section
