@@ -41,19 +41,63 @@ body:has(.father-spread) .site-ai-chat {
     box-sizing: border-box;
     height: 100%;
     display: grid;
-    grid-template-rows: auto minmax(0, 1fr);
+    grid-template-rows: auto auto minmax(0, 1fr);
     grid-template-columns: minmax(0, 1fr) 72px;
     padding: 6px 10px 16px 18px;
     border: 1.5px solid #1c1c1c;
     border-radius: 36px;
 }
 
-.father-mast,
+.father-mast {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.father-jumps {
+    grid-column: 1;
+    grid-row: 2;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin: 0;
+    padding: 0 12px 12px;
+}
+
+.father-jumps button {
+    box-sizing: border-box;
+    height: 34px;
+    margin: 0;
+    padding: 0 12px;
+    border: 1.5px solid #1c1c1c;
+    border-radius: 12px;
+    background: #fff;
+    color: inherit;
+    font-family: var(--font-bear-body);
+    font-size: 13px;
+    font-weight: 400;
+    font-synthesis: none;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.father-jumps button[aria-current="true"] {
+    background: #1c1c1c;
+    color: #fff;
+}
+
+.father-jumps button:focus-visible {
+    outline: 2px solid #1c1c1c;
+    outline-offset: 3px;
+}
+
 .father-desk {
     grid-column: 1;
+    grid-row: 3;
 }
 
 .father-side {
+    position: relative;
     grid-column: 2;
     grid-row: 1 / -1;
     align-self: center;
@@ -63,11 +107,9 @@ body:has(.father-spread) .site-ai-chat {
     gap: 10px;
     min-height: 0;
     max-height: 100%;
-    overflow: auto;
-    scrollbar-width: none;
+    overflow: visible;
 }
 
-.fount-page-focused .father-side .fount-social-rail,
 .fount-page-focused .father-side .fount-music-rail {
     position: static;
     top: auto;
@@ -82,6 +124,26 @@ body:has(.father-spread) .site-ai-chat {
     box-shadow: none;
     backdrop-filter: none;
     color: inherit;
+}
+
+.fount-page-focused .father-side .fount-social-rail {
+    position: absolute;
+    top: 8px;
+    right: calc(100% + 8px);
+    width: 56px;
+    border: 1.5px solid #1c1c1c;
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: none;
+    z-index: 3;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.father-side:hover .fount-social-rail,
+.father-side:focus-within .fount-social-rail {
+    opacity: 1;
+    pointer-events: auto;
 }
 
 .father-side .fount-music-copy {
@@ -166,13 +228,13 @@ body:has(.father-spread) .site-ai-chat {
 }
 
 .father-spread.is-wide .father-desk {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 62px minmax(0, 1fr);
-    grid-template-areas: "left mid rail right";
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas: "left mid right";
 }
 
 .father-spread.is-narrow .father-desk {
-    grid-template-columns: minmax(0, 1fr) 62px;
-    grid-template-areas: "right rail";
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "right";
 }
 
 .father-module {
@@ -308,7 +370,6 @@ body:has(.father-spread) .site-ai-chat {
 }
 
 .father-rail {
-    grid-area: rail;
     align-self: center;
     display: flex;
     flex-direction: column;
@@ -358,6 +419,7 @@ body:has(.father-spread) .site-ai-chat {
 :root[data-theme="night"] .father-module,
 :root[data-theme="night"] .father-rail a,
 :root[data-theme="night"] .father-rail button,
+:root[data-theme="night"] .father-jumps button,
 :root[data-theme="night"] .father-scroll,
 :root[data-theme="night"] .father-scroll::before,
 :root[data-theme="night"] .fount-page-focused .father-side .fount-social-rail,
@@ -454,6 +516,11 @@ body:has(.father-spread) .site-ai-chat {
 ::view-transition-group(*) {
     animation-duration: 480ms;
     animation-timing-function: cubic-bezier(0.16, 0.84, 0.32, 1);
+}
+
+:root[data-theme="night"] .father-jumps button[aria-current="true"] {
+    background: #f3efe6;
+    color: #141210;
 }
 
 :root[data-theme="night"] .father-tools button {

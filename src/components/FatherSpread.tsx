@@ -269,10 +269,10 @@ function runTransition(update: () => void, after?: () => void) {
 }
 
 /**
- * Three reading windows and a button column in the gutter before the last one.
- * The wheel scrolls whichever window the pointer is on. On the button column
- * it moves the windows left and right through the projects. Clicking a window
- * expands it across the desk. Hovering shows share and quote on its right edge.
+ * Three reading windows. A jump row under the title moves among works and
+ * articles. Language, theme, about, and contact sit in a global column on the
+ * right, with the music player; social links appear only while that column is
+ * hovered. The wheel scrolls a window, and scrolls the strip from the column.
  */
 export function FatherSpread({
   lang,
@@ -366,6 +366,18 @@ export function FatherSpread({
     };
   }, [clampedStart, focusedKey, maxStart, wide]);
 
+  function jumpTo(index: number) {
+    const next = Math.min(maxStart, Math.max(0, index));
+    if (focusedKey) {
+      runTransition(() => {
+        setFocusedKey(null);
+        setStart(next);
+      });
+      return;
+    }
+    setStart(next);
+  }
+
   function placeHover(article: HTMLElement, x: number, y: number) {
     const key = article.dataset.key;
     const entry = DESK_ENTRIES.find((item) => item.key === key);
@@ -456,6 +468,26 @@ export function FatherSpread({
             <span>杰</span>
           </div>
         </header>
+
+        <nav className="father-jumps" aria-label={lang === "zh" ? "快速定位" : "Jump"}>
+          {PERSONAL_PROJECTS.map((field, index) => (
+            <button
+              key={field.key}
+              type="button"
+              aria-current={clampedStart === index ? "true" : undefined}
+              onClick={() => jumpTo(index)}
+            >
+              {field.name}
+            </button>
+          ))}
+          <button
+            type="button"
+            aria-current={clampedStart >= FIRST_ARTICLE ? "true" : undefined}
+            onClick={() => jumpTo(FIRST_ARTICLE)}
+          >
+            {lang === "zh" ? "文章" : "Writing"}
+          </button>
+        </nav>
 
         <div className={`father-desk${focusedKey ? " is-focused" : ""}`}>
           {slots.map((index, slot) => {
@@ -567,23 +599,21 @@ export function FatherSpread({
               </div>
             );
           })}
-
+        </div>
+        <aside className="father-side" aria-label={copy.railAria}>
           <div
             className="father-rail"
             ref={railRef}
-            aria-label={copy.railAria}
             onKeyDown={(event) => {
               if (event.key !== "ArrowDown" && event.key !== "ArrowUp") {
                 return;
               }
               event.preventDefault();
               const direction = event.key === "ArrowDown" ? 1 : -1;
-              setStart((current) =>
-                Math.min(maxStart, Math.max(0, current + direction)),
-              );
+              jumpTo(clampedStart + direction);
             }}
           >
-            <button type="button" onClick={() => setStart(FIRST_ARTICLE)}>
+            <button type="button" onClick={() => jumpTo(FIRST_ARTICLE)}>
               {copy.nav.blog}
             </button>
             <button
@@ -608,14 +638,12 @@ export function FatherSpread({
               {lang === "zh" ? "聊聊" : "Hi"}
             </a>
           </div>
-        </div>
-        <aside className="father-side" aria-label={copy.railAria}>
+          <FountMusicPlayer lang={lang} />
           <SocialLinks
             ariaLabel={copy.socialAria}
             className="fount-social-links fount-social-rail"
             linkClassName="fount-social-link"
           />
-          <FountMusicPlayer lang={lang} />
         </aside>
       </div>
     </div>
