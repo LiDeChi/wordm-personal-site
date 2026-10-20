@@ -1,5 +1,11 @@
+import katex from "katex";
 import { useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
+import {
+  BLOG_ARTICLES,
+  type BlogArticle,
+  type BlogContentBlock,
+} from "../data/blogArticles";
 import { PERSONAL_PROJECTS, type FountField } from "../data/fountFields";
 import type { Lang } from "../i18n/lang";
 import { withSiteParams } from "../lib/lang-url";
@@ -7,8 +13,9 @@ import {
   CONTACT_EMAIL,
   SHELL_COPY,
   siteAboutHref,
-  siteTabHref,
 } from "../lib/site-shell";
+import { FountMusicPlayer } from "./FountMusicPlayer";
+import { SocialLinks } from "./SocialLinks";
 import { ThemeModeIcon } from "./ThemeModeIcon";
 import "./FatherSpread.css";
 
@@ -31,6 +38,145 @@ type NoteState = {
 };
 
 const WHEEL_STEP = 48;
+
+type DeskEntry =
+  | { kind: "project"; key: string; field: FountField }
+  | { kind: "article"; key: string; article: BlogArticle };
+
+const DESK_ENTRIES: DeskEntry[] = [
+  ...PERSONAL_PROJECTS.map((field) => ({
+    kind: "project" as const,
+    key: field.key,
+    field,
+  })),
+  ...BLOG_ARTICLES.map((article) => ({
+    kind: "article" as const,
+    key: `article-${article.id}`,
+    article,
+  })),
+];
+
+const FIRST_ARTICLE = PERSONAL_PROJECTS.length;
+
+function entryTitle(entry: DeskEntry, lang: Lang) {
+  return entry.kind === "project" ? entry.field.name : entry.article.title[lang];
+}
+
+function entryFallback(entry: DeskEntry, lang: Lang) {
+  if (entry.kind === "project") {
+    return entry.field.summary[lang];
+  }
+  return entry.article.summary[lang] || entry.article.title[lang];
+}
+
+function MathText({ text }: { text: string }) {
+  const segments = text.split(/(\$\$[\s\S]+?\$\$|\$(?:\\.|[^$\n])+\$)/g);
+  return segments.map((segment, index) => {
+    const displayMode = segment.startsWith("$$") && segment.endsWith("$$");
+    const inlineMode = !displayMode && segment.startsWith("$") && segment.endsWith("$");
+    if (!displayMode && !inlineMode) {
+      return segment;
+    }
+    const expression = displayMode ? segment.slice(2, -2) : segment.slice(1, -1);
+    const html = katex.renderToString(expression, {
+      displayMode,
+      throwOnError: false,
+      trust: false,
+    });
+    return (
+      <span
+        key={`math-${index}`}
+        className={displayMode ? "father-math-display" : "father-math"}
+        dangerouslySetInnerHTML={{ __html: html }}
+      />
+    );
+  });
+}
+
+function articleBlocks(article: BlogArticle): BlogContentBlock[] {
+  if (article.blocks?.length) {
+    return article.blocks;
+  }
+  return article.paragraphs.map((text) => ({ type: "paragraph", text }));
+}
+
+function EntryBody({ entry, lang }: { entry: DeskEntry; lang: Lang }) {
+  if (entry.kind === "project") {
+    const href = withSiteParams(entry.field.href, { lang });
+    return (
+      <>
+        <h2>{entry.field.name}</h2>
+        <p className="father-kind">{entry.field.kind[lang]}</p>
+        {framesOf(entry.field, lang).map((frame) => (
+          <figure key={frame.url}>
+            <img src={frame.url} alt={frame.alt} />
+            <figcaption>{frame.caption}</figcaption>
+          </figure>
+        ))}
+        <a
+          className="father-open"
+          href={href}
+          {...(href.startsWith("http") ? { target: "_blank", rel: "noreferrer" } : {})}
+        >
+          {lang === "zh" ? "打开" : "Open"}
+        </a>
+      </>
+    );
+  }
+
+  const href = entry.article.sourceUrl || entry.article.originalSourceUrl || "";
+  return (
+    <>
+      <h2>{entry.article.title[lang]}</h2>
+      <p className="father-kind">
+        {entry.article.category[lang]} · {entry.article.date}
+      </p>
+      {articleBlocks(entry.article).map((block, index) => {
+        const key = `${entry.key}-${index}`;
+        if (block.type === "heading") {
+          return (
+            <h3 key={key}>
+              <MathText text={block.text[lang]} />
+            </h3>
+          );
+        }
+        if (block.type === "list") {
+          return (
+            <ul key={key}>
+              {block.items.map((item, itemIndex) => (
+                <li key={`${key}-${itemIndex}`}>
+                  <MathText text={item[lang]} />
+                </li>
+              ))}
+            </ul>
+          );
+        }
+        if (block.type === "figure") {
+          return (
+            <figure key={key}>
+              <img src={block.src} alt={block.alt[lang]} />
+              {block.caption[lang].trim() ? (
+                <figcaption>
+                  <MathText text={block.caption[lang]} />
+                </figcaption>
+              ) : null}
+            </figure>
+          );
+        }
+        return (
+          <p key={key} className={block.type === "callout" ? "father-callout" : undefined}>
+            <MathText text={block.text[lang]} />
+          </p>
+        );
+      })}
+      {href ? (
+        <a className="father-open" href={href} target="_blank" rel="noreferrer">
+          {lang === "zh" ? "原文" : "Source"}
+        </a>
+      ) : null}
+    </>
+  );
+}
 
 function framesOf(field: FountField, lang: Lang) {
   return [
@@ -147,7 +293,7 @@ export function FatherSpread({
   const noteTimer = useRef(0);
 
   const visible = wide ? 3 : 1;
-  const maxStart = Math.max(0, PERSONAL_PROJECTS.length - visible);
+  const maxStart = Math.max(0, DESK_ENTRIES.length - visible);
   const clampedStart = Math.min(start, maxStart);
   const slots = wide
     ? [clampedStart, clampedStart + 1, clampedStart + 2]
@@ -222,8 +368,8 @@ export function FatherSpread({
 
   function placeHover(article: HTMLElement, x: number, y: number) {
     const key = article.dataset.key;
-    const field = PERSONAL_PROJECTS.find((item) => item.key === key);
-    if (!key || !field) {
+    const entry = DESK_ENTRIES.find((item) => item.key === key);
+    if (!key || !entry) {
       return;
     }
     const rect = article.getBoundingClientRect();
@@ -231,7 +377,7 @@ export function FatherSpread({
     const min = article.scrollTop + 58;
     const max = article.scrollTop + article.clientHeight - 58;
     const top = Math.min(max, Math.max(min, center));
-    const line = lineUnderPoint(x, y) ?? field.summary[lang];
+    const line = lineUnderPoint(x, y) ?? entryFallback(entry, lang);
     setHover((current) => {
       if (
         current?.key === key &&
@@ -264,10 +410,21 @@ export function FatherSpread({
     noteTimer.current = window.setTimeout(() => setNote(null), 1400);
   }
 
-  async function shareField(field: FountField) {
-    const href = withSiteParams(field.href, { lang });
-    const url = new URL(href, window.location.origin).href;
-    const payload = { title: field.name, text: field.summary[lang], url };
+  function entryHref(entry: DeskEntry) {
+    if (entry.kind === "project") {
+      return withSiteParams(entry.field.href, { lang });
+    }
+    return entry.article.sourceUrl || entry.article.originalSourceUrl || "";
+  }
+
+  async function shareEntry(entry: DeskEntry) {
+    const href = entryHref(entry);
+    const url = href ? new URL(href, window.location.origin).href : window.location.href;
+    const payload = {
+      title: entryTitle(entry, lang),
+      text: entryFallback(entry, lang),
+      url,
+    };
     if (navigator.share) {
       try {
         await navigator.share(payload);
@@ -279,13 +436,13 @@ export function FatherSpread({
       }
     }
     await navigator.clipboard.writeText(url);
-    showNote(field.key, "share");
+    showNote(entry.key, "share");
   }
 
-  async function quoteLine(field: FountField, line: string) {
-    const citation = `「${line}」\n—— ${field.name}`;
+  async function quoteLine(entry: DeskEntry, line: string) {
+    const citation = `「${line}」\n—— ${entryTitle(entry, lang)}`;
     await navigator.clipboard.writeText(citation);
-    showNote(field.key, "quote");
+    showNote(entry.key, "quote");
   }
 
   return (
@@ -302,17 +459,20 @@ export function FatherSpread({
 
         <div className={`father-desk${focusedKey ? " is-focused" : ""}`}>
           {slots.map((index, slot) => {
-            const field = PERSONAL_PROJECTS[index];
+            const entry = DESK_ENTRIES[index];
+            if (!entry) {
+              return null;
+            }
             const right = slot === slots.length - 1;
-            const focused = focusedKey === field.key;
-            const tools = hover?.key === field.key ? hover : null;
+            const focused = focusedKey === entry.key;
+            const tools = hover?.key === entry.key ? hover : null;
             const article = (
               <article
                 className={`father-module${focused ? " is-open" : ""}${tools ? " is-hot" : ""}`}
-                data-key={field.key}
-                aria-label={field.name}
+                data-key={entry.key}
+                aria-label={entryTitle(entry, lang)}
                 tabIndex={0}
-                style={{ viewTransitionName: `father-${field.key}` }}
+                style={{ viewTransitionName: `father-${entry.key}` }}
                 ref={(node) => {
                   moduleRefs.current[slot] = node;
                 }}
@@ -328,7 +488,7 @@ export function FatherSpread({
                   if (focused) {
                     return;
                   }
-                  runTransition(() => setFocusedKey(field.key), restorePointer);
+                  runTransition(() => setFocusedKey(entry.key), restorePointer);
                 }}
                 onKeyDown={(event) => {
                   if (event.key !== "Enter" && event.key !== " ") {
@@ -338,7 +498,7 @@ export function FatherSpread({
                     return;
                   }
                   event.preventDefault();
-                  runTransition(() => setFocusedKey(field.key), restorePointer);
+                  runTransition(() => setFocusedKey(entry.key), restorePointer);
                 }}
                 onMouseMove={(event) => {
                   pointerRef.current = { x: event.clientX, y: event.clientY };
@@ -349,26 +509,10 @@ export function FatherSpread({
                   placeHover(event.currentTarget, event.clientX, event.clientY);
                 }}
                 onMouseLeave={() => {
-                  setHover((current) => (current?.key === field.key ? null : current));
+                  setHover((current) => (current?.key === entry.key ? null : current));
                 }}
               >
-                <h2>{field.name}</h2>
-                <p className="father-kind">{field.kind[lang]}</p>
-                {framesOf(field, lang).map((frame) => (
-                  <figure key={frame.url}>
-                    <img src={frame.url} alt={frame.alt} />
-                    <figcaption>{frame.caption}</figcaption>
-                  </figure>
-                ))}
-                <a
-                  className="father-open"
-                  href={withSiteParams(field.href, { lang })}
-                  {...(field.href.startsWith("http")
-                    ? { target: "_blank", rel: "noreferrer" }
-                    : {})}
-                >
-                  {lang === "zh" ? "打开" : "Open"}
-                </a>
+                <EntryBody entry={entry} lang={lang} />
                 {tools ? (
                   <div className="father-tools" style={{ top: tools.top }}>
                     {focused ? (
@@ -382,9 +526,9 @@ export function FatherSpread({
                     <button
                       type="button"
                       aria-label={lang === "zh" ? "分享这一件" : "Share this"}
-                      onClick={() => void shareField(field)}
+                      onClick={() => void shareEntry(entry)}
                     >
-                      {note?.key === field.key && note.action === "share"
+                      {note?.key === entry.key && note.action === "share"
                         ? lang === "zh"
                           ? "已复制"
                           : "Copied"
@@ -399,9 +543,9 @@ export function FatherSpread({
                           ? `引用当前行：${tools.line}`
                           : `Quote this line: ${tools.line}`
                       }
-                      onClick={() => void quoteLine(field, tools.line)}
+                      onClick={() => void quoteLine(entry, tools.line)}
                     >
-                      {note?.key === field.key && note.action === "quote"
+                      {note?.key === entry.key && note.action === "quote"
                         ? lang === "zh"
                           ? "已复制"
                           : "Copied"
@@ -416,7 +560,7 @@ export function FatherSpread({
             return (
               <div
                 className={`father-slot${right ? " father-window" : ""}${focused ? " is-focused" : ""}`}
-                key={field.key}
+                key={entry.key}
               >
                 {article}
                 {right ? <div className="father-scroll" aria-hidden="true" /> : null}
@@ -439,7 +583,9 @@ export function FatherSpread({
               );
             }}
           >
-            <a href={siteTabHref("blog", lang)}>{copy.nav.blog}</a>
+            <button type="button" onClick={() => setStart(FIRST_ARTICLE)}>
+              {copy.nav.blog}
+            </button>
             <button
               type="button"
               aria-label={copy.langAria}
@@ -463,6 +609,14 @@ export function FatherSpread({
             </a>
           </div>
         </div>
+        <aside className="father-side" aria-label={copy.railAria}>
+          <SocialLinks
+            ariaLabel={copy.socialAria}
+            className="fount-social-links fount-social-rail"
+            linkClassName="fount-social-link"
+          />
+          <FountMusicPlayer lang={lang} />
+        </aside>
       </div>
     </div>
   );

@@ -42,9 +42,78 @@ body:has(.father-spread) .site-ai-chat {
     height: 100%;
     display: grid;
     grid-template-rows: auto minmax(0, 1fr);
-    padding: 6px 18px 16px;
+    grid-template-columns: minmax(0, 1fr) 72px;
+    padding: 6px 10px 16px 18px;
     border: 1.5px solid #1c1c1c;
     border-radius: 36px;
+}
+
+.father-mast,
+.father-desk {
+    grid-column: 1;
+}
+
+.father-side {
+    grid-column: 2;
+    grid-row: 1 / -1;
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    min-height: 0;
+    max-height: 100%;
+    overflow: auto;
+    scrollbar-width: none;
+}
+
+.fount-page-focused .father-side .fount-social-rail,
+.fount-page-focused .father-side .fount-music-rail {
+    position: static;
+    top: auto;
+    right: auto;
+    bottom: auto;
+    left: auto;
+    transform: none;
+    width: 56px;
+    border: 1.5px solid #1c1c1c;
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: none;
+    backdrop-filter: none;
+    color: inherit;
+}
+
+.father-side .fount-music-copy {
+    height: 120px;
+}
+
+.father-side .fount-music-title {
+    font-family: var(--font-bear-body);
+}
+
+.father-module h3,
+.father-module li,
+.father-callout {
+    font-family: var(--font-bear-body);
+    font-weight: 400;
+    font-synthesis: none;
+}
+
+.father-module h3 {
+    margin: 18px 0 0;
+    font-family: var(--font-bear-heading);
+    font-size: 1.25rem;
+    letter-spacing: 0.035em;
+}
+
+.father-module ul {
+    margin: 12px 0 0;
+    padding-left: 1.2em;
+}
+
+.father-callout {
+    margin-top: 12px;
 }
 
 .father-mast {
@@ -290,7 +359,9 @@ body:has(.father-spread) .site-ai-chat {
 :root[data-theme="night"] .father-rail a,
 :root[data-theme="night"] .father-rail button,
 :root[data-theme="night"] .father-scroll,
-:root[data-theme="night"] .father-scroll::before {
+:root[data-theme="night"] .father-scroll::before,
+:root[data-theme="night"] .fount-page-focused .father-side .fount-social-rail,
+:root[data-theme="night"] .fount-page-focused .father-side .fount-music-rail {
     border-color: #f3efe6;
     background: transparent;
     color: inherit;
