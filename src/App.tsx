@@ -3637,6 +3637,7 @@ function App() {
       >
         {rootView === "projects" ? (
           <PersonalProjectsPage
+            articles={blogArticles}
             lang={lang}
             themeMode={themeMode}
             onThemeToggle={() =>
