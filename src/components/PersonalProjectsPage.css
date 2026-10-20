@@ -1,7 +1,6 @@
-/* 「个人项目」页：作品 + 人工生命的实验。工作区里其余仓库不上这一页。 */
+/* 「个人项目」页：只铺 PERSONAL_PROJECT_KEYS 里的六件作品。 */
 
-/* 全站 h2 带 §N 计数器（博客那套版式）。这一页是卡片式版式，显式关掉，
-   否则标题会渲染成「§1 人工生命的实验」。 */
+/* 全站 h2 带 §N 计数器（博客那套版式）。这一页是卡片式版式，显式关掉。 */
 .personal-experiments-section h2::before,
 .personal-experiments-section h3::before {
     content: none;

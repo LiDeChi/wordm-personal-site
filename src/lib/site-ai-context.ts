@@ -30,23 +30,19 @@ export type SiteAiContext = {
 
 const SITE_STRUCTURE = {
   zh: [
-    "根域 wordm.us: 系统主页、产品入口、文章和旧作品归档。",
-    "主页 Home: 介绍 Wordm System、Agent Core life loop、Core Host 下载和产品入口。",
-    "Projects: 展示 Flipook、诗经、MuseumBook、Bookplain、万卷、RingBook、ARC3、Forge、Foundry、Town Agents 等产品入口，并支持项目预览。",
-    "Blog: 连续文章阅读流，包含站内长文、X/Substack 归档和配图。",
-    "Minds /minds: 机器构建心智页面——意识与认知学派史（Active Inference、Predictive Processing、GWT、IIT、AST、HOT、RPT）、关键人物、经典著作/论文链接，以及脑—身—环境交互关系图。",
-    "About: 旧作品集归档与项目详情弹窗。",
+    "根域 wordm.us: 个人项目与博客两个入口。",
+    "个人项目 /projects: 只展示人工生命史、RingBook、MuseumBook、Flipook、诗经长卷、万卷。",
+    "博客: 主导航里的博客入口，目前跳到 lidechi.github.io。",
+    "About: 不进主导航，直接打开 /?view=about。",
     "admin.wordm.us: 管理入口，包含分享链接和定价配置。",
     "p-*.wordm.us: 单个项目子域页面，按项目访问与分享规则开放。",
     "oneagent.wordm.us / /oneagent: OneAgent 产品页。",
   ],
   en: [
-    "Root domain wordm.us: system home, product entries, articles, and archived portfolio.",
-    "Home: introduces Wordm System, the Agent Core life loop, Core Host download, and product entries.",
-    "Projects: presents Flipook, Shijing, MuseumBook, Bookplain, WanJuan, RingBook, ARC3, Forge, Foundry, Town Agents, and product previews.",
-    "Blog: continuous article reading flow with on-site writing plus X/Substack archives and figures.",
-    "Minds /minds: building machine minds — history of consciousness/cognition schools (Active Inference, Predictive Processing, GWT, IIT, AST, HOT, RPT), key people, classic books/papers with links, and an interactive brain–body–environment relation map.",
-    "About: archived portfolio and project detail modal.",
+    "Root domain wordm.us: two public entries, Projects and Writing.",
+    "Projects /projects: Artificial Life History, RingBook, MuseumBook, Flipook, the Shijing scroll, and WanJuan.",
+    "Writing: the nav entry currently sends visitors to lidechi.github.io.",
+    "About: not in the main nav; open /?view=about directly.",
     "admin.wordm.us: management entry for share links and pricing configuration.",
     "p-*.wordm.us: project-specific subdomain pages governed by project access and share rules.",
     "oneagent.wordm.us / /oneagent: OneAgent product page.",
@@ -55,35 +51,33 @@ const SITE_STRUCTURE = {
 
 const HOME_SUMMARY = {
   zh: [
-    "Wordm System 是一套让应用拥有 agent life loop 的架构。",
-    "Core 负责持续感知、分配注意力、生成与回收子代理、沉淀 skill。",
-    "Agent、Flipook 和未来 app 通过 WCP 接入，把信号与工具交给 Core，同时接收 Core 的指导。",
-    "Core Host 是启动本机 Agent Core 的 macOS 测试壳，用来验证 local runtime、WCP 协议和 app 接入链路。",
+    "打开 wordm.us 就是个人项目：人工生命史、RingBook、MuseumBook、Flipook、诗经长卷、万卷。",
+    "另一个入口是博客，跳到 lidechi.github.io。",
+    "人工生命史展览仍在 /alife/，从个人项目进入。",
   ],
   en: [
-    "Wordm System is an architecture that gives apps an agent life loop.",
-    "Core handles perception, attention allocation, agent spawning and retirement, and skill crystallization.",
-    "Agent, Flipook, and future apps connect through WCP, sending signals and tools to Core while receiving guidance.",
-    "Core Host is a macOS test shell for starting the local Agent Core and validating the runtime, WCP protocol, and app connection loop.",
+    "wordm.us opens on Projects: Artificial Life History, RingBook, MuseumBook, Flipook, the Shijing scroll, and WanJuan.",
+    "The other entry is Writing, which currently goes to lidechi.github.io.",
+    "The artificial-life exhibition remains at /alife/ and is reached from Projects.",
   ],
 } as const;
 
 const LANDING_PAGES = {
   zh: [
+    "人工生命史: https://wordm.us/alife/ ，按时间与流派织成的人工生命展览。",
+    "RingBook: https://ringbook.wordm.us ，本地 EPUB 汇成私人 3D 园区，全文沿书环展开。",
+    "MuseumBook: https://museum.wordm.us ，章节成为展厅，展品能回到原文。",
     "Flipook: 把一本书变成可以进入、回看和继续生长的空间化阅读世界。",
     "诗经长卷: https://wordm.us/shijing/ ，风雅颂铺成一卷青绿山水，拖拽展卷并点击金点读全诗。",
-    "ARC3: 围绕 ARC-AGI-3 的世界模型 agent、想象 rollout 和自调训练 cockpit。",
-    "Forge: 把项目、资源、分支、审核和 agent 实时活动放进同一个可观察工作台。",
-    "Agent Core: wordm.us 主页里的 agent core 入口，包含 agent loop、监控、记忆和生命周期。",
-    "Town Agents: Godot 城镇项目入口，后续接居民、任务、关系和 debug 体验。",
+    "万卷: 由经典组成的时间地域 3D 书场。",
   ],
   en: [
+    "Artificial Life History: https://wordm.us/alife/ — a gallery of artificial life by decade and school.",
+    "RingBook: https://ringbook.wordm.us — local EPUBs gather in a private 3D park and the full text runs along a reading ring.",
+    "MuseumBook: https://museum.wordm.us — chapters become galleries, and exhibits lead back to the source text.",
     "Flipook: turns a book into a spatial reading world you can enter, revisit, and keep growing.",
     "Shijing: https://wordm.us/shijing/ — Airs, odes, and hymns as one landscape scroll; drag to unfurl and click a gold mark to read.",
-    "ARC3: a world-model agent cockpit for ARC-AGI-3, imagined rollouts, and self-tuning training.",
-    "Forge: keeps projects, resources, branches, review, and live agent activity inside one observable workspace.",
-    "Agent Core: the agent core entry on wordm.us for loops, monitoring, memory, and lifecycle.",
-    "Town Agents: entry for the Godot town project, ready for residents, tasks, relationships, and debug experience.",
+    "WanJuan: a 3D field of classics arranged by time and place.",
   ],
 } as const;
 

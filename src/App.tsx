@@ -4,7 +4,6 @@ import "katex/dist/katex.min.css";
 import { LoginPage, type AccountTier } from "./components/LoginPage";
 import { AdminPage } from "./components/AdminPage";
 import { FountHomePage } from "./components/FountHomePage";
-import { FocusPage } from "./components/FocusPage";
 import { PersonalProjectsPage } from "./components/PersonalProjectsPage";
 import type { SiteTab } from "./lib/site-shell";
 import { OneAgentProductPage } from "./components/OneAgentProductPage";
@@ -110,7 +109,7 @@ import {
 } from "./lib/projects";
 import type { PortfolioProject, ProjectsSnapshot } from "./types";
 
-type RootView = "focus" | "projects" | "blog" | "login" | "about";
+type RootView = "projects" | "blog" | "login" | "about";
 type UnlockStorageMode = "remote" | "local" | "loading" | "idle";
 type ThemeMode = "day" | "night";
 const BLOG_INITIAL_RENDER_COUNT = 18;
@@ -449,12 +448,12 @@ const APP_COPY = {
     themeToDayAria: "切换到日间模式",
     aboutTitle: "关于我",
     aboutIntro:
-      "我想构建会持续演化、留下历史的数字世界。《一念》从心智与社会开始，人工生命是另一条研究线；作品与实验收在「个人项目」里。",
+      "我想构建会持续演化、留下历史的数字世界。对外只留个人项目和博客；个人项目目前是人工生命史、RingBook、MuseumBook、Flipook、诗经长卷、万卷。",
     aboutArchiveTitle: "项目归档",
     projectsArchiveMeta: "当前展示",
     projectsArchiveTitle: "本次展示的项目",
     projectsArchiveIntro:
-      "这些是链接里点名的工作区项目（?show= 子集或分享范围）；默认的「个人项目」页只铺本人作品与实验。",
+      "这些是链接里点名的工作区项目（?show= 子集或分享范围）；默认的「个人项目」页只铺六件作品。",
     projectsArchiveCount: (count: number) => `共 ${count} 个项目`,
     aboutEntryText: "关于我",
     portfolioTitle: "作品集",
@@ -630,12 +629,12 @@ const APP_COPY = {
     themeToDayAria: "Switch to day mode",
     aboutTitle: "About",
     aboutIntro:
-      "I build digital worlds that keep evolving and retain their history. Yinian starts with minds and societies; artificial life is another research path. My work and experiments are on the Projects page.",
+      "I build digital worlds that keep evolving and retain their history. The public site keeps two entries: Projects and Writing. Projects currently lists Artificial Life History, RingBook, MuseumBook, Flipook, the Shijing scroll, and WanJuan.",
     aboutArchiveTitle: "Project archive",
     projectsArchiveMeta: "Current selection",
     projectsArchiveTitle: "Projects named in this link",
     projectsArchiveIntro:
-      "These are the workspace projects this link names (?show= subset or share scope). The default Projects page only lists my own work and experiments.",
+      "These are the workspace projects this link names (?show= subset or share scope). The default Projects page lists six works.",
     projectsArchiveCount: (count: number) => `${count} projects`,
     aboutEntryText: "About",
     portfolioTitle: "Portfolio Gallery",
@@ -854,8 +853,8 @@ function toRootView(raw: string | null, pathname: string): RootView {
   }
 
   // Legacy routes (pricing / partners / updates / fields / docs / minds / home)
-  // all converge on the focus landing page.
-  return "focus";
+  // land on personal projects. The old focus page is no longer a public entry.
+  return "projects";
 }
 
 function normalizeSlug(raw: string | null): string | null {
@@ -1184,7 +1183,7 @@ function App() {
     window.location.pathname === "/oneagent/";
 
   const defaultHomeHref = new URL(
-    relativeRootHref("focus", lang),
+    relativeRootHref("projects", lang),
     "https://wordm.us",
   ).toString();
   const accountHref = relativeRootHref("login", lang);
@@ -3529,12 +3528,8 @@ function App() {
     );
   }
 
-  const activeTab: SiteTab =
-    rootView === "projects"
-      ? "projects"
-      : rootView === "blog"
-        ? "blog"
-        : "focus";
+  const activeTab: SiteTab | null =
+    rootView === "projects" ? "projects" : rootView === "blog" ? "blog" : null;
 
   // 「关于」与「个人项目」共用同一份详情弹窗，避免两页各写一遍。
   const projectDetailModal = selectedProject ? (
@@ -3640,8 +3635,6 @@ function App() {
           setThemeMode((current) => (current === "night" ? "day" : "night"))
         }
       >
-        {rootView === "focus" ? <FocusPage lang={lang} /> : null}
-
         {rootView === "projects" ? <PersonalProjectsPage lang={lang} /> : null}
 
         {rootView === "projects" && showsProjectCatalog ? (

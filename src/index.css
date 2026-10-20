@@ -23832,7 +23832,7 @@ body:has(.fount-page-focused[data-page="docs"]) {
 }
 
 /* ==========================================================================
-   Personal site shell — three-section IA (关注方向 / 个人项目 / 博客)
+   Personal site shell — two public entries (个人项目 / 博客)
    Replaces the Fount product marketing layout. Loaded last on purpose so it
    wins over the earlier focused-page rules with equal specificity.
    ========================================================================== */

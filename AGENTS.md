@@ -25,7 +25,7 @@
 ## Main surface
 - Browser home screen captured at `screenshots/runtime-home.png`.
 ## Deep exploration flow
-- Visit `http://127.0.0.1:44014/?lang=zh` (关注方向：时间轴 + 标签化项目卡片).
+- Visit `http://127.0.0.1:44014/?lang=zh` (首页即个人项目：六件作品).
 - Visit `http://127.0.0.1:44014/?lang=en` (same page, English).
 - Visit `http://127.0.0.1:44014/projects?lang=zh` (个人项目).
 - Visit `http://127.0.0.1:44014/?show=page-glance-extension%2Capple-notes-webclipper%2Cpersonalinflationbasket%2Cllm-layer%2Cfocusor%2Ccode-agent-demo%2Copen-deep-research%2Cdynamic-delegate-2&debug=1`.
@@ -33,11 +33,11 @@
 - Visit `http://127.0.0.1:44014/jian-yongjie-resume.pdf`.
 - Replay `button` interaction `中文`.
 - Replay `button` interaction `EN`.
-- Scroll the 关注方向 timeline through all six stages, then check the tagged project cards below it.
+- On the projects page, confirm only these six cards: 人工生命史, RingBook, MuseumBook, Flipook, 诗经长卷, 万卷.
 ## Acceptance chain
 - Run `npm run dev` and wait for a local browser URL.
 - Confirm `screenshots/runtime-home.png` still matches the main UI (`screenshots/runtime-home.png`).
-- Confirm the top nav has exactly three entries (关注方向 / 个人项目 / 博客) and that the right rail shows the social links above the music player without overlap.
+- Confirm the top nav has exactly two entries (个人项目 / 博客) and that the right rail shows the social links above the music player without overlap.
 - Revisit the recorded deep pages and successful interactions listed above.
 ## Commands (real / N/A)
 - run: `npm run dev`
@@ -71,8 +71,17 @@
 - Missing command(s): test, docs. Add real scripts/targets if support exists.
 <!-- ORCHESTRATOR:END -->
 
-## 发布约定（人工指示，2026-09-21）
+## 发布约定（2026-10-15 修订，取代 2026-09-21 版）
 
-- 改完并通过 `tsc -b` / `eslint .` / `npm run build` 后，**直接 commit 并 `git push origin main`**，不要等用户说「推送」。
-- push 到 `main` 会触发 `.github/workflows/deploy.yml`（Cloudflare Pages 部署），这是预期行为。
+- 改完并通过 `tsc -b` / `eslint .` / `npm run build` 后，commit，然后**推新分支，不推 main**：
+
+  ```sh
+  git push -u origin HEAD:agent/<简短主题>    # 例：agent/zhuzi-product-page
+  gh pr create --fill --base main
+  ```
+
+  仍然不要等用户说「推送」，但目标永远是「分支 + PR」，不是 main。
+- `main` 是生产分支，只有人合并 PR 才动它。合并后的那次 push 才触发 `.github/workflows/deploy.yml`
+  （Cloudflare Pages，`wrangler pages deploy ... --branch=main`）上线。
+- **不要**直接 `git push origin main`：那会跳过审阅直接进生产。需要紧急直推时先问用户，得到同意再用。
 - 只提交本次改动涉及的文件：不要顺手 `git add .`（`.playwright-mcp/`、历史遗留的 `screenshots/*` 等未跟踪文件不进提交）。

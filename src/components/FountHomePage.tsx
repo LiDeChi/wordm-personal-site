@@ -23,7 +23,7 @@ import { ThemeModeIcon } from "./ThemeModeIcon";
 
 type FountHomePageProps = {
   lang: Lang;
-  activeTab: SiteTab;
+  activeTab: SiteTab | null;
   onTabChange: (tab: SiteTab) => void;
   onLangChange: (lang: Lang) => void;
   themeMode: "day" | "night";
@@ -75,7 +75,7 @@ export function FountHomePage({
         <h1 className="site-brand-h1">
           <SiteBrand
             lang={lang}
-            onNavigate={(event) => handleTabClick(event, "focus", onTabChange)}
+            onNavigate={(event) => handleTabClick(event, "projects", onTabChange)}
           />
         </h1>
 
@@ -146,7 +146,7 @@ export function FountHomePage({
         <div className="fount-footer-brand">
           <SiteBrand
             lang={lang}
-            onNavigate={(event) => handleTabClick(event, "focus", onTabChange)}
+            onNavigate={(event) => handleTabClick(event, "projects", onTabChange)}
           />
           <p>{copy.footerNote}</p>
         </div>

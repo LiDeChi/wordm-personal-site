@@ -1,32 +1,15 @@
 import { useState } from "react";
 import type { Lang } from "../i18n/lang";
-import { FOUNT_FIELDS, type FountField } from "../data/fountFields";
-import {
-  FAMILY_PROJECTS,
-  FAMILY_SOURCE_LABEL,
-  FAMILY_STATUS_LABELS,
-  FAMILY_TAG_LABELS,
-  type FamilyProject,
-} from "../data/mindFamily";
+import { PERSONAL_PROJECTS, type FountField } from "../data/fountFields";
 import { withSiteParams } from "../lib/lang-url";
 import "./PersonalProjectsPage.css";
 
 /**
- * 「个人项目」页：只摆两类东西——已经上线、能点进去的作品，以及人工生命的实验。
+ * 「个人项目」页：只铺对外保留的六件作品。
  *
- * 作品取自 `FOUNT_FIELDS`（Flipook / MuseumBook / RingBook / 诗经长卷 …），
- * 实验取自 `mind-society` 登记表里带 `alife` 标签的成员（`FAMILY_PROJECTS`）。
- * 工作区里其余仓库不进这一页：站点只呈现本人收口过的清单。
+ * 顺序写在 `PERSONAL_PROJECT_KEYS`：人工生命史、RingBook、MuseumBook、
+ * Flipook、诗经长卷、万卷。其余登记项和工作区实验不进这一页。
  */
-
-/** 已经作为作品出现过的 key（例如 town / Town Agents），实验区不重复铺一遍。 */
-const WORK_KEYS: Record<string, true> = Object.fromEntries(
-  FOUNT_FIELDS.map((field) => [field.key, true]),
-);
-
-const EXPERIMENTS: FamilyProject[] = FAMILY_PROJECTS.filter(
-  (project) => project.tags.includes("alife") && !WORK_KEYS[project.key],
-);
 
 const COPY = {
   zh: {
@@ -34,26 +17,12 @@ const COPY = {
     workCount: (count: number) => `${count} 个已上线入口`,
     workPreview: "预览页面",
     workOpen: "打开",
-    experimentsMeta: "实验",
-    experimentsTitle: "人工生命的实验",
-    experimentsIntro:
-      "这些还没有公开入口，都在本机跑：规则是身体里可以搬动、复制、重接的结构；解释器可以把时钟接过来；史料只给一半，看世界自己往哪儿长。",
-    experimentsCount: (count: number) => `${count} 个实验`,
-    experimentRepo: "查看仓库",
-    experimentLocalOnly: "本机运行",
   },
   en: {
     workMeta: "Products & work",
     workCount: (count: number) => `${count} live entries`,
     workPreview: "Page preview",
     workOpen: "Open",
-    experimentsMeta: "Experiments",
-    experimentsTitle: "Artificial-life experiments",
-    experimentsIntro:
-      "These have no public entry yet and run locally: rules are structures you can move, copy, and rewire inside a body; the interpreter can take over the clock; and the chronicle is cut in half to watch a world grow on its own.",
-    experimentsCount: (count: number) => `${count} experiments`,
-    experimentRepo: "Repository",
-    experimentLocalOnly: "Runs locally",
   },
 } as const;
 
@@ -79,13 +48,13 @@ export function PersonalProjectsPage({ lang }: { lang: Lang }) {
             {copy.workMeta}
           </p>
           <span className="personal-projects-count">
-            {copy.workCount(FOUNT_FIELDS.length)}
+            {copy.workCount(PERSONAL_PROJECTS.length)}
           </span>
         </div>
 
         <div className="home-projects-hero">
           <div className="home-projects-grid">
-            {FOUNT_FIELDS.map((field, index) => {
+            {PERSONAL_PROJECTS.map((field, index) => {
               const href = fieldHref(field, lang);
               const isVideo = field.embedType === "video";
 
@@ -165,74 +134,6 @@ export function PersonalProjectsPage({ lang }: { lang: Lang }) {
               );
             })}
           </div>
-        </div>
-      </section>
-
-      <section
-        className="fount-body-section personal-experiments-section"
-        aria-labelledby="personal-experiments-title"
-      >
-        <div className="personal-projects-lead">
-          <p className="paper-meta">{copy.experimentsMeta}</p>
-          <span className="personal-projects-count">
-            {copy.experimentsCount(EXPERIMENTS.length)}
-          </span>
-        </div>
-
-        <div className="personal-experiments-copy">
-          <h2 id="personal-experiments-title">{copy.experimentsTitle}</h2>
-          <p>{copy.experimentsIntro}</p>
-          <p className="personal-projects-source">{FAMILY_SOURCE_LABEL[lang]}</p>
-        </div>
-
-        <div className="personal-experiment-grid">
-          {EXPERIMENTS.map((project) => (
-            <article className="personal-experiment-card" key={project.key}>
-              <header className="personal-experiment-head">
-                <h3>{project.name}</h3>
-                {project.latin ? (
-                  <span className="personal-experiment-latin">
-                    {project.latin}
-                  </span>
-                ) : null}
-              </header>
-
-              <p className="personal-experiment-meta">
-                <span>{project.kind[lang]}</span>
-                <span
-                  className="personal-experiment-status"
-                  data-status={project.status}
-                >
-                  {FAMILY_STATUS_LABELS[project.status][lang]}
-                </span>
-              </p>
-
-              <p className="personal-experiment-summary">
-                {project.summary[lang]}
-              </p>
-
-              <p className="personal-experiment-tags">
-                {project.tags.map((tag) => (
-                  <span className="personal-experiment-tag" key={tag}>
-                    {FAMILY_TAG_LABELS[tag][lang]}
-                  </span>
-                ))}
-              </p>
-
-              <div className="personal-experiment-actions">
-                {project.repoUrl ? (
-                  <a href={project.repoUrl} target="_blank" rel="noreferrer">
-                    {copy.experimentRepo}
-                    <span aria-hidden="true">→</span>
-                  </a>
-                ) : (
-                  <span className="personal-experiment-local">
-                    {copy.experimentLocalOnly}
-                  </span>
-                )}
-              </div>
-            </article>
-          ))}
         </div>
       </section>
     </>

@@ -23,7 +23,7 @@ function SiteLifeMark() {
 /**
  * 顶栏 / 页脚的站点标记：左边滑翔机，右边站点标题（衬线体）。
  *
- * 标题就是站点的标题本身，顶栏不再显示域名；点击回到关注方向。
+ * 标题就是站点的标题本身，顶栏不再显示域名；点击回到个人项目。
  */
 export function SiteBrand({
   lang,
@@ -35,7 +35,7 @@ export function SiteBrand({
   const copy = SHELL_COPY[lang];
 
   return (
-    <a className="fount-logo" href={siteTabHref("focus", lang)} onClick={onNavigate}>
+    <a className="fount-logo" href={siteTabHref("projects", lang)} onClick={onNavigate}>
       <span className="fount-logo-mark" aria-hidden="true">
         <SiteLifeMark />
       </span>
