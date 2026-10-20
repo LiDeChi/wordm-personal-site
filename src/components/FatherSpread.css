@@ -223,18 +223,9 @@ body:has(.father-spread) .site-ai-chat {
 
 .father-desk {
     min-height: 0;
-    display: grid;
-    gap: 14px;
-}
-
-.father-spread.is-wide .father-desk {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
-    grid-template-areas: "left mid right";
-}
-
-.father-spread.is-narrow .father-desk {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-areas: "right";
+    display: flex;
+    gap: 12px;
+    align-items: stretch;
 }
 
 .father-module {
@@ -253,31 +244,40 @@ body:has(.father-spread) .site-ai-chat {
     display: none;
 }
 
-.father-slot,
-.father-window {
+.father-slot {
+    position: relative;
+    flex: 0 0 58px;
+    min-width: 0;
     min-height: 0;
+    transition: flex-basis 460ms cubic-bezier(0.16, 0.84, 0.32, 1);
 }
 
-.father-slot .father-module,
-.father-window .father-module {
+.father-slot.is-expanded {
+    flex: 1 1 auto;
+}
+
+.father-slot .father-module {
     height: 100%;
 }
 
-.father-spread.is-wide .father-slot:nth-child(1) {
-    grid-area: left;
-}
-
-.father-spread.is-wide .father-slot:nth-child(2) {
-    grid-area: mid;
-}
-
-.father-window {
-    grid-area: right;
-    position: relative;
-}
-
-.father-window .father-module {
+.father-slot.is-expanded .father-module {
     padding-right: 28px;
+}
+
+.father-slot:not(.is-expanded) .father-module {
+    overflow: hidden;
+    padding: 22px 8px;
+}
+
+.father-slot:not(.is-expanded) .father-module > :not(h2) {
+    display: none;
+}
+
+.father-slot:not(.is-expanded) h2 {
+    writing-mode: vertical-rl;
+    max-height: 100%;
+    font-size: 1.05rem;
+    letter-spacing: 0.16em;
 }
 
 .father-scroll {
@@ -306,6 +306,7 @@ body:has(.father-spread) .site-ai-chat {
 .father-module h2 {
     margin: 0;
     display: block;
+    color: #9d2b1f;
     font-family: var(--font-bear-heading);
     font-weight: 400;
     font-synthesis: none;
@@ -441,10 +442,8 @@ body:has(.father-spread) .site-ai-chat {
     padding-right: 92px;
 }
 
-.father-spread.is-wide .father-desk.is-focused,
-.father-spread.is-narrow .father-desk.is-focused {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-areas: "focus";
+.father-desk.is-focused {
+    display: flex;
 }
 
 .father-desk.is-focused > :not(.is-focused) {
@@ -523,6 +522,10 @@ body:has(.father-spread) .site-ai-chat {
     color: #141210;
 }
 
+:root[data-theme="night"] .father-module h2 {
+    color: #e7b1a4;
+}
+
 :root[data-theme="night"] .father-tools button {
     border-color: #f3efe6;
     background: #141210;
@@ -530,8 +533,10 @@ body:has(.father-spread) .site-ai-chat {
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .father-module {
+    .father-module,
+    .father-slot {
         scroll-behavior: auto;
+        transition: none;
     }
 
     ::view-transition-group(*) {

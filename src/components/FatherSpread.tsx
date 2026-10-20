@@ -57,6 +57,8 @@ const DESK_ENTRIES: DeskEntry[] = [
 ];
 
 const FIRST_ARTICLE = PERSONAL_PROJECTS.length;
+const PROJECT_ENTRIES = DESK_ENTRIES.slice(0, FIRST_ARTICLE);
+const ARTICLE_ENTRIES = DESK_ENTRIES.slice(FIRST_ARTICLE);
 
 function entryTitle(entry: DeskEntry, lang: Lang) {
   return entry.kind === "project" ? entry.field.name : entry.article.title[lang];
@@ -269,10 +271,9 @@ function runTransition(update: () => void, after?: () => void) {
 }
 
 /**
- * Three reading windows. A jump row under the title moves among works and
- * articles. Language, theme, about, and contact sit in a global column on the
- * right, with the music player; social links appear only while that column is
- * hovered. The wheel scrolls a window, and scrolls the strip from the column.
+ * Projects and articles are separate stacks. The card in the middle is open;
+ * hovering another card opens that one instead. The global column on the right
+ * switches stacks, and social links appear only while it is hovered.
  */
 export function FatherSpread({
   lang,
@@ -282,22 +283,29 @@ export function FatherSpread({
 }: FatherSpreadProps) {
   const copy = SHELL_COPY[lang];
   const [wide, setWide] = useState(true);
-  const [start, setStart] = useState(0);
+  const [pile, setPile] = useState<"projects" | "articles">("projects");
+  const [cursor, setCursor] = useState(() =>
+    Math.floor((PROJECT_ENTRIES.length - 1) / 2),
+  );
   const [focusedKey, setFocusedKey] = useState<string | null>(null);
   const [hover, setHover] = useState<HoverState | null>(null);
   const [note, setNote] = useState<NoteState | null>(null);
   const moduleRefs = useRef<Array<HTMLElement | null>>([]);
   const pointerRef = useRef<{ x: number; y: number } | null>(null);
   const railRef = useRef<HTMLDivElement | null>(null);
-  const maxStartRef = useRef(0);
+  const maxCursorRef = useRef(0);
   const noteTimer = useRef(0);
 
-  const visible = wide ? 3 : 1;
-  const maxStart = Math.max(0, DESK_ENTRIES.length - visible);
-  const clampedStart = Math.min(start, maxStart);
-  const slots = wide
-    ? [clampedStart, clampedStart + 1, clampedStart + 2]
-    : [clampedStart];
+  const pileEntries = pile === "projects" ? PROJECT_ENTRIES : ARTICLE_ENTRIES;
+  const maxCursor = Math.max(0, pileEntries.length - 1);
+  const center = Math.min(Math.max(cursor, 0), maxCursor);
+  const radius = wide ? (pile === "projects" ? pileEntries.length : 2) : 0;
+  const windowStart = Math.max(0, center - radius);
+  const windowEnd = Math.min(pileEntries.length, center + radius + 1);
+  const visibleEntries = pileEntries.slice(windowStart, windowEnd);
+  const centerKey = pileEntries[center]?.key ?? null;
+  const hoveredHere = hover && visibleEntries.some((item) => item.key === hover.key);
+  const openKey = focusedKey ?? (hoveredHere ? hover.key : centerKey);
 
   useEffect(() => {
     const media = window.matchMedia("(min-width: 980px)");
@@ -323,8 +331,20 @@ export function FatherSpread({
   }, [focusedKey]);
 
   useEffect(() => {
-    maxStartRef.current = maxStart;
+    maxCursorRef.current = maxCursor;
     const cleanups: Array<() => void> = [];
+    let pending = 0;
+    const stepCursor = (delta: number) => {
+      pending += delta;
+      if (Math.abs(pending) < WHEEL_STEP) {
+        return;
+      }
+      const direction = pending > 0 ? 1 : -1;
+      pending = 0;
+      setCursor((current) =>
+        Math.min(maxCursorRef.current, Math.max(0, current + direction)),
+      );
+    };
 
     moduleRefs.current.forEach((node) => {
       if (!node) {
@@ -334,9 +354,14 @@ export function FatherSpread({
         if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) {
           return;
         }
-        event.preventDefault();
+        const expanded = node.closest(".father-slot")?.classList.contains("is-expanded");
         const max = node.scrollHeight - node.clientHeight;
-        node.scrollTop = Math.min(max, Math.max(0, node.scrollTop + event.deltaY));
+        event.preventDefault();
+        if (expanded && max > 8) {
+          node.scrollTop = Math.min(max, Math.max(0, node.scrollTop + event.deltaY));
+          return;
+        }
+        stepCursor(event.deltaY);
       };
       node.addEventListener("wheel", onWheel, { passive: false });
       cleanups.push(() => node.removeEventListener("wheel", onWheel));
@@ -344,18 +369,9 @@ export function FatherSpread({
 
     const rail = railRef.current;
     if (rail) {
-      let pending = 0;
       const onWheel = (event: WheelEvent) => {
         event.preventDefault();
-        pending += event.deltaY;
-        if (Math.abs(pending) < WHEEL_STEP) {
-          return;
-        }
-        const direction = pending > 0 ? 1 : -1;
-        pending = 0;
-        setStart((current) =>
-          Math.min(maxStartRef.current, Math.max(0, current + direction)),
-        );
+        stepCursor(event.deltaY);
       };
       rail.addEventListener("wheel", onWheel, { passive: false });
       cleanups.push(() => rail.removeEventListener("wheel", onWheel));
@@ -364,18 +380,20 @@ export function FatherSpread({
     return () => {
       cleanups.forEach((cleanup) => cleanup());
     };
-  }, [clampedStart, focusedKey, maxStart, wide]);
+  }, [center, focusedKey, maxCursor, openKey, pile, wide]);
 
-  function jumpTo(index: number) {
-    const next = Math.min(maxStart, Math.max(0, index));
+  function showPile(next: "projects" | "articles") {
+    const apply = () => {
+      setPile(next);
+      setCursor(next === "projects" ? Math.floor((PROJECT_ENTRIES.length - 1) / 2) : 0);
+      setFocusedKey(null);
+      setHover(null);
+    };
     if (focusedKey) {
-      runTransition(() => {
-        setFocusedKey(null);
-        setStart(next);
-      });
+      runTransition(apply);
       return;
     }
-    setStart(next);
+    apply();
   }
 
   function placeHover(article: HTMLElement, x: number, y: number) {
@@ -469,35 +487,11 @@ export function FatherSpread({
           </div>
         </header>
 
-        <nav className="father-jumps" aria-label={lang === "zh" ? "快速定位" : "Jump"}>
-          {PERSONAL_PROJECTS.map((field, index) => (
-            <button
-              key={field.key}
-              type="button"
-              aria-current={clampedStart === index ? "true" : undefined}
-              onClick={() => jumpTo(index)}
-            >
-              {field.name}
-            </button>
-          ))}
-          <button
-            type="button"
-            aria-current={clampedStart >= FIRST_ARTICLE ? "true" : undefined}
-            onClick={() => jumpTo(FIRST_ARTICLE)}
-          >
-            {lang === "zh" ? "文章" : "Writing"}
-          </button>
-        </nav>
-
         <div className={`father-desk${focusedKey ? " is-focused" : ""}`}>
-          {slots.map((index, slot) => {
-            const entry = DESK_ENTRIES[index];
-            if (!entry) {
-              return null;
-            }
-            const right = slot === slots.length - 1;
+          {visibleEntries.map((entry, slot) => {
             const focused = focusedKey === entry.key;
-            const tools = hover?.key === entry.key ? hover : null;
+            const expanded = entry.key === openKey;
+            const tools = expanded && hover?.key === entry.key ? hover : null;
             const article = (
               <article
                 className={`father-module${focused ? " is-open" : ""}${tools ? " is-hot" : ""}`}
@@ -591,11 +585,11 @@ export function FatherSpread({
             );
             return (
               <div
-                className={`father-slot${right ? " father-window" : ""}${focused ? " is-focused" : ""}`}
+                className={`father-slot${expanded ? " is-expanded" : ""}${focused ? " is-focused" : ""}`}
                 key={entry.key}
               >
                 {article}
-                {right ? <div className="father-scroll" aria-hidden="true" /> : null}
+                {expanded && !focused ? <div className="father-scroll" aria-hidden="true" /> : null}
               </div>
             );
           })}
@@ -610,11 +604,16 @@ export function FatherSpread({
               }
               event.preventDefault();
               const direction = event.key === "ArrowDown" ? 1 : -1;
-              jumpTo(clampedStart + direction);
+              setCursor((current) =>
+                Math.min(maxCursor, Math.max(0, current + direction)),
+              );
             }}
           >
-            <button type="button" onClick={() => jumpTo(FIRST_ARTICLE)}>
-              {copy.nav.blog}
+            <button
+              type="button"
+              onClick={() => showPile(pile === "projects" ? "articles" : "projects")}
+            >
+              {pile === "projects" ? copy.nav.blog : lang === "zh" ? "作品" : "Works"}
             </button>
             <button
               type="button"
