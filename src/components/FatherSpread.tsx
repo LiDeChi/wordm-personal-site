@@ -9,7 +9,7 @@ import {
 import { PERSONAL_PROJECTS, type FountField } from "../data/fountFields";
 import type { Lang } from "../i18n/lang";
 import { withSiteParams } from "../lib/lang-url";
-import { CONTACT_EMAIL, SHELL_COPY, siteAboutHref, siteTabHref } from "../lib/site-shell";
+import { CONTACT_EMAIL, SHELL_COPY, siteTabHref } from "../lib/site-shell";
 import { FatherLanding } from "./FatherLanding";
 import { FountMusicPlayer } from "./FountMusicPlayer";
 import { SocialLinks } from "./SocialLinks";
@@ -547,7 +547,6 @@ export function FatherSpread({
           <div className="father-rail">
             <button type="button" aria-label={copy.langAria} onClick={() => onLangChange(lang === "zh" ? "en" : "zh")}>{lang === "zh" ? "中" : "EN"}</button>
             <button type="button" aria-label={themeMode === "night" ? copy.themeToDayAria : copy.themeToNightAria} aria-pressed={themeMode === "night"} onClick={onThemeToggle}><ThemeModeIcon mode={themeMode} /></button>
-            <a href={siteAboutHref(lang)}>{copy.footerAbout}</a>
             <a href={`mailto:${CONTACT_EMAIL}`} aria-label={copy.footerContact}>{lang === "zh" ? "聊聊" : "Hi"}</a>
             <button className="father-social-trigger" type="button" aria-label={copy.socialAria} aria-expanded={socialOpen} aria-controls="father-social" onClick={() => setSocialOpen((current) => !current)}>···</button>
           </div>
