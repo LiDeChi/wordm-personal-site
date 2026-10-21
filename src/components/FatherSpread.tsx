@@ -10,6 +10,7 @@ import { PERSONAL_PROJECTS, type FountField } from "../data/fountFields";
 import type { Lang } from "../i18n/lang";
 import { withSiteParams } from "../lib/lang-url";
 import { CONTACT_EMAIL, SHELL_COPY, siteAboutHref } from "../lib/site-shell";
+import { CardFrameOrnament } from "./CardFrameOrnament";
 import { FountMusicPlayer } from "./FountMusicPlayer";
 import { SocialLinks } from "./SocialLinks";
 import { ThemeModeIcon } from "./ThemeModeIcon";
@@ -465,6 +466,8 @@ export function FatherSpread({
               "--card-top": `${Math.max(0, 56 - depth * 24)}px`,
               "--card-scale": expanded ? 1 : Math.max(0.82, 1 - depth * 0.055),
               zIndex: expanded ? 40 : 20 - depth,
+              // Capture the scrolling paper and its stationary frame as one sheet.
+              viewTransitionName: `father-${entry.key}`,
             } as CSSProperties;
             return (
               <div className={`father-slot${expanded ? " is-expanded" : ""}${focused ? " is-focused" : ""}`} style={style} key={entry.key}>
@@ -473,7 +476,6 @@ export function FatherSpread({
                   data-key={entry.key}
                   aria-label={entryTitle(entry, lang)}
                   tabIndex={0}
-                  style={{ viewTransitionName: `father-${entry.key}` }}
                   ref={(node) => {
                     if (node) {
                       moduleRefs.current.set(entry.key, node);
@@ -517,6 +519,7 @@ export function FatherSpread({
                     <EntryBody entry={entry} lang={lang} />
                   </div>
                 </article>
+                <CardFrameOrnament projectKey={entry.kind === "project" ? entry.field.key : undefined} />
                 {expanded ? (
                   <div className="father-tools" style={{ top: tools?.top ?? 96 }}>
                     <button type="button" aria-label={lang === "zh" ? "分享这一件" : "Share this"} onClick={() => void shareEntry(entry)}>

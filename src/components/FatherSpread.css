@@ -203,6 +203,37 @@ body:has(.father-spread) .site-ai-chat { display: none; }
 }
 .father-slot.is-expanded .father-module { box-shadow: 0 16px 40px rgb(35 45 32 / 8%); }
 .father-module.is-open { cursor: auto; }
+
+/* Frame furniture is a sibling of the scroller, so it travels with the sheet.
+   A small paper ground keeps the top rule legible as text passes its edge. */
+.father-card-ornament {
+    --ornament-ink: var(--desk-muted);
+    --ornament-opacity: 0.72;
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+    color: var(--ornament-ink);
+    pointer-events: none;
+    user-select: none;
+}
+.father-card-ornament svg { position: absolute; display: block; }
+.father-card-ornament-mark {
+    top: 0;
+    left: 28px;
+    width: 112px;
+    height: 22px;
+    background: var(--desk-paper);
+    border-radius: 0 0 3px 3px;
+}
+.father-card-ornament path { opacity: var(--ornament-opacity); }
+.father-card-ornament-rule { color: var(--desk-line); }
+.father-card-ornament-corner {
+    bottom: 6px;
+    left: 6px;
+    width: 22px;
+    height: 22px;
+    opacity: 0.55;
+}
 .father-page {
     max-width: 864px;
     margin: 0 auto;
@@ -427,6 +458,7 @@ body:has(.father-spread) .site-ai-chat { display: none; }
     --desk-line: #414a3d;
     --desk-hover: #353e31;
 }
+:root[data-theme="night"] .father-card-ornament { --ornament-opacity: 0.8; }
 
 @media (max-height: 740px) and (min-width: 761px) {
     .father-mast { min-height: 70px; }
@@ -457,6 +489,8 @@ body:has(.father-spread) .site-ai-chat { display: none; }
     .father-slot { height: calc(100% - 64px); }
     .father-slot.is-expanded { left: 50%; }
     .father-page { padding: 22px 54px 32px 20px; font-size: 14px; }
+    .father-card-ornament-mark { left: 18px; width: 96px; height: 19px; }
+    .father-card-ornament-corner { bottom: 4px; left: 3px; width: 16px; height: 16px; }
     .father-spread .father-module h2 { font-size: 23px; }
     .father-spread .father-module h3 { font-size: 21px; }
     .father-spread .father-module figcaption { font-size: 13px; }
