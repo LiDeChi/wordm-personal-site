@@ -1,5 +1,5 @@
 import katex from "katex";
-import { useEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState, type ComponentPropsWithoutRef, type CSSProperties, type MouseEvent } from "react";
 import { flushSync } from "react-dom";
 import {
   BLOG_ARTICLES,
@@ -21,6 +21,7 @@ export type ReaderSurface = "home" | "projects" | "articles";
 type FatherSpreadProps = {
   surface: ReaderSurface;
   onSurfaceChange: (surface: ReaderSurface) => void;
+  onArticleOpen: (articleId: string) => void;
   lang: Lang;
   themeMode: "day" | "night";
   onThemeToggle: () => void;
@@ -92,7 +93,17 @@ function framesOf(field: FountField, lang: Lang) {
   ];
 }
 
-function EntryBody({ entry, lang }: { entry: DeskEntry; lang: Lang }) {
+type ReaderModuleProps = ComponentPropsWithoutRef<"article"> & {
+  entryKey: string;
+  onRegister: (key: string, node: HTMLElement | null) => void;
+};
+
+function ReaderModule({ entryKey, onRegister, ...props }: ReaderModuleProps) {
+  const register = useCallback((node: HTMLElement | null) => onRegister(entryKey, node), [entryKey, onRegister]);
+  return <article {...props} ref={register} />;
+}
+
+const EntryBody = memo(function EntryBody({ entry, lang }: { entry: DeskEntry; lang: Lang }) {
   if (entry.kind === "project") {
     const href = withSiteParams(entry.field.href, { lang });
     return (
@@ -116,7 +127,6 @@ function EntryBody({ entry, lang }: { entry: DeskEntry; lang: Lang }) {
     );
   }
 
-  const href = entry.article.sourceUrl || entry.article.originalSourceUrl || "";
   return (
     <>
       <h2>{entry.article.title[lang]}</h2>
@@ -153,14 +163,9 @@ function EntryBody({ entry, lang }: { entry: DeskEntry; lang: Lang }) {
           </p>
         );
       })}
-      {href ? (
-        <a className="father-open" href={href} target="_blank" rel="noreferrer">
-          {lang === "zh" ? "阅读原文" : "Read original"}
-        </a>
-      ) : null}
     </>
   );
-}
+});
 
 function runTransition(update: () => void, after?: () => void) {
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -187,6 +192,7 @@ function Chevron({ next = false }: { next?: boolean }) {
 export function FatherSpread({
   surface,
   onSurfaceChange,
+  onArticleOpen,
   lang,
   themeMode,
   onThemeToggle,
@@ -195,10 +201,17 @@ export function FatherSpread({
 }: FatherSpreadProps) {
   const copy = SHELL_COPY[lang];
   const pile: Pile = surface === "articles" ? "articles" : "projects";
+  const [requestedArticleId] = useState(() => surface === "articles"
+    ? new URLSearchParams(window.location.search).get("article")
+    : null);
   const [previousSurface, setPreviousSurface] = useState(surface);
-  const [positions, setPositions] = useState({ projects: INITIAL_PROJECT, articles: 0 });
+  const [positions, setPositions] = useState(() => ({
+    projects: INITIAL_PROJECT,
+    articles: Math.max(0, articles.findIndex((article) => article.id === requestedArticleId)),
+  }));
   const [previewKey, setPreviewKey] = useState<string | null>(null);
-  const [focusedKey, setFocusedKey] = useState<string | null>(null);
+  const [focusRequest, setFocusedKey] = useState<string | null>(requestedArticleId ? `article-${requestedArticleId}` : null);
+  const [pendingFocus, setPendingFocus] = useState<string | null>(null);
   const [note, setNote] = useState<NoteState | null>(null);
   const [indexQuery, setIndexQuery] = useState("");
   const [socialOpen, setSocialOpen] = useState(false);
@@ -210,13 +223,26 @@ export function FatherSpread({
   const scrollPositions = useRef(new Map<string, number>());
   const pointerRef = useRef<{ x: number; y: number } | null>(null);
   const noteTimer = useRef(0);
+  const registerModule = useCallback((key: string, node: HTMLElement | null) => {
+    if (node) {
+      moduleRefs.current.set(key, node);
+      const saved = scrollPositions.current.get(key);
+      if (saved !== undefined && node.scrollTop !== saved) node.scrollTop = saved;
+    } else {
+      const previous = moduleRefs.current.get(key);
+      if (previous) scrollPositions.current.set(key, previous.scrollTop);
+      moduleRefs.current.delete(key);
+    }
+  }, []);
 
   const articleEntries = useMemo<DeskEntry[]>(() => articles.map((article) => ({
     kind: "article", key: `article-${article.id}`, article,
   })), [articles]);
   const entries = pile === "projects" ? PROJECT_ENTRIES : articleEntries;
   const maxCursor = Math.max(0, entries.length - 1);
-  const center = Math.min(positions[pile], maxCursor);
+  const focusedIndex = surface === "home" ? -1 : entries.findIndex((entry) => entry.key === focusRequest);
+  const focusedKey = focusedIndex >= 0 ? focusRequest : null;
+  const center = focusedIndex >= 0 ? focusedIndex : Math.min(positions[pile], maxCursor);
   const centerKey = entries[center]?.key ?? null;
   const openKey = focusedKey ?? previewKey ?? centerKey;
   // Keep a small article window mounted, with the focused entry pinned in place.
@@ -230,7 +256,8 @@ export function FatherSpread({
   if (surface !== previousSurface) {
     setPreviousSurface(surface);
     setPreviewKey(null);
-    setFocusedKey(null);
+    setFocusedKey(surface === "articles" ? pendingFocus : null);
+    setPendingFocus(null);
   }
 
   useEffect(() => () => window.clearTimeout(noteTimer.current), []);
@@ -241,7 +268,10 @@ export function FatherSpread({
 
   function closeFocus() {
     const key = focusedKey;
-    runTransition(() => setFocusedKey(null), () => { if (key) restoreFocus(key); });
+    runTransition(() => {
+      setPositions((current) => ({ ...current, [pile]: center }));
+      setFocusedKey(null);
+    }, () => { if (key) restoreFocus(key); });
   }
 
   useEffect(() => {
@@ -249,11 +279,14 @@ export function FatherSpread({
     const onKey = (event: KeyboardEvent) => {
       if (event.key !== "Escape" || indexRef.current?.open) return;
       const key = focusedKey;
-      runTransition(() => setFocusedKey(null), () => restoreFocus(key));
+      runTransition(() => {
+        setPositions((current) => ({ ...current, [pile]: center }));
+        setFocusedKey(null);
+      }, () => restoreFocus(key));
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [focusedKey]);
+  }, [center, focusedKey, pile]);
 
   useEffect(() => {
     if (surface === "home") return;
@@ -282,19 +315,16 @@ export function FatherSpread({
       if (!(target instanceof Element)) return;
       const module = target.closest<HTMLElement>(".father-module");
       const multiplier = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? 600 : 1;
-      const horizontal = Math.abs(event.deltaX) > Math.abs(event.deltaY);
-      event.preventDefault();
-      if (module && !horizontal) {
-        // Even a short sheet owns its vertical wheel; reaching its end never changes cards.
-        module.scrollTop += event.deltaY * multiplier;
-      } else {
-        step((horizontal ? event.deltaX : event.deltaY) * multiplier);
-      }
+      const horizontal = event.shiftKey || Math.abs(event.deltaX) > Math.abs(event.deltaY);
+      // Native scrolling keeps trackpad momentum and stays off the main thread.
+      if (module && !horizontal) return;
+      if (horizontal && target.closest(".father-math-display")) return;
+      step((horizontal ? event.deltaX || event.deltaY : event.deltaY) * multiplier);
     };
     const desk = deskRef.current;
     const side = sideRef.current;
-    desk?.addEventListener("wheel", onWheel, { passive: false });
-    side?.addEventListener("wheel", onWheel, { passive: false });
+    desk?.addEventListener("wheel", onWheel, { passive: true });
+    side?.addEventListener("wheel", onWheel, { passive: true });
     return () => {
       desk?.removeEventListener("wheel", onWheel);
       side?.removeEventListener("wheel", onWheel);
@@ -312,8 +342,38 @@ export function FatherSpread({
     indexRef.current?.close();
   }
 
+  function focusEntry(entry: DeskEntry) {
+    const index = entries.findIndex((item) => item.key === entry.key);
+    if (index < 0) return;
+    runTransition(() => {
+      setPositions((current) => ({ ...current, [pile]: index }));
+      setPreviewKey(entry.key);
+      setFocusedKey(entry.key);
+      if (entry.kind === "article") onArticleOpen(entry.article.id);
+    });
+  }
+
+  function openArticle(articleId: string) {
+    const index = articleEntries.findIndex((entry) => entry.kind === "article" && entry.article.id === articleId);
+    if (index < 0) return;
+    const entry = articleEntries[index];
+    indexRef.current?.close();
+    runTransition(() => {
+      setPositions((current) => ({ ...current, articles: index }));
+      setPreviewKey(entry.key);
+      if (surface !== "articles") {
+        setPendingFocus(entry.key);
+        onSurfaceChange("articles");
+      } else {
+        setFocusedKey(entry.key);
+      }
+      onArticleOpen(articleId);
+    });
+  }
+
   function openSurface(next: ReaderSurface) {
     indexRef.current?.close();
+    setPendingFocus(null);
     pointerRef.current = null;
     setPreviewKey(null);
     setFocusedKey(null);
@@ -335,9 +395,11 @@ export function FatherSpread({
   }
 
   async function shareEntry(entry: DeskEntry) {
+    const articleUrl = new URL(siteTabHref("blog", lang), window.location.origin);
+    if (entry.kind === "article") articleUrl.searchParams.set("article", entry.article.id);
     const href = entry.kind === "project"
       ? withSiteParams(entry.field.href, { lang })
-      : entry.article.sourceUrl || entry.article.originalSourceUrl || "";
+      : articleUrl.href;
     const url = href ? new URL(href, window.location.origin).href : window.location.href;
     if (navigator.share) {
       try {
@@ -362,21 +424,18 @@ export function FatherSpread({
           </a>
           <div className="father-identity">
             <h1>Father of Chana</h1>
-            <div className="father-seal" aria-label="简永杰" title="简永杰">
-              <span>简</span><span>永</span><span>杰</span>
-            </div>
           </div>
-          <nav className="father-sections" aria-label={copy.navAria}>
-            <a href={siteTabHref("projects", lang)} aria-current={surface === "projects" ? "page" : undefined} onClick={(event) => surfaceLink(event, "projects")}>{copy.nav.projects}</a>
-            <a href={siteTabHref("blog", lang)} aria-current={surface === "articles" ? "page" : undefined} onClick={(event) => surfaceLink(event, "articles")}>{copy.nav.blog}</a>
-          </nav>
         </header>
 
         {surface === "home" ? (
-          <FatherLanding lang={lang} articles={articles} onOpen={openSurface} />
+          <FatherLanding lang={lang} articles={articles} onOpen={openSurface} onOpenArticle={openArticle} />
         ) : (
           <>
             <nav className="father-navigation" aria-label={lang === "zh" ? "卡片导航" : "Card navigation"}>
+              <div className="father-sections" role="group" aria-label={copy.navAria}>
+                <a href={siteTabHref("projects", lang)} aria-current={surface === "projects" ? "page" : undefined} onClick={(event) => surfaceLink(event, "projects")}>{lang === "zh" ? "项目" : "Projects"}</a>
+                <a href={siteTabHref("blog", lang)} aria-current={surface === "articles" ? "page" : undefined} onClick={(event) => surfaceLink(event, "articles")}>{copy.nav.blog}</a>
+              </div>
               <div className="father-jumps" aria-label={lang === "zh" ? "快速定位" : "Jump to"}>
                 {pile === "projects" ? PROJECT_ENTRIES.map((entry, index) => (
                   <button type="button" key={entry.key} aria-current={center === index ? "true" : undefined} onClick={() => jumpTo(index)}>
@@ -430,24 +489,18 @@ export function FatherSpread({
                 } as CSSProperties;
                 return (
                   <div className={`father-slot${expanded ? " is-expanded" : ""}${focused ? " is-focused" : ""}`} style={style} key={entry.key}>
-                    <article
+                    <ReaderModule
+                      entryKey={entry.key}
+                      onRegister={registerModule}
                       className={`father-module${focused ? " is-open" : ""}`}
                       data-key={entry.key}
                       aria-label={entryTitle(entry, lang)}
                       tabIndex={0}
-                      ref={(node) => {
-                        if (node) {
-                          moduleRefs.current.set(entry.key, node);
-                          const saved = scrollPositions.current.get(entry.key);
-                          if (saved !== undefined && node.scrollTop !== saved) node.scrollTop = saved;
-                        } else moduleRefs.current.delete(entry.key);
-                      }}
                       onClick={(event) => {
                         const target = event.target;
                         if (!(target instanceof Element) || target.closest("a, button")) return;
                         if (window.getSelection()?.isCollapsed === false || focused) return;
-                        if (!expanded) { setPreviewKey(entry.key); return; }
-                        runTransition(() => { setPreviewKey(entry.key); setFocusedKey(entry.key); });
+                        focusEntry(entry);
                       }}
                       onFocus={(event) => {
                         if (event.target === event.currentTarget && !focusedKey) setPreviewKey(entry.key);
@@ -455,7 +508,7 @@ export function FatherSpread({
                       onKeyDown={(event) => {
                         if ((event.key !== "Enter" && event.key !== " ") || event.target !== event.currentTarget || focused) return;
                         event.preventDefault();
-                        runTransition(() => { setPreviewKey(entry.key); setFocusedKey(entry.key); });
+                        focusEntry(entry);
                       }}
                       onPointerMove={(event) => {
                         if (event.pointerType === "touch") return;
@@ -463,7 +516,7 @@ export function FatherSpread({
                         const moved = !previous || Math.hypot(event.clientX - previous.x, event.clientY - previous.y) > 3;
                         if (moved) {
                           pointerRef.current = { x: event.clientX, y: event.clientY };
-                          if (!focusedKey) setPreviewKey(entry.key);
+                          if (!focusedKey && openKey !== entry.key) setPreviewKey(entry.key);
                         }
                       }}
                       onScroll={(event) => {
@@ -474,7 +527,7 @@ export function FatherSpread({
                       <div className="father-page" inert={!expanded}>
                         <EntryBody entry={entry} lang={lang} />
                       </div>
-                    </article>
+                    </ReaderModule>
                     {expanded ? (
                       <div className="father-tools">
                         <button type="button" aria-label={lang === "zh" ? "分享这一件" : "Share this"} onClick={() => void shareEntry(entry)}>
@@ -512,7 +565,7 @@ export function FatherSpread({
         </div>
         <div className="father-index-list">
           {matchingArticles.map((entry) => (
-            <button type="button" key={entry.key} onClick={() => jumpTo(articleEntries.indexOf(entry))}>
+            <button type="button" key={entry.key} onClick={() => { if (entry.kind === "article") openArticle(entry.article.id); }}>
               <span>{entryTitle(entry, lang)}</span>
               <small>{entry.kind === "article" ? entry.article.date : ""}</small>
             </button>

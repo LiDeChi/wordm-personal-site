@@ -39,6 +39,7 @@
 - Run `npm run dev` and wait for a local browser URL.
 - Confirm `screenshots/runtime-home.png` still matches the main UI (`screenshots/runtime-home.png`).
 - Confirm home has exactly two entrance cards (项目 / 博客). Reading cards share their top and bottom edges, retain internal scroll, and expand on click with Escape / 收回 to return. Only sharing is offered; no quote action or frame ornaments.
+- Confirm the mast has no personal seal, and the 项目 / 博客 switch sits directly above the cards. Home article previews, article cards and index entries expand in place; no 阅读原文 link remains. Vertical scrolling keeps native momentum while horizontal navigation still changes cards.
 - Confirm language, theme, music and hover-revealed social controls remain usable outside the cards on desktop and in the bottom rail on phones. Browser Back / Forward must restore the correct surface.
 - Revisit the recorded deep pages and successful interactions listed above.
 ## Commands (real / N/A)

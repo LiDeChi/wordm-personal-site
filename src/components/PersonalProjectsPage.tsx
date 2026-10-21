@@ -6,6 +6,7 @@ import { FatherSpread, type ReaderSurface } from "./FatherSpread";
 type PersonalProjectsPageProps = {
   surface: ReaderSurface;
   onSurfaceChange: (surface: ReaderSurface) => void;
+  onArticleOpen: (articleId: string) => void;
   lang: Lang;
   themeMode: "day" | "night";
   onThemeToggle: () => void;

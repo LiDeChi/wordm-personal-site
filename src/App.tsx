@@ -1237,7 +1237,7 @@ function App() {
     }
 
     if (rootView === "projects") {
-      document.title = lang === "zh" ? "个人项目 | wordm.us" : "Projects | wordm.us";
+      document.title = lang === "zh" ? "项目 | wordm.us" : "Projects | wordm.us";
       return;
     }
 
@@ -3662,6 +3662,7 @@ function App() {
           <PersonalProjectsPage
             articles={blogArticles}
             surface={deskSurface}
+            onArticleOpen={setActiveBlogArticleId}
             onSurfaceChange={(surface) =>
               switchRootView(surface === "articles" ? "blog" : surface)
             }
@@ -3694,6 +3695,7 @@ function App() {
           <PersonalProjectsPage
             articles={blogArticles}
             surface="projects"
+            onArticleOpen={setActiveBlogArticleId}
             onSurfaceChange={(surface) =>
               switchRootView(surface === "articles" ? "blog" : surface)
             }

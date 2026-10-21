@@ -71,7 +71,7 @@ body:has(.father-spread) .site-ai-chat { display: none; }
 }
 .father-home { justify-self: start; }
 .father-home:hover, .father-sections a:hover { color: var(--desk-ink); }
-.father-identity { display: flex; align-items: center; gap: 10px; }
+.father-identity { grid-column: 2; justify-self: center; display: flex; align-items: center; }
 .father-spread .father-mast h1 {
     margin: 0;
     color: var(--desk-ink);
@@ -82,21 +82,7 @@ body:has(.father-spread) .site-ai-chat { display: none; }
     letter-spacing: 0.025em;
     white-space: nowrap;
 }
-.father-seal {
-    display: grid;
-    place-items: center;
-    width: 22px;
-    height: 30px;
-    padding: 3px 0;
-    background: #963a2d;
-    color: #fff;
-    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 60%);
-    font-family: var(--font-bear-heading);
-    font-size: 8px;
-    line-height: 1;
-}
-.father-seal span { letter-spacing: 0; }
-.father-sections { justify-self: end; display: flex; align-items: center; gap: 14px; }
+.father-sections { display: flex; flex: none; align-items: center; gap: 14px; }
 .father-sections a[aria-current="page"] {
     color: var(--desk-ink);
     text-decoration: underline;
@@ -113,7 +99,7 @@ body:has(.father-spread) .site-ai-chat { display: none; }
 
 /* The landing cards are the navigation, with the work and writing visible. */
 .is-home .father-frame { grid-template-rows: 40px minmax(0, 1fr); }
-.is-home .father-home, .is-home .father-sections { visibility: hidden; }
+.is-home .father-home { visibility: hidden; }
 .father-landing {
     grid-column: 1;
     grid-row: 2;
@@ -139,6 +125,8 @@ body:has(.father-spread) .site-ai-chat { display: none; }
     transition: border-color 160ms ease;
 }
 .father-entry:hover { border-color: var(--desk-muted); }
+.father-entry-collection, .father-article-preview { display: block; color: inherit; text-decoration: none; }
+.father-article-preview:hover h3 { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 5px; }
 .father-entry-heading { display: flex; align-items: baseline; gap: 14px; margin-bottom: 28px; }
 .father-spread .father-entry h2,
 .father-spread .father-entry h3 {
@@ -283,20 +271,21 @@ body:has(.father-spread) .site-ai-chat { display: none; }
 .father-slot {
     position: absolute;
     top: 0;
-    left: calc(50% + var(--card-offset));
+    left: 50%;
     width: var(--card-width);
     height: 100%;
     min-height: 0;
-    transform: translateX(-50%);
-    transition: left 420ms cubic-bezier(0.2, 0.75, 0.25, 1);
+    transform: translateX(calc(-50% + var(--card-offset)));
+    transition: transform 220ms cubic-bezier(0.2, 0.75, 0.25, 1);
 }
 .father-slot.is-expanded {
-    left: clamp(calc(var(--card-width) / 2 + 4px), calc(50% + var(--card-offset)), calc(100% - var(--card-width) / 2 - 4px));
+    transform: translateX(clamp(calc(4px - 50cqw), calc(-50% + var(--card-offset)), calc(50cqw - 100% - 4px)));
 }
 .father-module {
     height: 100%;
     min-height: 0;
     margin: 0;
+    overflow-x: hidden;
     overflow-y: auto;
     overscroll-behavior: contain;
     scrollbar-gutter: stable;
@@ -505,7 +494,7 @@ body:has(.father-spread) .site-ai-chat { display: none; }
 .father-spread :is(button, a, article, input):focus-visible { outline: 2px solid var(--desk-muted); outline-offset: 2px; }
 
 ::view-transition-old(root), ::view-transition-new(root) { animation-duration: 0s; }
-::view-transition-group(*) { animation-duration: 460ms; animation-timing-function: cubic-bezier(0.2, 0.75, 0.25, 1); }
+::view-transition-group(*) { animation-duration: 220ms; animation-timing-function: cubic-bezier(0.2, 0.75, 0.25, 1); }
 :root[data-theme="night"] .father-spread {
     --desk-ground: #202420;
     --desk-paper: #2b302b;
@@ -539,8 +528,6 @@ body:has(.father-spread) .site-ai-chat { display: none; }
     .father-frame { grid-template: 40px 34px minmax(0, 1fr) 46px / minmax(0, 1fr); gap: 0; }
     .father-mast { grid-column: 1; column-gap: 8px; }
     .father-spread .father-mast h1 { font-size: 20px; }
-    .father-identity { gap: 7px; }
-    .father-seal { width: 18px; height: 27px; font-size: 7px; }
     .father-home, .father-sections a { padding-inline: 2px; font-size: 11px; }
     .father-sections { gap: 8px; }
     .is-home .father-frame { grid-template-rows: 40px minmax(0, 1fr) 46px; }
@@ -566,7 +553,7 @@ body:has(.father-spread) .site-ai-chat { display: none; }
     .father-paging span { min-width: 36px; }
     .father-paging button { width: 26px; height: 26px; }
     .father-desk { --card-width: calc(100cqw - 24px); --card-step: 58px; }
-    .father-slot.is-expanded { left: 50%; }
+    .father-slot.is-expanded { transform: translateX(-50%); }
     .father-page { padding: 24px 52px 34px 22px; font-size: 14px; }
     .father-spread .father-module h2 { font-size: 24px; }
     .father-spread .father-module h3 { font-size: 21px; }
