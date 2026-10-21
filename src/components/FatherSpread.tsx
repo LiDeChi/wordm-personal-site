@@ -472,6 +472,7 @@ export function FatherSpread({
                 jumpTo(Math.min(maxCursor, Math.max(0, center + (event.key === "ArrowRight" ? 1 : -1))));
               }}
             >
+              {focusedKey ? <button className="father-back" type="button" onClick={closeFocus}>{lang === "zh" ? "收回" : "Back"}</button> : null}
               {visibleEntries.map((entry, slot) => {
                 const index = pile === "projects" ? slot : windowStart + slot;
                 const distance = index - center;
@@ -544,7 +545,6 @@ export function FatherSpread({
 
         <aside className={`father-side${socialOpen ? " is-social-open" : ""}`} ref={sideRef} aria-label={copy.railAria}>
           <div className="father-rail">
-            {focusedKey ? <button className="father-back" type="button" onClick={closeFocus}>{lang === "zh" ? "收回" : "Back"}</button> : null}
             <button type="button" aria-label={copy.langAria} onClick={() => onLangChange(lang === "zh" ? "en" : "zh")}>{lang === "zh" ? "中" : "EN"}</button>
             <button type="button" aria-label={themeMode === "night" ? copy.themeToDayAria : copy.themeToNightAria} aria-pressed={themeMode === "night"} onClick={onThemeToggle}><ThemeModeIcon mode={themeMode} /></button>
             <a href={siteAboutHref(lang)}>{copy.footerAbout}</a>
