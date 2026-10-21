@@ -741,3 +741,26 @@ const FOUNT_FIELDS_RAW: FountField[] = [
 export const FOUNT_FIELDS: FountField[] = [...FOUNT_FIELDS_RAW].sort(
   (a, b) => b.addedAt.localeCompare(a.addedAt),
 );
+
+/**
+ * 个人项目页对外只铺这六件，顺序即页面顺序。
+ * 用户说的 flipbook 在站内登记名是 Flipook（key: flipook）。
+ */
+export const PERSONAL_PROJECT_KEYS = [
+  "alife",
+  "ringbook",
+  "museum-book",
+  "flipook",
+  "shijing",
+  "wanjuan",
+] as const;
+
+export const PERSONAL_PROJECTS: FountField[] = PERSONAL_PROJECT_KEYS.map(
+  (key) => {
+    const field = FOUNT_FIELDS_RAW.find((item) => item.key === key);
+    if (!field) {
+      throw new Error(`Missing personal project: ${key}`);
+    }
+    return field;
+  },
+);

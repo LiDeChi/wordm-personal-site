@@ -3,15 +3,15 @@ import type { Lang } from "../i18n/lang";
 import { withSiteParams } from "./lang-url";
 
 /**
- * 站点外壳 / personal site shell — the three top-level sections.
+ * 站点外壳 / personal site shell — the two public entries.
  *
  * Kept out of `FountHomePage.tsx` so the component file stays fast-refresh
  * friendly.
  */
 
-export type SiteTab = "focus" | "projects" | "blog";
+export type SiteTab = "projects" | "blog";
 
-export const SITE_TABS: SiteTab[] = ["focus", "projects", "blog"];
+export const SITE_TABS: SiteTab[] = ["projects", "blog"];
 
 export const CONTACT_EMAIL = "parsonjian@gmail.com";
 
@@ -35,7 +35,7 @@ type SiteShellCopy = {
 export const SHELL_COPY: Record<Lang, SiteShellCopy> = {
   zh: {
     brand: "会产生历史的数字世界",
-    nav: { focus: "关注方向", projects: "个人项目", blog: "博客" },
+    nav: { projects: "个人项目", blog: "博客" },
     navAria: "主导航",
     langAria: "语言",
     themeToDayAria: "切换到白天模式",
@@ -50,7 +50,7 @@ export const SHELL_COPY: Record<Lang, SiteShellCopy> = {
   },
   en: {
     brand: "Digital Worlds That Make History",
-    nav: { focus: "Focus", projects: "Projects", blog: "Writing" },
+    nav: { projects: "Projects", blog: "Writing" },
     navAria: "Main navigation",
     langAria: "Language",
     themeToDayAria: "Switch to light mode",
@@ -71,13 +71,9 @@ export function siteTabHref(tab: SiteTab, lang: Lang): string {
     return withSiteParams("/projects", { lang });
   }
 
-  if (tab === "blog") {
-    return IN_SITE_BLOG_ENABLED
-      ? withSiteParams("/blog", { lang })
-      : withSiteParams(ARTICLES_SITE_URL, { lang });
-  }
-
-  return withSiteParams("/", { lang });
+  return IN_SITE_BLOG_ENABLED
+    ? withSiteParams("/blog", { lang })
+    : withSiteParams(ARTICLES_SITE_URL, { lang });
 }
 
 export function siteAboutHref(lang: Lang): string {

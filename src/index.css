@@ -1,5 +1,37 @@
 @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=Noto+Serif+SC:wght@300;400;600;700&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap");
 
+/* Bear on this Mac: titles are Libian SC (隶变-简), body is TsukuARdGothic-Regular.
+   These are system faces. Do not ship the font files. */
+@font-face {
+    font-family: "Bear Heading";
+    src:
+        local("STLibianSC-Regular"),
+        local("Libian SC"),
+        local("隶变-简");
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Bear Body";
+    src:
+        local("TsukuARdGothic-Regular"),
+        local("Tsukushi A Round Gothic"),
+        local("筑紫A丸ゴシック");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Bear Body";
+    src: local("TsukuARdGothic-Bold");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
 :root {
     --c-ink: #1a1a1a;
     --c-ink-light: #666666;
@@ -7,7 +39,12 @@
     --c-paper: #ffffff;
     --c-accent: #000000;
 
-    --font-main: "Noto Serif SC", "Noto Serif", serif;
+    --font-bear-heading:
+        "Bear Heading", "Libian SC", "STLibianSC-Regular", "Songti SC", serif;
+    --font-bear-body:
+        "Bear Body", "TsukuARdGothic-Regular", "Tsukushi A Round Gothic",
+        "PingFang SC", sans-serif;
+    --font-main: var(--font-bear-body);
     --font-mono: "JetBrains Mono", "Courier New", monospace;
 
     --column-gap: 40px;
@@ -27,7 +64,9 @@ body {
     font-weight: 400;
     line-height: 1.7;
     font-size: 16px;
+    text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
 }
 
@@ -9492,9 +9531,10 @@ body {
 .fount-logo,
 .site-brand {
     color: var(--warm-ink);
-    font-family: var(--font-mono);
-    font-weight: 520;
-    letter-spacing: 0;
+    font-family: var(--font-bear-heading);
+    font-weight: 400;
+    font-synthesis: none;
+    letter-spacing: 0.035em;
 }
 
 .fount-logo-mark,
@@ -10259,14 +10299,15 @@ body {
     }
 }
 
-/* Fount structure content typography and dense-system sections */
+/* Fount structure content typography and dense-system sections.
+   Titles: Libian SC. Body: TsukuARdGothic-Regular. Same pairing Bear uses. */
 .fount-page {
-    --fount-serif: "Noto Serif SC", "Noto Serif", Georgia, serif;
+    --fount-serif: var(--font-bear-body);
     --fount-ui: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
     font-family: var(--fount-serif);
+    text-rendering: optimizeLegibility;
 }
 
-.fount-logo,
 .fount-nav a,
 .fount-lang-switch button,
 .fount-download-small,
@@ -10290,9 +10331,10 @@ body {
 .fount-page h2,
 .fount-page h3,
 .fount-field-world strong {
-    font-family: var(--fount-serif);
-    font-weight: 600;
-    letter-spacing: 0;
+    font-family: var(--font-bear-heading);
+    font-weight: 400;
+    font-synthesis: none;
+    letter-spacing: 0.035em;
 }
 
 .fount-hero h1 {
@@ -11905,9 +11947,10 @@ body {
     background: transparent;
     color: rgb(43 35 29 / 64%);
     box-shadow: none;
-    font-size: 0.78rem;
-    font-weight: 650;
-    letter-spacing: 0;
+    font-family: var(--font-bear-body);
+    font-size: 0.86rem;
+    font-weight: 400;
+    letter-spacing: 0.02em;
 }
 
 .fount-page-focused .fount-site-nav a:hover,
@@ -23832,7 +23875,7 @@ body:has(.fount-page-focused[data-page="docs"]) {
 }
 
 /* ==========================================================================
-   Personal site shell — three-section IA (关注方向 / 个人项目 / 博客)
+   Personal site shell — two public entries (个人项目 / 博客)
    Replaces the Fount product marketing layout. Loaded last on purpose so it
    wins over the earlier focused-page rules with equal specificity.
    ========================================================================== */
@@ -24068,10 +24111,11 @@ body:has(.fount-page-focused[data-page="docs"]) {
 }
 
 .site-brand-title {
-    font-family: var(--font-main);
-    font-size: 1.02rem;
-    font-weight: 600;
-    letter-spacing: 0.02em;
+    font-family: var(--font-bear-heading);
+    font-size: 1.15rem;
+    font-weight: 400;
+    font-synthesis: none;
+    letter-spacing: 0.035em;
     line-height: 1.25;
     white-space: nowrap;
 }

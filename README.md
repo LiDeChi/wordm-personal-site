@@ -3,19 +3,17 @@
 > **根域名管理说明**：本仓库已接管 `wordm.us` 根域名管理职责（原 `wordm-personal-home` 的 `_redirects` 和根域名配置已合并至此）。
 > 当前域名归属与迁移原则见 [`docs/domain-ownership.md`](docs/domain-ownership.md)，机器可审计清单见 [`config/domain-ownership.json`](config/domain-ownership.json)。
 
-站点收敛成三段式信息架构（详见 [`docs/site-convergence-plan.md`](docs/site-convergence-plan.md)）：
+站点对外只留两个入口（历史收敛过程见 [`docs/site-convergence-plan.md`](docs/site-convergence-plan.md)）：
 
 | 栏目 | 路径 | 说明 |
 | --- | --- | --- |
-| 关注方向 | `/` | 首页用《一念》固定种子的一次心念交互展示玩家如何影响人物的判断，并以 3D 场景呈现人物的行动和沉默对照；心智与社会、人工生命是两条世界实验线，人与世界的交互是共用的问题；人工生命史时间轴保留在页面下方，列表与画廊读同一份 `public/alife/data/catalog.json` |
-| 个人项目 | `/projects` | 本人作品（`src/data/fountFields.ts`，13 个已上线入口）+ 人工生命的实验（`mind-society` 里带 `alife` 标签的成员） |
+| 个人项目 | `/`、`/projects` | 只铺六件：人工生命史、RingBook、MuseumBook、Flipook、诗经长卷、万卷（`PERSONAL_PROJECT_KEYS`） |
 | 博客 | 外链 `lidechi.github.io` | 站内博客页暂时关闭 |
-| 关于 / 账号 | `/?view=about`、`/?view=login` | 关于页保留；账号入口暂时隐藏，直接 URL 仍可访问 |
+| 关于 / 账号 | `/?view=about`、`/?view=login` | 不进主导航；关于页保留，账号入口暂时隐藏，直接 URL 仍可访问 |
 
-- 关注方向是一页到底，**没有文章页、没有方向切换、没有筛选**。旧的 `?area=` / `?mode=` 参数会被清掉。
-- 关注方向读 `public/alife/data/catalog.json`（展览自己的数据），站内与 `/alife/` 展览永远同一份事实，不二次维护。
-- 个人项目的作品清单与 `src/components/PersonalProjectsPage.tsx` 一一对应；实验部分取自 `mind-society` 项目族登记表
-  （`/Users/lidechi/Documents/Github/mind-society`，双语整理在 `src/data/mindFamily.ts`，只取 `tags` 含 `alife` 的成员）。
+- `/` 与旧的关注方向路由都落到个人项目。旧的 `?area=` / `?mode=` 参数会被清掉。
+- 人工生命史展览仍在 `/alife/`，列表与画廊读 `public/alife/data/catalog.json`；它从个人项目进入，不再单独占一个栏目。
+- 个人项目的作品清单与 `src/components/PersonalProjectsPage.tsx` 一一对应，顺序写在 `src/data/fountFields.ts` 的 `PERSONAL_PROJECT_KEYS`。
   工作区里的其余仓库不进这一页；只有链接点名了项目（`?show=` 子集或分享链接）时才铺工作区目录。
 - 账号系统暂时不在主站导航和页脚展示；保留直接登录 URL，避免锁死后台管理与受限访问链路。
 - 旧路由（`/pricing`、`/partners`、`/updates`、`/fields`、`/docs`、`?view=portfolio`）全部 301/回落到上面的新路径，见 [`public/_redirects`](public/_redirects)。
@@ -26,9 +24,9 @@
 
 个人网站包含：
 
-- 根域 `wordm.us`：关注方向 + 个人项目 + 博客入口
+- 根域 `wordm.us`：个人项目 + 博客入口
 - 产品站 `/zhuzi/`：竹子导演管线介绍与《推门·旱》试玩入口
-- 独立站 `bookplain.wordm.us`、`foundry.wordm.us`、`ringbook.wordm.us` 等由「关注方向 > 项目」与「个人项目」列出
+- 独立站 `ringbook.wordm.us` 等由「个人项目」列出；未列入的产品站仍可直接访问，只是不出现在主导航和项目页
 - 子域 `resume.wordm.us`：独立简历页（含 PDF 下载，仅管理员/测试账号可访问）
 - 子域 `admin.wordm.us`：后台系统入口（HTTP Basic Auth 保护）
 - 子域 `support.wordm.us`：所有产品/App Store 上架共用的支持入口
@@ -83,7 +81,7 @@ NEXT_PUBLIC_FOUNT_EARLY_BIRD_CLAIMED=0
 - `NEXT_PUBLIC_CREEM_AFFILIATE_APPLY_URL`、`NEXT_PUBLIC_FOUNT_*`、`NEXT_PUBLIC_PARTNER_CONTACT_EMAIL` 随 Fount 定价页 / Partner Program 一起下线，代码里已不再读取；`.env.example` 仍保留旧键以免破坏既有部署，可后续清理。
 - 若不配置，会使用 `latti` 当前公开计划商品作为默认值。
 - 站点会将 Supabase 会话同步到 `.wordm.us` 域级 cookie，因此 `wordm.us`、`resume.wordm.us`、`p-*.wordm.us` 会共享登录态。
-- `bookplain.wordm.us` 使用同一 Supabase 项目、`wordm-auth-v1` storage key 与父域 Cookie；从「关注方向 > 项目」或「个人项目」进入独立站后会继续使用当前账号。
+- `bookplain.wordm.us` 使用同一 Supabase 项目、`wordm-auth-v1` storage key 与父域 Cookie；从个人项目进入仍在目录里的独立站后会继续使用当前账号。
 - `foundry.wordm.us` 使用同一 Supabase 项目与 `wordm-auth-v1` 存储键；入口同上。
 - `ringbook.wordm.us` 通过 `auth.wordm.us` 读取同一域级会话；未登录时由主站登录并安全回跳 RingBook，EPUB 与阅读进度仍只保存在本机。
 - 账号角色共四类：`admin`（管理员）、`tester`（测试账号）、`user`（普通账号）、`guest`（游客）。

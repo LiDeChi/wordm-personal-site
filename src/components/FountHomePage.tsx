@@ -23,8 +23,8 @@ import { ThemeModeIcon } from "./ThemeModeIcon";
 
 type FountHomePageProps = {
   lang: Lang;
-  activeTab: SiteTab;
-  onTabChange: (tab: SiteTab) => void;
+  activeTab: SiteTab | null;
+  onTabChange: (tab: "home" | SiteTab) => void;
   onLangChange: (lang: Lang) => void;
   themeMode: "day" | "night";
   onThemeToggle: () => void;
@@ -35,8 +35,8 @@ type FountHomePageProps = {
 
 function handleTabClick(
   event: React.MouseEvent<HTMLAnchorElement>,
-  tab: SiteTab,
-  onTabChange: (tab: SiteTab) => void,
+  tab: "home" | SiteTab,
+  onTabChange: (tab: "home" | SiteTab) => void,
 ) {
   if (
     event.defaultPrevented ||
@@ -75,7 +75,7 @@ export function FountHomePage({
         <h1 className="site-brand-h1">
           <SiteBrand
             lang={lang}
-            onNavigate={(event) => handleTabClick(event, "focus", onTabChange)}
+            onNavigate={(event) => handleTabClick(event, "home", onTabChange)}
           />
         </h1>
 
@@ -146,7 +146,7 @@ export function FountHomePage({
         <div className="fount-footer-brand">
           <SiteBrand
             lang={lang}
-            onNavigate={(event) => handleTabClick(event, "focus", onTabChange)}
+            onNavigate={(event) => handleTabClick(event, "home", onTabChange)}
           />
           <p>{copy.footerNote}</p>
         </div>
