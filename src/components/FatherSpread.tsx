@@ -1,4 +1,3 @@
-import katex from "katex";
 import { memo, useCallback, useEffect, useMemo, useRef, useState, type ComponentPropsWithoutRef, type CSSProperties, type MouseEvent } from "react";
 import { flushSync } from "react-dom";
 import {
@@ -11,6 +10,7 @@ import type { Lang } from "../i18n/lang";
 import { withSiteParams } from "../lib/lang-url";
 import { CONTACT_EMAIL, SHELL_COPY, siteTabHref } from "../lib/site-shell";
 import { FatherLanding } from "./FatherLanding";
+import { MathText } from "./MathText";
 import { FountMusicPlayer } from "./FountMusicPlayer";
 import { SocialLinks } from "./SocialLinks";
 import { ThemeModeIcon } from "./ThemeModeIcon";
@@ -51,29 +51,6 @@ function entryFallback(entry: DeskEntry, lang: Lang) {
   return entry.kind === "project"
     ? entry.field.summary[lang]
     : entry.article.summary[lang] || entry.article.title[lang];
-}
-
-function MathText({ text }: { text: string }) {
-  const segments = text.split(/(\$\$[\s\S]+?\$\$|\$(?:\\.|[^$\n])+\$)/g);
-  return segments.map((segment, index) => {
-    const displayMode = segment.startsWith("$$") && segment.endsWith("$$");
-    const inlineMode = !displayMode && segment.startsWith("$") && segment.endsWith("$");
-    if (!displayMode && !inlineMode) return segment;
-    const expression = displayMode ? segment.slice(2, -2) : segment.slice(1, -1);
-    return (
-      <span
-        key={`math-${index}`}
-        className={displayMode ? "father-math-display" : "father-math"}
-        dangerouslySetInnerHTML={{
-          __html: katex.renderToString(expression, {
-            displayMode,
-            throwOnError: false,
-            trust: false,
-          }),
-        }}
-      />
-    );
-  });
 }
 
 function articleBlocks(article: BlogArticle): BlogContentBlock[] {
@@ -353,6 +330,14 @@ export function FatherSpread({
     });
   }
 
+  function openIndex() {
+    const dialog = indexRef.current;
+    if (!dialog?.isConnected) return;
+    setIndexQuery("");
+    if (!dialog.open) dialog.showModal();
+    indexInputRef.current?.focus({ preventScroll: true });
+  }
+
   function openArticle(articleId: string) {
     const index = articleEntries.findIndex((entry) => entry.kind === "article" && entry.article.id === articleId);
     if (index < 0) return;
@@ -428,7 +413,7 @@ export function FatherSpread({
         </header>
 
         {surface === "home" ? (
-          <FatherLanding lang={lang} articles={articles} onOpen={openSurface} onOpenArticle={openArticle} />
+          <FatherLanding lang={lang} articles={articles} onOpen={openSurface} onOpenArticle={openArticle} onOpenIndex={openIndex} />
         ) : (
           <>
             <nav className="father-navigation" aria-label={lang === "zh" ? "卡片导航" : "Card navigation"}>
@@ -442,10 +427,7 @@ export function FatherSpread({
                     {entryTitle(entry, lang)}
                   </button>
                 )) : (
-                  <button className="father-index-trigger" type="button" aria-haspopup="dialog" onClick={() => {
-                    indexRef.current?.showModal();
-                    indexInputRef.current?.focus();
-                  }}>
+                  <button className="father-index-trigger" type="button" aria-haspopup="dialog" onClick={openIndex}>
                     {lang === "zh" ? "文章目录" : "All articles"}
                     <span>{entries.length}</span>
                   </button>

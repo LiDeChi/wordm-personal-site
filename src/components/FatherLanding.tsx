@@ -3,23 +3,29 @@ import type { BlogArticle } from "../data/blogArticles";
 import { PERSONAL_PROJECTS } from "../data/fountFields";
 import type { Lang } from "../i18n/lang";
 import { withSiteParams } from "../lib/lang-url";
+import { MathText } from "./MathText";
 
 type FatherLandingProps = {
   lang: Lang;
   articles: BlogArticle[];
   onOpen: (surface: "projects" | "articles") => void;
   onOpenArticle: (articleId: string) => void;
+  onOpenIndex: () => void;
 };
 
-export function FatherLanding({ lang, articles, onOpen, onOpenArticle }: FatherLandingProps) {
+function articleExcerpt(article: BlogArticle, lang: Lang) {
+  if (article.summary[lang].trim()) return article.summary[lang];
+  for (const block of article.blocks ?? []) {
+    if ((block.type === "paragraph" || block.type === "callout") && block.text[lang].trim()) {
+      return block.text[lang];
+    }
+  }
+  return article.paragraphs.find((paragraph) => paragraph[lang].trim())?.[lang] ?? "";
+}
+
+export function FatherLanding({ lang, articles, onOpen, onOpenArticle, onOpenIndex }: FatherLandingProps) {
   const project = PERSONAL_PROJECTS.find((field) => field.key === "ringbook") ?? PERSONAL_PROJECTS[0];
-  const article = articles[0];
-  const previewParagraphs = article?.blocks?.length
-    ? article.blocks.flatMap((block) =>
-      block.type === "paragraph" || block.type === "callout" ? [block.text[lang]] : [],
-    )
-    : article?.paragraphs.map((paragraph) => paragraph[lang]) ?? [];
-  const excerpt = previewParagraphs.slice(0, 4).join("\n\n") || article?.summary[lang] || "";
+  const chronology = lang === "zh" ? ["最新", "上一篇", "更早"] : ["Latest", "Previous", "Earlier"];
 
   function open(event: MouseEvent<HTMLAnchorElement>, surface: "projects" | "articles") {
     if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
@@ -65,31 +71,36 @@ export function FatherLanding({ lang, articles, onOpen, onOpenArticle }: FatherL
       </a>
 
       <section className="father-entry father-entry-articles" aria-labelledby="father-entry-articles-title">
-        <a className="father-entry-collection" href={withSiteParams("/blog", { lang })} onClick={(event) => open(event, "articles")}>
-          <div className="father-entry-heading">
-            <h2 id="father-entry-articles-title">{lang === "zh" ? "博客" : "Blog"}</h2>
-            <span className="father-entry-count">{articles.length}{lang === "zh" ? " 篇文章" : " articles"}</span>
-          </div>
-        </a>
-        {article ? (
-          <>
-            <a className="father-entry-writing father-article-preview" href={articleHref(article.id)} onClick={(event) => openArticle(event, article.id)}>
-              <p className="father-entry-date">{article.date}</p>
-              <h3>{article.title[lang]}</h3>
-              <p className="father-entry-excerpt">{excerpt}</p>
-            </a>
-            <div className="father-entry-article-list">
-              {articles.slice(1, 3).map((item) => (
-                <a className="father-article-preview" href={articleHref(item.id)} key={item.id} onClick={(event) => openArticle(event, item.id)}>
-                  <h3>{item.title[lang]}</h3>
-                  <p className="father-entry-date">{item.date}</p>
-                </a>
+        <div className="father-entry-heading">
+          <h2 id="father-entry-articles-title">{lang === "zh" ? "博客" : "Blog"}</h2>
+          <span className="father-entry-count">{articles.length}{lang === "zh" ? " 篇文章" : " articles"}</span>
+        </div>
+        <div className="father-entry-article-previews">
+          {articles.length ? (
+            <ol className="father-entry-article-list">
+              {articles.slice(0, 3).map((article, index) => (
+                <li key={article.id}>
+                  <a className="father-article-preview" href={articleHref(article.id)} onClick={(event) => openArticle(event, article.id)}>
+                    <div className="father-entry-article-meta">
+                      <span>{chronology[index]}</span>
+                      <span className="father-entry-date">{article.date}</span>
+                    </div>
+                    <h3>{article.title[lang]}</h3>
+                    <p className="father-entry-excerpt"><MathText text={articleExcerpt(article, lang)} /></p>
+                    <span className="father-entry-read">{lang === "zh" ? "阅读全文" : "Read article"}</span>
+                  </a>
+                </li>
               ))}
-            </div>
-          </>
-        ) : (
-          <p className="father-entry-empty">{lang === "zh" ? "还没有已发布的文章" : "No published articles yet"}</p>
-        )}
+            </ol>
+          ) : (
+            <p className="father-entry-empty">{lang === "zh" ? "还没有已发布的文章" : "No published articles yet"}</p>
+          )}
+        </div>
+        <footer className="father-entry-articles-footer">
+          <button className="father-entry-all-articles" type="button" aria-haspopup="dialog" onClick={onOpenIndex}>
+            {lang === "zh" ? "全部文章" : "All articles"}
+          </button>
+        </footer>
       </section>
     </div>
   );
