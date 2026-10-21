@@ -19,12 +19,7 @@
 /zhuzi/         /zhuzi/index.html  200
 /zhuzi/index.html /zhuzi/          301
 
-# 项目与博客由同一阅读界面接管，刷新深链仍回到应用
-/projects     /index.html  200
-/projects/    /index.html  200
-/blog         /index.html  200
-/blog/        /index.html  200
-/blog/*       /index.html  200
+# 项目与博客客户端路由使用现有 SPA 兜底以保留 URL；精确重写到 /index.html 会触发 Cloudflare 归一化到根路径。
 
 # Fount 已下线；旧下载地址与旧栏目路径统一回到首页
 /Fount.dmg                 /  302
