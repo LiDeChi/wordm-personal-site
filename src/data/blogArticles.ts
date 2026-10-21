@@ -48,11 +48,8 @@ export type BlogArticle = {
 export const ARTICLES_SITE_URL = "https://lidechi.github.io/";
 export const ARTICLES_MANIFEST_URL = `${ARTICLES_SITE_URL}articles.json`;
 
-/**
- * Temporary switch: hide the in-site blog reading page and send visitors to
- * the GitHub Pages personal blog instead. Flip back to `true` to restore.
- */
-export const IN_SITE_BLOG_ENABLED = false;
+/** Published articles share the reading desk; original sources remain linked. */
+export const IN_SITE_BLOG_ENABLED = true;
 
 function isBilingualText(value: unknown): value is BilingualText {
   if (!value || typeof value !== "object") return false;

@@ -25,9 +25,10 @@
 ## Main surface
 - Browser home screen captured at `screenshots/runtime-home.png`.
 ## Deep exploration flow
-- Visit `http://127.0.0.1:44014/?lang=zh` (首页即个人项目：六件作品).
+- Visit `http://127.0.0.1:44014/?lang=zh` (首页为「项目 / 博客」两张入口卡).
 - Visit `http://127.0.0.1:44014/?lang=en` (same page, English).
-- Visit `http://127.0.0.1:44014/projects?lang=zh` (个人项目).
+- Visit `http://127.0.0.1:44014/projects?lang=zh` (六件个人项目，等高水平叠放的阅读卡片).
+- Visit `http://127.0.0.1:44014/blog?lang=zh` (博客阅读卡片及可搜索的文章目录).
 - Visit `http://127.0.0.1:44014/?show=page-glance-extension%2Capple-notes-webclipper%2Cpersonalinflationbasket%2Cllm-layer%2Cfocusor%2Ccode-agent-demo%2Copen-deep-research%2Cdynamic-delegate-2&debug=1`.
 - Visit `http://127.0.0.1:44014/auth-role-rules.json`.
 - Visit `http://127.0.0.1:44014/jian-yongjie-resume.pdf`.
@@ -37,7 +38,8 @@
 ## Acceptance chain
 - Run `npm run dev` and wait for a local browser URL.
 - Confirm `screenshots/runtime-home.png` still matches the main UI (`screenshots/runtime-home.png`).
-- Confirm the top nav has exactly two entries (个人项目 / 博客) and that the right rail shows the social links above the music player without overlap.
+- Confirm home has exactly two entrance cards (项目 / 博客). Reading cards share their top and bottom edges, retain internal scroll, and expand on click with Escape / 收回 to return. Only sharing is offered; no quote action or frame ornaments.
+- Confirm language, theme, music and hover-revealed social controls remain usable outside the cards on desktop and in the bottom rail on phones. Browser Back / Forward must restore the correct surface.
 - Revisit the recorded deep pages and successful interactions listed above.
 ## Commands (real / N/A)
 - run: `npm run dev`

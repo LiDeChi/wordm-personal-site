@@ -1,9 +1,11 @@
 import type { BlogArticle } from "../data/blogArticles";
 import type { Lang } from "../i18n/lang";
-import { FatherSpread } from "./FatherSpread";
+import { FatherSpread, type ReaderSurface } from "./FatherSpread";
 
-/** Project and article sheets share the desk and its global controls. */
+/** The entrance and both reading surfaces keep the same desk instance. */
 type PersonalProjectsPageProps = {
+  surface: ReaderSurface;
+  onSurfaceChange: (surface: ReaderSurface) => void;
   lang: Lang;
   themeMode: "day" | "night";
   onThemeToggle: () => void;

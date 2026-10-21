@@ -109,7 +109,7 @@ import {
 } from "./lib/projects";
 import type { PortfolioProject, ProjectsSnapshot } from "./types";
 
-type RootView = "projects" | "blog" | "login" | "about";
+type RootView = "home" | "projects" | "blog" | "login" | "about";
 type UnlockStorageMode = "remote" | "local" | "loading" | "idle";
 type ThemeMode = "day" | "night";
 const BLOG_INITIAL_RENDER_COUNT = 18;
@@ -852,9 +852,8 @@ function toRootView(raw: string | null, pathname: string): RootView {
     return "about";
   }
 
-  // Legacy routes (pricing / partners / updates / fields / docs / minds / home)
-  // land on personal projects. The old focus page is no longer a public entry.
-  return "projects";
+  // The root and retired section routes open the two-card entrance.
+  return "home";
 }
 
 function normalizeSlug(raw: string | null): string | null {
@@ -1331,6 +1330,17 @@ function App() {
     isOneAgentProductPage,
     initialAuthReturnTo,
   ]);
+
+  useEffect(() => {
+    const restoreRoute = () => {
+      const params = new URLSearchParams(window.location.search);
+      setRootView(toRootView(params.get("view"), window.location.pathname));
+      setLang(resolveInitialLang(window.location));
+      setSelectedProjectSlug(normalizeSlug(params.get("project")));
+    };
+    window.addEventListener("popstate", restoreRoute);
+    return () => window.removeEventListener("popstate", restoreRoute);
+  }, []);
 
   useEffect(() => {
     const activeLangButton = document.querySelector<HTMLElement>(
@@ -3133,13 +3143,18 @@ function App() {
     setSelectedProjectSlug(visibleProjects[nextIndex]?.slug ?? null);
   }
 
-  function switchRootView(nextRootView: SiteTab) {
+  function switchRootView(nextRootView: "home" | SiteTab) {
     if (nextRootView === "blog" && !IN_SITE_BLOG_ENABLED) {
       window.location.assign(ARTICLES_SITE_URL);
       return;
     }
 
-    setRootView(nextRootView);
+    if (nextRootView !== rootView) {
+      const next = new URL(relativeRootHref(nextRootView, lang), window.location.origin);
+      if (shareToken) next.searchParams.set("share", shareToken);
+      window.history.pushState({}, "", next);
+      setRootView(nextRootView);
+    }
 
     window.requestAnimationFrame(() => {
       window.scrollTo({ top: 0, left: 0, behavior: "auto" });
@@ -3623,6 +3638,46 @@ function App() {
     );
   }
 
+  const deskSurface = rootView === "home"
+    ? "home"
+    : rootView === "projects" && !showsProjectCatalog
+      ? "projects"
+      : rootView === "blog"
+        ? "articles"
+        : null;
+
+  if (deskSurface) {
+    return (
+      <>
+        <FountHomePage
+          lang={lang}
+          activeTab={activeTab}
+          onTabChange={switchRootView}
+          onLangChange={setLang}
+          themeMode={themeMode}
+          onThemeToggle={() =>
+            setThemeMode((current) => (current === "night" ? "day" : "night"))
+          }
+        >
+          <PersonalProjectsPage
+            articles={blogArticles}
+            surface={deskSurface}
+            onSurfaceChange={(surface) =>
+              switchRootView(surface === "articles" ? "blog" : surface)
+            }
+            lang={lang}
+            themeMode={themeMode}
+            onThemeToggle={() =>
+              setThemeMode((current) => (current === "night" ? "day" : "night"))
+            }
+            onLangChange={setLang}
+          />
+        </FountHomePage>
+        {projectDetailModal}
+      </>
+    );
+  }
+
   return (
     <>
       <FountHomePage
@@ -3638,6 +3693,10 @@ function App() {
         {rootView === "projects" ? (
           <PersonalProjectsPage
             articles={blogArticles}
+            surface="projects"
+            onSurfaceChange={(surface) =>
+              switchRootView(surface === "articles" ? "blog" : surface)
+            }
             lang={lang}
             themeMode={themeMode}
             onThemeToggle={() =>
