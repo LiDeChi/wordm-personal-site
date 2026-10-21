@@ -82,7 +82,14 @@ body:has(.father-spread) .site-ai-chat { display: none; }
     letter-spacing: 0.025em;
     white-space: nowrap;
 }
-.father-sections { display: flex; flex: none; align-items: center; gap: 14px; }
+.father-sections {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 14px;
+    padding-inline-end: clamp(8px, 1.2vw, 18px);
+    border-inline-end: 1px solid color-mix(in srgb, var(--desk-muted) 45%, var(--desk-ground));
+}
 .father-sections a[aria-current="page"] {
     color: var(--desk-ink);
     text-decoration: underline;
