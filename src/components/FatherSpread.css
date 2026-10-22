@@ -148,10 +148,13 @@ body:has(.father-spread) .site-ai-chat { display: none; }
     text-decoration: none;
     transition: border-color 160ms ease;
 }
-.father-entry-projects:hover { border-color: var(--desk-muted); }
-.father-entry-articles .father-article-preview { display: block; min-width: 0; color: inherit; text-decoration: none; overflow-wrap: anywhere; }
-.father-entry-articles .father-article-preview:hover h3 { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 5px; }
-.father-entry-heading { display: flex; align-items: baseline; gap: 14px; margin-bottom: 28px; }
+.father-entry :is(.father-article-preview, .father-project-preview) { display: block; min-width: 0; color: inherit; text-decoration: none; overflow-wrap: anywhere; }
+.father-entry :is(.father-article-preview, .father-project-preview):hover h3 { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 5px; }
+.father-entry-heading { display: flex; flex: none; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; margin-bottom: 28px; }
+.father-entry-heading-link { display: flex; align-items: center; min-width: 0; }
+.father-entry-arrow { display: grid; place-items: center; flex: none; width: 44px; height: 44px; color: var(--desk-ink); }
+.father-entry-arrow:hover { color: var(--desk-muted); }
+.father-entry-arrow svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.4; }
 .father-spread .father-entry h2,
 .father-spread .father-entry h3 {
     margin: 0;
@@ -164,59 +167,36 @@ body:has(.father-spread) .site-ai-chat { display: none; }
 .father-spread .father-entry h2::before,
 .father-spread .father-entry h3::before { content: none; counter-increment: none; }
 .father-entry-count { color: var(--desk-muted); font-size: 12px; white-space: nowrap; }
-.father-entry-project-preview {
+.father-entry .father-project-preview {
     display: grid;
-    grid-template-rows: minmax(0, 1fr) auto;
-    gap: 22px;
-    flex: 1;
-    min-height: 0;
-    margin: 0;
+    grid-template-columns: clamp(80px, 8vw, 124px) minmax(0, 1fr);
+    align-items: start;
+    gap: 16px;
 }
+.father-project-preview > div { min-width: 0; }
 .father-entry-image {
     display: block;
     width: 100%;
-    height: 100%;
-    min-height: 0;
+    aspect-ratio: 4 / 3;
     border-radius: 4px;
     object-fit: cover;
     object-position: center;
     background: var(--desk-hover);
 }
-.father-spread .father-entry-project-preview h3 { font-size: 27px; line-height: 1.4; }
-.father-entry-project-preview p {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-    margin: 8px 0 0;
-    overflow: hidden;
-    font-size: 15px;
-    line-height: 1.85;
-}
-.father-entry-project-list {
-    display: flex;
-    flex-wrap: wrap;
-    column-gap: 16px;
-    row-gap: 6px;
-    flex: none;
-    margin-top: 28px;
-    color: var(--desk-muted);
-    font-size: 12px;
-    line-height: 1.6;
-}
-.father-entry-articles > .father-entry-heading { flex: none; flex-wrap: wrap; }
-.father-entry-article-previews {
+.father-entry-previews {
     flex: 1;
     min-height: 0;
     min-width: 0;
+    overflow-x: hidden;
     overflow-y: auto;
     overscroll-behavior-y: contain;
     padding: 4px;
     margin-inline: -4px;
 }
-.father-entry-article-list { list-style: none; margin: 0; padding: 0; }
-.father-entry-article-list > li { margin: 0; padding: 18px 0; }
-.father-entry-article-list > li:first-child { padding-top: 0; }
-.father-entry-article-list > li + li { border-top: 1px solid var(--desk-line); }
+.father-entry-preview-list { list-style: none; margin: 0; padding: 0; }
+.father-entry-preview-list > li { margin: 0; padding: 18px 0; }
+.father-entry-preview-list > li:first-child { padding-top: 0; }
+.father-entry-preview-list > li + li { border-top: 1px solid var(--desk-line); }
 .father-entry-article-meta {
     display: flex;
     flex-wrap: wrap;
@@ -228,53 +208,29 @@ body:has(.father-spread) .site-ai-chat { display: none; }
     line-height: 1.5;
 }
 .father-entry-article-meta .father-entry-date { white-space: nowrap; }
-.father-spread .father-entry-articles .father-article-preview h3 { font-size: 25px; line-height: 1.4; }
-.father-entry-articles .father-entry-excerpt {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-    min-height: 5.1em;
-    max-height: 5.1em;
-    margin: 8px 0;
+.father-spread .father-entry :is(.father-article-preview, .father-project-preview) h3 { font-size: 25px; line-height: 1.4; }
+.father-spread .father-entry .father-entry-excerpt {
+    max-height: 3.4em;
+    margin: 8px 0 0;
     overflow: hidden;
     color: var(--desk-text);
+    font-family: var(--font-bear-body);
     font-size: 14px;
     line-height: 1.7;
+    text-align: start;
 }
-/* Keep complete formulas in the renderer, within the excerpt's visual clamp. */
-.father-entry-excerpt .father-math-display { display: inline; overflow: visible; }
-.father-entry-excerpt .katex-display { display: inline; margin: 0; }
-.father-entry-excerpt .katex-display > .katex { display: inline; white-space: normal; }
-.father-entry-read {
-    display: inline-block;
-    color: var(--desk-ink);
-    font-size: 12px;
-    line-height: 1.6;
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 3px;
+.father-entry .father-entry-excerpt > span { display: block; }
+/* The first line stays opaque; only an overflowing second line has a fading tail. */
+.father-entry .father-entry-excerpt[data-overflow="true"] {
+    mask-image: linear-gradient(#000, #000), linear-gradient(to right, #000 55%, transparent);
+    mask-size: 100% 1.7em, 100% 1.7em;
+    mask-position: 0 0, 0 1.7em;
+    mask-repeat: no-repeat;
 }
-.father-entry-articles-footer {
-    flex: none;
-    margin-top: 12px;
-    padding-top: 8px;
-    border-top: 1px solid var(--desk-line);
-}
-.father-entry-articles .father-entry-all-articles {
-    display: block;
-    width: 100%;
-    min-height: 44px;
-    padding: 8px 12px;
-    border: 1px solid var(--desk-line);
-    border-radius: 6px;
-    background: var(--desk-hover);
-    color: var(--desk-ink);
-    font-size: 14px;
-    line-height: 1.5;
-    text-align: center;
-    overflow-wrap: anywhere;
-}
-.father-entry-articles .father-entry-all-articles:hover { border-color: var(--desk-muted); }
+/* Keep complete formulas in the renderer, within the excerpt's visual clip. */
+.father-entry .father-entry-excerpt .father-math-display { display: inline; overflow: visible; }
+.father-entry .father-entry-excerpt .katex-display { display: inline; margin: 0; }
+.father-entry .father-entry-excerpt .katex-display > .katex { display: inline; white-space: normal; }
 .father-entry-empty { color: var(--desk-muted); font-size: 14px; overflow-wrap: anywhere; }
 
 .father-navigation {
@@ -604,8 +560,6 @@ body:has(.father-spread) .site-ai-chat { display: none; }
 @media (max-height: 740px) and (min-width: 761px) {
     .father-entry { padding: 24px; }
     .father-entry-heading { margin-bottom: 20px; }
-    .father-entry-project-preview { gap: 14px; }
-    .father-entry-project-list { margin-top: 20px; }
     .father-side { gap: 8px; }
     .father-rail { gap: 0; }
     .father-rail button, .father-rail a { min-height: 32px; }
@@ -626,20 +580,14 @@ body:has(.father-spread) .site-ai-chat { display: none; }
     .father-landing { gap: 8px; }
     .father-entry { padding: 18px 14px; border-radius: 8px; }
     .father-entry-heading { flex-wrap: wrap; gap: 6px 10px; margin-bottom: 22px; }
-    .father-spread .father-entry h2 { font-size: 32px; }
+    .father-spread .father-entry h2 { font-size: 26px; }
     .father-entry-count { font-size: 10px; }
-    .father-entry-project-preview { grid-template-rows: minmax(130px, 1fr) auto; gap: 18px; }
-    .father-entry-image { object-position: 40% center; }
-    .father-spread .father-entry-project-preview h3 { font-size: 22px; }
-    .father-entry-project-preview p { -webkit-line-clamp: 5; font-size: 13px; line-height: 1.8; }
-    .father-entry-project-list { column-gap: 9px; row-gap: 6px; margin-top: 22px; font-size: 11px; }
-    .father-entry-article-list > li { padding-block: 14px; }
+    .father-entry .father-project-preview { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+    .father-entry-image { aspect-ratio: 16 / 9; max-height: 100px; object-position: center; }
+    .father-entry-preview-list > li { padding-block: 14px; }
     .father-entry-article-meta { gap: 3px 8px; font-size: 10px; }
-    .father-spread .father-entry-articles .father-article-preview h3 { font-size: 19px; line-height: 1.45; }
-    .father-entry-articles .father-entry-excerpt { font-size: 12px; }
-    .father-entry-read { font-size: 11px; }
-    .father-entry-articles-footer { margin-top: 8px; padding-top: 4px; }
-    .father-entry-articles .father-entry-all-articles { font-size: 13px; }
+    .father-spread .father-entry :is(.father-article-preview, .father-project-preview) h3 { font-size: 19px; line-height: 1.45; }
+    .father-spread .father-entry .father-entry-excerpt { font-size: 12px; }
     .father-navigation { gap: 8px; padding: 0 0 4px; }
     .father-jumps button { min-height: 28px; padding: 4px 7px; font-size: 11px; }
     .father-paging { gap: 0; }
@@ -665,17 +613,14 @@ body:has(.father-spread) .site-ai-chat { display: none; }
     .father-spread .father-social .fount-social-links { flex-direction: row; width: auto; }
 }
 @media (max-width: 400px) {
-    .father-entry { padding-inline: 12px; }
-    .father-spread .father-entry h2 { font-size: 28px; }
+    .father-entry { padding-inline: 10px; }
+    .father-spread .father-entry h2 { font-size: 20px; }
     .father-entry-heading { gap: 5px 7px; }
-    .father-spread .father-entry-articles .father-article-preview h3 { font-size: 17px; }
+    .father-spread .father-entry :is(.father-article-preview, .father-project-preview) h3 { font-size: 17px; }
 }
 @media (max-height: 660px) and (max-width: 760px) {
     .father-entry { padding-block: 14px; }
     .father-entry-heading { margin-bottom: 14px; }
-    .father-entry-project-preview { grid-template-rows: minmax(70px, 1fr) auto; gap: 12px; }
-    .father-entry-project-preview p { -webkit-line-clamp: 3; }
-    .father-entry-project-list { margin-top: 14px; row-gap: 3px; }
 }
 @media (hover: none) {
     .father-tools { opacity: 1; pointer-events: auto; }

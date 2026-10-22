@@ -43,6 +43,18 @@ const PROJECT_ENTRIES: DeskEntry[] = PERSONAL_PROJECTS.map((field) => ({
 const INITIAL_PROJECT = Math.floor((PROJECT_ENTRIES.length - 1) / 2);
 const WHEEL_STEP = 64;
 
+function requestedProject() {
+  const key = new URLSearchParams(window.location.search).get("card");
+  return PROJECT_ENTRIES.find((entry) => entry.key === key) ?? null;
+}
+
+function writeProjectCard(key: string | null) {
+  const next = new URL(window.location.href);
+  if (key) next.searchParams.set("card", key);
+  else next.searchParams.delete("card");
+  if (next.href !== window.location.href) window.history.replaceState(window.history.state, "", next);
+}
+
 function entryTitle(entry: DeskEntry, lang: Lang) {
   return entry.kind === "project" ? entry.field.name : entry.article.title[lang];
 }
@@ -181,13 +193,14 @@ export function FatherSpread({
   const [requestedArticleId] = useState(() => surface === "articles"
     ? new URLSearchParams(window.location.search).get("article")
     : null);
+  const [requestedProjectKey] = useState(() => surface === "projects" ? requestedProject()?.key ?? null : null);
   const [previousSurface, setPreviousSurface] = useState(surface);
   const [positions, setPositions] = useState(() => ({
-    projects: INITIAL_PROJECT,
+    projects: requestedProjectKey ? PROJECT_ENTRIES.findIndex((entry) => entry.key === requestedProjectKey) : INITIAL_PROJECT,
     articles: Math.max(0, articles.findIndex((article) => article.id === requestedArticleId)),
   }));
   const [previewKey, setPreviewKey] = useState<string | null>(null);
-  const [focusRequest, setFocusedKey] = useState<string | null>(requestedArticleId ? `article-${requestedArticleId}` : null);
+  const [focusRequest, setFocusedKey] = useState<string | null>(requestedProjectKey ?? (requestedArticleId ? `article-${requestedArticleId}` : null));
   const [pendingFocus, setPendingFocus] = useState<string | null>(null);
   const [note, setNote] = useState<NoteState | null>(null);
   const [indexQuery, setIndexQuery] = useState("");
@@ -229,11 +242,16 @@ export function FatherSpread({
     entryTitle(entry, lang).toLocaleLowerCase().includes(indexQuery.trim().toLocaleLowerCase()),
   );
 
-  // Route changes clear the enlarged sheet; both piles retain their reading positions.
+  // Route changes retain reading positions and honor pending or linked project focus.
   if (surface !== previousSurface) {
     setPreviousSurface(surface);
     setPreviewKey(null);
-    setFocusedKey(surface === "articles" ? pendingFocus : null);
+    const nextFocus = surface === "home" ? null : pendingFocus ?? (surface === "projects" ? requestedProject()?.key ?? null : null);
+    setFocusedKey(nextFocus);
+    if (surface === "projects" && nextFocus) {
+      const index = PROJECT_ENTRIES.findIndex((entry) => entry.key === nextFocus);
+      if (index >= 0) setPositions((current) => ({ ...current, projects: index }));
+    }
     setPendingFocus(null);
   }
 
@@ -248,6 +266,7 @@ export function FatherSpread({
     runTransition(() => {
       setPositions((current) => ({ ...current, [pile]: center }));
       setFocusedKey(null);
+      if (pile === "projects") writeProjectCard(null);
     }, () => { if (key) restoreFocus(key); });
   }
 
@@ -259,6 +278,7 @@ export function FatherSpread({
       runTransition(() => {
         setPositions((current) => ({ ...current, [pile]: center }));
         setFocusedKey(null);
+        if (pile === "projects") writeProjectCard(null);
       }, () => restoreFocus(key));
     };
     window.addEventListener("keydown", onKey);
@@ -313,6 +333,7 @@ export function FatherSpread({
       setPositions((current) => ({ ...current, [pile]: index }));
       setPreviewKey(null);
       setFocusedKey(null);
+      if (pile === "projects") writeProjectCard(null);
     };
     if (focusedKey) runTransition(apply);
     else apply();
@@ -327,6 +348,7 @@ export function FatherSpread({
       setPreviewKey(entry.key);
       setFocusedKey(entry.key);
       if (entry.kind === "article") onArticleOpen(entry.article.id);
+      else writeProjectCard(entry.key);
     });
   }
 
@@ -358,11 +380,33 @@ export function FatherSpread({
 
   function openSurface(next: ReaderSurface) {
     indexRef.current?.close();
-    setPendingFocus(null);
-    pointerRef.current = null;
-    setPreviewKey(null);
-    setFocusedKey(null);
-    onSurfaceChange(next);
+    runTransition(() => {
+      setPendingFocus(null);
+      pointerRef.current = null;
+      setPreviewKey(null);
+      setFocusedKey(null);
+      onSurfaceChange(next);
+      // The destination has been pushed; retain the previous entry's deep link.
+      writeProjectCard(null);
+    });
+  }
+
+  function openProject(projectKey: string) {
+    const index = PROJECT_ENTRIES.findIndex((entry) => entry.key === projectKey);
+    if (index < 0) return;
+    const entry = PROJECT_ENTRIES[index];
+    indexRef.current?.close();
+    runTransition(() => {
+      setPositions((current) => ({ ...current, projects: index }));
+      setPreviewKey(entry.key);
+      if (surface !== "projects") {
+        setPendingFocus(entry.key);
+        onSurfaceChange("projects");
+      } else {
+        setFocusedKey(entry.key);
+      }
+      writeProjectCard(entry.key);
+    });
   }
 
   function surfaceLink(event: MouseEvent<HTMLAnchorElement>, next: ReaderSurface) {
@@ -413,7 +457,7 @@ export function FatherSpread({
         </header>
 
         {surface === "home" ? (
-          <FatherLanding lang={lang} articles={articles} onOpen={openSurface} onOpenArticle={openArticle} onOpenIndex={openIndex} />
+          <FatherLanding lang={lang} articles={articles} onOpen={openSurface} onOpenArticle={openArticle} onOpenProject={openProject} />
         ) : (
           <>
             <nav className="father-navigation" aria-label={lang === "zh" ? "卡片导航" : "Card navigation"}>
@@ -442,6 +486,7 @@ export function FatherSpread({
 
             <div
               className={`father-desk${focusedKey ? " is-focused" : ""}`}
+              style={{ viewTransitionName: `father-library-${pile}` }}
               ref={deskRef}
               onPointerLeave={() => {
                 if (!focusedKey) setPreviewKey(null);
