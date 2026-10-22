@@ -4,6 +4,7 @@ import { PERSONAL_PROJECTS } from "../data/fountFields";
 import type { Lang } from "../i18n/lang";
 import { withSiteParams } from "../lib/lang-url";
 import { HomeExcerpt } from "./HomeExcerpt";
+import { useAdaptivePreviewCount } from "./useAdaptivePreviewCount";
 import { useHomeLibraryGesture } from "./useHomeLibraryGesture";
 
 type FatherLandingProps = {
@@ -26,6 +27,7 @@ function articleExcerpt(article: BlogArticle, lang: Lang) {
 
 export function FatherLanding({ lang, articles, onOpen, onOpenArticle, onOpenProject }: FatherLandingProps) {
   const landingRef = useHomeLibraryGesture(onOpen);
+  const { previewsRef, previewCount } = useAdaptivePreviewCount(articles.length);
   const chronology = lang === "zh" ? ["最新", "上一篇", "更早"] : ["Latest", "Previous", "Earlier"];
 
   function open(event: MouseEvent<HTMLAnchorElement>, surface: "projects" | "articles") {
@@ -53,18 +55,18 @@ export function FatherLanding({ lang, articles, onOpen, onOpenArticle, onOpenPro
         style={{ viewTransitionName: "father-library-projects" }}
         aria-labelledby="father-entry-projects-title"
       >
-        <div className="father-entry-heading">
+        <a className="father-entry-heading" href={withSiteParams("/projects", { lang })} onClick={(event) => open(event, "projects")} aria-label={lang === "zh" ? "打开项目卡片库" : "Open project library"}>
           <div className="father-entry-heading-link">
             <h2 id="father-entry-projects-title">{lang === "zh" ? "项目" : "Projects"}</h2>
-            <a className="father-entry-arrow" href={withSiteParams("/projects", { lang })} onClick={(event) => open(event, "projects")} aria-label={lang === "zh" ? "打开项目卡片库" : "Open project library"} title={lang === "zh" ? "打开项目卡片库" : "Open project library"}>
+            <span className="father-entry-arrow" aria-hidden="true">
               <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12h16m-7-7 7 7-7 7" /></svg>
-            </a>
+            </span>
           </div>
           <span className="father-entry-count">{PERSONAL_PROJECTS.length}{lang === "zh" ? " 件作品" : " works"}</span>
-        </div>
+        </a>
         <div className="father-entry-previews">
           <ol className="father-entry-preview-list">
-            {PERSONAL_PROJECTS.slice(0, 3).map((project) => (
+            {PERSONAL_PROJECTS.map((project) => (
               <li key={project.key}>
                 <a className="father-project-preview" href={withSiteParams(`/projects?card=${encodeURIComponent(project.key)}`, { lang })} onClick={(event) => openPreview(event, () => onOpenProject(project.key))}>
                   <img className="father-entry-image" src={project.coverUrl} alt={project.coverAlt[lang]} />
@@ -80,23 +82,23 @@ export function FatherLanding({ lang, articles, onOpen, onOpenArticle, onOpenPro
       </section>
 
       <section className="father-entry father-entry-articles" data-home-surface="articles" style={{ viewTransitionName: "father-library-articles" }} aria-labelledby="father-entry-articles-title">
-        <div className="father-entry-heading">
+        <a className="father-entry-heading" href={withSiteParams("/blog", { lang })} onClick={(event) => open(event, "articles")} aria-label={lang === "zh" ? "打开文章卡片库" : "Open article library"}>
           <div className="father-entry-heading-link">
             <h2 id="father-entry-articles-title">{lang === "zh" ? "文章" : "Articles"}</h2>
-            <a className="father-entry-arrow" href={withSiteParams("/blog", { lang })} onClick={(event) => open(event, "articles")} aria-label={lang === "zh" ? "打开文章卡片库" : "Open article library"} title={lang === "zh" ? "打开文章卡片库" : "Open article library"}>
+            <span className="father-entry-arrow" aria-hidden="true">
               <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12h16m-7-7 7 7-7 7" /></svg>
-            </a>
+            </span>
           </div>
           <span className="father-entry-count">{articles.length}{lang === "zh" ? " 篇文章" : " articles"}</span>
-        </div>
-        <div className="father-entry-previews">
+        </a>
+        <div className="father-entry-previews" ref={previewsRef}>
           {articles.length ? (
             <ol className="father-entry-preview-list">
-              {articles.slice(0, 3).map((article, index) => (
+              {articles.slice(0, previewCount).map((article, index) => (
                 <li key={article.id}>
                   <a className="father-article-preview" href={articleHref(article.id)} onClick={(event) => openPreview(event, () => onOpenArticle(article.id))}>
                     <div className="father-entry-article-meta">
-                      <span>{chronology[index]}</span>
+                      <span>{chronology[Math.min(index, 2)]}</span>
                       <span className="father-entry-date">{article.date}</span>
                     </div>
                     <h3>{article.title[lang]}</h3>

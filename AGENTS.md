@@ -25,7 +25,7 @@
 ## Main surface
 - Browser home screen captured at `screenshots/runtime-home.png`.
 ## Deep exploration flow
-- Visit `http://127.0.0.1:44014/?lang=zh` (首页为「项目 / 文章」两张预览卡，每侧三项).
+- Visit `http://127.0.0.1:44014/?lang=zh` (首页为「项目 / 文章」两张预览卡，内容铺满可视区域).
 - Visit `http://127.0.0.1:44014/?lang=en` (same page, English).
 - Visit `http://127.0.0.1:44014/projects?lang=zh` (六件个人项目，等高水平叠放的阅读卡片).
 - Visit `http://127.0.0.1:44014/blog?lang=zh` (博客阅读卡片及可搜索的文章目录).
@@ -38,7 +38,7 @@
 ## Acceptance chain
 - Run `npm run dev` and wait for a local browser URL.
 - Confirm `screenshots/runtime-home.png` still matches the main UI (`screenshots/runtime-home.png`).
-- Confirm home has exactly two preview cards (项目 / 文章), each showing three entries. Heading arrows and upward touch gestures / downward wheel gestures expand the corresponding panel into its card library; individual previews open in place. Summaries show at most two lines and fade only when overflowing, with no bottom 全部文章 button or extra reading-action text.
+- Confirm home has exactly two preview cards (项目 / 文章): all six projects and enough article previews to fill the available height, including after viewport resize. Hovering or focusing the complete heading row activates its arrow; clicking the title, count or intervening space enters the library. Upward touch gestures / downward wheel gestures also expand the panel into its library; individual previews open in place. Summaries show at most two lines and fade only when overflowing, with no bottom 全部文章 button or extra reading-action text.
 - Reading cards share their top and bottom edges, retain native internal scroll, and expand on click with Escape / 收回 to return. Only sharing is offered; no quote action or frame ornaments.
 - Confirm the mast has no personal seal, and the 项目 / 博客 switch sits directly above the cards. Home article previews, article cards and index entries expand in place; no 阅读原文 link remains. Vertical scrolling keeps native momentum while horizontal navigation still changes cards.
 - Confirm language, theme, music and hover-revealed social controls remain usable outside the cards on desktop and in the bottom rail on phones. Browser Back / Forward must restore the correct surface.
