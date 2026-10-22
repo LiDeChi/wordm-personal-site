@@ -3,14 +3,15 @@ import type { BlogArticle } from "../data/blogArticles";
 import { PERSONAL_PROJECTS } from "../data/fountFields";
 import type { Lang } from "../i18n/lang";
 import { withSiteParams } from "../lib/lang-url";
-import { MathText } from "./MathText";
+import { HomeExcerpt } from "./HomeExcerpt";
+import { useHomeLibraryGesture } from "./useHomeLibraryGesture";
 
 type FatherLandingProps = {
   lang: Lang;
   articles: BlogArticle[];
   onOpen: (surface: "projects" | "articles") => void;
   onOpenArticle: (articleId: string) => void;
-  onOpenIndex: () => void;
+  onOpenProject: (projectKey: string) => void;
 };
 
 function articleExcerpt(article: BlogArticle, lang: Lang) {
@@ -23,8 +24,8 @@ function articleExcerpt(article: BlogArticle, lang: Lang) {
   return article.paragraphs.find((paragraph) => paragraph[lang].trim())?.[lang] ?? "";
 }
 
-export function FatherLanding({ lang, articles, onOpen, onOpenArticle, onOpenIndex }: FatherLandingProps) {
-  const project = PERSONAL_PROJECTS.find((field) => field.key === "ringbook") ?? PERSONAL_PROJECTS[0];
+export function FatherLanding({ lang, articles, onOpen, onOpenArticle, onOpenProject }: FatherLandingProps) {
+  const landingRef = useHomeLibraryGesture(onOpen);
   const chronology = lang === "zh" ? ["最新", "上一篇", "更早"] : ["Latest", "Previous", "Earlier"];
 
   function open(event: MouseEvent<HTMLAnchorElement>, surface: "projects" | "articles") {
@@ -33,11 +34,11 @@ export function FatherLanding({ lang, articles, onOpen, onOpenArticle, onOpenInd
     onOpen(surface);
   }
 
-  function openArticle(event: MouseEvent<HTMLAnchorElement>, articleId: string) {
+  function openPreview(event: MouseEvent<HTMLAnchorElement>, action: () => void) {
     if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     event.preventDefault();
     if (window.getSelection()?.isCollapsed === false) return;
-    onOpenArticle(articleId);
+    action();
   }
 
   function articleHref(articleId: string) {
@@ -45,49 +46,61 @@ export function FatherLanding({ lang, articles, onOpen, onOpenArticle, onOpenInd
   }
 
   return (
-    <div className="father-landing">
-      <a
+    <div className="father-landing" ref={landingRef}>
+      <section
         className="father-entry father-entry-projects"
-        href={withSiteParams("/projects", { lang })}
-        onClick={(event) => open(event, "projects")}
+        data-home-surface="projects"
+        style={{ viewTransitionName: "father-library-projects" }}
         aria-labelledby="father-entry-projects-title"
       >
         <div className="father-entry-heading">
-          <h2 id="father-entry-projects-title">{lang === "zh" ? "项目" : "Projects"}</h2>
+          <div className="father-entry-heading-link">
+            <h2 id="father-entry-projects-title">{lang === "zh" ? "项目" : "Projects"}</h2>
+            <a className="father-entry-arrow" href={withSiteParams("/projects", { lang })} onClick={(event) => open(event, "projects")} aria-label={lang === "zh" ? "打开项目卡片库" : "Open project library"} title={lang === "zh" ? "打开项目卡片库" : "Open project library"}>
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12h16m-7-7 7 7-7 7" /></svg>
+            </a>
+          </div>
           <span className="father-entry-count">{PERSONAL_PROJECTS.length}{lang === "zh" ? " 件作品" : " works"}</span>
         </div>
-        {project ? (
-          <figure className="father-entry-project-preview">
-            <img className="father-entry-image" src={project.coverUrl} alt={project.coverAlt[lang]} />
-            <figcaption>
-              <h3>{project.name}</h3>
-              <p>{project.summary[lang]}</p>
-            </figcaption>
-          </figure>
-        ) : null}
-        <div className="father-entry-project-list">
-          {PERSONAL_PROJECTS.map((field) => <span key={field.key}>{field.name}</span>)}
+        <div className="father-entry-previews">
+          <ol className="father-entry-preview-list">
+            {PERSONAL_PROJECTS.slice(0, 3).map((project) => (
+              <li key={project.key}>
+                <a className="father-project-preview" href={withSiteParams(`/projects?card=${encodeURIComponent(project.key)}`, { lang })} onClick={(event) => openPreview(event, () => onOpenProject(project.key))}>
+                  <img className="father-entry-image" src={project.coverUrl} alt={project.coverAlt[lang]} />
+                  <div>
+                    <h3>{project.name}</h3>
+                    <HomeExcerpt text={project.summary[lang]} />
+                  </div>
+                </a>
+              </li>
+            ))}
+          </ol>
         </div>
-      </a>
+      </section>
 
-      <section className="father-entry father-entry-articles" aria-labelledby="father-entry-articles-title">
+      <section className="father-entry father-entry-articles" data-home-surface="articles" style={{ viewTransitionName: "father-library-articles" }} aria-labelledby="father-entry-articles-title">
         <div className="father-entry-heading">
-          <h2 id="father-entry-articles-title">{lang === "zh" ? "博客" : "Blog"}</h2>
+          <div className="father-entry-heading-link">
+            <h2 id="father-entry-articles-title">{lang === "zh" ? "文章" : "Articles"}</h2>
+            <a className="father-entry-arrow" href={withSiteParams("/blog", { lang })} onClick={(event) => open(event, "articles")} aria-label={lang === "zh" ? "打开文章卡片库" : "Open article library"} title={lang === "zh" ? "打开文章卡片库" : "Open article library"}>
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12h16m-7-7 7 7-7 7" /></svg>
+            </a>
+          </div>
           <span className="father-entry-count">{articles.length}{lang === "zh" ? " 篇文章" : " articles"}</span>
         </div>
-        <div className="father-entry-article-previews">
+        <div className="father-entry-previews">
           {articles.length ? (
-            <ol className="father-entry-article-list">
+            <ol className="father-entry-preview-list">
               {articles.slice(0, 3).map((article, index) => (
                 <li key={article.id}>
-                  <a className="father-article-preview" href={articleHref(article.id)} onClick={(event) => openArticle(event, article.id)}>
+                  <a className="father-article-preview" href={articleHref(article.id)} onClick={(event) => openPreview(event, () => onOpenArticle(article.id))}>
                     <div className="father-entry-article-meta">
                       <span>{chronology[index]}</span>
                       <span className="father-entry-date">{article.date}</span>
                     </div>
                     <h3>{article.title[lang]}</h3>
-                    <p className="father-entry-excerpt"><MathText text={articleExcerpt(article, lang)} /></p>
-                    <span className="father-entry-read">{lang === "zh" ? "阅读全文" : "Read article"}</span>
+                    <HomeExcerpt text={articleExcerpt(article, lang)} />
                   </a>
                 </li>
               ))}
@@ -96,11 +109,6 @@ export function FatherLanding({ lang, articles, onOpen, onOpenArticle, onOpenInd
             <p className="father-entry-empty">{lang === "zh" ? "还没有已发布的文章" : "No published articles yet"}</p>
           )}
         </div>
-        <footer className="father-entry-articles-footer">
-          <button className="father-entry-all-articles" type="button" aria-haspopup="dialog" onClick={onOpenIndex}>
-            {lang === "zh" ? "全部文章" : "All articles"}
-          </button>
-        </footer>
       </section>
     </div>
   );
